@@ -147,21 +147,7 @@ if __name__ == "__main__":
     harbor_cleaner.soft_delete_all_tags_except_latest_n(10)  # 每个镜像只保留最新的十个 tag
 
     # 2. 进行一次 GC，清除掉所有已软删除的 images
-    # 2.1 harbor 1.7 之前的版本，需要停机才能 GC
-    
-    """
-cd /volume1/docker/harbor/harbor
-docker-compose stop  # 停机
-
-# 下面的 tag 'v2.6.2-v1.4.0' 需要换成当前使用的 registry-photon 镜像的版本号
-# --dry-run 表示尝试进行 GC，输出 log 与正式 gc 一致，可用于提前发现问题
-docker run -it --name gc --rm --volumes-from registry vmware/registry-photon:v2.6.2-v1.4.0 garbage-collect --dry-run /etc/registry/config.yml
-
-# 正式 gc，这个才会真正的 gc 掉已经软删除的镜像
-docker run -it --name gc --rm --volumes-from registry vmware/registry-photon:v2.6.2-v1.4.0 garbage-collect /etc/registry/config.yml
-    """
-
-    # 2.2 harbor 1.7+ 可以通过 restful api 进行在线 GC 或定期自动 GC。
+    # harbor 1.7+ 可以通过 restful api 进行在线 GC 或定期自动 GC。
 
 
 
