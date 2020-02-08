@@ -39,4 +39,5 @@ ulimit -n
 ## 参考
 
 - [ulimit、limits.conf、sysctl和proc文件系统](https://www.jianshu.com/p/20a2dd80cbad)
+- [Rancher - 基础环境配置](https://docs.rancher.cn/rancher2x/install-prepare/basic-environment-configuration.html)
 - [最佳实践 - 主机 OS 调优](https://docs.rancher.cn/rancher2x/install-prepare/best-practices/os.html)
