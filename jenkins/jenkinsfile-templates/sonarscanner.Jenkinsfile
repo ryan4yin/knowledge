@@ -35,7 +35,8 @@ pipeline {
                 environment name: 'TEST', value: 'true'
             }
             steps {
-                sh 'pytest'
+                // sh "pip install pytest pytest-cov"  // 建议通过 poetry 管理依赖
+                sh 'pytest --cov=./'
             }
         }
 
