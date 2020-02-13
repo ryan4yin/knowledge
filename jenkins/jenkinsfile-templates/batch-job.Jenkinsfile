@@ -25,13 +25,44 @@ pipeline {
             steps {
                 script {
                     def folderName = "Your Folder Name"
+                    
+                    // 方案一，有任务失败，则批量任务直接中断
                     Jenkins.instance.getItemByFullName(folderName).allJobs.each {
-                        build job: job_name, wait: true, propagate: true, quietPeriod: 1,  parameters: [
+                        build job: it.fullName, wait: true, propagate: true, parameters: [
                             string(name: 'BRANCH', value: params.BRANCH),
                             string(name: 'BUILD_MODE', value: params.BUILD_MODE),  // choice 的值就是普通的 string
                             booleanParam(name: 'XXX', value: params.XXX)
                         ]
                     }
+
+
+                    // 方案二：所有的子任务都跑一遍，最后再统计结果
+                    // def failed_builds = []
+                    // Jenkins.instance.getItemByFullName(folderName).allJobs.each {
+                    //     def result = build job: it.fullName, wait: true, propagate: false, parameters: [
+                    //         string(name: 'BRANCH', value: params.BRANCH),
+                    //         string(name: 'BUILD_MODE', value: params.BUILD_MODE),  // choice 的值就是普通的 string
+                    //         booleanParam(name: 'XXX', value: params.XXX)
+                    //     ]
+    
+                    //     println "Jobname: ${it.fullName}, Status: ${result.result}"
+
+                    //     if (result.result != "SUCCESS") {
+                    //         failed_builds.add(result)
+                    //     }
+                    // }
+
+                    // // 打印出失败的任务
+                    // if (failed_builds.size() > 0) {
+                    //     echo "${env.RED}====================批量构建失败，失败的任务如下：====================${env.NC}"
+                    //     failed_builds.each {
+                    //         echo "${env.RED}任务名称：${it.getProjectName()}, 状态：${it.result}${env.NC}"
+                    //         echo "${env.RED}  链接:${env.NC} ${it.getAbsoluteUrl()}/console"
+                    //     }
+                    //     sh "exit 1"
+                    // } else {
+                    //     echo "构建成功"
+                    // }
                 }
             }
         }
