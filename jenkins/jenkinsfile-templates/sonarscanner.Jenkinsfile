@@ -47,16 +47,16 @@ pipeline {
                         script{
                             // SonarQube 要求路径中不包含中文文件夹！否则 sonarscanner 什么 bug 都扫不到！！！
 
-                            // 1. 通用扫描器
+                            // 1. 通用扫描器，需要首先在 jenkins 工具配置中添加好此工具
                             def sqScannerHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                             sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
 
                             // 2. dotnet 扫描器
-                            // def sqScannerMsBuildHome = tool name: 'sonarscanner-msbuild', type: 'hudson.plugins.sonar.MsBuildSQRunnerInstallation'
-                            // sh "dotnet ${sqScannerMsBuildHome}/SonarScanner.MSBuild.dll begin /k:${JOB_BASE_NAME}"
+                            // sh "dotnet tool install --global dotnet-sonarscanner"  // 可指定版本：`--version 4.8.0`
+                            // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
                             // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
                             // sh "dotnet build --no-restore"
-                            // sh "dotnet ${sqScannerMsBuildHome}/SonarScanner.MSBuild.dll end"
+                            // sh "dotnet sonarscanner end"
                         }
                     }
                 }
