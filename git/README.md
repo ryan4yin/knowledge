@@ -5,6 +5,7 @@
 1. [官方镜像：gitlab-ce](https://docs.gitlab.com/omnibus/docker/#install-gitlab-using-docker-compose)
     - 官方镜像，一个 all-in-one 的镜像。
     - 好处是部署方便。但是难以拓展，适合小项目/个人。
+    - 另外官方已经推出了 Kubernetes 集群版，应该比单机部署可靠很多。（前面给的官方文档，靠后部分有说明）
 1. [第三方部署方案：docker-gitlab](https://github.com/sameersbn/docker-gitlab)
     - 通过 docker-compose 组合 redis/postgresql/gitlab-ce 等镜像协同工作。
     - 相比官方镜像，它更灵活，拓展性也更好。文档也相当详细。
