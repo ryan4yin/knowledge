@@ -10,6 +10,8 @@
     - 通过 docker-compose 组合 redis/postgresql/gitlab-ce 等镜像协同工作。
     - 相比官方镜像，它更灵活，拓展性也更好。文档也相当详细。
     - 但是毕竟是非官方的，作为第二选项。
+    
+Gitlab 很庞杂，启动很慢，每次重启都要好几分钟。
 
 ### Gitlab 配置相关
 
