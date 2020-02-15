@@ -19,3 +19,7 @@
 各操作系统中将应用设为自动启动的方法，参见 [使用 supervisord 设置应用开机启动](https://www.cnblogs.com/kirito-c/p/12170126.html)，
 文末也有提到 Windows 设置开机启动的方法。
 
+
+### Bugs 归档
+
+- [「Bug」Jenkins Slave 卡顿与僵尸进程](https://www.cnblogs.com/kirito-c/p/12153528.html)
