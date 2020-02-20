@@ -14,4 +14,4 @@
 
 因此使用国内镜像源就显得很有必要了。
 
-- [微软 azure container service 国内镜像源](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md)
+- [微软 azure container service 国内镜像源](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy)
