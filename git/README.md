@@ -17,9 +17,11 @@ Gitlab 很庞杂，启动很慢，每次重启都要好几分钟。
 
 - [Gitlab System Hooks](https://docs.gitlab.com/ee/system_hooks/system_hooks.html): 系统钩子，通常用于通知别的程序一个 Gitlab Event 发生了。
     - Web Hooks: Gitlab Event 发生时通知某个 URL
+        - Web Hooks 可以细化到具体的 Project。
     - File Hooks: 和 Web Hooks 类似，只是它不调用 URL，而是调用一个 Gitlab 本地的脚本/可执行文件。
 - [Gitlab Server Hooks: 自定义 repo/global 级别的钩子](https://docs.gitlab.com/ce/administration/server_hooks.html)
     - 服务端钩子，比 System Hooks 更强大的一点是，Server Hooks 可以通过返回非 0 值，使 Gitlab Event 终止。（比如拒绝 git push）
+    - Server Hooks 也支持 project/global 两个级别。
 
 另外将如果 Gitlab 的数据映射到宿主机文件夹后，首次启动（创建目录）时容易遇到权限问题。
 
