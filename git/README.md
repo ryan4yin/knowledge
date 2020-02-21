@@ -22,6 +22,13 @@ Gitlab 很庞杂，启动很慢，每次重启都要好几分钟。
 - [Gitlab Server Hooks: 自定义 repo/global 级别的钩子](https://docs.gitlab.com/ce/administration/server_hooks.html)
     - 服务端钩子，比 System Hooks 更强大的一点是，Server Hooks 可以通过返回非 0 值，使 Gitlab Event 终止。（比如拒绝 git push）
     - Server Hooks 也支持 project/global 两个级别。
+        - Project: 参照官方文档做，没成功过。不清楚是什么原因。。
+        - Global: 官方文档也不对！更新不及时。具体方法如下：
+            a. 在 `/etc/gitlab/gitlab.rb` 中找到 `gitlab_shell['custom_hooks_dir']` 设定的文件夹。
+            b. 进入上一步找到的文件夹中，创建 `pre-receive.d` 文件夹。
+            c. 将可执行文件（脚本/binary）放到 `pre-receive.d` 中，文件名随意，但是要有 exec 权限。
+                - 可以使用任何可执行文件（binary/python/ruby/shell），前提是系统中有对应的运行环境。
+            d. 结束，下次 push 时就会调用上述文件夹中的可执行文件。
 
 另外将如果 Gitlab 的数据映射到宿主机文件夹后，首次启动（创建目录）时容易遇到权限问题。
 
