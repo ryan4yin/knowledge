@@ -4,9 +4,6 @@
 Git Server Hooks: pre-receive
 
 检查 Git Commit Message 的格式是否符合 Angular Style
-Style 文档：
-- https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines
-- https://zhuanlan.zhihu.com/p/67804026
 """
 
 import sys
@@ -44,7 +41,7 @@ commit_msg_format = f"""
 {commit_types_msg}
 {'-'*40}
 修改最新 Commit Message 的命令如下:
-git commit --amend -m "<修改类型>(<影响范围>): <主题>"」
+git commit --amend -m "<修改类型>(<影响范围>): <主题>"
 {'='*10}Commit Message 格式说明{'='*10}
 提交失败！详细错误请往上查看。
 """
@@ -57,6 +54,11 @@ def check_commit_msg(commit_id, commit_msg):
     暂时只检查第一行
     """
     lines = commit_msg.splitlines()
+
+    # 忽略掉 Revert 和 Merge 信息
+    for type_ in ("Revert ", "Merge "):
+        if commit_msg.startswith(type_):
+            return
     
     if ":" not in lines[0]:
         print("格式不匹配！！！第一行需符合格式：<修改类型>(<影响范围>): <主题>")
