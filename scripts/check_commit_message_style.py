@@ -21,6 +21,7 @@ commit_types = {
     "pref": "性能优化",
     "test": "测试用例修改",
     "chore": "琐事，比如修改构建流程、更新/增删依赖等等",
+    "revert": "手动回退代码"
 }
 
 commit_types_msg = '\n'.join(f'- {tp}: {desc}' for tp, desc in commit_types.items())
@@ -55,7 +56,7 @@ def check_commit_msg(commit_id, commit_msg):
     """
     lines = commit_msg.splitlines()
 
-    # 忽略掉 Revert 和 Merge 信息
+    # 忽略掉 Revert 和 Merge 信息（git 自动生成的 commit message）
     for type_ in ("Revert ", "Merge "):
         if commit_msg.startswith(type_):
             return
