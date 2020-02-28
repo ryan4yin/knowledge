@@ -30,3 +30,6 @@ Jenkinsfile 和 Git 仓库之间，通过 `JOB_NAME` 关联起来，这个关联
 
 最近 GitOps 好像借着云原生的热潮，越来越流行。目前 Github 上新兴的 CI/CD 工具如 Jenkins-X/Argo/Knative/flux 等，几乎全都是以 GitOps 为核心的。
 
+但是感觉上 GitOps 以 Git 仓库为核心，忽略了 Git 仓库之间的依赖，因此它和分层结构的项目不怎么合得来。
+GitOps 很适合扁平化的项目，每个 Git 仓库就是一个应用，相互独立，也就不需要去考虑它们之间的依赖关系、构建/部署顺序。
+
