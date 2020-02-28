@@ -28,5 +28,5 @@ Jenkinsfile 和 Git 仓库之间，通过 `JOB_NAME` 关联起来，这个关联
 
 ## GitOps
 
-最近 GitOps 好像借着云原生的热潮，越来越流行。目前 Github 上新兴的 CI/CD 工具，几乎全都是以 GitOps 为核心的。
+最近 GitOps 好像借着云原生的热潮，越来越流行。目前 Github 上新兴的 CI/CD 工具如 Jenkins-X/Argo/Knative/flux 等，几乎全都是以 GitOps 为核心的。
 
