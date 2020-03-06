@@ -18,5 +18,5 @@
 
 | Worker 节点数   | HA 主节点配置(3个，每个节点上跑一个 etcd+controlplane) |
 | --------       | -----:        |
-|   1-10         |    2c/2g/disk-20g      |  
-|   10-30        |    4c/4g/disk-20g      |
+|   1-5         |    2c/2g/disk-20g      |  
+|   5-30        |    4c/4g/disk-20g      |
