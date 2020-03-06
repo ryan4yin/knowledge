@@ -6,7 +6,7 @@
 
 | 安装工具     | 安装难度 |  集群可靠程度  |  集群修改难度（升级/降级）
 | --------     | -----:   | :----:  | :----:  |
-| rke(rancher) |    1     |   3     |    1    |
+| [rke(rancher)](https://docs.rancher.cn/rke/) |    1     |   3     |    1    |
 | kubeadm      |    -     |   -     |    -    |
 | KubeOperator |    -     |   -     |    -    |
 | KubeSpray    |    3     |   -     |    -    |
