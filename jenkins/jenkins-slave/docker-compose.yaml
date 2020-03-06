@@ -2,7 +2,7 @@ version: '3.7'
 services:
   android1:  # 这个 key 只是它在 docker-compose 内部的一个别名，在 docker 中不可用。
     container_name: android1  # 这个名字才是容器 在 docker 中的真正名称。
-    image: registry.harbor.local/android:latest  # 私有仓库，定制的 android 构建用基础镜像
+    image: registry.harbor.local/jenkins/slave-android:latest  # 私有仓库，定制的 android 构建用基础镜像
     init: true  # 这个必须加上，否则僵尸进程无法回收，僵尸进程累积会导致系统卡顿
     environment:
       - TZ=Asia/Shanghai
@@ -13,7 +13,7 @@ services:
 
   general1:
     container_name: general1
-    image: registry.harbor.local/jenkins-base:latest  # 私有仓库，定制的通用基础镜像
+    image: registry.harbor.local/jenkins/slave-base:latest  # 私有仓库，定制的通用基础镜像
     init: true  # 这个必须加上，否则僵尸进程无法回收，僵尸进程累积会导致系统卡顿
     environment:
       - TZ=Asia/Shanghai
