@@ -22,3 +22,8 @@
 |   5-30        |    4c/4g/disk-20g      |
 
 另外主节点性能也受集群 Pods 个数的影响，上述配置应该可以支撑到每个 Worker 节点跑 100 个 Pod.
+
+
+## 日志收集
+
+- [fluentd+elasticsearch](https://github.com/fluent/fluentd-kubernetes-daemonset/blob/master/fluentd-daemonset-elasticsearch.yaml)，ES 为有状态应用，另做部署。
