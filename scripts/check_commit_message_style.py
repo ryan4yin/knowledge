@@ -21,7 +21,7 @@ commit_types = {
     "pref": "性能优化",
     "test": "测试用例修改",
     "chore": "琐事，比如修改构建流程、更新/增删依赖等等",
-    "revert": "手动回退代码"
+    "revert": "手动回退修改"
 }
 
 commit_types_msg = '\n'.join(f'- {tp}: {desc}' for tp, desc in commit_types.items())
@@ -55,6 +55,7 @@ def check_commit_msg(commit_id, commit_msg):
     暂时只检查第一行
     """
     lines = commit_msg.splitlines()
+    print(f"提交ID：'{commit_id}', 提交信息（首行）: '{lines[0]}'")
 
     # 忽略掉 Revert 和 Merge 信息（git 自动生成的 commit message）
     for type_ in ("Revert ", "Merge "):
@@ -62,7 +63,7 @@ def check_commit_msg(commit_id, commit_msg):
             return
     
     if ":" not in lines[0]:
-        print("格式不匹配！！！第一行需符合格式：<修改类型>(<影响范围>): <主题>")
+        print("提交信息格式不正确！第一行需符合格式：<修改类型>(<影响范围>): <主题>")
         raise RuntimeError()
 
     type_scope, subject = commit_msg.split(":", maxsplit=1)
