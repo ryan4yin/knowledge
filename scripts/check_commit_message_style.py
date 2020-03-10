@@ -43,6 +43,9 @@ commit_msg_format = f"""
 {'-'*40}
 修改最新 Commit Message 的命令如下:
 git commit --amend -m "<修改类型>(<影响范围>): <主题>"
+{'-'*40}
+提交信息举例：https://github.com/angular/angular.js/commits/master
+提交规范：https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines
 {'='*10}Commit Message 格式说明{'='*10}
 提交失败！详细错误请往上查看。
 """
@@ -76,6 +79,8 @@ def check_commit_msg(commit_id, commit_msg):
 
 
 def iter_commit_msg(parent_commit_id: str, latest_commit_id: str):
+    """迭代所有的提交记录，从最新的提交开始"""
+    print(f"新增提交记录范围：{parent_commit_id}..{latest_commit_id}")
     if parent_commit_id == "0" * len(parent_commit_id):  # 首次提交
         cmd = shlex.split(f"git log -1 --pretty=format:%h---%s")
     else:
