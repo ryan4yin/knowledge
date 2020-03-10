@@ -81,8 +81,9 @@ def check_commit_msg(commit_id, commit_msg):
 def iter_commit_msg(parent_commit_id: str, latest_commit_id: str):
     """迭代所有的提交记录，从最新的提交开始"""
     print(f"新增提交记录范围：{parent_commit_id}..{latest_commit_id}")
-    if parent_commit_id == "0" * len(parent_commit_id):  # 首次提交
-        cmd = shlex.split(f"git log -1 {latest_commit_id} --pretty=format:%h---%s") 
+    if parent_commit_id == "0" * len(parent_commit_id):  # 暂时不清楚这个 parent_commit_id 全为 0 是个什么情况
+        # -1 表示仅输出 latest_commit_id 对应的提交信息
+        cmd = shlex.split(f"git log -1 {latest_commit_id} --pretty=format:%h---%s")
     else:
         cmd = shlex.split(
             f"git log {parent_commit_id}..{latest_commit_id} --pretty=format:%h---%s")
