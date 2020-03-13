@@ -40,7 +40,7 @@ curl -sSL --output go.tar.gz https://dl.google.com/go/go$GOLANG_VERSION.linux-am
 sudo tar -C /opt/ -xzf go.tar.gz
 rm go.tar.gz
 
-echo "export PATH=/opt/go/bin:$PATH" >> ~/.bashrc
+echo "export PATH=/opt/go/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
 
 echo "4. 为 go 语言配置国内代理，并开启 mod 模式"
