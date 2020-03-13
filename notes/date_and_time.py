@@ -97,6 +97,11 @@ dt.time.fromisoformat("04:00:03.537061")  # =>  datetime.time(4, 0, 3, 537061)
 # 2.3 解析指定格式的字符串
 dt.datetime.strptime('2020-02-22 04:00:03', '%Y-%m-%d %H:%M:%S')  # => datetime.datetime(2020, 2, 22, 4, 0, 3)
 
+## 时区
+
+# 上海时区：东八区 utc+8
+tz_shanghai = dt.timezone(dt.timedelta(hours=8))
+
 ## 第三方库
 
 """
