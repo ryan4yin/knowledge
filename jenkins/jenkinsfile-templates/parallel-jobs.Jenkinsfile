@@ -28,6 +28,7 @@ pipeline {
                     def RED ='\033[31m'
                     def NC='\033[0m'
 
+                    // Jenkins.instance.getAllItems(AbstractItem.class).each {  # 获取到根下所有的 Items，包括所有文件夹、所有 Jobs（文件夹内的也会列出）
                     Jenkins.instance.getItemByFullName(folderName).allJobs.each {
                         parallel_args[it.fullName] = {  // 这个代码块会被交给一个新线程处理
                             def result = build job: it.fullName, wait: true, propagate: false, quietPeriod: 3, parameters: [
