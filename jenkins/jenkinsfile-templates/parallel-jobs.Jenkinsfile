@@ -21,7 +21,7 @@ pipeline {
                     def folderName = 'Your Folder Name'
 
                     def branch = params.BRANCH  // parallel 中不能使用 pipeline 的全局变量，这里先将变量保存到局部
-                    def parallel_args = [:] // parallel 的所有参数，键值对 
+                    def parallel_args = [:] // parallel 的所有参数，键值对
                     
                     // 彩色输出的代码
                     def GREEN = "\033[1;32m"
