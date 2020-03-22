@@ -1,6 +1,22 @@
-# Git 部署方案
+# Git 相关
 
-## Gitlab
+## Git 命令
+
+### 强制走 ssh 协议
+
+以下命令将对 gitlab.local 的 https 请求，强制转换成 ssh 请求。
+```
+git config --global url."git@gitlab.local:".insteadOf "https://gitlab.local"
+```
+
+在 CI/CD 中可用上述方法强制走 ssh 协议，配合 ssh-agent 插件动态注入 ssh 密钥。
+这样你使用 `git clone https://gitlab.local/xxx.git` 时，底层实际上使用的是 ssh 协议。
+
+也可以用同样的手法转换 http/git 协议，但是不能同时转换多种协议。。
+
+## Git 部署方案
+
+### Gitlab
 
 1. [官方镜像：gitlab-ce](https://docs.gitlab.com/omnibus/docker/#install-gitlab-using-docker-compose)
     - 官方镜像，一个 all-in-one 的镜像。
@@ -13,7 +29,7 @@
     
 Gitlab 很庞杂，启动很慢，每次重启都要好几分钟。
 
-### Gitlab 配置相关
+#### Gitlab 配置相关
 
 - [Gitlab System Hooks](https://docs.gitlab.com/ee/system_hooks/system_hooks.html): 系统钩子，通常用于通知别的程序一个 Gitlab Event 发生了。
     - Web Hooks: Gitlab Event 发生时通知某个 URL
@@ -32,6 +48,6 @@ Gitlab 很庞杂，启动很慢，每次重启都要好几分钟。
 
 另外将如果 Gitlab 的数据映射到宿主机文件夹后，首次启动（创建目录）时容易遇到权限问题。
 
-## 其他项目
+### 其他项目
 
 - [gitea/gogs](https://github.com/gogs/gogs): 轻量级的 git 仓库方案，适合小项目/个人。
