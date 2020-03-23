@@ -18,6 +18,7 @@
 ## 语言相关
 
 - [python: miniconda3](https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile)
+- [python: official](https://github.com/docker-library/python)
 - [pypiserver - python](https://github.com/pypiserver/pypiserver)
 
 - [dotnet-docker](https://github.com/dotnet/dotnet-docker)
