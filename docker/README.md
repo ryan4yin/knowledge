@@ -15,3 +15,30 @@
 因此使用国内镜像源就显得很有必要了。
 
 - [微软 azure container service 国内镜像源](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy)
+
+
+## daemon.json 样例
+
+限制容器日志大小，配置 dockerhub 的国内镜像仓库，信任 harbor 私有镜像仓库。其他参见前面提到的 `Docker 调优`
+
+```json
+{
+    "oom-score-adjust": -1000,
+    "log-driver": "json-file",
+    "log-opts": {
+      "max-size": "50m",
+      "max-file": "1"
+    },
+    "max-concurrent-downloads": 10,
+    "max-concurrent-uploads": 10,
+    "insecure-registries" : ["harbor.internal.xxx.com"],
+    "registry-mirrors": [
+      "https://dockerhub.azk8s.cn",
+      "https://hub-mirror.c.163.com"
+    ],
+    "storage-driver": "overlay2",
+    "storage-opts": [
+      "overlay2.override_kernel_check=true"
+    ]
+}
+```
