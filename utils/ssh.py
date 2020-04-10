@@ -66,10 +66,11 @@ class SSH(object):
         return self.conn.is_connected
 
     def run(self, cmd: str,
+            warn=False,
             hide=False,
             echo=True,
-            out_stream=None,
-            err_stream=None,
+            shell="/bin/bash",
+            encoding='utf-8',
             **kwargs):
         """
         远程执行命令
@@ -77,23 +78,24 @@ class SSH(object):
         注意！！！run/sudo 并不记录 cd 命令切换的路径！
         如果需要改变 self.cwd （当前工作目录），必须使用 self.cd() 函数，详细的用法参见该函数的 docstring
 
+        官方文档：http://docs.pyinvoke.org/en/0.12.1/api/runners.html#invoke.runners.Runner.run
         :param cmd: 命令字符串
+        :param warn: 命令非正常结束时，默认抛异常。如果这个为 True，就只发出 Warning，不抛异常
         :param hide: 是否隐藏掉命令的输出流（stdout/stderr）
         :param echo:是否回显正在运行的命令（最好选择回显，debug很有用）
-        :param out_stream:输出流
-        :param err_stream: stderr
-        :param : 其他参数直接传到 Fabric 中：
-        :param encoding: 字符集
-        :param warn: 命令非正常结束时，默认抛异常。如果这个为 True，就只发出 Warning，不抛异常
         :param shell: 指定用于执行命令的 shell
-        :return: 一个 Result 对象
+        :param encoding: 字符集
+        :return: 一个 Result 对象，该对象的主要参数有：
+            command: 被执行的命令
+            ok: A boolean equivalent to exited == 0.
+            return_code: 命令返回值
+            stdout: 命令的标准输出，是一个多行字符串
+                程执行命令时可能无法区分 stdout/stderr，这时 stdout 会包含 stderr
         """
         return self.conn.run(
             command=cmd,
             hide=hide,
             echo=echo,
-            out_stream=out_stream,
-            err_stream=err_stream,
             **kwargs
         )
 
@@ -217,3 +219,4 @@ class SSH(object):
         with self.cd(remote_path):
             self.run("tar -ax -f {}".format(tar_name))
             self.run("rm {}".format(tar_name))
+
