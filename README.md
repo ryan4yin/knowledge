@@ -10,6 +10,12 @@
 1. Jenkins 相关：部署、Pipeline 流水线模板
 1. Python 实用脚本库
 
+## docker-compose
+
+参考资料：
+
+- [awesome-compose](https://github.com/docker/awesome-compose)
+
 
 ## 国内主流镜像站
 

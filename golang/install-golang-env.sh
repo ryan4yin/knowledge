@@ -3,12 +3,25 @@ PRIVATE_GIT_HOST=gitlab.local
 GOLANG_VERSION=1.13.5
 
 
+# apt 镜像源的 host（三选一）
+## 阿里云镜像速度快，而且稳定
 APT_SOURCE_HOST="mirrors.aliyun.com"
+## 清华镜像源，有时会停机维护（备选）
+# APT_SOURCE_HOST=mirrors.tuna.tsinghua.edu.cn
+## 中科大源，有时会停机维护（备选）
+# APT_SOURCE_HOST=mirrors.ustc.edu.cn
+
 
 echo "1. apt 更换国内镜像源"
 sudo sed -i "s/archive.ubuntu.com/${APT_SOURCE_HOST}/g" /etc/apt/sources.list
-
 sudo apt-get update --fix-missing
+# 安装 https 协议需要的依赖
+sudo apt-get install -y --no-install-recommends \
+        ca-certificates apt-transport-https
+# 切换成 https 协议
+sed -i "s@http://@https://@g" /etc/apt/sources.list
+
+# 安装常用软件
 sudo apt-get install -y \
         build-essential \
         automake \
