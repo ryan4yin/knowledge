@@ -39,5 +39,10 @@ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebre
 source ~/.bash_profile
 ```
 
-## 2. 通过 Homebrew 安装 Python3/AdopetOpenJDK 等
+## 2. 通过 Homebrew 安装 Python3/AdopetOpenJDK 等软件
 
+待续
+
+## 3. 设置软件开机自启（Service）
+
+参见 [使用 supervisord 设置应用开机启动 ](https://www.cnblogs.com/kirito-c/p/12170126.html)
