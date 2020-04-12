@@ -16,6 +16,19 @@
 具体的参数配置，因服务器配置而异，也因应用程序的功能与特性而异。
 
 
+## 网络设置
+
+对物理机，可以编写通用脚本设置静态 IP、DNS 等。
+不同发行版的网络配置方法也不同，要注意区分：
+
+1. Ubuntu: 新版现在已经使用 netplan 进行配置了，配置文件是 `/etc/netplan/xxx.yaml`
+1. CentOS7: 配置文件是 `/etc/sysconfig/network-scripts/ifcfg-<interface-name>.conf`
+
+对虚拟机，可以在打包 ova 前首先使用 `apt`/`yum` 安装好 open-vm-tools，
+然后直接使用 terraform 的 vsphere 等插件从 ova 模板新建虚拟机。
+新建虚拟机时可以直接通过 terraform 的配置文件设置好虚拟机的硬件和网络参数。
+这种方式对 ubuntu/centos 都有效，运维不需要自己去处理各 linux 发行版网络配置的差异。
+
 ## Swap 分区设置
 
 - [Linux Server Swap 分区设置](https://www.cnblogs.com/kirito-c/p/12058159.html)
