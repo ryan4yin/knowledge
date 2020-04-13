@@ -49,3 +49,36 @@
     ]
 }
 ```
+
+### 远程访问 Docker Engine
+
+如果希望能够远程访问（**危险操作！！！**），可以在上述 json 中再添加属性：
+
+```json
+{
+    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"],
+}
+```
+重启后就能通过 `http://<server-ip>:2375` 访问 [docker remote api](https://docs.docker.com/engine/api/latest/) 了。
+
+注意，这种方式暴露出来的  api 没有任何保护！要添加安全防护，请首先使用 openssl 生成自己的 tls 证书，然后在 `/etc/docker/daemon.json` 中再添加如下字段：
+
+```json
+{
+    "tls": true,
+    "tlscacert": "/etc/docker/ca.pem",
+    "tlscert": "/etc/docker/server.pem",
+    "tlskey": "/etc/docker/server-key.pem",
+    "tlsverify": true
+}
+```
+
+客户端需要配置环境变量：
+
+```shell
+export DOCKER_HOST=tcp://[your-remote-server-address]:2376
+export DOCKER_CERT_PATH=/Somewhere/on/your/machine
+export DOCKER_TLS_VERIFY=1
+```
+
+详见 [Deploy-and-Secure-a-Remote-Docker-Engine](https://github.com/IcaliaLabs/guides/wiki/Deploy-and-Secure-a-Remote-Docker-Engine)
