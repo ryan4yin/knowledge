@@ -77,8 +77,8 @@
 
 ```shell
 export DOCKER_HOST=tcp://[your-remote-server-address]:2376
-export DOCKER_CERT_PATH=/Somewhere/on/your/machine
-export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=/path/to/cert  # 现在客户端必须使用 tls 证书才能连接上 daemon！
+export DOCKER_TLS_VERIFY=1  # 表示要使用 tls 证书进行通信，否则会被 docker engine 拒绝连接
 ```
 
 详见 [Deploy-and-Secure-a-Remote-Docker-Engine](https://github.com/IcaliaLabs/guides/wiki/Deploy-and-Secure-a-Remote-Docker-Engine)
