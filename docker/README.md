@@ -61,7 +61,7 @@
 ```
 重启后就能通过 `http://<server-ip>:2375` 访问 [docker remote api](https://docs.docker.com/engine/api/latest/) 了。
 
-注意，这种方式暴露出来的  api 没有任何保护！要添加安全防护，请首先使用 openssl 生成自己的 tls 证书，然后在 `/etc/docker/daemon.json` 中再添加如下字段：
+注意，这种方式暴露出来的  api 没有任何保护！要添加安全防护，请首先[使用 openssl 生成自己的 tls 证书](https://docs.docker.com/engine/security/https/#create-a-ca-server-and-client-keys-with-openssl)，然后在 `/etc/docker/daemon.json` 中再添加如下字段：
 
 ```json
 {
