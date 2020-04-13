@@ -1,0 +1,17 @@
+# 详见 https://docs.traefik.io/reference/dynamic-configuration/file/
+http:
+  routers:
+    api:
+      entryPoints:
+        - "web"
+      rule: "Host(`traefik.lan`)"
+      service: api@internal
+
+  services:
+
+# tcp 协议只支持通过 tls 协议的 sni 参数进行路由
+# 非 tls 协议，不能分辨数据
+tcp:
+  routers:
+  service:
+

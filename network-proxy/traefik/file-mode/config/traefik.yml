@@ -1,0 +1,17 @@
+providers:
+  docker: {}
+  file:
+    directory: "/etc/traefik"
+    watch: true
+
+log:
+  level: DEBUG
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+api:
+  dashboard: true
