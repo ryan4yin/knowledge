@@ -11,5 +11,5 @@ services:
       - "50000:50000"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      # 绑定我们的配置目录
+      # 绑定配置目录
       - "./config:/etc/traefik"
