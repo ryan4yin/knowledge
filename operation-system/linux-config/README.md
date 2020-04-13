@@ -16,13 +16,69 @@
 具体的参数配置，因服务器配置而异，也因应用程序的功能与特性而异。
 
 
+## 镜像源
+
+```shell
+# alpine
+sed -i "s@dl-cdn.alpinelinux.org@mirrors.aliyun.com@g" /etc/apk/repositories
+# debian
+sed -i "s@\(deb\|security\).debian.org@mirrors.aliyun.com@g" /etc/apt/sources.list
+# ubuntu
+sudo sed -i 's@archive.ubuntu.com@mirrors.aliyun.com@g' /etc/apt/sources.list
+
+# ubuntu/debian 切换 https 源
+apt-get install -y --no-install-recommends ca-certificates apt-transport-https
+sed -i "s@http://@https://@g" /etc/apt/sources.list
+```
+
+
 ## 网络设置
 
 对物理机，可以编写通用脚本设置静态 IP、DNS 等。
 不同发行版的网络配置方法也不同，要注意区分：
 
 1. Ubuntu: 新版现在已经使用 netplan 进行配置了，配置文件是 `/etc/netplan/xxx.yaml`
-1. CentOS7: 配置文件是 `/etc/sysconfig/network-scripts/ifcfg-<interface-name>.conf`
+1. CentOS7: 配置文件是 `/etc/sysconfig/network-scripts/ifcfg-<interface-name>`
+
+Ubuntu netplan 配置，修改后通过命令 `sudo netplan apply` 使配置生效：
+```yaml
+# cat /etc/netplan/50-cloud-init.yaml
+network:
+    ethernets:
+        ens33:  # 网卡名称
+            addresses:  # 静态 IP 和网段
+            - 192.168.1.111/24
+            gateway4: 192.168.1.1  # ipv4 默认网关
+            nameservers:  # DNS 服务器
+                addresses:
+                - 114.114.114.114
+    version: 2
+```
+
+CentOS7 网络配置，修改后通过命令 `systemctl restart network` 使配置生效：
+```conf
+#  cat /etc/sysconfig/network-scripts/ifcfg-ens33
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static  # 使用静态 IP
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=1bfd36ad-a80b-48c0-9cdb-b28bcf281e27
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=192.168.1.111  # 静态 IP
+PREFIX=24             # 网段
+GATEWAY=192.168.1.1   # 默认网关
+DNS1=114.114.114.114  # DNS 服务器
+# DNS2=
+```
 
 对虚拟机，可以在打包 ova 前首先使用 `apt`/`yum` 安装好 open-vm-tools，
 然后直接使用 terraform 的 vsphere 等插件从 ova 模板新建虚拟机。
