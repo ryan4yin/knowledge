@@ -16,6 +16,22 @@
 具体的参数配置，因服务器配置而异，也因应用程序的功能与特性而异。
 
 
+## 镜像源
+
+```shell
+# alpine
+sed -i "s@dl-cdn.alpinelinux.org@mirrors.aliyun.com@g" /etc/apk/repositories
+# debian
+sed -i "s@\(deb\|security\).debian.org@${APT_SOURCE_HOST}@g" /etc/apt/sources.list
+# ubuntu
+sudo sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
+# ubuntu/debian 切换 https 源
+apt-get install -y --no-install-recommends ca-certificates apt-transport-https
+sed -i "s@http://@https://@g" /etc/apt/sources.list
+```
+
+
 ## 网络设置
 
 对物理机，可以编写通用脚本设置静态 IP、DNS 等。
