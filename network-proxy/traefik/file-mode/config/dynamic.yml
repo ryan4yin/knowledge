@@ -1,10 +1,11 @@
 # 详见 https://docs.traefik.io/reference/dynamic-configuration/file/
 http:
   routers:
+    # 配置 traefik dashboard 的入口域名
     api:
       entryPoints:
         - "web"
-      rule: "Host(`traefik.lan`)"
+      rule: "Host(`traefik.local`)"
       service: api@internal
 
   services:
