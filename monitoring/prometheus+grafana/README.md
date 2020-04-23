@@ -10,6 +10,7 @@
 ## Kubernetes 监控
 
 - [coreos/kube-prometheus](https://github.com/coreos/kube-prometheus): Use Prometheus to monitor Kubernetes and applications running on Kubernetes
+  - 它部署的 prometheus 可以和 istio 集成，替换掉 istioctl 自带的 prometheus+grafana，参见 [istioctl + prometheus-operator](/kubernetes/service_mesh/README.md)
 
 ## 高可用 Prometheus
 
