@@ -4,7 +4,7 @@ services:
     image: "traefik:2.2"
     container_name: "traefik"
     restart: always
-    command: --providers.docker
+    command: --api.dashboard=true --providers.docker
     ports:
       - "80:80"
       - "443:443"
