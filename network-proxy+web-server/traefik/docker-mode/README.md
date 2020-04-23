@@ -19,5 +19,8 @@ services:
     restart: always
 ```
 
+另外安全起见，也可以通过 docker-compose 的 `networks` 属性使用独立的虚拟网络。（默认情况下，所有容器都自动连接到 default 网桥，因此 traefik 能直接访问其他容器）
+不过这样就需要在 traefik 的 docker-compose.yml 中指定加入这个虚拟网络，否则 traefik 就无法将流量路由到该网络中去。
+
 详见 [Traefik & Docker](https://docs.traefik.io/providers/docker/)
 
