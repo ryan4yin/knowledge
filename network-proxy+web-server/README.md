@@ -6,11 +6,11 @@
 
 1. 反向代理(Reverse Proxy): 可理解成**服务端代理**，是服务端配置的一个中间代理服务器，负责将客户端的请求转发给后端服务器。 
    - 常被用于流量负载均衡(Load Balancer)、API网关、实现缓存/https/安全等功能。
-   - ![reverse-proxy](_imgs/reverse-proxy-flow.svg)
+   - ![reverse-proxy-flow.svg](_imgs/reverse-proxy-flow.svg)
 2. 前向代理(Forward Proxy)/转发代理: 可理解成**客户端代理**，是客户端配置的一个中间代理服务器，负责将客户端的请求转发给后端服务器。 
    - 常被用于突破某些服务端的访问限制（比如地域限制-翻墙），或者在网络上隐藏自己的真实身份（Tor 洋葱代理）。
    - 也可用于添加某些访问限制：比如学校/企业可以通过前向代理禁止用户访问 Zhihu/Bilibili 等娱乐网站。
-   - ![forward-proxy](_imgs/forward-proxy-flow.svg)
+   - ![forward-proxy-flow.svg](_imgs/forward-proxy-flow.svg)
 
 
 下面介绍几种当下比较流行的代理软件：
