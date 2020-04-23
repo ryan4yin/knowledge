@@ -17,3 +17,10 @@ services:
       # 为 dashboard 设置身份验证
       # - "traefik.http.routers.api.middlewares=auth"
       # - "traefik.http.middlewares.auth.basicauth.users=......"
+#     networks:  # 如果使用了自定义的虚拟网络，traefik 必须额外添加这项配置
+#       - my-service1
+
+# networks: 
+#   my-service1:
+#     external:  # 加入 my-service 中已定义好的虚拟网络。否则 traefik 将无法访问 my-service
+#       name: my-service1
