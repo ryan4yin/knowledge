@@ -18,6 +18,14 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 而它使用的配置文件也是 `docker-compose.yml`，只是多了一些集群相关的参数（scale 等），这类参数在 [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/) 有专门注明。
 
+
+### Swarm vs Kubernetes vs Nomad
+
+1. Swarm Mode: 简单方便，功能也够用。适合个人或简单场景下使用。
+1. Kubernetes: 功能强大，生态丰富。企业级首选。
+   1. [k3s](https://github.com/rancher/k3s): K8s 极简发行版，部署体验和 Swarm 差不多。(类比 Manjaro - Arch Linux 的省心版)
+2. Nomad: 如果嫌 Kubernetes 太重，那可以试试这个。
+
 ## quay.io/gcr.io/dockerhub.com 的国内镜像
 
 由于 GFW 和国内政策等原因，国内访问上述国际镜像仓库速度堪忧（或者根本无法访问）。
