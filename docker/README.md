@@ -6,8 +6,18 @@
 
 ## docker-compose
 
-- [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/)
+使用最广泛的单机容器编排工具，简单好用。
 
+- [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/)：此文档也适用于 docker-swarm.
+
+
+## Docker Swarm Mode
+
+Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmKit），已经被集成进了 docker 本身。
+它和 [k3s](https://github.com/rancher/k3s) 一样简单，装上 docker-ce 然后一两行命令就能启动 docker swarm 集群。
+基本上全程看 `docker swarm` 命令的提示就行，文档都不需要看。
+
+而它使用的配置文件也是 `docker-compose.yml`，只是多了一些集群相关的参数（scale 等），这类参数在 [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/) 有专门注明。
 
 ## quay.io/gcr.io/dockerhub.com 的国内镜像
 
