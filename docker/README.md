@@ -16,8 +16,10 @@
 因此使用国内镜像源就显得很有必要了。
 
 1. `gcr.io`: 替换成 `registry.cn-hangzhou.aliyuncs.com/google_containers/`
-1. `dockerhub`: `https://reg-mirror.qiniu.com` 和 `https://hub-mirror.c.163.com`，以及阿里云镜像加速器（要登录阿里账号）。
-1. `quay.io`: `quay-mirror.qiniu.com`
+2. `dockerhub`
+   1. 网易镜像源地址：`https://hub-mirror.c.163.com`
+   2. [阿里云镜像加速器](https://cr.console.aliyun.com/cn-shenzhen/instances/mirrors)，需要使用阿里云账号登录，登录后会给出一个专用加速地址。
+3. `quay.io`: `quay-mirror.qiniu.com`
 
 以上镜像都不一定长期可用。
 
@@ -41,7 +43,7 @@
     "insecure-registries" : ["harbor.internal.xxx.com"],
     "registry-mirrors": [
       "https://hub-mirror.c.163.com",
-      "https://reg-mirror.qiniu.com"
+      "https://xd6he1w9.mirror.aliyuncs.com"
     ],
     "storage-driver": "overlay2",
     "storage-opts": [
@@ -49,6 +51,10 @@
     ]
 }
 ```
+
+>其中的 aliyun 镜像源地址是我使用账号登录阿里云后得到的，使用时不需要任何验证。仅自用。
+
+其中镜像源地址建议配置多个，因为镜像源可能会不够稳定。
 
 ### 远程访问 Docker Engine
 
