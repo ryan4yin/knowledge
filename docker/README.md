@@ -10,7 +10,6 @@
 
 - [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/)：此文档也适用于 docker-swarm.
 
-
 ## Docker Swarm Mode
 
 Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmKit），已经被集成进了 docker 本身。
@@ -35,34 +34,32 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 参考了 [让 K8S 在国内愉快的航行](https://www.cnblogs.com/ants/p/12663724.html?utm_source=tuicool&utm_medium=referral)。
 
-
 ## daemon.json 样例
 
 限制容器日志大小，配置 dockerhub 的国内镜像仓库，信任 harbor 私有镜像仓库。其他参见前面提到的 `Docker 调优`
 
 ```json
 {
-    "oom-score-adjust": -1000,
-    "log-driver": "json-file",
-    "log-opts": {
-      "max-size": "50m",
-      "max-file": "1"
-    },
-    "max-concurrent-downloads": 10,
-    "max-concurrent-uploads": 10,
-    "insecure-registries" : ["harbor.internal.xxx.com"],
-    "registry-mirrors": [
-      "https://hub-mirror.c.163.com",
-      "https://xd6he1w9.mirror.aliyuncs.com"
-    ],
-    "storage-driver": "overlay2",
-    "storage-opts": [
-      "overlay2.override_kernel_check=true"
-    ]
+  "oom-score-adjust": -1000,
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50m",
+    "max-file": "1"
+  },
+  "max-concurrent-downloads": 10,
+  "max-concurrent-uploads": 10,
+  "insecure-registries": ["harbor.internal.xxx.com"],
+  "registry-mirrors": [
+    "https://hub-mirror.c.163.com",
+    "https://xd6he1w9.mirror.aliyuncs.com"
+  ],
+  "dns": ["114.114.114.114", "119.29.29.29"],
+  "storage-driver": "overlay2",
+  "storage-opts": ["overlay2.override_kernel_check=true"]
 }
 ```
 
->其中的 aliyun 镜像源地址是我使用账号登录阿里云后得到的，使用时不需要任何验证。仅自用。
+> 其中的 aliyun 镜像源地址是我使用账号登录阿里云后得到的，使用时不需要任何验证。仅自用。
 
 其中镜像源地址建议配置多个，因为镜像源可能会不够稳定。
 
@@ -72,20 +69,21 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 ```json
 {
-    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"],
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"]
 }
 ```
+
 重启后就能通过 `http://<server-ip>:2375` 访问 [docker remote api](https://docs.docker.com/engine/api/latest/) 了。
 
-注意，这种方式暴露出来的  api 没有任何保护！要添加安全防护，请首先[使用 openssl 生成自己的 tls 证书](https://docs.docker.com/engine/security/https/#create-a-ca-server-and-client-keys-with-openssl)，然后在 `/etc/docker/daemon.json` 中再添加如下字段：
+注意，这种方式暴露出来的 api 没有任何保护！要添加安全防护，请首先[使用 openssl 生成自己的 tls 证书](https://docs.docker.com/engine/security/https/#create-a-ca-server-and-client-keys-with-openssl)，然后在 `/etc/docker/daemon.json` 中再添加如下字段：
 
 ```json
 {
-    "tls": true,
-    "tlscacert": "/etc/docker/ca.pem",
-    "tlscert": "/etc/docker/server.pem",
-    "tlskey": "/etc/docker/server-key.pem",
-    "tlsverify": true
+  "tls": true,
+  "tlscacert": "/etc/docker/ca.pem",
+  "tlscert": "/etc/docker/server.pem",
+  "tlskey": "/etc/docker/server-key.pem",
+  "tlsverify": true
 }
 ```
 
