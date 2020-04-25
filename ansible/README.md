@@ -14,6 +14,14 @@
 
 但对于更复杂的 devops 任务，用 `fabric` 可能就有些难度了。为此现在开始学习 Ansible.
 
+## Ansible 说明
+
+Ansible 和 Fabric 一样，都是基于 pramiko(ansible 也能用 openssh，性能更好)，使用 ssh 协议连接到远程主机上运行命令，但是两个项目的规模却不是一个量级的。
+
+对标容器编排领域，Ansible 就好比 Kubernetes，从具体场景中提炼出了一些抽象概念，需要花时间去学习它的这一套抽象概念。
+而 Fabric 就类似 Docker Swarm Mode，走的是极简的路子，用起来很方便，但是不适合更复杂的场景。
+
+另外 Ansible 和 Kubernetes 还有一个共同点，就是它们灵活的「插件」机制，Ansible 社区提供了数千个实用的 Modules 来完成一些通用的任务（而且还在不断增多），Kubernetes 生态圈也是百花齐放——[CNCF LandScape](https://landscape.cncf.io/)。
 
 ## 安装 ansible
 
