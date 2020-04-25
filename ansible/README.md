@@ -15,4 +15,14 @@
 但对于更复杂的 devops 任务，用 `fabric` 可能就有些难度了。为此现在开始学习 Ansible.
 
 
+## 安装 ansible
 
+我比较习惯使用 pip 安装:
+
+```shell
+pip install --user ansible paramiko
+```
+
+## 参考
+
+- [ansible docs](https://docs.ansible.com/)

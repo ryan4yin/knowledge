@@ -20,11 +20,14 @@
 
 ```shell
 # alpine
+cp /etc/apk/repositories /etc/apk/repositories.bak
 sed -i "s@dl-cdn.alpinelinux.org@mirrors.aliyun.com@g" /etc/apk/repositories
 # debian
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
 sed -i "s@\(deb\|security\).debian.org@mirrors.aliyun.com@g" /etc/apt/sources.list
 # ubuntu
-sudo sed -i 's@archive.ubuntu.com@mirrors.aliyun.com@g' /etc/apt/sources.list
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
+sudo sed -i 's@\(archive\|security\).ubuntu.com@mirrors.aliyun.com@g' /etc/apt/sources.list
 
 # ubuntu/debian 切换 https 源
 apt-get install -y --no-install-recommends ca-certificates apt-transport-https
