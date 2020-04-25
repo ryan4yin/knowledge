@@ -13,6 +13,7 @@ from .file import tar_files
 通过 ssh 协议与远程主机交互：
     1. 使用 Connection.run() 远程执行命令（或者 Connection.sudo()，执行 root 命令）
     2. 使用 Connection.put()/Connection.get()，通过 sftp 协议传输文件
+    3. TODO 使用 SerialGroup 在多台主机上批量执行命令
 """
 
 
