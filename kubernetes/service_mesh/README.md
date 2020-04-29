@@ -26,7 +26,7 @@ istioctl manifest apply \
 
 可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [custom-operator.yml](./custom-operator.yml) 的参考。
 
-更多自定义部署的信息，参见官方文档 [https://istio.io/docs/setup/install/istioctl/#configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
+更多自定义部署的信息，参见官方文档 [istioctl: configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
 
 #### 1.2 升级与删除
