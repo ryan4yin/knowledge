@@ -1,0 +1,46 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  # profile=default 下只部署 pilot/ingressgateway/prometheus
+  profile: default
+  hub: registry.xxx.local/istio
+  components:
+    pilot:
+      k8s:
+        hpaSpec:
+          maxReplicas: 3 # ... default 5
+          minReplicas: 2  # ... default 1
+        nodeSelector:
+          network: "true"  # 使用网络组件专用节点
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          hpaSpec:
+            maxReplicas: 5 # ... default 5
+            minReplicas: 2  # ... default 1
+          nodeSelector:
+          network: "true"  # 使用网络组件专用节点
+          service:  # 内网环境通过 NodePort 导出 ingressgateway
+            ports:
+            - name: status-port
+              port: 15020
+              targetPort: 15020
+            - name: http2
+              port: 80
+              nodePort: 80   # 内网需以 nodePort 的方式导出
+              targetPort: 80
+            - name: https
+              port: 443
+            - name: tls
+              port: 15443
+              targetPort: 15443
+            - name: tcp
+              port: 31400
+  values:
+    prometheus:  # 不通过 istio 部署 prometheus，我们会在后续使用 prometheus-operator 来部署
+      enabled: false
+    gateways:
+      istio-ingressgateway:
+        type: NodePort  # 内网环境用不了 LoadBalancer
+

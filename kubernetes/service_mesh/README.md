@@ -18,38 +18,13 @@ istioctl manifest apply \
 
 #### 自定义部署
 
-可以通过 `istioctl manifest apply -f custom-operator.yml` 进行自定义部署，`custom-oprator.yml` 的示例内容如下：
+可以通过 `istioctl manifest apply -f custom-operator.yml` 进行自定义部署，[custom-operator.yml](./custom-operator.yml) 就在当前文件夹内。
 
-```yaml
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  profile: default  # 选择 profile
-  components:
-    pilot:
-      k8s:
-        resources:
-          requests:
-            cpu: 1000m # override from default 500m
-            memory: 4096Mi # ... default 2048Mi
-        hpaSpec:
-          maxReplicas: 10 # ... default 5
-          minReplicas: 2  # ... default 1
-        nodeSelector:
-          master: "true"
-        tolerations:
-        - key: dedicated
-          operator: Exists
-          effect: NoSchedule
-        - key: CriticalAddonsOnly
-          operator: Exists
-```
+通过 [custom-operator.yml](./custom-operator.yml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。
 
-通过 `custom-operator.yml`，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。
+可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [custom-operator.yml](./custom-operator.yml) 的参考。
 
-可以通过 `istioctl profile dump` 查看完整的 `operator.yml` 配置。
-
-更多信息参见 [https://istio.io/docs/setup/install/istioctl/#configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
+更多自定义部署的信息，参见官方文档 [https://istio.io/docs/setup/install/istioctl/#configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
 
 ### istioctl + prometheus-operator
