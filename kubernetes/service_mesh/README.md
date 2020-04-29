@@ -16,18 +16,39 @@ istioctl manifest apply \
   --set hub=registry.xxx.local > istio-manifest.yaml
 ```
 
-#### 自定义部署
+这种方式适合自定义参数比较少，而且只是临时测试的情形。
+
+#### 1.1 自定义部署（推荐方式）
 
 可以通过 `istioctl manifest apply -f custom-operator.yml` 进行自定义部署，[custom-operator.yml](./custom-operator.yml) 就在当前文件夹内。
 
-通过 [custom-operator.yml](./custom-operator.yml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。
+通过 [custom-operator.yml](./custom-operator.yml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
 
 可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [custom-operator.yml](./custom-operator.yml) 的参考。
 
 更多自定义部署的信息，参见官方文档 [https://istio.io/docs/setup/install/istioctl/#configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
 
-### istioctl + prometheus-operator
+#### 1.2 升级与删除
+
+升级 istio:
+
+```shell
+istioctl upgrade -f custom-operator.yml
+```
+
+删除 istio：
+
+```shell
+# 格式如下：
+istioctl manifest generate <your original installation options> | kubectl delete -f -
+# 使用 --set 指定自定义参数
+istioctl manifest generate --set profile=default --set values.prometheus.enabled=false | kubectl delete -f -
+# 使用 istiooperator 配置指定自定义参数
+istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
+```
+
+### 2. 监控：istioctl + prometheus-operator
 
 部署 Istio 时可以不部署它自带的 Prometheus+Grafana，而是使用以 [kube-prometheus](https://github.com/coreos/kube-prometheus) 部署的监控系统进行监控。
 但是需要手动修改 `istio-manifest.yaml`（前述生成的 yaml 配置），详见 [istioctl with prometheus-operator install](https://github.com/istio/istio/issues/21187#issuecomment-610744178)
