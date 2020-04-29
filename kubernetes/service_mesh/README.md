@@ -19,7 +19,9 @@ istioctl manifest apply --set profile=default --set values.prometheus.enabled=fa
 
 ```shell
 # 1. 生成 manifest.yaml 文件
-istioctl manifest generate --set profile=default --set values.prometheus.enabled=false > istio-manifest.yaml
+istioctl manifest generate \
+  --set profile=default --set values.prometheus.enabled=false \
+  --set hub=registry.xxx.local > istio-manifest.yaml
 # 2. 修改 istio-manifest.yaml，修改 HPA，添加调度策略等。
 # 3. 通过 istioctl+修改过的 yaml 文件进行部署(不能直接用 kubectl apply!)
 istioctl manifest apply --filename istio-manifest.yaml
