@@ -8,6 +8,10 @@ spec:
   components:
     pilot:
       k8s:
+        resources:
+          requests:
+            cpu: 1000m # override from default 500m
+            memory: 4096Mi # ... default 2048Mi
         hpaSpec:
           maxReplicas: 3 # ... default 5
           minReplicas: 2  # ... default 1
@@ -17,6 +21,12 @@ spec:
       - name: istio-ingressgateway
         enabled: true
         k8s:
+          resources:
+            requests:
+              cpu: 200m
+            limits:  # 实测发现这东西还挺吃资源的
+              cpu: 2000m
+              memory: 2048Mi
           hpaSpec:
             maxReplicas: 5 # ... default 5
             minReplicas: 2  # ... default 1
