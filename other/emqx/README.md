@@ -11,7 +11,7 @@ EMQ X Broker - Scalable Distributed MQTT Message Broker for IoT in 5G Era
 docker-compose up 
 ```
 
-更方便的方法是使用 helm3 部署到 kuberntes:
+更方便的方法是使用 helm3 部署测试集群到 kuberntes:
 
 ```shell
 helm repo add emqx https://repos.emqx.io/charts
