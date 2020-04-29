@@ -23,7 +23,8 @@ spec:
         k8s:
           resources:
             requests:
-              cpu: 200m
+              cpu: 1000m
+              memory: 1024Mi
             limits:  # 实测发现这东西还挺吃资源的
               cpu: 2000m
               memory: 2048Mi
