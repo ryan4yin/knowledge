@@ -10,6 +10,8 @@
 
 使用最广泛的单机容器编排工具，简单好用。
 
+因为是 python 写的，可以直接通过 `pip install docker-compose` 来安装它。
+
 - [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/)：此文档也适用于 docker-swarm.
 
 ## Docker Swarm Mode
