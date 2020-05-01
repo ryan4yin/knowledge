@@ -8,7 +8,8 @@ import (
 
 func main() {
 	var a1 [3]int // 数组，自动分配空间
-	var s1 []int  // 切片，自动分配空间（长度0，容量 0）
+	a1[1] = 3
+	var s1 []int // 空切片，未分配底层数组（长度0，容量 0）
 
 	fmt.Println(a1, len(a1))
 	fmt.Println(s1, len(s1), cap(s1))
