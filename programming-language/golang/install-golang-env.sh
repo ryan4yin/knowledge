@@ -1,6 +1,6 @@
 # 只在 Ubuntu 上测试过
 PRIVATE_GIT_HOST=gitlab.local
-GOLANG_VERSION=1.13.5
+GOLANG_VERSION=1.14.2
 
 
 # apt 镜像源的 host（三选一）
@@ -49,7 +49,7 @@ git config --global user.email email
 git config --global url."git@$PRIVATE_GIT_HOST:".insteadOf "https://$PRIVATE_GIT_HOST/"
 
 echo "3. 下载安装 go"
-curl -sSL --output go.tar.gz https://dl.google.com/go/go$GOLANG_VERSION.linux-amd64.tar.gz
+curl -SL --output go.tar.gz https://dl.google.com/go/go$GOLANG_VERSION.linux-amd64.tar.gz
 sudo tar -C /opt/ -xzf go.tar.gz
 rm go.tar.gz
 
