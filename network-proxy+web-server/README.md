@@ -25,7 +25,12 @@
 1. Traefik: 一个纯粹的代理软件，支持自动配置 SSL 证书，配置很简单，功能相当丰富，还有好看的 Web UI。
 1. Envoy: Istio 钦定代理，在服务网格中专门负责流量转发
 2. Linkerd: 用 rust 写的轻量高效的代理，值得一看。
+3. `IPVS(LVS)`: Linux 内核自带的负载均衡器，未来将是 Kubernetes Service 层的默认负载均衡方案。（替换掉当前的 iptables 方案）
 
+其他经常听说的代理：
+
+4. [OpenResty](https://github.com/openresty/openresty): 基于 Nginx+Lua Web 平台，很多网关/代理的底层都是它。
+5. Kong/HAProxy: Kong 是基于 Openresty 开发的 API 网关，HAProxy 不了解。
 
 ## 参考
 
