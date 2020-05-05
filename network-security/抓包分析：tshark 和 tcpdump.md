@@ -17,9 +17,17 @@ tshark -i eth0 -x tcp port 80 -R http
 
 待续
 
-## WireShark 远程抓包
+## WireShark 远程实时抓包
 
-待续
+### 方法一：使用 [termshark](https://github.com/gcla/termshark)
+
+termshark 是一个 tshark 的一个命令行 UI，完全模仿了 wireshark.
+
+可以考虑在远程主机上直接通过 termshark+tshark 进行远程抓包分析。
+
+## 方法二：使用 rpcapd
+
+拷贝 pcap 分析的方法在某些时候可能会显得不够方便，这时可以考虑进行实时抓包。
 
 ## 参考
 
