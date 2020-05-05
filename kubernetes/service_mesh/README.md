@@ -54,9 +54,13 @@ istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 但是需要通过 [custom-operator.yml](./custom-operator.yml) 设定额外的配置，详见 [istioctl with prometheus-operator install](https://github.com/istio/istio/issues/21187#issuecomment-610744178)
 
 
-### 4. 链路追踪
+### 4. 链路追踪（Istio + Jaeger + OpenTelemetry）
+
+>OpenTracing 只支持跟踪 HTTP/GRPC 调用，而 Opencensus 提供了自定义指标的功能，使我们能跟踪任意自定义指标（比如 mysql 调用、redis 调用，甚至任意本地方法调用）。
+现在上述两个开放标准已经合二为一：[OpenTelemetry](https://github.com/open-telemetry).
 
 待续
+
 
 ### 5. Kiali 网络拓扑
 

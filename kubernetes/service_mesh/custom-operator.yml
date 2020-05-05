@@ -15,8 +15,6 @@ spec:
         hpaSpec:
           maxReplicas: 3 # ... default 5
           minReplicas: 2  # ... default 1
-        nodeSelector:
-          network: "true"  # 使用网络组件专用节点
     ingressGateways:
       - name: istio-ingressgateway
         enabled: true
@@ -31,8 +29,6 @@ spec:
           hpaSpec:
             maxReplicas: 5 # ... default 5
             minReplicas: 2  # ... default 1
-          nodeSelector:
-          network: "true"  # 使用网络组件专用节点
           service:  # 测试集群需通过 NodePort 导出 ingressgateway
             ports:
             - name: status-port
@@ -50,6 +46,18 @@ spec:
             - name: tcp
               port: 31400
   values:
+    global:  # 全局配置
+      defaultNodeSelector:
+        network: "true"     # 使用网络组件专用节点
+      jwtPolicy: first-party-jwt  # 不使用第三方 jwt 验证。
+      proxy:
+        logLevel: info  # 开发环境，启用更详细的日志输出
+        tracer: zipkin
+      tracer:
+        zipkin:  # jaeger 兼容 zipkin，因此用的是同一个配置
+          address: "<jaeger-collector-service>.<jaeger-collector-namespace>:9411"  # 应该也可以配置外部 url
+    pilot:
+      traceSampling: 0.1  # 链路追踪的采样率
     prometheus:  # 不通过 istio 部署 prometheus，我们会在后续使用 prometheus-operator 来部署
       enabled: false
     gateways:
