@@ -6,6 +6,8 @@ http:
       entryPoints:
         - "web"
       rule: "Host(`traefik.local`)"
+      # 也支持使用正则表达式，注意正则必须写在 {} 中，并且指定一个没什么用的名称(如 prefix/root/subdomain)
+      # rule: "HostRegexp(`{prefix:.+}.traefik.{root:(local|lan|srv)}`)"
       service: api@internal
 
   services:
