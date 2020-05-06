@@ -31,9 +31,11 @@ istioctl manifest apply \
 
 #### 1.2 升级与删除
 
-升级 istio:
+滚动升级 istio:
 
 ```shell
+# TODO 我使用此命令从 1.5.0 升级到 1.5.2 时一直卡住，没升级成功。
+# 最后只好先删除掉 1.5.0 然后重新安装 1.5.2
 istioctl upgrade -f custom-operator.yml
 ```
 
