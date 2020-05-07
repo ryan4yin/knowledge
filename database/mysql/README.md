@@ -40,6 +40,8 @@ FLUSH PRIVILEGES;
 GRANT ALL PRIVILEGES ON testdb.* TO 'test'@'localhost'
 # 给远程用户 test 授予 testdb 中所有表的 CRUD 权限。
 GRANT ALL PRIVILEGES ON testdb.* TO 'test'@'%'
+# 给远程用户 test 授予 testdb 中所有表的**只读**权限
+GRANT SELECT ON testdb.* TO 'test'@'%'
 FLUSH PRIVILEGES;
 ```
 
