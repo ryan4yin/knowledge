@@ -54,11 +54,12 @@ spec:
         logLevel: info  # 开发环境，启用更详细的日志输出
         tracer: zipkin
       tracer:
-        zipkin:  # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），还不支持 w3c trace-context 标准
+        # 不使用 istio 自带的 jaeger，改用 Jaeger Operator 部署（或者测试环境可以使用集群外部的 jaeger）
+        zipkin:  # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
           address: "<jaeger-collector-service>.<jaeger-collector-namespace>:9411"  # 应该也可以配置外部 url
     pilot:
       traceSampling: 0.1  # 链路追踪的采样率
-    prometheus:  # 不通过 istio 部署 prometheus，我们会在后续使用 prometheus-operator 来部署
+    prometheus:  # 不使用 istio 自带的 prometheus，改用 prometheus-operator 管理 prometheus
       enabled: false
     gateways:
       istio-ingressgateway:
