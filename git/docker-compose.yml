@@ -14,6 +14,8 @@ services:
       - '443:443'
       - '22:22'
     volumes:
-      - '$GITLAB_HOME/gitlab/config:/etc/gitlab'
-      - '$GITLAB_HOME/gitlab/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/gitlab/data:/var/opt/gitlab'
+      - './gitlab/config:/etc/gitlab'
+      - './gitlab/logs:/var/log/gitlab'
+      - './gitlab/data:/var/opt/gitlab'
+      # gitlab custom hooks
+      - './pre-receive.d:/opt/gitlab/embedded/service/gitlab-shell/hooks/pre-receive.d'
