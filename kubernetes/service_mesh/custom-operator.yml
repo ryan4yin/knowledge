@@ -54,7 +54,7 @@ spec:
         logLevel: info  # 开发环境，启用更详细的日志输出
         tracer: zipkin
       tracer:
-        zipkin:  # jaeger 兼容 zipkin，因此用的是同一个配置
+        zipkin:  # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），还不支持 w3c trace-context 标准
           address: "<jaeger-collector-service>.<jaeger-collector-namespace>:9411"  # 应该也可以配置外部 url
     pilot:
       traceSampling: 0.1  # 链路追踪的采样率
