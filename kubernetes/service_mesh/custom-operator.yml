@@ -2,7 +2,8 @@
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
-  # profile=default 下只部署 pilot/ingressgateway/prometheus
+  # profile=default 是官方推荐的用于生产环境部署。它只部署 pilot/ingressgateway/prometheus
+  # 建议：prometheus/grafana/jaeger(tracing)/kiali 都使用比较流行的 operator/helm 进行安装，不要使用 istio 自带的
   profile: default
   hub: registry.xxx.local/istio  # 使用私有 dockerhub 镜像仓库
   components:
