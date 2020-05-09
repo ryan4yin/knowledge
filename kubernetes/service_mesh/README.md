@@ -61,9 +61,9 @@ istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 >OpenTracing 只支持跟踪 HTTP/GRPC 调用，而 Opencensus 提供了自定义指标的功能，使我们能跟踪任意自定义指标（比如 mysql 调用、redis 调用，甚至任意本地方法调用）。
 现在上述两个开放标准已经合二为一：[OpenTelemetry](https://github.com/open-telemetry).
 
-待续
+Istio 通过使用 Envoy 作为 Sidercar，
 
 
-### 5. Kiali 网络拓扑
+### 5. Kiali 网络拓扑/流量拓扑
 
 待续
