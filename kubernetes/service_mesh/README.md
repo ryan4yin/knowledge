@@ -61,7 +61,19 @@ istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 >OpenTracing 只支持跟踪 HTTP/GRPC 调用，而 Opencensus 提供了自定义指标的功能，使我们能跟踪任意自定义指标（比如 mysql 调用、redis 调用，甚至任意本地方法调用）。
 现在上述两个开放标准已经合二为一：[OpenTelemetry](https://github.com/open-telemetry).
 
-Istio 通过使用 Envoy 作为 Sidercar，
+#### Istio Tracing 当前存在的缺陷
+
+Istio 链路追踪吹得很高大上，翻遍各种文档，都说应用本身只需要转发一下 trace headers 就行，sidecar(也就是 envoy) 会自动帮你:
+
+1. 生成 span 并添加到 http headers 中
+2. 收集 http headers 中的 spans
+3. 对 spans 进行采样
+4. 将 spans 发送到指定的后端（使用 zipkin 协议）
+
+但是实际调研后，发现上述流程的核心是 HTTP Headers，而 mysql/redis/message_queue 都是使用的转有协议，
+Sidecar 或者我们的应用本身，都没有办法往这些流量中添加额外的链路信息。
+
+因此使用服务网格进行链路追踪，只能满足我们的一小部分需求。对于 mysql/redis/mq 等非 http 协议的调用，还是必须由我们的应用自身来完成 span 的生成、收集、采样、上报。
 
 
 ### 5. Kiali 网络拓扑/流量拓扑
