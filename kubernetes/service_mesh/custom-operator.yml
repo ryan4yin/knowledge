@@ -9,7 +9,7 @@ spec:
   components:
     pilot:
       k8s:
-        # 启用实验性功能：记录 mysql/redis 的指标
+        # 启用实验性功能：记录 mysql/redis 的指标(metrics)
         #（mysql/redis 流量不基于 http，加不了 trace headers，我们的应用只能主动上报这类 trace 信息）
         env:
         - name: PILOT_ENABLE_MYSQL_FILTER
