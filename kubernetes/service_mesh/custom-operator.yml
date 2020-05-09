@@ -9,6 +9,12 @@ spec:
   components:
     pilot:
       k8s:
+        # 启用实验性功能：记录 mysql/redis 的指标
+        env:
+        - name: PILOT_ENABLE_MYSQL_FILTER
+          value: "true"
+        - name: PILOT_ENABLE_REDIS_FILTER
+          value: "true"
         resources:
           requests:
             cpu: 1000m # override from default 500m
