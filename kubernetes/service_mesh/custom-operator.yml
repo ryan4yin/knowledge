@@ -64,7 +64,7 @@ spec:
       tracer:
         # 不使用 istio 自带的 jaeger，改用 Jaeger Operator 部署（或者测试环境可以使用集群外部的 jaeger）
         zipkin:  # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
-          address: "<jaeger-host>:9411"  # 可以使用外部 jaeger
+          address: "<jaeger-service>.<jager-space>:9411"  # 应该也可以使用外部的 jaeger
     pilot:
       traceSampling: 0.1  # 链路追踪的采样率
     prometheus:  # 不使用 istio 自带的 prometheus，改用 prometheus-operator 管理 prometheus
