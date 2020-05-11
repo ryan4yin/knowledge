@@ -93,7 +93,7 @@ openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.
 ECC(Elliptic Curve Cryptography) 算法被认为是比 RSA 更优秀的算法。与 RSA 算法相比，ECC 算法使用更小的密钥大小，但可提供同样的安全性，这使计算更快，降低了能耗，并节省了内存和带宽。
 
 对于 RSA 密钥，可以提供不同的密钥大小（密钥大小越大，加密效果越好）。
-而对于 ECC 密钥，您应选择要用哪种曲线生成密钥对。各个组织（ANSI X9.62、NIST、SECG）命名了多种曲线，可通过如下命名查看 openssl 支持的所有曲线名称：
+而对于 ECC 密钥，您应选择要用哪种曲线生成密钥对。各个组织（ANSI X9.62、NIST、SECG）命名了多种曲线，可通过如下命名查看 openssl 支持的所有椭圆曲线名称：
 
 ```shell
 openssl ecparam -list_curves
