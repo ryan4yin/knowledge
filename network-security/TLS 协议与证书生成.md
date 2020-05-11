@@ -90,7 +90,7 @@ ECC 算法被认为是比 RSA 更强的算法，相同算法强度下 ECC 的密
 生成一个自签名的 ECC 证书：
 
 ```shell
-# 生成 ec 算法的私钥
+# 生成 ec 算法的私钥，使用 prime256v1 算法，密钥长度 256 位。（强度大于 2048 位的 RSA 密钥）
 openssl ecparam -genkey -name prime256v1 -out key.pem
 # 
 openssl req -new -sha256 -key key.pem -out csr.csr
