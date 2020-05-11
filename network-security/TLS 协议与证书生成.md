@@ -17,7 +17,7 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
 
 # TLS 证书的生成
 
->这里主要使用 openssl 进行证书生成
+>[OpenSSL](https://github.com/openssl/openssl) 是目前使用最广泛的网络加密算法库，这里以它为例介绍证书的生成。
 
 首先说明一下，一个 TLS 证书，由两部分组成：
 
@@ -65,19 +65,18 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
 
-### 2. [OpenSSL](https://github.com/openssl/openssl)
+总结一下，使用如下命令可生成一个自签名的 TLS 证书（RSA256 算法）：
 
-目前使用最广泛的 TLS 加密库。但是使用起来比较复杂。
-所有操作系统 (Linux/Windows/MacOS) 应该都自带 opensshl 工具（不过以下示例不支持 windows）
+```shell
+# 1. 生成 2048 位 的 RSA 密钥
+openssl genrsa -out server.key 2048
+# 2. 生成证书签名请求，需要输入域名(CN)等相关信息，也可通过 `-config csr.conf` 指定相关信息
+openssl req -new -key server.key -out server.csr 
+# 3. 生成最终的证书，这里指定证书有效期 10 年
+openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.crt
+```
 
-用法见参考文档。。
-
-## 二、生成 Let's Encrypt 免费证书
-
-待续
-
-
-## 拓展：基于 ECC 算法的 TLS 证书
+### 拓展：基于 ECC 算法的 TLS 证书
 
 >Let's Encrypt 目前也已经支持了 ECC 证书。
 
@@ -103,6 +102,12 @@ openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.p
 
 
 >P.S. 另外还有使用 ECC 进行签名的 ECDSA 算法，被用在了 SSH 协议中，另外 Web 编程中 JWT 的签名也可选用该算法。
+
+## 二、生成 Let's Encrypt 免费证书
+
+待续
+
+
 
 ## 参考
 
