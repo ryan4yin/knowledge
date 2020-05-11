@@ -30,7 +30,7 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
 
 另外介绍下这里涉及到的几种文件类型：
 
-1. `xxx.key`: 就是一个私钥，一般是一个 RSA 私钥，长度通常指定为 2048 位。
+1. `xxx.key`: 就是一个私钥，一般是一个 RSA 私钥(SHA256 算法)，长度通常指定为 2048 位。
    - openssl 命令：`openssl genrsa -out xxx.key 2048`
    - CA 证书和 TLS 证书的私钥都是通过这种方式生成的。
 1. `xxx.csr`: 即 Certificate Sign Request，证书签名请求。使用 openssl 等工具，通过 TLS 密钥+TLS 证书的相关信息，可生成出一个 CSR 文件。
