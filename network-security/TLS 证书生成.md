@@ -39,6 +39,8 @@ cfssl 是 cloudflare 开源的一个 PKI 与 TLS 工具包，官方文档宣称�
 目前使用最广泛的 TLS 加密库。但是使用起来比较复杂。
 所有操作系统 (Linux/Windows/MacOS) 应该都自带 opensshl 工具（不过以下示例不支持 windows）
 
+用法见参考文档。。
+
 ## 二、生成 Let's Encrypt 免费证书
 
 待续
