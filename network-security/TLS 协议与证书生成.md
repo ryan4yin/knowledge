@@ -1,4 +1,20 @@
 
+# TLS 协议
+
+我们需要加密网络数据以实现安全通信，但是有一个现实的问题：
+
+1. 非对称加密算法可以方便地对数据进行签名/验证，但是计算速度慢。
+2. 对称加密算法（ChaCha20/AES 等）计算速度快，强度高，但是无法安全地生成与保管密钥。
+
+于是 TLS 协议在握手阶段使用非对称算法验证服务端，并安全地生成一个对称密钥，然后使用对称算法进行加密通信。
+
+TLS 通过两个证书来实现服务端身份验证，以及对称密钥生成：
+
+1. CA 证书（公钥）：浏览器/操作系统自带，用于验证服务端的 TLS 证书的签名。保证服务端证书可信。
+2. TLS 证书：使用 CA 证书验证了 TLS 证书后，将使用这个 TLS 证书进行协商，以安全地生成一个对称密钥。
+
+CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信就与它们无关了。
+
 # TLS 证书的生成
 
 首先说明一下，一个 TLS 证书，由两部分组成：
@@ -65,8 +81,13 @@ cfssl 是 cloudflare 开源的一个 PKI(Public Key Infrastructure) 与 TLS 工�
 
 待续
 
+
+## 拓展：基于 ECC 算法的 TLS 证书
+
+
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
-
 - [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
+- [ECC作为SSL/TLS证书加密算法的优势](https://zhuanlan.zhihu.com/p/57710573)
