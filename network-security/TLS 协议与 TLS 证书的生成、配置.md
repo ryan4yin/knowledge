@@ -132,6 +132,14 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 如果你在证书不是权威 CA 机构颁发的（比如是一个自签名证书），那就需要在客户端将这个 TLS 证书（公钥）添加到受信证书列表中。
 这个步骤可以在 OS 层面进行——添加到 OS 的默认证书列表中，也可以在代码层面完成——指定使用某个证书进行 TLS 验证。
 
+1. Linux: 使用如下命令安装证书
+    ```shell
+    sudo cp ca.crt /usr/local/share/ca-certificates/server.crt
+    sudo update-ca-certificates
+    ```
+2. Windows: 通过证书管理器 `certmgr.msc` 安装证书
+3. 编程：使用 HTTPS 客户端的 api 指定使用的 TLS 证书
+
 
 ## 参考
 
