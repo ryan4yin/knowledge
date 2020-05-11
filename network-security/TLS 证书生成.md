@@ -35,6 +35,7 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
    - CA 证书和 TLS 证书的私钥都是通过这种方式生成的。
 1. `xxx.csr`: 即 Certificate Sign Request，证书签名请求。使用 openssl 等工具，通过 TLS 密钥+TLS 证书的相关信息，可生成出一个 CSR 文件。
    - openssl 命令：`openssl req -new -key server.key -out server.csr -config csr.conf`，给定 TLS 密钥 `server.key` 以及证书相关信息 `csr.conf`
+   - 域名（CN）就是在这里指定的。
    - 用户将 csr 文件发送给 CA 机构，进行进一步处理。
 2. `xxx.crt`: 这就是我们所说的 TLS 证书，CA 证书和服务端 TLS 证书都是这个格式。
     - openssl 命令：
@@ -45,6 +46,7 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
         ```
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
+注：CA 证书也可以指定
 
 ### 1. [CFSSL（推荐）](https://github.com/cloudflare/cfssl)
 
