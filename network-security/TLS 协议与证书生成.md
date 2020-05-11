@@ -17,10 +17,12 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
 
 # TLS 证书的生成
 
+>这里主要使用 openssl 进行证书生成
+
 首先说明一下，一个 TLS 证书，由两部分组成：
 
-2. TLS 证书：这个是服务端需要配置的数据加密证书。
-1. CA 证书：这是根证书，可用于验证所有使用它进行签名的 TLS 证书。
+1. TLS 证书：这个是服务端需要配置的数据加密证书。
+2. CA 证书：这是根证书，可用于验证所有使用它进行签名的 TLS 证书。
 
 CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥。
 在 TLS 连接的建立阶段，客户端（如浏览器）会使用 CA 证书的公钥对服务端的证书签名进行验证，验证成功则说明该证书是受信任的。
@@ -63,13 +65,6 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
 
-### 1. [CFSSL（推荐）](https://github.com/cloudflare/cfssl)
-
-cfssl 是 cloudflare 开源的一个 PKI(Public Key Infrastructure) 与 TLS 工具包，官方文档宣称它是 cloudflare 的 PKI/TLS 瑞士军刀。
-这里我们可以使用它进行 TLS 证书的生成与打包。
-
-此工具需要手动安装，详细安装使用方法见参考文档。。
-
 ### 2. [OpenSSL](https://github.com/openssl/openssl)
 
 目前使用最广泛的 TLS 加密库。但是使用起来比较复杂。
@@ -84,18 +79,26 @@ cfssl 是 cloudflare 开源的一个 PKI(Public Key Infrastructure) 与 TLS 工�
 
 ## 拓展：基于 ECC 算法的 TLS 证书
 
-ECC 算法被认为是比 RSA 更强的算法，相同算法强度下 ECC 的密钥长度要比 RSA 短很多。
-可以预测的是，未来 RSA 的某些应用会渐渐被 ECC 取代。Let's Encrypt 目前也已经支持了 ECC 证书。
+>Let's Encrypt 目前也已经支持了 ECC 证书。
+
+ECC(Elliptic Curve Cryptography) 算法被认为是比 RSA 更优秀的算法。与 RSA 算法相比，ECC 算法使用更小的密钥大小，但可提供同样的安全性，这使计算更快，降低了能耗，并节省了内存和带宽。
+
+对于 RSA 密钥，可以提供不同的密钥大小（密钥大小越大，加密效果越好）。
+而对于 ECC 密钥，您应选择要用哪种曲线生成密钥对。各个组织（ANSI X9.62、NIST、SECG）命名了多种曲线，Web Server 支持当前指定的所有曲线。
 
 生成一个自签名的 ECC 证书：
 
 ```shell
 # 生成 ec 算法的私钥，使用 prime256v1 算法，密钥长度 256 位。（强度大于 2048 位的 RSA 密钥）
 openssl ecparam -genkey -name prime256v1 -out key.pem
-# 
+# 生成证书签名请求，需要输入域名(CN)等相关信息
 openssl req -new -sha256 -key key.pem -out csr.csr
-openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem
+# 生成最终的证书，这里指定证书有效期 10 年
+openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.pem
 ```
+
+
+>P.S. 另外还有使用 ECC 进行签名的 ECDSA 算法，被用在了 SSH 协议中，另外 Web 编程中 JWT 的签名也可选用该算法。
 
 ## 参考
 
