@@ -18,17 +18,20 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
 ## 一、TLS 证书的生成
 
 >[OpenSSL](https://github.com/openssl/openssl) 是目前使用最广泛的网络加密算法库，这里以它为例介绍证书的生成。
+另外也可以考虑使用 [cfssl](https://github.com/cloudflare/cfssl).
 
-首先说明一下，一个 TLS 证书，由两部分组成：
+前面讲到了 TLS 协议的握手需要使用到两个证书：
 
 1. TLS 证书：这个是服务端需要配置的数据加密证书。
-2. CA 证书：这是根证书，可用于验证所有使用它进行签名的 TLS 证书。
+    - 服务端需要持有这个 TLS 证书本身，以及证书的私钥。
+    - 握手时服务端需要将 TLS 证书发送给客户端。
+2. CA 证书（公钥）：这是受信证书，客户端可用于验证所有使用它进行签名的 TLS 证书。
+   - CA 证书的私钥由权威机构持有，客户端（比如浏览器）则保有 CA 证书的公钥。
 
-CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥。
 在 TLS 连接的建立阶段，客户端（如浏览器）会使用 CA 证书的公钥对服务端的证书签名进行验证，验证成功则说明该证书是受信任的。
 
 如果我们要生成一个面向公共网络的 TLS 证书，那最好的方法，应该是申请一个 [Let's Encrypt 免费证书](https://letsencrypt.org)。
-该证书可以手动申请，另外 [Traefik](/network-proxy+web-server/traefik/README.md) 等反向代理也有提供自动生成并更新 TLS 证书的功能。
+该证书可以手动申请，另外 [Traefik](/network-proxy+web-server/traefik/README.md) 等反向代理也有提供自动生成并更新 Let's Encrypt 证书的功能。
 
 ### 生成自签名证书（或由本地证书签名的证书）
 
