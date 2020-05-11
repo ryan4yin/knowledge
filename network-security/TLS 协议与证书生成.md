@@ -84,10 +84,22 @@ cfssl 是 cloudflare 开源的一个 PKI(Public Key Infrastructure) 与 TLS 工�
 
 ## 拓展：基于 ECC 算法的 TLS 证书
 
+ECC 算法被认为是比 RSA 更强的算法，相同算法强度下 ECC 的密钥长度要比 RSA 短很多。
+可以预测的是，未来 RSA 的某些应用会渐渐被 ECC 取代。Let's Encrypt 目前也已经支持了 ECC 证书。
 
+生成一个自签名的 ECC 证书：
+
+```shell
+# 生成 ec 算法的私钥
+openssl ecparam -genkey -name prime256v1 -out key.pem
+# 
+openssl req -new -sha256 -key key.pem -out csr.csr
+openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem
+```
 
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
 - [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
 - [ECC作为SSL/TLS证书加密算法的优势](https://zhuanlan.zhihu.com/p/57710573)
+- [ECC证书的生成和验签](https://cloud.tencent.com/developer/article/1407305)
