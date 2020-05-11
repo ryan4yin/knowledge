@@ -1,3 +1,7 @@
+>这里不详细说明 TLS 协议的内容，请另行查阅文档
+
+>个人笔记，不保证正确。
+
 
 # TLS 协议
 
@@ -108,6 +112,7 @@ openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.p
 
 
 >P.S. 另外还有使用 ECC 进行签名的 ECDSA 算法，被用在了 SSH 协议中，另外 Web 编程中 JWT 的签名也可选用该算法。
+JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身也就变短了，比 RS256 更节约流量，而且具有同等的安全性（这个不 100% 确定）。
 
 
 ## 二、服务端与客户端的证书配置
