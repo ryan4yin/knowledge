@@ -46,11 +46,10 @@ CA 证书的私钥由权威机构持有，客户端则保有 CA 证书的公钥�
         ```
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
-注：CA 证书也可以指定
 
 ### 1. [CFSSL（推荐）](https://github.com/cloudflare/cfssl)
 
-cfssl 是 cloudflare 开源的一个 PKI 与 TLS 工具包，官方文档宣称它是 cloudflare 的 PKI/TLS 瑞士军刀。
+cfssl 是 cloudflare 开源的一个 PKI(Public Key Infrastructure) 与 TLS 工具包，官方文档宣称它是 cloudflare 的 PKI/TLS 瑞士军刀。
 这里我们可以使用它进行 TLS 证书的生成与打包。
 
 此工具需要手动安装，详细安装使用方法见参考文档。。
