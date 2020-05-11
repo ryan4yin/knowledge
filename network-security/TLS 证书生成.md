@@ -25,4 +25,4 @@ cfssl 是 cloudflare 开源的一个 PKI 与 TLS 工具包，官方文档宣称�
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
 
-- [[转]如何创建一个自签名的SSL证书(X509)](https://www.cnblogs.com/lihuang/articles/4205540.html)
+- [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
