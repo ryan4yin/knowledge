@@ -75,16 +75,44 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
 
-总结一下，**使用如下命令可生成一个自签名的 TLS 证书（RSA256 算法）**：
+总结一下，**生成一个自签名的 TLS 证书（RSA256 算法）有两个步骤**：
 
-```shell
-# 1. 生成 2048 位 的 RSA 密钥
-openssl genrsa -out server.key 2048
-# 2. 生成证书签名请求，需要输入域名(Common Name, CN)等相关信息，也可通过 `-config csr.conf` 指定相关信息
-openssl req -new -key server.key -out server.csr 
-# 3. 生成最终的证书，这里指定证书有效期 10 年
-openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.crt
-```
+1. 编写证书签名请求的配置文件 `csr.conf`:
+    ```conf
+    [ req ]
+    default_bits = 2048
+    prompt = no
+    default_md = sha256
+    req_extensions = v3_req
+    distinguished_name = dn
+
+    [ dn ]
+    C = CN  # Contountry
+    ST = <state>
+    L = <city>
+    O = <organization>
+    OU = <organization unit>
+    CN = *.xxx.local  # 泛域名
+
+    [ alt_names ]
+    DNS.1 = *.xxx.local  # 泛域名，和 CN 一致就行。
+
+    [ v3_ext ]
+    subjectAltName=@alt_names  #     # Chrome 现在要求必须要有 subjectAltName(SAN)！
+    authorityKeyIdentifier=keyid,issuer:always
+    basicConstraints=CA:FALSE
+    keyUsage=keyEncipherment,dataEncipherment
+    extendedKeyUsage=serverAuth,clientAuth
+    ```                                 
+2. 生成证书：
+    ```shell
+    # 1. 生成 2048 位 的 RSA 密钥
+    openssl genrsa -out server.key 2048
+    # 2. 通过第一步编写的配置文件，生成证书签名请求
+    openssl req -new -key server.key -out server.csr -config csr.conf
+    # 3. 生成最终的证书，这里指定证书有效期 10 年
+    openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.crt
+    ```
 
 #### 拓展：基于 ECC 算法的 TLS 证书
 
@@ -105,7 +133,7 @@ openssl ecparam -list_curves
 # 生成 ec 算法的私钥，使用 prime256v1 算法，密钥长度 256 位。（强度大于 2048 位的 RSA 密钥）
 openssl ecparam -genkey -name prime256v1 -out key.pem
 # 生成证书签名请求，需要输入域名(Common Name, CN)等相关信息
-openssl req -new -sha256 -key key.pem -out csr.csr
+openssl req -new -sha256 -key key.pem -out csr.csr -config csr.conf
 # 生成最终的证书，这里指定证书有效期 10 年
 openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.pem
 ```
@@ -147,3 +175,8 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 - [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
 - [ECC作为SSL/TLS证书加密算法的优势](https://zhuanlan.zhihu.com/p/57710573)
 - [ECC证书的生成和验签](https://cloud.tencent.com/developer/article/1407305)
+
+另外两个关于 CN(Common Name) 和 SAN(Ssubject Altnative Name) 的问答：
+
+- [Can not get rid of `net::ERR_CERT_COMMON_NAME_INVALID` error in chrome with self-signed certificates](https://serverfault.com/questions/880804/can-not-get-rid-of-neterr-cert-common-name-invalid-error-in-chrome-with-self)
+- [SSL - How do Common Names (CN) and Subject Alternative Names (SAN) work together?](https://stackoverflow.com/questions/5935369/ssl-how-do-common-names-cn-and-subject-alternative-names-san-work-together)
