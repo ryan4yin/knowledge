@@ -99,7 +99,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     default_bits = 2048
     prompt = no
     default_md = sha256
-    req_extensions = v3_req
+    req_extensions = req_ext
     distinguished_name = dn
 
     [ dn ]
@@ -111,15 +111,20 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     CN = *.xxx.local  # 泛域名
 
     [ alt_names ]
-    DNS.1 = *.xxx.local  # 泛域名，和 CN 一致就行。
+    DNS.1 = *.xxx.local  # 一级泛域名
+    DNS.1 = *.aaa.xxx.local  # 二级泛域名
+    DNS.1 = *.bbb.xxx.local  # 二级泛域名
+
+    [ req_ext ]
+    subjectAltName = @alt_names
 
     [ v3_ext ]
-    subjectAltName=@alt_names  #     # Chrome 现在要求必须要有 subjectAltName(SAN)！
+    subjectAltName=@alt_names  # Chrome 要求必须要有 subjectAltName(SAN)
     authorityKeyIdentifier=keyid,issuer:always
     basicConstraints=CA:FALSE
-    keyUsage=keyEncipherment,dataEncipherment
+    keyUsage=keyEncipherment,dataEncipherment,digitalSignature
     extendedKeyUsage=serverAuth,clientAuth
-    ```                                 
+    ```
 2. 生成证书：
     ```shell
     # 1. 生成 2048 位 的 RSA 密钥
