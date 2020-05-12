@@ -1,23 +1,6 @@
 # Linux 服务器配置
 
-为了让应用程序能发挥出最高的效率，我们经常需要调整一部分 Linux 系统参数。
-
-或者是通过提高内存使用率来提升性能，或者是提升 TCP 连接数以提升网络性能，等等。
-
-其中主要涉及的系统参数有两个：
-
-1. ulimit：linux shell 的内建命令，它具有一套参数集，用于对进程及子进程进行资源限制。（退出 shell 后失效）
-    - `/etc/security/limits.conf`: ulimit 的默认配置。修改它的值，重启后就永久有效了。
-    - `docker-compose.yaml` 中有一套完整的参数用于控制 ulimit 限制。
-1. sysctl：临时修改整个系统的内核参数（重启后失效）
-    - `/etc/security/limits.conf`: ulimit 的默认配置。修改它同样是重启后永久有效。
-    - `docker-compose.yaml` 中也可以修改有限的几个 sysctl 参数。大部分 sysctl 参数需要直接修改宿主机配置。
-
-具体的参数配置，因服务器配置而异，也因应用程序的功能与特性而异。
-
-
 ## 镜像源
-
 
 请选择对应 OS 的镜像源设置命令：
 ```shell
@@ -111,12 +94,16 @@ ulimit -n
 ## Linux 系统参数设置（ulimit/sysctl）
 
 
+为了让应用程序能发挥出最高的效率，我们经常需要调整一部分 Linux 系统参数。
+或者是通过提高内存使用率来提升性能，或者是提升 TCP 连接数以提升网络性能，等等。
+
 Linux 系统参数的修改主要包含两个部分：
 
 1. `ulimit`：linux shell 的内建命令，它具有一套参数集，用于对 shell进程 及其 子进程 进行 资源限制。（退出 shell 后失效）
-    例如用户同时运行了两个shell终端进程，只在其中一个环境中执行了ulimit – s 100，则该 shell 进程里创建文件的大小会有相应的限制，而另一个 shell 终端包括其上运行的子程序都不会受其影响。
-    因此 docker-compose.yml 中可以直接设定 ulimit 参数。因为这个参数是 per-process 的。
-1. `sysctl`：临时修改整个系统的内核参数（重启后失效）
+    - 例如用户同时运行了两个shell终端进程，只在其中一个环境中执行了ulimit – s 100，则该 shell 进程里创建文件的大小会有相应的限制，而另一个 shell 终端包括其上运行的子程序都不会受其影响。
+      因此 docker-compose.yml 中可以直接设定 ulimit 参数。因为这个参数是 per-process 的。
+    - `docker-compose.yaml` 中有一套完整的参数用于控制 ulimit 限制。
+2. `sysctl`：临时修改整个系统的内核参数（重启后失效）
     - 另外 linux 还有一个 /proc 文件系统，也是 Linux 内核提供的，用于临时查看/修改内核参数的机制，可通过修改文件内容临时修改内核参数。它和 sysctl 功能基本一致。
     - docker 和宿主机共用内核，因此直接修改宿主机的 sysctl 参数，在容器内也会生效。
     - docker-compose 只支持设置一部分 sysctl 参数。所有支持的参数见 [Docker - Configure namespaced kernel parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/commandline/run/#configure-namespaced-kernel-parameters-sysctls-at-runtime) 和 [docker-compose - sysctls](https://docs.docker.com/compose/compose-file/#sysctls)
