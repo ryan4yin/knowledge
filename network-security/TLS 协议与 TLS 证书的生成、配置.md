@@ -53,7 +53,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 如果我们要生成一个面向公共网络的 TLS 证书，那最好的方法，应该是申请一个 [Let's Encrypt 免费证书](https://letsencrypt.org)。
 该证书可以手动申请，另外 [Traefik](/network-proxy+web-server/traefik/README.md) 等反向代理也有提供自动生成并更新 Let's Encrypt 证书的功能。
 
-### 生成自签名证书（或由本地证书签名的证书）
+### 生成由本地证书签名的证书(非自签名证书)
 
 除了公网可用的受信证书，在内网环境，我们需要也使用 TLS 证书保障通信安全，这时我们可能会选择自己生成证书，而不是向权威机构申请证书。
 可能的原因如下：
@@ -63,7 +63,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
 自己生成的证书有两种方类型：
 
-1. 自签名证书（我签我自己）：即 TLS 和 CA 使用同一个密钥，使用 TLS 证书对它自己进行签名。
+1. 自签名证书（我签我自己）：可以认为是 TLS 和 CA 使用同一个密钥，使用 TLS 证书对它自己进行签名。
+   - 测试发现这种方式得到的证书貌似不包含 SAN 属性！因此不支持多域名。
 2. 由本地证书签名的证书：生成两个独立的密钥，一个用作 CA 证书，一个用作 TLS 证书。使用 CA 证书对 TLS 证书进行签名。
 
 一般来说，直接生成一个泛域名的自签名证书就够了，但是它不方便拓展——客户端对每个自签名证书，都需要单独添加一次信任。
@@ -75,19 +76,11 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 另外介绍下这里涉及到的几种文件类型：
 
 1. `xxx.key`: 就是一个私钥，一般是一个 RSA 私钥(SHA256 算法)，长度通常指定为 2048 位。
-   - openssl 命令：`openssl genrsa -out xxx.key 2048`
    - CA 证书和 TLS 证书的私钥都是通过这种方式生成的。
-1. `xxx.csr`: 即 Certificate Sign Request，证书签名请求。使用 openssl 等工具，通过 TLS 密钥+TLS 证书的相关信息，可生成出一个 CSR 文件。
-   - openssl 命令：`openssl req -new -key server.key -out server.csr -config csr.conf`，给定 TLS 密钥 `server.key` 以及证书相关信息 `csr.conf`
+2. `xxx.csr`: 即 Certificate Sign Request，证书签名请求。使用 openssl 等工具，通过 TLS 密钥+TLS 证书的相关信息，可生成出一个 CSR 文件。
    - 域名（Common Name, CN）就是在这里指定的，可以使用泛域名。
    - 用户将 csr 文件发送给 CA 机构，进行进一步处理。
-2. `xxx.crt`: 这就是我们所说的 TLS 证书，CA 证书和服务端 TLS 证书都是这个格式。
-    - openssl 命令：
-        ```shell
-        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
-            -CAcreateserial -out server.crt -days 10000 \
-            -extensions v3_ext -extfile csr.conf
-        ```
+3. `xxx.crt`: 这就是我们所说的 TLS 证书，CA 证书和服务端 TLS 证书都是这个格式。
     - 使用 CA 证书、CA 密钥对 `csr` 文件进行签名，就能得到最终的服务端 TLS 证书——一个 `crt` 文件。
 
 
@@ -132,7 +125,17 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     # 2. 通过第一步编写的配置文件，生成证书签名请求
     openssl req -new -key server.key -out server.csr -config csr.conf
     # 3. 生成最终的证书，这里指定证书有效期 10 年
+    ## 3.1 方法一：使用 server.key 进行自签名。这种方式得到的证书不包含 SAN！不支持多域名！
     openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.crt
+    ## 3.2 方法二：生成 ca 证书，并且使用 ca 证书生成出 server.crt
+    ### ca 私钥
+    openssl genrsa -out ca.key 2048
+    ### ca 公钥
+    openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.local" -days 10000 -out ca.crt
+    ### 签名
+    openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
+    -CAcreateserial -out server.crt -days 10000 \
+    -extensions v3_ext -extfile csr.conf
     ```
 
 #### 拓展：基于 ECC 算法的 TLS 证书
@@ -156,7 +159,9 @@ openssl ecparam -genkey -name prime256v1 -out key.pem
 # 生成证书签名请求，需要输入域名(Common Name, CN)等相关信息
 openssl req -new -sha256 -key key.pem -out csr.csr -config csr.conf
 # 生成最终的证书，这里指定证书有效期 10 年
+## 方法一：自签名
 openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.pem
+## 方法二：使用 ca 进行签名，方法参考前面
 ```
 
 
