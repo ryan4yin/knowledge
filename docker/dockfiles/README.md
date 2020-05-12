@@ -1,5 +1,7 @@
 # Dockerfiles 集锦
 
+编写 Dockerfile 时，可以在 github 上先搜索一下相关的项目，参考（COPY）别人的 Dockerfile，避免无从下手的情况。
+
 ## CI/CD 相关
 
 - [jenkins: docker-jnlp-slave](https://github.com/jenkinsci/docker-jnlp-slave)
