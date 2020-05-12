@@ -60,8 +60,8 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
   "max-concurrent-uploads": 10,
   "insecure-registries": ["harbor.internal.xxx.com"],
   "registry-mirrors": [
-    "https://hub-mirror.c.163.com",
-    "https://xd6he1w9.mirror.aliyuncs.com"
+    "https://xd6he1w9.mirror.aliyuncs.com",
+    "https://hub-mirror.c.163.com"
   ],
   "dns": ["114.114.114.114", "119.29.29.29"],
   "storage-driver": "overlay2",
