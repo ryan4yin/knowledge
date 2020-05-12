@@ -191,9 +191,9 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
     sudo cp ca.crt /usr/local/share/ca-certificates/server.crt
     sudo update-ca-certificates
     ```
-2. Windows: 通过证书管理器 `certmgr.msc` 安装证书
+2. Windows: 通过证书管理器 `certmgr.msc` 将证书安装到 `受信任的根证书颁发机构`，Chrome 的小锁就能变绿了。
 3. 编程：使用 HTTPS 客户端的 api 指定使用的 TLS 证书
-
+4. Docker-Client: 参见 [Use self-signed certificates - Docker Docs](https://docs.docker.com/registry/insecure/#use-self-signed-certificates)
 
 ## 参考
 
