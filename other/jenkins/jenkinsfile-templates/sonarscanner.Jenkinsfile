@@ -53,7 +53,8 @@ pipeline {
                             sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
 
                             // 2. dotnet core 扫描器，需要 dotnet core sdk
-                            // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0" // 安装或更新 sonarscanner
+                            // 安装或更新 sonarscanner，建议在 Dockerfile 中安装，加快构建速度。
+                            // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
                             // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
                             // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
                             // sh "dotnet build --no-restore"

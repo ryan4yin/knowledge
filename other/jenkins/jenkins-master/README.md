@@ -18,15 +18,24 @@ docker-compose up -d
 启动好后我们得到一个全新的 Jenkins，现在需要进行一些配置：
 
 1. 安装常用插件
-    - Pipeline Utility Steps
-    - ansiColor
-    - Workspace Cleanup Plugin
-    - Localization: Chinese (Simplified)
-    - SSH Agent
+    - `Pipeline Utility Steps`: 一些实用的 steps
+    - `ansiColor`: 彩色日志输出
+    - `Workspace Cleanup Plugin`: 构建完成后清理工作目录，防止 slave 磁盘满溢
+    - `Localization: Chinese (Simplified)`: 中文本地化插件
+    - `SSH Agent`: SSH 密钥注入，可用于 git ssh 拉取代码/连接远程主机
+    - `Build Name and Description Setter`: 通过插件设置 Build Name 和 Description
+    - `Kubernetes`: 通过 k8s 对 slave 进行自动扩缩容，但是它貌似和许多插件不兼容。
+    - `Rebuilder`: 提供一个「重新构建」的按钮，可使用当前 Build 的参数运行一个新 Build.
+    - `LDAP`/`Role-based Authorization Strategy`: 企业用的 LDAP 集成验证插件，以及权限管理插件
+    - `	Mailer Plugin`/`DingTalk`: 构建通知
+    - `Publish Over SSH`/
+    - `Python Plugin`: 使用 `python` 编写 build steps
+    - `SonarQube Scanner for Jenkins`: 代码质量扫描，配合 [sonarscanner.Jenkinsfile](./../jenkinsfile-templates/sonarscanner.Jenkinsfile) 使用
+    - [`Simple Theme Plugin`](https://github.com/jenkinsci/simple-theme-plugin): 切换 UI 主题。
     - ...
 1. 在「系统设置」设置好各插件的配置项。（LDAP/email/git/等）
-1. 设置凭据
-1. 设置权限管理：用户、角色、权限
+1. 设置凭据：用于拉取 git 仓库的 ssh 凭据等
+1. 设置权限管理（`Role-based Authorization Strategy`）：用户、角色、权限
 1. 进入 `<jenkins-url>/scriptApproval/`，批准有使用到的 java 接口。
 
 然后就可以开始使用了
