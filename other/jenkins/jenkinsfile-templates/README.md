@@ -34,9 +34,11 @@ sshagent (credentials: ['git-ssh-credentials-ID']) {
 拉取 git 仓库：
 ```
 // 代码拉到当前文件夹中
+// 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion 
 git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.local/test_repo'
 
 // 代码拉到文件夹 test_dir 中，会新建文件夹
+// 缺点是不会 jenkins 记录不到仓库的 reversion！
 sshagent (credentials: ['git-ssh-credentials-ID']) {
     sh("git clone --branch dev 'http://gitlab.local/text_repo' test_dir")
 }

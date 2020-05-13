@@ -26,6 +26,9 @@ Jenkins 是当下最流行的 CI/CD 工具之一，优势在于：
 Jenkinsfile 和 Git 仓库之间，通过 `JOB_NAME` 关联起来，这个关联关系也可以存放在这个 Git 仓库中
 这样维护起来方便，不需要每次都批量修改所有 Git 仓库中的 Jenkinsfile。缺点是耦合度增加了。
 
+## Python SDK
+
+推荐使用 [python-jenkins](https://pypi.org/project/python-jenkins/)
 
 ## GitOps
 
