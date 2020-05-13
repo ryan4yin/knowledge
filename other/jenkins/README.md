@@ -28,7 +28,9 @@ Jenkinsfile 和 Git 仓库之间，通过 `JOB_NAME` 关联起来，这个关联
 
 ## Python SDK
 
-推荐使用 [python-jenkins](https://pypi.org/project/python-jenkins/)
+>总的来说，jenkins 的两个 python sdk 都不是很好用。。。
+
+推荐使用 [python-jenkins](https://pypi.org/project/python-jenkins/)，最好不要使用 [jenkinsapi](https://github.com/pycontribs/jenkinsapi)
 
 ## GitOps
 
