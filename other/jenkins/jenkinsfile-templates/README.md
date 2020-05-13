@@ -7,6 +7,8 @@
 
 在 「系统管理」-「系统配置」-「Pipeline Speed/Durability Settings」，将它设为 「Performance Optimized」
 
+这也能避免因为 Groovy 脚本没有使用 `@CPS` 注解而报错！
+
 
 ## 脚本片段
 

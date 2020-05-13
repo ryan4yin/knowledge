@@ -1,5 +1,7 @@
 // 串行地运行某一文件夹中的所有任务
 // 如果中途有任务失败，就终止此批量任务的运行
+
+// 这个 jenkinsfile 需要通过 `In-process Script Approval` 批准多项方法调用！
 pipeline {
     agent any
 

@@ -1,5 +1,7 @@
 // 并行地运行某一文件夹中的所有任务
 // 在所有任务全部运行结束后，再统计任务是否全部成功
+
+// 这个 jenkinsfile 需要通过 `In-process Script Approval` 批准多项方法调用！
 pipeline {
     agent any
 
