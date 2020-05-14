@@ -8,4 +8,7 @@
   - 用于日志存储与分析的 ElasticSearch/Kibana 请额外部署。
 
 
+## 「Bug」记录
+
+- [Fluentd 报错：`Worker 0 finished unexpectedly with signal SIGKILL`](https://github.com/fluent/fluentd/issues/2408): 内存不足，增加 `resources.limits.memory` 的值。
 
