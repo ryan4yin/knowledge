@@ -3,11 +3,43 @@
 参考：https://jenkins.io/doc/pipeline/examples
 
 
-## 加快构建速度
+
+## 加快 Pipeline 构建速度
 
 在 「系统管理」-「系统配置」-「Pipeline Speed/Durability Settings」，将它设为 「Performance Optimized」
 
 这也能避免因为 Groovy 脚本没有使用 `@CPS` 注解而报错！
+
+
+## Jenkinsfile 与 CI/CD 代码管理
+
+企业级的 Jenkinsfile 往往同质化严重，每个环节中的几十个仓库，它们用到的 Jenkinsfile 和构建逻辑都是一模一样的。
+因此完全不需要在每个仓库中放一个 Jenkinfile——这加大了运维成本。
+
+比较优越的解决方案是将 Jenkinsfile 和它用到的 CI/CD 代码放在一起，达成 Jenkinsfile 和 CI/CD 代码的复用。
+
+比如一个专用于运维的代码仓库，结构如下：
+
+```tree
+├───jenkinsfiles
+│   ├─── xxx.Jenkinsfile  # 别的运维相关 Jenkinsfiles
+│   ├───batch「文件夹」  # 批量任务的 Jenkinsfiles，只负责批量调用子任务
+│   ├───cleaning「文件夹」  # 日志、镜像、缓存等历史数据清理的 Jenkinsfiles
+│   └───schedulers「文件夹」  # 统一管理定时执行的 Jenkinsfiles，其中大部分都只负责定时调用其他子任务。
+├───operation  # 上述 Jenkinsfiles 需要用到的 Python 代码
+│   ├─── vmware  # 与 vmware 相关的脚本（虚拟机的 CURD）
+│   ├─── ftp  # 与 ftp 服务器相关的脚本（数据清理）
+```
+
+我们目前是将 jenkinsfiles 和 CI/CD 代码分成了七个 Git 仓库进行管理：
+
+1. 四个直接使用源码的仓库：运维、前端、后端、测试的 CI/CD 仓库，结构前面讲过了
+1. 三个打成 package 使用的仓库：
+   3. job_config: 保存了所有 Git 源码仓库和 Jenkins Job 的映射关系，所有任务都通过它提供的 api 获取源码的 git_url/branch 等信息。
+      - 提供按类别查询的功能
+      - 提供自动通过映射关系创建 Jenkins 任务的功能。
+   4. operation_utils: 运维的实用工具包，通用的代码抽取到这里面 
+   6. common_config: 一些通用的配置，以 class 等方式定义在这个包里面。
 
 
 ## 脚本片段
