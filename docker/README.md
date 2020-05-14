@@ -58,7 +58,7 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
   },
   "max-concurrent-downloads": 10,
   "max-concurrent-uploads": 10,
-  "insecure-registries": ["harbor.internal.xxx.com"],
+  "insecure-registries": ["registry.local"],
   "registry-mirrors": [
     "https://xd6he1w9.mirror.aliyuncs.com",
     "https://hub-mirror.c.163.com"
@@ -72,6 +72,8 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 > 其中的 aliyun 镜像源地址是我使用账号登录阿里云后得到的，使用时不需要任何验证。仅自用。
 
 其中镜像源地址建议配置多个，因为镜像源可能会不够稳定。
+
+另外还是尽量不要使用 `insecure-registries`，可以使用一个私有 TLS 证书进行加密和身份验证，配置方法参见 [TLS 协议与 TLS 证书的生成、配置](/network-security/TLS%20协议与%20TLS%20证书的生成、配置.md)
 
 ### 远程访问 Docker Engine
 
