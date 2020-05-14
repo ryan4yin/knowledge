@@ -26,4 +26,4 @@
 
 ## 日志收集
 
-- [fluentd+elasticsearch](https://github.com/fluent/fluentd-kubernetes-daemonset/blob/master/fluentd-daemonset-elasticsearch.yaml)，ES 为有状态应用，另做部署。
+参见 [monitoring/fluentd](/monitoring/fluentd/README.md)
