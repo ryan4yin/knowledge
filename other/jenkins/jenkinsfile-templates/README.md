@@ -50,10 +50,8 @@ def nodes = [:]
 nodesByLabel('docker').each {
   nodes[it] = { ->
     node(it) {
-      stage("docker-prune@${it}") {
-        // 清理 docker 的所有历史数据
-        sh('docker system prune --all --force')
-      }
+      // 清理 docker 的所有历史数据
+      sh('docker system prune --all --force')
     }
   }
 }
