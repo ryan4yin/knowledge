@@ -1,8 +1,5 @@
 # Jenkins Pipeline
 
-参考：https://jenkins.io/doc/pipeline/examples
-
-
 
 ## 加快 Pipeline 构建速度
 
@@ -44,19 +41,29 @@
 
 ## 脚本片段
 
-获取所有节点名称：
+在所有 labels 匹配的节点上运行某个任务：
 
-```
-// This method collects a list of Node names from the current Jenkins instance
-@NonCPS
-def nodeNames() {
-  return jenkins.model.Jenkins.instance.nodes.collect { node -> node.name }
+```groovy
+def nodes = [:]
+
+// 需要插件：Pipeline Utility Steps
+nodesByLabel('docker').each {
+  nodes[it] = { ->
+    node(it) {
+      stage("docker-prune@${it}") {
+        // 清理 docker 的所有历史数据
+        sh('docker system prune --all --force')
+      }
+    }
+  }
 }
+
+parallel nodes
 ```
 
 自动注入 ssh 密钥用于 git 操作：
 
-```
+```groovy
 // For SSH private key authentication, try the sshagent step from the SSH Agent plugin.
 sshagent (credentials: ['git-ssh-credentials-ID']) {
     sh("git tag -a some_tag -m 'Jenkins'")
@@ -66,7 +73,7 @@ sshagent (credentials: ['git-ssh-credentials-ID']) {
 
 
 拉取 git 仓库：
-```
+```groovy
 // 代码拉到当前文件夹中
 // 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion 
 git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.local/test_repo'
@@ -78,3 +85,8 @@ sshagent (credentials: ['git-ssh-credentials-ID']) {
 }
 ```
 
+
+## 参考
+
+- [Pipeline Examples - Jenkins Docs](https://jenkins.io/doc/pipeline/examples)
+- [Running Jenkins job simultaneously on all nodes](https://stackoverflow.com/questions/17286614/running-jenkins-job-simultaneously-on-all-nodes#answer-61692506)
