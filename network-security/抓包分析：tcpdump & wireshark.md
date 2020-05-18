@@ -53,7 +53,7 @@ nc localhost 11111 | wireshark -k -S -i -
 如果需要对 Kubernetes 集群中的容器进行抓包，推荐直接使用 [ksniff](https://github.com/eldadru/ksniff)!
 
 另外如果你本机是 Windows 系统，并且你使用 `cmd`，那上面的命令直接就能用。
-而如果你用的是 PowerShell，**PowerShell 管道两边的命令是串行执行的，这会导致 wireshark 无法启动！**目前没有找到好的解决方法。。
+而如果你用的是 PowerShell，**PowerShell 管道对 `native commands` 的支持不是很好，管道两边的命令是串行执行的，这会导致 wireshark 无法启动！**目前没有找到好的解决方法。。
 
 ## 参考
 
