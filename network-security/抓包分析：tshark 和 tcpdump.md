@@ -1,34 +1,50 @@
 # 抓包分析
 
+
+## tcpdump + ssh + wireshark 远程实时抓包
+
 在进行远程网络抓包分析时，我们通常的做法是：
 
 1. 使用 `tcpdump` 在远程主机上抓包，保存为 pcap 文件。
 2. 将 pcap 文件拷贝到本地，使用 wireshark 对其进行分析。
 
-另外 `wireshark` 也提供一个命令行的版本 `tshark`，命令行参数和 tcpdump 很相似，但是它功能更强大一些——能直接解析上百种协议。比如直接在命令行显示 http 内容：
+但是这样做没有时效性，而且数据拷贝来去也比较麻烦。
+
+考虑使用流的方式，在远程主机上使用 `tcpdump` 抓包，本地使用 `wireshark` 进行实时分析。
+
+使用 ssh 协议进行流式传输的示例如下：
 
 ```shell
-tshark -i eth0 -x tcp port 80 -R http
+ssh root@some.host 'tcpdump -i eth0 -l -w -' | wireshark -k -i -
 ```
 
-不过我们一般都是将 pcap 文件拷到本地，所以 tcpdump 用的应该是最多的。
+在不方便使用 ssh 协议的情况下（比如容器抓包、Android 抓包），可以考虑使用 `nc`(netcat) 进行数据流的转发：
 
-## tcpdump 常用命令
+```shell
+# 1. 远程主机抓包：将数据流通过 11111 端口暴露出去
+tcpdump -i wlan0 -s0 -w - | nc -l -p 11111
 
-待续
+# 2. 本地主机从远程主机的 11111 端口读取数据，提供给 wireshark
+nc <remote-host> 11111 | wireshark -k -S -i -
+```
 
-## WireShark 远程实时抓包
+如果是抓取 Android 手机的数据，方便起见，可以通过 adb 多进行一次数据转发：
 
-### 方法一：使用 [termshark](https://github.com/gcla/termshark)
+```shell
+# 1. 在 adb shell 里使用 tcpdump 抓包
+tcpdump -i wlan0 -s0 -w - | nc -l -p 11111
 
-termshark 是一个 tshark 的一个命令行 UI，完全模仿了 wireshark.
+# 2. 在本机使用 adb forward 将本机的 11111 端口和手机的 11111 端口绑定
+adb forward tcp:11233 tcp:11233
 
-可以考虑在远程主机上直接通过 termshark+tshark 进行远程抓包分析。
+# 3. 直接从本机的 11111 端口读取数据，提供给 wireshark
+nc localhost 11111 | wireshark -k -S -i -
+```
 
-## 方法二：使用 rpcapd
 
-拷贝 pcap 分析的方法在某些时候可能会显得不够方便，这时可以考虑进行实时抓包。
 
 ## 参考
 
 - [Tracing network traffic using tcpdump and tshark](https://techzone.ergon.ch/tcpdump)
+- [Android remote sniffing using Tcpdump, nc and Wireshark](https://blog.dornea.nu/2015/02/20/android-remote-sniffing-using-tcpdump-nc-and-wireshark/)
+- [聊聊tcpdump与Wireshark抓包分析](https://www.jianshu.com/p/a62ed1bb5b20)
