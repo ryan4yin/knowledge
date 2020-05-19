@@ -2,7 +2,7 @@
 
 抓包分析工具主要有两种：
 
-1. http/https 抓包工具：mitmproxy/fiddler 都属于这一类，用于分析 http 非常方便。但是只支持 http，有局限性。
+1. http/https 抓包工具：mitmproxy/fiddler 都属于这一类，用于分析 http 非常方便。但是只支持 http/https，有局限性。
 2. tcp/udp/icmp 等网络层的数据嗅探：tcpdump/tshark 都属于这一类，网络故障分析等场景常用。
 
 这里主要介绍如何使用 tcpdump + wireshark 进行远程实时抓包分析。
