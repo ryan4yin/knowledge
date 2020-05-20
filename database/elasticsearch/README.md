@@ -4,6 +4,30 @@
 
 需要注意的，主要是防止磁盘使用率过高，导致 ElasticSearch 自动将索引设为 `read only`。
 
+
+## 安装中文分词插件
+
+1. [IK Analyzer](https://github.com/medcl/elasticsearch-analysis-ik): 使用最广泛的中文分词插件
+2. [pinyin Analyzer](elasticsearch-analysis-pinyin): 拼音分词插件
+
+如果你有 github 代理，请直接修改 `docker-elk/elasticsearch/Dockerfile`，示例如下：
+
+```
+ARG ELK_VERSION
+
+# https://www.docker.elastic.co/
+FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+
+# Add your elasticsearch plugins setup here
+# Example: RUN elasticsearch-plugin install analysis-icu
+ARG ELK_VERSION  # 这一行不能省略！
+RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip
+RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-pinyin-6.3.0.zip
+```
+
+没有代理，网速慢的话，建议手动解压上面的两个 zip 文件到两个文件夹中，然后通过数据卷将文件夹挂载到 `/usr/share/elasticsearch/plugins` 下。
+
+
 ## 修改宿主机的内核参数
 
 elasticsearch 6.8 及以上的版本，需要设置 max_map_count 为 262144，否则不能启动。
@@ -27,7 +51,7 @@ echo "vm.max_map_count=262144" >> /etc/sysctl.conf  # 重启后生效
 services:
   elasticsearch:
     # ...省略...
-    logging: &logging # 限制容器服务的日志大小
+    logging: &logging # 限制容器日志大小，也可在 `/etc/docker/daemon.json` 中进行全局配置。
       options:
         max-size: "10m"
         max-file: "1"
