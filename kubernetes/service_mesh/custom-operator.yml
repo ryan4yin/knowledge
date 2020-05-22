@@ -67,9 +67,14 @@ spec:
           address: "<jaeger-service>.<jager-space>:9411"  # 应该也可以使用外部的 jaeger
     pilot:
       traceSampling: 0.1  # 链路追踪的采样率
-    prometheus:  # 不使用 istio 自带的 prometheus，改用 prometheus-operator 管理 prometheus
-      enabled: false
     gateways:
       istio-ingressgateway:
         type: NodePort  # 本地测试集群用不了 LoadBalancer
-
+    prometheus:  # 不使用 istio 自带的 prometheus
+      enabled: false
+    prometheusOperator:  # 改用**预先部署好的** prometheus-operator 管理 prometheus
+      createPrometheusResource: true
+  addonComponents:
+    # 必须在这里启用 prometheusOperator 支持，前面的 prometheusOperator 配置才能生效。
+    prometheusOperator:
+      enabled: true
