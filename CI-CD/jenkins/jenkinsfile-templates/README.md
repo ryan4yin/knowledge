@@ -115,6 +115,13 @@ nodesByLabel('docker').each {
 parallel nodes
 ```
 
+## Pipeline 代码复用
+
+可以使用专门的 git 仓库来存放一些可复用的 pipeline 片段，详见：
+
+- [Extending with Shared Libraries - Jenkins Docs](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
+
+
 ## 参考
 
 - [Pipeline Examples - Jenkins Docs](https://jenkins.io/doc/pipeline/examples)
