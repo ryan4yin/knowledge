@@ -73,7 +73,7 @@ spec:
     prometheus:  # 不使用 istio 自带的 prometheus
       enabled: false
     prometheusOperator:  # 改用**预先部署好的** prometheus-operator 管理 prometheus
-      createPrometheusResource: false  # 不创建 prometheus，只创建 CRDs
+      createPrometheusResource: false  # 不创建 prometheus（也就是只创建 CRDs）
       scrapeInterval: 15s   # 指标的抓取间隔
   addonComponents:
     # 必须在这里启用 prometheusOperator 支持，前面的 prometheusOperator 配置才能生效。
