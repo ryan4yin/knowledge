@@ -44,9 +44,9 @@ istioctl upgrade -f custom-operator.yml
 ```shell
 # 格式如下：
 istioctl manifest generate <your original installation options> | kubectl delete -f -
-# 使用 --set 指定自定义参数
+# 示例一：使用 --set 指定自定义参数
 istioctl manifest generate --set profile=default --set values.prometheus.enabled=false | kubectl delete -f -
-# 使用 istiooperator 配置指定自定义参数
+# 示例二：使用 istiooperator 配置指定自定义参数
 istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 ```
 
