@@ -73,7 +73,7 @@ spec:
     prometheus:  # 不使用 istio 自带的 prometheus
       enabled: false
     prometheusOperator:  # 改用**预先部署好的** prometheus-operator 管理 prometheus
-      createPrometheusResource: true
+      createPrometheusResource: true  # 创建 prometheus 相关的 CRDs(ServiceMonitor)，这要求已经提前部署好了 PrometheusOperator！
   addonComponents:
     # 必须在这里启用 prometheusOperator 支持，前面的 prometheusOperator 配置才能生效。
     prometheusOperator:
