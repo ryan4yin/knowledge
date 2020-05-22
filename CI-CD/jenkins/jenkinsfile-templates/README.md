@@ -41,23 +41,11 @@
 
 ## 脚本片段
 
-在所有 labels 匹配的节点上运行某个任务：
+>这里省略了 `pipeline.stages.stage.steps` 等外部代码块(block)。
+如果出现 grovvy 脚本（标志性特征是: 控制流语句 if-else/while、变量定义 def），下列代码片段还需要使用 `script` 包裹。
 
-```groovy
-def nodes = [:]
 
-// 需要插件：Pipeline Utility Steps
-nodesByLabel('docker').each {
-  nodes[it] = { ->
-    node(it) {
-      // 清理 docker 的所有历史数据
-      sh('docker system prune --all --force')
-    }
-  }
-}
-
-parallel nodes
-```
+### 1. git 仓库相关操作
 
 自动注入 ssh 密钥用于 git 操作：
 
@@ -83,6 +71,49 @@ sshagent (credentials: ['git-ssh-credentials-ID']) {
 }
 ```
 
+
+### 2. 批量任务
+
+在所有 labels 匹配的节点上运行某个命令：
+
+```groovy
+def nodes = [:]
+
+// 需要插件：Pipeline Utility Steps
+nodesByLabel('docker').each {
+  nodes[it] = { ->
+    node(it) {
+      // 清理 docker 的所有历史数据
+      sh('docker system prune --all --force')
+    }
+  }
+}
+
+parallel nodes
+```
+
+如果还需要在多个节点之间共用某些文件/代码/配置，可以使用 `stash`/`unstash`:
+
+```groovy
+// stash 当前文件夹下的所有内容
+stash includes: '**', name: 'operation-scripts', useDefaultExcludes: false
+
+def nodes = [:]
+
+// 需要插件：Pipeline Utility Steps
+nodesByLabel('docker').each {
+  nodes[it] = { ->
+    node(it) {
+      // 将之前暂存的文件再取出到当前节点上。
+      unstash 'operation-scripts'
+      // 清理所有历史数据
+      sh("python3 run.py operation.")
+    }
+  }
+}
+
+parallel nodes
+```
 
 ## 参考
 
