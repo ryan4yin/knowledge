@@ -72,7 +72,10 @@ spec:
         type: NodePort  # 本地测试集群用不了 LoadBalancer
     prometheus:  # 不使用 istio 自带的 prometheus
       enabled: false
-    prometheusOperator:  # 改用**预先部署好的** prometheus-operator 管理 prometheus
+    
+    # 改用**预先部署好的** prometheus-operator 管理 prometheus
+    # 参考了 https://github.com/istio/istio/issues/21187#issuecomment-610744178
+    prometheusOperator:
       createPrometheusResource: false  # 不创建 prometheus（也就是只创建 CRDs）
       scrapeInterval: 15s   # 指标的抓取间隔
   addonComponents:
