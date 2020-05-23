@@ -20,9 +20,14 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 
 ## 架构
 
-Knative 由三大组件组成：
+Knative 由两大组件组成：
 
-1. [Tekton](https://github.com/tektoncd/pipeline)
+1. Servering
+2. Eventing
+
+Knative 本身只提供容器级别的 Serverless 能力，而从源码到容器的流程，它建议你使用 Tekton:
+
+3. [Tekton](https://github.com/tektoncd/pipeline)
 
 
 
