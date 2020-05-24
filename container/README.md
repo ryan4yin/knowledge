@@ -38,13 +38,26 @@ CNI 主要是提供给 Kubernetes 这类容器集群系统的，这是一个蓬�
 
 前面介绍了 OCI 指定的三个容器相关标准，接下来该讨论兼容该标准的各类工具了。
 
+网上能搜得到一些对 `runc`/`cri-o`/`containerd`/`docker`/`podman` 进行比较的文章，写得还算可以。
+但是网上的文章没有讲清楚这些组件在整个容器生态中处于一个什么位置，只是笼统地介绍一下优缺点，使人云里雾里，一知半解。
+
+这里我遵循一个自底向上的介绍方法，顺序介绍：
+
+1. 容器运行时：
+   1. `runc`/`crun`: 最底层的组件，只负责容器的运行。
+   2. `containerd`/`cri-o`: 封装了 `runc`，管理整个容器的生命周期（创建、运行、销毁）
+2. 容器镜像、存储、网络等
+   1. `docker engine`/`podman`
+   2. `docker-cli`/`kaniko`/`buildah` 等等
+
+这样我们能对各个工具有更清晰的理解。
+
 ### 容器运行时
 
-OCI 官方提供了一个「容器运行时规范」的标准实现：
+- [runc](https://github.com/opencontainers/runc): OCI 官方的「容器运行时规范」标准实现：
+  - `runc` 最初由 Docker 公司捐献，由 Go 语言编写
+- [crun](https://github.com/opencontainers/runc): 功能和 `runc` 完全一致，但是是 C 语言写的，速度更快。
 
-- [runc](https://github.com/opencontainers/runc)
-
->`runc` 最初由 Docker 公司捐献。
 
 但是 `runc` 非常底层，它只负责容器的**运行**，别的一概不管。它甚至不能识别容器镜像！
 你需要先使用别的工具创建一个符合规范的容器，然后才能使用 `runc` 去运行它。
