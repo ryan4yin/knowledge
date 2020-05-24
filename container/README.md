@@ -60,7 +60,7 @@ OCI 官方提供了一个「容器运行时规范」的标准实现：
 
 因为这两个项目都支持 CRI，我们可以使用 [cri-tools](https://github.com/kubernetes-sigs/cri-tools) 来直接调用它们进行容器相关操作。
 
-#### Docker vs Podman
+#### Docker Engine vs Podman
 
 `docker engine(dockerd)` 就建立在 `containerd` 之上，添加了数据卷、网络等功能。它们组合起来就是 Docker，结构如下：
 
@@ -72,6 +72,8 @@ OCI 官方提供了一个「容器运行时规范」的标准实现：
 [containers/storage](https://github.com/containers/storage)/
 [CNI](https://github.com/containernetworking/cni) 等）
 来实现和 `docker engine` 一致的功能，并且不需要运行一个后台进程（daemon）.
+
+#### Docker vs Others
 
 除了 Podman 对标 `Docker Engine`，大厂还推出了各种工具，势要完全消除掉 Docker 的不可替代性。
 
@@ -86,6 +88,7 @@ OCI 官方提供了一个「容器运行时规范」的标准实现：
 1. [skopeo](https://github.com/containers/skopeo)
 
 
+总的来说，
 
 ## 参考资料
 
