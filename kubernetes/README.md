@@ -20,10 +20,12 @@
 # 1. 下载最新版 minikube: https://github.com/kubernetes/minikube/releases
 # 2. 以 docker 方式启动 minikube，注意 base-image 要换成最新的
 minikube start --driver=docker \
+    --cpus 4 --memory=10G \
     --image-mirror-country cn \
     --base-image registry.cn-hangzhou.aliyuncs.com/google_containers/kicbase:v0.0.10
 # 3. 或者也可以使用 hyperv 启动 minikube，注意 iso 的版本号要匹配
 minikube start  start --driver=hyperv \
+    --cpus 4 --memory=10G \
     --image-mirror-country cn \
     --iso-url  https://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/iso/minikube-v1.10.0.iso
 ```
