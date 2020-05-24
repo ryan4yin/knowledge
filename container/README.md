@@ -100,8 +100,9 @@ CNI 主要是提供给 Kubernetes 这类容器集群系统的，这是一个蓬�
 
 1. [skopeo](https://github.com/containers/skopeo)
 
+上述这些工具的 CLI 接口，基本都和 Docker 的非常相似，并且大都兼容 Dockerfile 规范。目的就是减小切换成本。
 
-总的来说，
+总的来说，只知道 Docker 在当前环境下，已经不太够了。上述这一圈容器生态的发展也是非常有必要去了解的。
 
 ## 参考资料
 
