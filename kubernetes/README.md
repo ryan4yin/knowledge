@@ -1,5 +1,7 @@
 # Kubernetes
 
+## 集群安装工具/发行版
+
 支持裸机安装多节点 K8s 集群的工具：
 
 > `-` 表示未测试，待考察。
@@ -11,6 +13,20 @@
 | KubeOperator |    -     |   -     |    -    |
 | KubeSpray    |    3     |   -     |    -    |
 
+
+### 1. Minikube: 部署一个本地测试用的单节点集群
+
+```shell
+# 1. 下载最新版 minikube: https://github.com/kubernetes/minikube/releases
+# 2. 以 docker 方式启动 minikube，注意 base-image 要换成最新的
+minikube start --driver=docker \
+    --image-mirror-country cn \
+    --base-image registry.cn-hangzhou.aliyuncs.com/google_containers/kicbase:v0.0.10
+# 3. 或者也可以使用 hyperv 启动 minikube，注意 iso 的版本号要匹配
+minikube start  start --driver=hyperv \
+    --image-mirror-country cn \
+    --iso-url  https://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/iso/minikube-v1.10.0.iso
+```
 
 ## 节点配置
 
