@@ -4,7 +4,7 @@
 
 从 2013 年 Docker 横空出世（开源），席卷整个 IT 产业，到现在 2020 年，绝大部分新项目都是使用容器进行部署了。
 任何技术发展到一定程度，都一定会「规范化」「标准化」。容器技术不断发展，各家大厂（Google、IBM、RedHat、AWS 等）都希望容器技术能有一个开放的标准，大家都能参与标准的指定，保存不会被任何公司垄断技术核心。
-于是这些大厂们带（bi）着（po） Docker 搞出了 [OCI(Open Container Initiative，开放容器倡议)](https://github.com/opencontainers)，这个组织的工作为容器相关的各种技术制定一个开放的标准。
+于是这些大厂们带（bi）着（po） Docker 搞出了 [OCI(Open Container Initiative，开放容器倡议)](https://github.com/opencontainers)，这个组织负责为容器相关的各种技术制定开放的标准。
 
 目前已经 OCI 已经完成了两个规范（标准）的制定：
 
