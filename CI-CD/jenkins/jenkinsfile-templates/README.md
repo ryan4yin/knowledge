@@ -47,30 +47,25 @@
 
 ### 1. git 仓库相关操作
 
+拉取 git 仓库：
+```groovy
+// 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion
+dir("sub_git_dir"){  // 如果此文件夹不存在，会自动创建它
+  // 使用 git 插件，好处是插件会记录当前的 git reversion，方便排查。
+  git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.local/test_repo'
+}
+```
+
 自动注入 ssh 密钥用于 git 操作：
 
 ```groovy
-// For SSH private key authentication, try the sshagent step from the SSH Agent plugin.
-sshagent (credentials: ['git-ssh-credentials-ID']) {
-    sh("git tag -a some_tag -m 'Jenkins'")
-    sh('git push <REPO> --tags')
+dir("sub_git_dir"){
+    sshagent (credentials: ['git-ssh-credentials-ID']) {
+      sh("git tag -a some_tag -m 'Jenkins'")
+      sh('git push <REPO> --tags')
+  }
 }
 ```
-
-
-拉取 git 仓库：
-```groovy
-// 代码拉到当前文件夹中
-// 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion 
-git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.local/test_repo'
-
-// 代码拉到文件夹 test_dir 中，会新建文件夹
-// 缺点是不会 jenkins 记录不到仓库的 reversion！
-sshagent (credentials: ['git-ssh-credentials-ID']) {
-    sh("git clone --branch dev 'http://gitlab.local/text_repo' test_dir")
-}
-```
-
 
 ### 2. 批量任务
 
