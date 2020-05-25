@@ -2,14 +2,16 @@
 
 ### 1. 容器化部署
 
-以当前文件夹下的 `docker-compose.yaml` 为模板进行容器化部署，可部署 c#/golang/android 等的自动化构建环境。
+以当前文件夹下的 `docker-compose.yml` 为模板进行容器化部署，可部署 c#/golang/android 等的自动化构建环境。
+
+`docker-compose.yml` 中的所有镜像，都是基于 [jenkinsci/docker-inbound-agent](https://github.com/jenkinsci/docker-inbound-agent) 构建的。
 
 需要注意的是模板中的每一个参数，都是有意义的，不能随便省略。
 
 比如 `init` 是用于清理僵尸进程，
 `container_name` 和 `networks.[xxx].name` 是用于指定容器/网络的名称，避免 docker-compose 自动生成。
 
-[docker-compose.yaml 各参数说明](https://docs.docker.com/compose/compose-file)
+- [docker-compose.yaml 各参数说明](https://docs.docker.com/compose/compose-file)
 
 ### 2. 部署 UI 测试/IOS 构建机
 
