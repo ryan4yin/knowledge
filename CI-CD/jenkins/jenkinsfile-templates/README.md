@@ -51,7 +51,7 @@
 ```groovy
 // 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion
 dir("sub_git_dir"){  // 如果此文件夹不存在，会自动创建它
-  // 使用 git 插件，好处是插件会记录当前的 git reversion，方便排查。
+  // 使用 git 插件，好处是插件会记录当前的 git reversion(web 页面上能看到)，方便排查。
   git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.local/test_repo'
 }
 ```
