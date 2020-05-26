@@ -60,6 +60,7 @@ dir("sub_git_dir"){  // 如果此文件夹不存在，会自动创建它
 
 ```groovy
 dir("sub_git_dir"){
+    // 需要插件 sshagent
     sshagent (credentials: ['git-ssh-credentials-ID']) {
       sh("git tag -a some_tag -m 'Jenkins'")
       sh('git push <REPO> --tags')
@@ -108,6 +109,36 @@ nodesByLabel('docker').each {
 }
 
 parallel nodes
+```
+
+## 3. json/yaml 等文件的读写
+
+读文件很简单：`readCSV`/`readJSON`/`readYaml`/`readFile` 等
+
+而写文件，比如输出 json，完整的 pipeline 如下：
+
+```groovy
+import groovy.json.JsonOutput
+
+pipeline {
+  stages {
+    stage("Xxx") {
+      steps {
+        script {  // groovy 代码需要放到 script 中
+          // 将 groovy 字典转换成 json，写入到 build 描述中
+          def git_hash = sh(  // 目标项目的 hash 值存在 description 里面
+              encoding: 'utf-8',
+              returnStdout: true,
+              script: "git rev-parse HEAD"  // 获取 HEAD 所在的 ref 的值
+          ).trim()
+          def build_description = [
+              "git_hash": git_hash,
+          ]
+          // 需要安装插件：[Build Name and Description Setter]
+          buildDescription JsonOutput.toJson(build_description)
+        }
+      }
+}
 ```
 
 ## Pipeline 代码复用
