@@ -10,9 +10,9 @@
 在使用 EFK 作为 Kubernetes 的日志分析方案时，我们最常使用的，应该就是 Kibana 的「Discover」了，它最大的特点就是：可以使用「Kibana Query Language」在 ES 中快速地查找日志。
 下面详细介绍下如何使用 Kibana 查找 K8s 日志。
 
-## [Kibana Query Language](https://www.elastic.co/guide/en/kibana/master/kuery-query.html)
+### 1. [Kibana Query Language](https://www.elastic.co/guide/en/kibana/master/kuery-query.html)
 
-首先介绍下「Kibana Query Language」语法，此语法**在 Kibana 6.x 中需要手动启用**！而在 Kibana 7.x 中已经被设为默认语法。
+首先介绍下「Kibana Query Language」语法，此语法**在 Kibana 6.x 中需要手动启用！**而在 Kibana 7.x 中已经被设为默认语法。
 
 1. 匹配数字：
     - `response:200`: 匹配所有 response 的值为 200 的 documents
@@ -35,8 +35,7 @@
 6. 使用 `not` 进行反匹配
     - `not response:200`: 不是 200 的 documents
 
-
-## K8s 日志搜索实战
+#### 使用 KQL 搜索 K8s 日志
 
 搜索所有 `log` 中包含有 XxxError 或 XxxException 的日志：
 
@@ -55,6 +54,13 @@ log: (*error or *exception) and kubernetes.container_name : *worker
 ```
 not log: (debug or info)
 ```
+
+### 2. 过滤器（Filter）
+
+除了使用 KQL 进行查询，也可以通过添加 Filter 对日志进行过滤。
+过滤器会自动生成出对应的 ElasticSearch Query DSL 语句进行查询。
+
+这个比较简单，可以自行尝试。
 
 ## 二、数据分析
 
