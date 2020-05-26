@@ -34,6 +34,8 @@ Knative 本身只提供容器级别的 Serverless 能力，而从源码到容器
 1. [Tekton](/CI-CD/tekton/README.md): 一个云原生的 CI/CD 流水线。
 
 
+结合上述三个组件，就得到了 Knative: 应用从源码到生产环境的全生命周期管理平台。
+
 此外，Knative 还可以与服务网格 Istio 结合，提供服务路由管理、灰度发布等功能。
 
 
