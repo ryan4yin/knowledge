@@ -29,6 +29,7 @@ pipeline {
                     def folderName = "Your Folder Name"
                     
                     // 方案一，有任务失败，则批量任务直接中断
+                    // 如果是指定名称的任务，也可以写成 ["<job1-name>", "<job2-name>"].each {
                     Jenkins.instance.getItemByFullName(folderName).allJobs.each {
                         build job: it.fullName, wait: true, propagate: true, parameters: [
                             string(name: 'BRANCH', value: params.BRANCH),
