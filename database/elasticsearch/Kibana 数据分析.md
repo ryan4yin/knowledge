@@ -1,5 +1,10 @@
 # Kibana 数据分析
 
+先说一句，对不熟悉 ElasticSearch 的同学而言，刚上手 Kibana 可能会很不适应。
+比如搜个关键字结果啥都搜不到，让人怀疑人生。
+所以这里先强调一个核心：**ElasticSearch 是以单词为单位进行搜索的！**
+如果你搜索某个关键字（比如 `elastic`）啥都搜不到，仔细想想它是不是某个单词的一部分？（`elasticsearch` 的一部分）
+
 ## 一、日志搜索
 
 在使用 EFK 作为 Kubernetes 的日志分析方案时，我们最常使用的，应该就是 Kibana 的「Discover」了，它最大的特点就是：可以使用「Kibana Query Language」在 ES 中快速地查找日志。
