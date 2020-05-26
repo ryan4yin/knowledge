@@ -36,6 +36,25 @@
     - `not response:200`: 不是 200 的 documents
 
 
+## K8s 日志搜索实战
+
+搜索所有 `log` 中包含有 XxxError 或 XxxException 的日志：
+
+```
+log: (*error or *exception)
+```
+
+再限定在所有 xxxworker 日志中进行查找：
+
+```
+log: (*error or *exception) and kubernetes.container_name : *worker
+```
+
+搜索所有不包含 `info` `debug` 的日志：
+
+```
+not log: (debug or info)
+```
 
 ## 二、数据分析
 
