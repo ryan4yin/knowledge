@@ -74,7 +74,7 @@ sudo ln -s "$(which wireshark.exe)" /usr/local/bin/wireshark
 ## 2. [termshark](https://github.com/gcla/termshark): 直接通过命令行 UI 进行实时抓包分析
 
 有的时候，远程实时抓包因为某些原因无法实现，而把 pcap 数据拷贝到本地分析又比较麻烦。
-这时你可以考虑直接使用命令行版本的 `wireshark`: [termshark](https://github.com/gcla/termshark)，直接在命令行进行实时的抓包分析。
+这时你可以考虑直接使用命令行版本的 `wireshark` UI: [termshark](https://github.com/gcla/termshark)，直接在命令行进行实时的抓包分析。
 
 [kubectl-debug](https://github.com/aylei/kubectl-debug) 默认的调试镜像中，就自带 `termshark`.
 
