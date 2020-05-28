@@ -66,7 +66,6 @@ cd flux  # 进入 chart 文件夹修改 values.yaml
 `values.yaml` 需要修改如下这些属性（略过了不需要修改的部分）：
 
 ```yaml
-
 git:
   # URL of git repo with Kubernetes manifests; e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
   url: "ssh://git@github.com/fluxcd/flux-get-started"
@@ -110,6 +109,8 @@ registry:
   disableScanning: true
 memcached:  # 镜像仓库元信息存放位置，关掉
   enabled: false
+
+# 其他参数请按需修改
 ```
 
 最后使用 helm 进行部署：
