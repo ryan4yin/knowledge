@@ -1,6 +1,6 @@
 # DevOps Notes & Scripts
 
-我日常总结出来的一些 DevOps 笔记与脚本。
+我日常总结出来的一些 DevOps 笔记与脚本。个人笔记，不保证正确！
 
 主要包含：
 
