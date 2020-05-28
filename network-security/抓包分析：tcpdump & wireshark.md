@@ -10,7 +10,7 @@
 
 >P.S. tshark 是 wireshark 的命令行版本，用法 tcpdump 非常相似。
 
-## tcpdump + ssh + wireshark 远程实时抓包
+## 一、tcpdump + ssh + wireshark 远程实时抓包
 
 在进行远程网络抓包分析时，我们通常的做法是：
 
@@ -52,7 +52,7 @@ nc localhost 11111 | wireshark -k -S -i -
 
 如果需要对 Kubernetes 集群中的容器进行抓包，推荐直接使用 [ksniff](https://github.com/eldadru/ksniff)!
 
-## Windows 系统
+### Windows 系统
 
 另外如果你本机是 Windows 系统，要分 shell 讨论：
 
@@ -70,6 +70,13 @@ sudo ln -s "$(which wireshark.exe)" /usr/local/bin/wireshark
 添加了上述软链接后，就可以正常地在 `wsl` 中使用前面介绍的所有抓包指令了（包括 [ksniff](https://github.com/eldadru/ksniff)）。
 它能正常调用 windows 中的 wireshark，数据流也能正常地通过 shell 管道传输。
 
+
+## 2. [termshark](https://github.com/gcla/termshark): 直接通过命令行 UI 进行实时抓包分析
+
+有的时候，远程实时抓包因为某些原因无法实现，而把 pcap 数据拷贝到本地分析又比较麻烦。
+这时你可以考虑直接使用命令行版本的 `wireshark`: [termshark](https://github.com/gcla/termshark)，直接在命令行进行实时的抓包分析。
+
+[kubectl-debug](https://github.com/aylei/kubectl-debug) 默认的调试镜像中，就自带 `termshark`.
 
 ## 参考
 
