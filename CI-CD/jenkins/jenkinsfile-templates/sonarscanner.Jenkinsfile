@@ -50,11 +50,13 @@ pipeline {
 
                             // 1. 通用扫描器，需要首先在 jenkins 工具配置中添加好此工具
                             def sqScannerHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                            // 1.1 扫描当前文件夹中的源码
                             sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
 
-                            // 2. dotnet core 扫描器，需要 dotnet core sdk
-                            // 安装或更新 sonarscanner，建议在 Dockerfile 中安装，加快构建速度。
+                            // 2. dotnet core 专用扫描器，需要 dotnet core sdk
+                            // 2.1 安装或更新 sonarscanner，建议在 Dockerfile 中安装，加快构建速度。
                             // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
+                            // 2.2 扫描 dotnet core 代码
                             // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
                             // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
                             // sh "dotnet build --no-restore"
