@@ -1,5 +1,5 @@
-// 一个普通的 Jenkins 任务的模板
-// 以 Python 代码的质量扫描为例
+// 代码质量分析任务模板，以 Python 代码的质量扫描为例
+// 需要首先安装插件：SonarQube Scanner for Jenkins
 pipeline {
     agent {label "sonarscanner && python"}
     // agent {label "sonarscanner && dotnet"}  // for dotnet
@@ -43,11 +43,13 @@ pipeline {
         stage("Sonar 代码审查") {
             steps {
                 sh "git checkout -b ${params.BRANCH}"  // 切换到对应的分支
+                // 进入 SonarQube 环境，需要提前在「系统管理」-「系统配置」-「SonarQube Servers」中添加好相关参数
                 withSonarQubeEnv('sonarqube') {
                     script{
                         // SonarQube 要求路径中不包含中文文件夹！否则 sonarscanner 什么 bug 都扫不到！！！
 
-                        // 1. 通用扫描器，需要首先在 jenkins 工具配置中添加好此工具
+                        // 1. 通用扫描器
+                        //   需要首先在 jenkins 「系统管理」-「全局工具配置」中添加好此工具
                         def sqScannerHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                         // 1.1 扫描当前文件夹中的源码
                         sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
