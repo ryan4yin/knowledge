@@ -42,26 +42,24 @@ pipeline {
 
         stage("Sonar 代码审查") {
             steps {
-                dir(env.TARGET_PROJECT_DIR) {
-                    sh "git checkout -b ${params.BRANCH}"  // 添加分支属性
-                    withSonarQubeEnv('sonarqube') {
-                        script{
-                            // SonarQube 要求路径中不包含中文文件夹！否则 sonarscanner 什么 bug 都扫不到！！！
+                sh "git checkout -b ${params.BRANCH}"  // 切换到对应的分支
+                withSonarQubeEnv('sonarqube') {
+                    script{
+                        // SonarQube 要求路径中不包含中文文件夹！否则 sonarscanner 什么 bug 都扫不到！！！
 
-                            // 1. 通用扫描器，需要首先在 jenkins 工具配置中添加好此工具
-                            def sqScannerHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                            // 1.1 扫描当前文件夹中的源码
-                            sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
+                        // 1. 通用扫描器，需要首先在 jenkins 工具配置中添加好此工具
+                        def sqScannerHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        // 1.1 扫描当前文件夹中的源码
+                        sh "${sqScannerHome}/bin/sonar-scanner -Dsonar.projectKey=${JOB_BASE_NAME}"
 
-                            // 2. dotnet core 专用扫描器，需要 dotnet core sdk
-                            // 2.1 安装或更新 sonarscanner，建议在 Dockerfile 中安装，加快构建速度。
-                            // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
-                            // 2.2 扫描 dotnet core 代码
-                            // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
-                            // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
-                            // sh "dotnet build --no-restore"
-                            // sh "dotnet sonarscanner end"
-                        }
+                        // 2. dotnet core 专用扫描器，需要 dotnet core sdk
+                        // 2.1 安装或更新 sonarscanner，建议在 Dockerfile 中安装，加快构建速度。
+                        // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
+                        // 2.2 扫描 dotnet core 代码
+                        // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
+                        // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
+                        // sh "dotnet build --no-restore"
+                        // sh "dotnet sonarscanner end"
                     }
                 }
             }
