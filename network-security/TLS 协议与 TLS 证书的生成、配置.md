@@ -11,6 +11,7 @@
 2. 对称加密算法（ChaCha20/AES 等）计算速度快，强度高，但是无法安全地生成与保管密钥。
 
 于是 TLS 协议在握手阶段使用非对称算法验证服务端，并安全地生成一个对称密钥，然后使用对称算法进行加密通信。
+这里讲「安全地生成一个对称密钥」（Elliptic Curve Diffie-Hellman (ECDHE) key exchange），提供了「完美前向保密（Perfect Forward Secrecy）」特性，前向保密能够保护过去进行的通讯不受密码或密钥在未来暴露的威胁。
 
 TLS 通过两个证书来实现服务端身份验证，以及对称密钥的安全生成：
 
@@ -212,6 +213,7 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 - [TLS/HTTPS 证书生成与验证](https://www.cnblogs.com/kyrios/p/tls-and-certificates.html)
 - [ECC作为SSL/TLS证书加密算法的优势](https://zhuanlan.zhihu.com/p/57710573)
 - [ECC证书的生成和验签](https://cloud.tencent.com/developer/article/1407305)
+- [前向保密(Forward Secrecy) - WikiPedia](https://zh.wikipedia.org/wiki/%E5%89%8D%E5%90%91%E4%BF%9D%E5%AF%86)
 
 - [证书选型和购买 - 阿里云文档](https://help.aliyun.com/document_detail/28542.html)
 
