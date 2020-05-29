@@ -1,13 +1,13 @@
 >这里不详细说明 TLS 协议的内容，请另行查阅文档
 
->个人笔记，不保证正确。
-
+>画外：由于 RSA/ECC 两类非对称加密算法被广泛的应用在各类加密通讯中，因此下面说明的证书生成、签名过程，
+同样也适用于其他场景，比如 SSH 密钥对生成、JWT 密钥对生成等等。
 
 # TLS 协议
 
 我们需要加密网络数据以实现安全通信，但是有一个现实的问题：
 
-1. 非对称加密算法可以方便地对数据进行签名/验证，但是计算速度慢。
+1. 非对称加密算法（RSA/ECC 等）可以方便地对数据进行签名/验证，但是计算速度慢。
 2. 对称加密算法（ChaCha20/AES 等）计算速度快，强度高，但是无法安全地生成与保管密钥。
 
 于是 TLS 协议在握手阶段使用非对称算法验证服务端，并安全地生成一个对称密钥，然后使用对称算法进行加密通信。
@@ -141,7 +141,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     -extensions v3_ext -extfile csr.conf
     ```
 
-#### 拓展：基于 ECC 算法的 TLS 证书
+#### 拓展1：基于 ECC 算法的 TLS 证书
 
 >Let's Encrypt 目前也已经支持了 ECC 证书。
 
@@ -171,6 +171,14 @@ openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.p
 >P.S. 另外还有使用 ECC 进行签名的 ECDSA 算法，被用在了 SSH 协议中，另外 Web 编程中 JWT 的签名也可选用该算法。
 JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身也就变短了，比 RS256 更节约流量，而且具有同等的安全性（这个不 100% 确定）。
 
+
+#### 拓展2：使用 OpenSSL 生成 SSH 密钥对
+
+我们通常都会使用 `ssh-keygen` 生成 SSH 密钥对（默认 RSA 算法），它是 OpenSSH 的一个命令。
+
+既然使用的是相同的算法，那按理说 SSH 密钥对应该也可以通过 OpenSSL 生成出来。
+
+- [ssh-keygen and openssl gives two different public keys](https://stackoverflow.com/questions/46870569/ssh-keygen-and-openssl-gives-two-different-public-keys)
 
 ## 三、服务端与客户端的证书配置
 
