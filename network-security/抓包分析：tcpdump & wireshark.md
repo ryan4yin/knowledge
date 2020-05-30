@@ -12,9 +12,13 @@
 
 ## 一、wireshark 的基本用法
 
-上网能搜得到各种类型的 wireshark 抓包分析，多看几篇博客就会了。
-搜索格式：[xxx 协议 wireshark 抓包分析]，比如「gRPC 协议 wireshark 抓包分析」「WebSocket 协议 wireshark 抓包分析」
-「TCP 协议 wireshark 抓包分析」等等。
+WireShark 的 UI 界面如何使用，网上能搜得到各种类型的 wireshark 演示，多看几篇博客就会了。
+搜索 [xxx 协议 wireshark 抓包分析] 就能找到各种各样的演示，比如
+
+1. 「gRPC 协议 wireshark 抓包分析」
+2. 「WebSocket 协议 wireshark 抓包分析」
+3. 「TCP 协议 wireshark 抓包分析」
+4. 等等
 
 主要需要介绍的，应该是 wireshark 的数据包过滤器。
 wireshark 中有两种包过滤器：
