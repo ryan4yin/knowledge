@@ -55,7 +55,7 @@ istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 部署 Istio 时可以不部署它自带的 Prometheus+Grafana，而是使用以 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 部署的监控系统进行监控。
 
 配置步骤如下：
-1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)
+1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)。
 2. 修改 [custom-operator.yml](./custom-operator.yml)。最后面带 prometheus/prometheusOperator 的配置就是需要添加的内容。
 3. `istioctl manifest apply -f custom-operator.yml`：通过修改好的配置部署 istio 或更新 istio 配置。
 
