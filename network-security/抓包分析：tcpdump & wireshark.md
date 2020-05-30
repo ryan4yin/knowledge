@@ -10,7 +10,57 @@
 
 >P.S. tshark 是 wireshark 的命令行版本，用法 tcpdump 非常相似。
 
-## 一、tcpdump + ssh + wireshark 远程实时抓包
+## 一、wireshark 的基本用法
+
+上网能搜得到各种类型的 wireshark 抓包分析，多看几篇博客就会了。
+搜索格式：[xxx 协议 wireshark 抓包分析]，比如「gRPC 协议 wireshark 抓包分析」「WebSocket 协议 wireshark 抓包分析」
+「TCP 协议 wireshark 抓包分析」等等。
+
+主要需要介绍的，应该是 wireshark 的数据包过滤器。
+wireshark 中有两种包过滤器：
+
+1. 捕获过滤器：在抓包的时候使用它对数据包进行过滤。
+1. 显示过滤器：对抓到的所有数据包进行过滤。
+
+显示过滤器是最有用的，下面简要介绍下显示过滤器的语法。
+
+可以直接通过「**协议名称**」进行过滤：
+
+```
+# 只看 tcp 流量
+tcp
+# 只看 http 流量
+http
+
+# 使用感叹号（或 not）进行反向过滤
+!arp  # 过滤掉所有 arp 数据包
+```
+
+也可以通过「**协议名称.协议属性**」和「比较操作符（比如 `==`）」进行更精确的过滤：
+
+```
+# 通过 ip 的源地址 src 或 dst 进行过滤
+ip.src==192.168.1.33
+
+# 通过 IP 地址（ip.addr）进行过滤（匹配 ip.src 或 ip.dst）
+ip.addr==192.168.0.5
+# 上一条过滤表达式等价于：
+ip.src==192.168.0.5 or ip.dst==192.168.0.5
+
+# 通过 tcp 端口号进行过滤
+tcp.port==80
+tcp.port>4000
+
+# 通过 http 的 host 属性进行过滤
+http.host != "xxx.baidu.com"
+# 通过 http.referer 属性进行过滤
+http.referer == "xxx.baidu.com"
+
+# 多个过滤器之间用 and、or 进行组合
+http.host != "xxx.baidu.com" and http.referer == "xxx.baidu.com"
+```
+
+## 二、tcpdump + ssh + wireshark 远程实时抓包
 
 在进行远程网络抓包分析时，我们通常的做法是：
 
@@ -80,6 +130,7 @@ sudo ln -s "$(which wireshark.exe)" /usr/local/bin/wireshark
 
 ## 参考
 
+- [WireShark使用教程](https://zhuanlan.zhihu.com/p/92993778)
 - [Tracing network traffic using tcpdump and tshark](https://techzone.ergon.ch/tcpdump)
 - [Android remote sniffing using Tcpdump, nc and Wireshark](https://blog.dornea.nu/2015/02/20/android-remote-sniffing-using-tcpdump-nc-and-wireshark/)
 - [聊聊tcpdump与Wireshark抓包分析](https://www.jianshu.com/p/a62ed1bb5b20)
