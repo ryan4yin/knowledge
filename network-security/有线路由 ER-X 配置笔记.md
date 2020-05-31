@@ -1,17 +1,18 @@
 
 ## 基础配置
 
-### 端口规划：网段划分、PPPoe 拨号
+### 端口规划：网段划分
 
-这个比较简单，有空写。
+主要是要事先规划好，设置的时候挺简单的。
 
-### 动态 IP DHCP、DNS
+### PPPoe 拨号、DHCP、DNS
 
 DHCP 就填下 IP 段、DNS1/DNS2、默认网关就 ok 了。
 
 DNS1 填内网 DNS 服务器地址，DNS2 可以填公网的（114.114.114.114）。
 这种配置方法下如果 DNS1（内网 DNS）挂掉，用户仍然能够正常访问公网域名（DNS2），只是解析速度会变慢（因为每次都会先尝试连接 DNS1）。
 
+PPPoe 拨号也很简单，填下账号密码就 OK 了。
 
 ## 配置 Dynamic DNS
 
@@ -47,7 +48,19 @@ sudo apt-get update
 # 现在可以正常使用 apt-get 了
 sudo apt-cache search dnsutils  # 通过索引搜索依赖
 sudo apt-get install dnsutils   # 安装依赖
+
+# 如果提示空间不足，先进行一下空间清理
+sudo apt-get clean  # 清理 apt-get 缓存
+delete system image  # 如果你升级了固件，edgeos 默认会保留旧固件，这会占用大量空间。
 ```
+
+需要注意的是，ER-X 的存储空间只有 256M，非常小。因此尽量不要装任何可选的组件，能省则省。。
+比如如果你写个 python 脚本需要安装 `requests` 等第三方依赖，千万别装 `python-pip`，这东西一装就要 160M 的空间。。
+替代的方法有：
+
+1. 通过 `apt-get` 安装：`sudo apt-get install python-requests`。
+2. 通过 `setup.py` 安装：手动下载依赖，然后通过 `setup.py` 进行安装。这个比较麻烦。
+
 
 参考：
 
@@ -80,4 +93,4 @@ set modify out rule <rule-id> ...  # 修改策略，每一个子命令都可以�
 
 ## 参考
 
-- [EdgeRoute 系列文档](https://help.ui.com/hc/en-us/sections/360008075214-EdgeRouter)
+- [EdgeRoute 系列官方文档](https://help.ui.com/hc/en-us/sections/360008075214-EdgeRouter)
