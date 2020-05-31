@@ -29,7 +29,16 @@ ER-X 自身支持的 DDNS 服务商太少，不过它使用的是基于 debian �
 ## EdgeOS 安装 Debian 包
 
 EdgeOS 是基于 Debian 定制的一个路由器 OS，它可以直接通过 `apt-get` 安装各种依赖。
-方法如下：
+
+首先通过 SSH 协议登入 EdgeOS 控制台：
+
+```shell
+# 就和登录别的远程主机一样的操作。使用用户名和主机 IP 地址进行登录。
+ssh admin@192.168.1.1
+# 输入管理员密码即可成功登录。
+```
+
+接下来进行 `apt-get` 相关配置：
 
 ```shell
 # 以下内容基于 EdgeOS v2.0(deiban 9 strech)，更低的版本请将 stretch 修改为 Wheezy(debian 7)
