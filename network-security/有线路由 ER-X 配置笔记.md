@@ -1,11 +1,17 @@
 
-## 基础配置
+## 一、基础配置
 
-### 端口规划：网段划分
+### 1. 物理端口规划：网段划分
 
-主要是要事先规划好，设置的时候挺简单的。
+主要是要事先规划好，设置的时候挺简单的，UI 操作流程网上都能搜到。
 
-### PPPoe 拨号、DHCP、DNS
+在每个物理端口上，都可以设定一个独立的网段，`Address` 的参数格式为 `192.168.3.1/24`，即 `<网关>/掩码`。
+
+也可以使用 `switch` 将多个物理端口桥接到一起。
+
+待补充。
+
+### 2. PPPoe 拨号、DHCP、DNS
 
 DHCP 就填下 IP 段、DNS1/DNS2、默认网关就 ok 了。
 
@@ -14,7 +20,7 @@ DNS1 填内网 DNS 服务器地址，DNS2 可以填公网的（114.114.114.114�
 
 PPPoe 拨号也很简单，填下账号密码就 OK 了。
 
-## 配置 Dynamic DNS
+## 三、配置 Dynamic DNS
 
 如果你的 WAN 口被供应商分配了动态的公网 IP，可以通过配置 DDNS 提供一个固定的公网入口。
 这样 IP 会动态变更，但是域名始终固定，就可以在内网运行公网可访问的 Web 应用了。
@@ -26,7 +32,7 @@ ER-X 自身支持的 DDNS 服务商太少，不过它使用的是基于 debian �
 
 上面的客户端使用 python 编码，需要通过 `python-pip` 安装一些依赖。安装方法见下一小节。
 
-## EdgeOS 安装 Debian 包
+## 四、EdgeOS 安装 Debian 包
 
 EdgeOS 是基于 Debian 定制的一个路由器 OS，它可以直接通过 `apt-get` 安装各种依赖。
 
@@ -58,7 +64,7 @@ sudo apt-get update
 sudo apt-cache search dnsutils  # 通过索引搜索依赖
 sudo apt-get install dnsutils   # 安装依赖
 
-# 如果提示空间不足，先进行一下空间清理
+# 如果提示空间不足，先进行一下空间清理。再重新执行安装命令
 sudo apt-get clean  # 清理 apt-get 缓存
 delete system image  # 如果你升级了固件，edgeos 默认会保留旧固件，这会占用大量空间。
 ```
@@ -75,7 +81,7 @@ delete system image  # 如果你升级了固件，edgeos 默认会保留旧固�
 
 - [EdgeRouter - Add Debian Packages to EdgeOS](https://help.ui.com/hc/en-us/articles/205202560-EdgeRouter-Add-Debian-Packages-to-EdgeOS)
 
-## 源地址策略路由配置
+## 五、源地址策略路由配置
 
 - 参考文档：[EdgeRouter端口策略路由配置案例](https://bbs.ui.com.cn/t/edgerouter/42290)
 
@@ -95,9 +101,25 @@ edit firewall         # 切换到 firewall 内部进行策略修改
 set modify out rule <rule-id> ...  # 修改策略，每一个子命令都可以通过 [tab] 键补全
 ```
 
-## 通过 Firewall Policy 限制各网段互访
+## 六、防火墙与网络之间的流量限制
 
-待续
+### 1. WAN 的 Firewall Policy
+
+顾名思义，这就是在 WAN 端口上配置的防火墙。它可以防止外部的异常流量进入路由器/LAN，它是一个完全针对外部流量的防火墙策略。
+
+EdgeOS 的默认配置会设置两条 WAN 防火墙策略：
+
+1. `WAN_IN`(WAN to LAN): 匹配穿透路由器的流量，分成两种流量类型：无效流量、相关的/已建立连接的流量。
+1. `WAN_LOCAL`(WAN to LOCAL): 匹配以路由器本身为目的地的流量，流量也可分成上述两种类型分别处理。
+
+参考：
+
+- [EdgeRouter - How to Create a WAN Firewall Rule](https://help.ui.com/hc/en-us/articles/204962154-EdgeRouter-How-to-Create-a-WAN-Firewall-Rule)
+
+### 2. LAN 的 Firewall Policy
+
+这个策略可以针对各个 LAN 设置防火墙策略，限制各 LAN 的互访。
+
 
 
 ## 参考
