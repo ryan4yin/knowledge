@@ -159,8 +159,15 @@ EdgeOS 的默认配置会设置两条 WAN 防火墙策略：
 ### 2. LAN 的 Firewall Policy
 
 这个策略可以针对各个 LAN 设置防火墙策略，限制各 LAN 的互访。
+比如设置一个 Wireless 的 Guest 网络，只允许该网段用户使用 WAN，并访问有限的几个不重要的服务器。
 
+参考：
 
+- [EdgeRouter - How to Create a Guest\LAN Firewall Rule](https://help.ui.com/hc/en-us/articles/218889067-EdgeRouter-How-to-Create-a-Guest-LAN-Firewall-Rule)
+
+## 七、SNAT 和 DNAT 设置
+
+待续
 
 ## 参考
 
