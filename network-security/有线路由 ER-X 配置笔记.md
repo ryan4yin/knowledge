@@ -1,3 +1,6 @@
+Ubiquiti 公司的 EdgeRoute-X 是一款有线广受好评的专业路由器，稳定可靠。
+它使用的 EdgeOS frok 自 vyatta 项目，底层是 Debian 系统。可玩性很高，甚至能直接使用 `apt-get` 安装 debian 包。
+
 
 ## 一、基础配置
 
@@ -49,7 +52,7 @@ ssh admin@192.168.1.1
 ```shell
 # 以下内容基于 EdgeOS v2.0(deiban 9 strech)，更低的版本请将 stretch 修改为 Wheezy(debian 7)
 
-# 1. 进入设置
+# 1. 入 config edit 模式
 configure
 # 2. 使用 debian 阿里云镜像源
 set system package repository stretch components 'main contrib non-free' 
@@ -82,24 +85,57 @@ delete system image  # 清理旧固件
 
 - [EdgeRouter - Add Debian Packages to EdgeOS](https://help.ui.com/hc/en-us/articles/205202560-EdgeRouter-Add-Debian-Packages-to-EdgeOS)
 
-## 五、源地址策略路由配置
+## 五、策略路由
 
 - 参考文档：[EdgeRouter端口策略路由配置案例](https://bbs.ui.com.cn/t/edgerouter/42290)
 
-源地址策略路由，就是让不同源 IP 的流量路由到不同的端口。主要场景有如下几种：
+源地址（Source Address）策略路由，就是让不同源 IP 的流量路由到不同的接口。主要场景有如下几种：
 
 1. 在多 WAN(Wire Area Network) 场景下（EdgeRoute-X 支持多 WAN），我们可能会希望不同网段的流量走不同的 WAN 出去。
     - 比如一个网段用电信网，另一个网段用联通网。
 
+另外还有目标地址策略路由，顾名思义，就是根据 Destination Address/Port 进行路由。
+
 ### 查看与修改「源地址策略路由」配置
+
+>configure 中所有的命令，都可以通过 [tab] 补全或者查看帮助！非常方便。
 
 这个策略配置在 Web UI 上没有展示面板，需要通过 ssh 进入 Terminal，通过如下命令查看：
 
 ```shell
 configure  # 进入 config edit 模式
-show firewall modify  # 查看所有的源地址策略路由设置
-edit firewall         # 切换到 firewall 内部进行策略修改
-set modify out rule <rule-id> ...  # 修改策略，每一个子命令都可以通过 [tab] 键补全
+# 查看所有的策略路由设置
+show firewall modify
+# 查看所有静态路由表设置
+show protocols static table
+
+# 1. 创建一条新路由，走 pppoe0 号接口（出去）
+set protocols static table 11 description "route all traffic to pppoe0"
+set protocols static table 11 interface-route 0.0.0.0/0 next-hop-interface pppoe0
+## 或者也可以通过 ip 地址指定路由的下一跳
+set protocols static table 12 description "route all traffic to 192.168.2.1"
+set protocols static table 12 route 0.0.0.0/0 next-hop 192.168.2.1
+# 2. 切换到 firewall.modify 中
+edit firewall modify
+## 2.1 根据 source address 选择路由表
+## 这里的 `traffic_out` 只是一个配置名称，只要求它是唯一的
+set traffic_out description "route traffic to wan"  # 简要说明下配置的用途
+set traffic_out rule 10 description "route all traffic to pppoe0"  # 其中的 10 是一个 id，只要求它是一个唯一的数字。
+set traffic_out rule 10 source address 192.168.5.0/24
+set traffic_out rule 40 modify table 11  # 让被匹配的流量使用 id 为 11 的路由（也就是从 pppoe0 出去）
+
+# 3. 指定哪些接口需要使用 traffic_out 这个策略路由配置
+# 这里的 `in` 匹配穿透该接口的流量，也就是说会过滤掉访问接口本身的流量（比如访问路由器主页）。
+set interfaces ethernet eth1 firewall in modify traffic_out
+set interfaces ethernet eth2 firewall in modify traffic_out
+
+# 4. 保存修改
+commit ; save
+
+# 5. 查看 ip route 路由表信息，验证配置正确性
+show ip route
+# 查看 modify 防火墙的统计信息
+show firewall modify statistics
 ```
 
 ## 六、防火墙与网络之间的流量限制
