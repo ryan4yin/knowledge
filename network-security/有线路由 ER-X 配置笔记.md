@@ -146,10 +146,11 @@ show firewall modify statistics
 
 EdgeOS 的默认配置会设置两条 WAN 防火墙策略：
 
-1. `WAN_IN`(WAN to LAN): 匹配穿透路由器的流量，分成两种流量类型：无效流量、相关的/已建立连接的流量。
-2. `WAN_LOCAL`(WAN to LOCAL): 匹配以路由器本身为目的地的流量，流量也可分成上述两种类型分别处理。
+1. `WAN_IN`(WAN to LAN): 匹配穿透路由器的流量（Dest IP 不是网关 IP 的流量），分成两种流量类型：无效流量、相关的/已建立连接的流量。
+2. `WAN_LOCAL`(WAN to LOCAL): 匹配以路由器本身为 Destination IP 的流量，流量也可分成上述两种类型分别处理。
+    - 比如从公网访问你 WAN 的 IP 地址，就会被这条规则进行处理。
 
-这个「相关的流量」，大概就是 `port-forwarding`/`dnat` 处理过的流量。（个人理解）
+这个「相关的流量」是哪一类流量？不太清楚。。
 而已「建立连接的流量」就很好理解了，是状态为「Estabilished」的 TCP 流量。
 
 参考：
