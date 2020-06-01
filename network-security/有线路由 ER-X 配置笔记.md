@@ -66,7 +66,8 @@ sudo apt-get install dnsutils   # 安装依赖
 
 # 如果提示空间不足，先进行一下空间清理。再重新执行安装命令
 sudo apt-get clean  # 清理 apt-get 缓存
-delete system image  # 如果你升级了固件，edgeos 默认会保留旧固件，这会占用大量空间。
+# 如果你升级了固件，edgeos 默认会保留旧固件，这会占用大量空间。
+delete system image  # 清理旧固件
 ```
 
 需要注意的是，ER-X 的存储空间只有 256M，非常小。因此尽量不要装任何可选的组件，能省则省。。
