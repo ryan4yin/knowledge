@@ -96,7 +96,7 @@ delete system image  # 清理旧固件
 
 另外还有目标地址策略路由，顾名思义，就是根据 Destination Address/Port 进行路由。
 
-### 查看与修改「源地址策略路由」配置
+### 「策略路由」配置
 
 >configure 中所有的命令，都可以通过 [tab] 补全或者查看帮助！非常方便。
 
@@ -147,7 +147,10 @@ show firewall modify statistics
 EdgeOS 的默认配置会设置两条 WAN 防火墙策略：
 
 1. `WAN_IN`(WAN to LAN): 匹配穿透路由器的流量，分成两种流量类型：无效流量、相关的/已建立连接的流量。
-1. `WAN_LOCAL`(WAN to LOCAL): 匹配以路由器本身为目的地的流量，流量也可分成上述两种类型分别处理。
+2. `WAN_LOCAL`(WAN to LOCAL): 匹配以路由器本身为目的地的流量，流量也可分成上述两种类型分别处理。
+
+这个「相关的流量」，大概就是 `port-forwarding`/`dnat` 处理过的流量。（个人理解）
+而已「建立连接的流量」就很好理解了，是状态为「Estabilished」的 TCP 流量。
 
 参考：
 
