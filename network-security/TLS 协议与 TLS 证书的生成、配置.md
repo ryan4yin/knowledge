@@ -231,7 +231,7 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 - [证书选型和购买 - 阿里云文档](https://help.aliyun.com/document_detail/28542.html)
 
-另外两个关于 CN(Common Name) 和 SAN(Ssubject Altnative Name) 的问答：
+另外两个关于 CN(Common Name) 和 SAN(Subject Altnative Name) 的问答：
 
 - [Can not get rid of `net::ERR_CERT_COMMON_NAME_INVALID` error in chrome with self-signed certificates](https://serverfault.com/questions/880804/can-not-get-rid-of-neterr-cert-common-name-invalid-error-in-chrome-with-self)
 - [SSL - How do Common Names (CN) and Subject Alternative Names (SAN) work together?](https://stackoverflow.com/questions/5935369/ssl-how-do-common-names-cn-and-subject-alternative-names-san-work-together)
