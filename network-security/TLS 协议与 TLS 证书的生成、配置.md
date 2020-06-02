@@ -64,6 +64,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 1. 申请 [Let's Encrypt 免费证书](https://letsencrypt.org)
    - 很多代理工具都有提供 Let's Encrypt 证书的 Auto Renewal，比如:
      - [Traefik](/network-proxy+web-server/traefik/README.md)
+     - [Caddy](https://github.com/caddyserver/caddy)
+     - [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion)
    - 网上也有一些 [certbot](https://github.com/certbot/certbot) 插件，可以通过 DNS 提供商的 API 进行 Let's Encrypt 证书的 Auto Renewal，比如：
      - [certbot-dns-aliyun](https://github.com/tengattack/certbot-dns-aliyun)
 
