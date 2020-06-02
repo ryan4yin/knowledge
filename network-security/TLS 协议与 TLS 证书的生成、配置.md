@@ -233,6 +233,24 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 3. 编程：使用 HTTPS 客户端的 api 指定使用的 TLS 证书
 4. Docker-Client: 参见 [Use self-signed certificates - Docker Docs](https://docs.docker.com/registry/insecure/#use-self-signed-certificates)
 
+#### 2.1 证书锁定技术(Certifacte Pining)
+
+即使使用了 TLS 协议对流量进行加密，并且保证了前向保密，也无法保证流量不被代理！
+
+这是因为客户端大多是直接依靠了操作系统内置的证书链进行 TLS 证书验证，而 Fiddler 等代理工具可以将自己的 TLS 证书添加到该证书链中。
+
+为了防止流量被 Fiddler 等工具使用上述方式监听流量，出现了「证书锁定」技术。
+方法是在客户端中硬编码证书的 hash 值，在建立 TLS 连接前，先计算使用的证书的 hash 值是否匹配，否则就中断连接。
+
+这种锁定方式需要两个前提才能确保流量不被监听：
+
+1. 客户端中硬编码的证书 hash 值不会被篡改。
+2. 用于 TLS 协议的证书不会更换。（如果更换了，hash 值就对不上了。）
+
+而对于第三方的 API，因为我们不知道它们会不会更换 TLS 证书，就不能直接将证书 hash 值硬编码在客户端中。
+这时可以考虑从服务端获取这些 API 的证书 hash 值（附带私钥签名用于防伪造）。
+
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
