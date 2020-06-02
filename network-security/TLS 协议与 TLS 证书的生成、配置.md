@@ -54,10 +54,22 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
 在 TLS 连接的建立阶段，客户端（如浏览器）会使用 CA 证书的公钥对服务端的证书签名进行验证，验证成功则说明该证书是受信任的。
 
-如果我们要生成一个面向公共网络的 TLS 证书，那最好的方法，应该是申请一个 [Let's Encrypt 免费证书](https://letsencrypt.org)。
-该证书可以手动申请，另外 [Traefik](/network-proxy+web-server/traefik/README.md) 等反向代理也有提供自动生成并更新 Let's Encrypt 证书的功能。
+### 1. 生成面向公共网络的 TLS 证书
 
-### 生成由本地证书签名的证书(非自签名证书)
+如果我们需要在公网通过 HTTPS 提供 Web 服务，就需要生成一个面向公共网络的 TLS 证书。
+
+免费的 TLS 证书有两种方式获取：
+
+1. 部分 TLS 提供商有提供免费证书的申请，有效期为一年，但是不支持泛域名。
+1. 申请 [Let's Encrypt 免费证书](https://letsencrypt.org)
+   - 很多代理工具都有提供 Let's Encrypt 证书的 Auto Renewal，比如:
+     - [Traefik](/network-proxy+web-server/traefik/README.md)
+   - 网上也有一些 [certbot](https://github.com/certbot/certbot) 插件，可以通过 DNS 提供商的 API 进行 Let's Encrypt 证书的 Auto Renewal，比如：
+     - [certbot-dns-aliyun](https://github.com/tengattack/certbot-dns-aliyun)
+
+收费证书可以在各 TLS 提供商处购买，比如国内的阿里云腾讯云等。
+
+### 1. 生成由本地证书签名的证书(非自签名证书)
 
 除了公网可用的受信证书，在内网环境，我们需要也使用 TLS 证书保障通信安全，这时我们可能会选择自己生成证书，而不是向权威机构申请证书。
 可能的原因如下：
@@ -142,7 +154,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     -extensions v3_ext -extfile csr.conf
     ```
 
-#### 拓展1：基于 ECC 算法的 TLS 证书
+#### 1.1 拓展1：基于 ECC 算法的 TLS 证书
 
 >Let's Encrypt 目前也已经支持了 ECC 证书。
 
@@ -173,7 +185,7 @@ openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.p
 JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身也就变短了，比 RS256 更节约流量，而且具有同等的安全性（这个不 100% 确定）。
 
 
-#### 拓展2：使用 OpenSSL 生成 SSH 密钥对
+#### 1.2 拓展2：使用 OpenSSL 生成 SSH 密钥对
 
 我们通常都会使用 `ssh-keygen` 生成 SSH 密钥对（默认 RSA 算法），它是 OpenSSH 的一个命令。
 
