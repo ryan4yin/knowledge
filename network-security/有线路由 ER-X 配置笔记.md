@@ -1,6 +1,7 @@
 Ubiquiti 公司的 EdgeRoute-X 是一款有线广受好评的专业路由器，稳定可靠。
 它使用的 EdgeOS frok 自 vyatta 项目，底层是 Debian 系统。可玩性很高，甚至能直接使用 `apt-get` 安装 debian 包。
 
+另外 [VyOS](https://docs.vyos.io/en/latest/) 也是 fork 自 vyatta，因此也可以参考它的文档。
 
 ## 一、基础配置
 
