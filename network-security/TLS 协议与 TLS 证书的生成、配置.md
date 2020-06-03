@@ -233,7 +233,9 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 3. 编程：使用 HTTPS 客户端的 api 指定使用的 TLS 证书
 4. Docker-Client: 参见 [Use self-signed certificates - Docker Docs](https://docs.docker.com/registry/insecure/#use-self-signed-certificates)
 
-#### 2.1 证书锁定技术(Certifacte Pining)
+#### 2.1 证书锁定(Certifacte Pining)/公钥锁定(Public Key Pining)技术
+
+>TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的签名。
 
 即使使用了 TLS 协议对流量进行加密，并且保证了前向保密，也无法保证流量不被代理！
 
