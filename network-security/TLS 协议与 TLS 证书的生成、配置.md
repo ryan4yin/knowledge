@@ -233,9 +233,7 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 3. 编程：使用 HTTPS 客户端的 api 指定使用的 TLS 证书
 4. Docker-Client: 参见 [Use self-signed certificates - Docker Docs](https://docs.docker.com/registry/insecure/#use-self-signed-certificates)
 
-#### 2.1 证书锁定(Certifacte Pining)/公钥锁定(Public Key Pining)技术
-
->TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的签名。
+#### 2.1 证书锁定(Certifacte Pining)技术
 
 即使使用了 TLS 协议对流量进行加密，并且保证了前向保密，也无法保证流量不被代理！
 
@@ -256,6 +254,10 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 >证书锁定技术几乎等同于 SSH 协议的 `StrictHostKeyChecking` 选项，客户端会验证服务端的公钥指纹（key fingerprint），验证不通过则断开连接。
 
+#### 2.2 公钥锁定(Public Key Pining)
+
+TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的签名，因此我们也可以考虑只锁定其中的公钥
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
@@ -275,3 +277,4 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 关于证书锁定技术：
 
 - [Certificate and Public Key Pinning - OWASP](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning)
+- [Difference between certificate pinning and public key pinning](https://security.stackexchange.com/questions/85209/difference-between-certificate-pinning-and-public-key-pinning)
