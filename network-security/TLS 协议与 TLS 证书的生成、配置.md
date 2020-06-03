@@ -260,6 +260,8 @@ TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的
 
 「公钥锁定」比「证书锁定」更灵活，这样证书本身其实就可以直接轮转了（证书有过期时间），而不需要一个旧证书和新证书共存的中间时期。
 
+如果不考虑实现难度的话，「公钥锁定」是更推荐的技术。
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
