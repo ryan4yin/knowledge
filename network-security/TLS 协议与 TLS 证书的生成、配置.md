@@ -240,23 +240,25 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 这是因为客户端大多是直接依靠了操作系统内置的证书链进行 TLS 证书验证，而 Fiddler 等代理工具可以将自己的 TLS 证书添加到该证书链中。
 
 为了防止流量被 Fiddler 等工具使用上述方式监听流量，出现了「证书锁定」技术。
-方法是在客户端中硬编码证书的 hash 值，在建立 TLS 连接前，先计算使用的证书的 hash 值是否匹配，否则就中断连接。
+方法是在客户端中硬编码证书的指纹（Hash值），在建立 TLS 连接前，先计算使用的证书的指纹是否匹配，否则就中断连接。
 
 这种锁定方式需要两个前提才能确保流量不被监听：
 
-1. 客户端中硬编码的证书 hash 值不会被篡改。
-2. 用于 TLS 协议的证书不会更换。（如果更换了，hash 值就对不上了。）
+1. 客户端中硬编码的证书指纹不会被篡改。
+2. 用于 TLS 协议的证书不会频繁更换。（如果更换了，指纹就对不上了。）
 
-而对于第三方的 API，因为我们不知道它们会不会更换 TLS 证书，就不能直接将证书 hash 值硬编码在客户端中。
-这时可以考虑从服务端获取这些 API 的证书 hash 值（附带私钥签名用于防伪造）。
+而对于第三方的 API，因为我们不知道它们会不会更换 TLS 证书，就不能直接将证书指纹硬编码在客户端中。
+这时可以考虑从服务端获取这些 API 的证书指纹（附带私钥签名用于防伪造）。
 
-而证书的轮转(Rotate)机制，可以通过在新版本的客户端中包含多个证书 hash 来实现，这样能保证同时有多个可信证书，达成证书的轮转。（类比 JWT 的公钥轮转机制）
+为了实现证书的轮转(rotation)，可以在新版本的客户端中包含多个证书指纹，这样能保证同时有多个可信证书，达成证书的轮转。（类比 JWT 的公钥轮转机制）
 
 >证书锁定技术几乎等同于 SSH 协议的 `StrictHostKeyChecking` 选项，客户端会验证服务端的公钥指纹（key fingerprint），验证不通过则断开连接。
 
 #### 2.2 公钥锁定(Public Key Pining)
 
-TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的签名，因此我们也可以考虑只锁定其中的公钥
+TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的签名，因此我们也可以考虑只锁定其中的公钥。
+
+「公钥锁定」比「证书锁定」更灵活，这样证书本身其实就可以直接轮转了，而不需要一个旧证书和新证书共存的中间时期。
 
 ## 参考
 
@@ -278,3 +280,8 @@ TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的
 
 - [Certificate and Public Key Pinning - OWASP](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning)
 - [Difference between certificate pinning and public key pinning](https://security.stackexchange.com/questions/85209/difference-between-certificate-pinning-and-public-key-pinning)
+
+
+加密/签名算法相关：
+
+1. [RSA算法原理（二）](http://www.ruanyifeng.com/blog/2013/07/rsa_algorithm_part_two.html)
