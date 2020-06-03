@@ -276,7 +276,7 @@ TLS 证书其实就是公钥+一些证书相关信息+CA相关信息+CA私钥的
 - [SSL - How do Common Names (CN) and Subject Alternative Names (SAN) work together?](https://stackoverflow.com/questions/5935369/ssl-how-do-common-names-cn-and-subject-alternative-names-san-work-together)
 
 
-关于证书锁定技术：
+关于证书锁定/公钥锁定技术：
 
 - [Certificate and Public Key Pinning - OWASP](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning)
 - [Difference between certificate pinning and public key pinning](https://security.stackexchange.com/questions/85209/difference-between-certificate-pinning-and-public-key-pinning)
