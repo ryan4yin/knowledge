@@ -76,6 +76,7 @@ dir("sub_git_dir"){
 def nodes = [:]
 
 // 需要插件：Pipeline Utility Steps
+// 会忽略所有不在线的节点！
 nodesByLabel('docker').each {
   nodes[it] = { ->
     node(it) {
@@ -103,7 +104,7 @@ nodesByLabel('docker').each {
       // 将之前暂存的文件再取出到当前节点上。
       unstash 'operation-scripts'
       // 清理所有历史数据
-      sh("python3 run.py operation.")
+      sh("python3 run.py operation.clean_old_data")
     }
   }
 }
