@@ -280,6 +280,8 @@ mTLS 的应用场景主要在「零信任网络架构」中。
 比如微服务之间的互相访问，就可以使用 mTLS。
 这样就能保证每个 RPC 调用的客户端，都是其他微服务（可信），防止黑客入侵后为所欲为。
 
+目前 Istio/Linkerd2 等服务网格，都已经提供了 mTLS 双向认证的功能。
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
