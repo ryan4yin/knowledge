@@ -219,6 +219,34 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 另外阿里云负载均衡器配置前向保密的方法参见：[管理TLS安全策略 - 负载均衡 - 阿里云文档](https://help.aliyun.com/document_detail/90740.html)
 
+#### 1.2 TLS 双向认证(Mutual TLS authentication, mTLS)
+
+传统的「TLS 单向认证」技术，只在客户端去验证服务端是否可信。
+而「TLS 双向认证（mTLS）」，则添加了服务端验证客户端是否可信的步骤（第三步）：
+
+1. 客户端发起请求
+2. 「验证服务端是否可信」：服务端将自己的 TLS 证书发送给客户端，客户端通过自己的 CA 证书链验证这个服务端证书。
+3. 「验证客户端是否可信」：客户端将自己的 TLS 证书发送给服务端，服务端使用它的 CA 证书链验证该客户端证书。
+4. 协商对称加密算法及密钥
+5. 使用对称加密进行后续通信。
+
+因为相比传统的 TLS，mTLS 只是添加了「验证客户端」这样一个步骤，所以这项技术也被称为「Client Authetication」.
+
+mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界网络」中。
+比如微服务之间的互相访问，就可以使用 mTLS。
+这样就能保证每个 RPC 调用的客户端，都是其他微服务（或者别的可信方），防止黑客入侵后为所欲为。
+
+
+目前查到如下几个Web服务器/代理支持 mTLS:
+
+1. Traefik: [Docs - Client Authentication (mTLS)](https://docs.traefik.io/v2.0/https/tls/#client-authentication-mtls)
+1. Nginx: [Using NGINX Reverse Proxy for client certificate authentication](https://community.openhab.org/t/using-nginx-reverse-proxy-for-client-certificate-authentication-start-discussion/43064)
+   1. 主要参数是两个：`ssl_client_certificate /etc/nginx/client-ca.pem` 和 `ssl_verify_client on`
+
+>mTLS 是一项比较新的技术，目前资料还比较少。能查阅到的信息中，大部分都是 2017 年之后的。
+目前查到的比较正式的 mTLS 相关的 RFC 只有 [RFC8705](https://www.rfc-editor.org/rfc/rfc8705.html)，另外只在[TLS1.3 规范（RFC8446）](https://tools.ietf.org/html/rfc8446) 中看到了
+「mutual TLS」相关的内容，更低版本的 TLS 规范中没有任何说明。
+
 ### 2. 客户端的 TLS 证书配置（针对本地签名的证书）
 
 如果你在证书不是权威 CA 机构颁发的（比如是一个自签名证书），那就需要在客户端将这个 TLS 证书（公钥）添加到受信证书列表中。
@@ -268,20 +296,6 @@ TLS 证书其实就是公钥+申请者(你)和颁发者(CA)的信息+签名(使�
 
 #### 2.3 TLS 双向认证(Mutual TLS authentication, mTLS)
 
-常用的「TLS 单向认证」技术，只在客户端去验证服务端是否可信。
-而「TLS 双向认证（mTLS）」，则添加了服务端验证客户端是否可信的步骤（第三步）：
-
-1. 客户端发起请求
-2. 「验证服务端是否可信」：服务端将自己的 TLS 证书发送给客户端，客户端通过自己的 CA 证书链验证这个服务端证书。
-3. 「验证客户端是否可信」：客户端将自己的 TLS 证书发送给服务端，服务端使用它的 CA 证书链验证该客户端证书。
-4. 协商对称加密算法及密钥
-5. 使用对称加密进行后续通信。
-
-mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界网络」中。
-比如微服务之间的互相访问，就可以使用 mTLS。
-这样就能保证每个 RPC 调用的客户端，都是其他微服务（或者别的可信方），防止黑客入侵后为所欲为。
-
-目前 Istio/Linkerd2 等服务网格，都已经提供了 mTLS 双向认证的功能。
 
 如果将 mTLS 用在 App 安全上，存在的风险是：
 
