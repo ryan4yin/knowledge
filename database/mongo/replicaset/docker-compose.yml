@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  mongo1:
+    container_name: mongo1
+    image: mongo:4.2
+    restart: always
+    entrypoint: [ "mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+    - ./mongo-data1:/data/db
+    ports:
+    - "27017:27017"
+  mongo2:
+    container_name: mongo2
+    image: mongo:4.2
+    restart: always
+    entrypoint: [ "mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+    - ./mongo-data2:/data/db
+    ports:
+    - "27018:27017"
+  mongo3:
+    container_name: mongo3
+    image: mongo:4.2
+    restart: always
+    entrypoint: [ "mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+    - ./mongo-data3:/data/db
+    ports:
+    - "27019:27017"
