@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+    - 3306:3306
+    # 内存模式（tmpfs）的 mysql，速度非常快！但是重启 PC 会丢数据！可用于单元测试/集成测试等环境。
+    ## https://docs.docker.com/storage/tmpfs/
+    ## 也可以通过 volumes 将文件夹映射到 /dev/shm 中实现「内存模式」
+    tmpfs:
+      - /var/lib/mysql:size=256m
+      # 模板如下：
+      # - /tempFiles:exec,mode=777,size=1G,uid=104,gid=107
+    environment:
+      # 参考：https://hub.docker.com/_/mysql/
+      MYSQL_ROOT_PASSWORD: example
