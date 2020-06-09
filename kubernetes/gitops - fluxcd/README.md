@@ -8,6 +8,14 @@ Flux 就会帮你完成接下来的一切工作。
 
 >[Flux+Flagger+Istio](https://github.com/stefanprodan/gitops-istio)，可以完成应用的自动灰度更新，自动根据监控指标增加灰度或回滚。
 
+## 零、Flux vs Argo CD vs Jenkins-X
+
+1. Flux: 简单小巧，只做一件事，并且把这件事做得很好。
+2. Argo CD: 比 Flux 更强大，支持多租户多名字空间。有 Web UI
+3. Jenkins-X: 最复杂的一个工具，同时包含了 CI 和 CD。目前不建议使用。
+
+参考：[FluxCD、ArgoCD或Jenkins X，哪个才是适合你的GitOps工具？ ](http://dockone.io/article/10175)
+
 ## 一、安装使用 Flux
 
 ### 1. 生成 ssh 密钥对
