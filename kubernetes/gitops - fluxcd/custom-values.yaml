@@ -1,0 +1,45 @@
+git:
+  # URL of git repo with Kubernetes manifests; e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
+  url: "ssh://git@github.com/fluxcd/flux-get-started"
+  # Branch of git repo to use for Kubernetes manifests
+  branch: "master"
+  # Path within git repo to locate Kubernetes manifests (relative path)
+  path: "workloads"
+  # Set to `true` if you intend for Flux to not be able to push changes to git.
+  # Also configure state.mode to `secret` since storing state in a git tag will no longer be possible.
+  readonly: false
+  # Username to use as git committer
+  user: "Weave Flux"
+  # Email to use as git committer
+  email: "support@weave.works"
+  # Period at which to poll git repo for new commits
+  pollInterval: "5m"
+  # Duration after which git operations time out
+  timeout: "20s"
+  # The secret name can be used to supply your own SSH key, instead of
+  # relying on Flux to generate one for you:
+  # 1. Generate a SSH key named identity: ssh-keygen -q -N "" -f ./identity
+  # 2. Create a Kubernetes secret: kubectl -n flux create secret generic flux-ssh --from-file=./identity
+  # 3. Delete the private key: rm ./identity
+  # 4. Add ./identity.pub as a deployment key with write access in your Git repo
+  # 5. Set the secret name (flux-ssh) below
+  secretName: "flux-git-deploy"  # 和前面使用 ssh key 创建的 secret 名称一致
+
+
+# SSH 主机指纹
+ssh:
+  # 这里填之前扫描得到的 known_hosts 文件的内容，注意多行文字要缩进两个空格。
+  # 这里我以 gitlab 为例，请使用自己的 known_hosts 替换掉它！
+  known_hosts: |
+    github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+    gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
+    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+
+# 如果你使用的镜像仓库不是 dockerhub，就关掉镜像仓库的扫描 
+registry:
+  disableScanning: true
+memcached:  # 镜像仓库元信息存放位置，关掉
+  enabled: false
+
+# 其他参数请按需修改
