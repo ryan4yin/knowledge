@@ -5,6 +5,10 @@
 gRPC （默认情况下）使用 HTTP/2 进行数据的传输，使用 protobuf3 进行 RPC 数据的序列化以及 RPC 接口的定义。
 
 
+## gRPC 状态码
+
+- [Status codes and their use in gRPC](https://github.com/grpc/grpc/blob/master/doc/statuscodes.md)
+
 ## [gRPC over HTTP2](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md)
 
 gRPC 的 Request 只使用 HTTP 的 POST 方法；
