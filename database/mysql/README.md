@@ -6,7 +6,7 @@
 
 ### 1. 开发环境（对安全性要求不高）
 
-启用 root 账户远程登录，并且设置密码
+启用 root 账户远程登录，并且设置密码：
 ```sql
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<your-password>';
 FLUSH PRIVILEGES;
