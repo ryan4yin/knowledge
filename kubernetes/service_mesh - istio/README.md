@@ -18,6 +18,11 @@ istioctl manifest apply \
 
 这种方式适合自定义参数比较少，而且只是临时测试的情形。
 
+其中 `profile` 的选择，参见 [Installation Configuration Profiles - Istio Docs](https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
+
+生产环境建议使用 `default`，试用 istio 建议使用 `demo`。
+
+
 #### 1.1 自定义部署（推荐方式）
 
 可以通过 `istioctl manifest apply -f custom-operator.yml` 进行自定义部署，[custom-operator.yml](./custom-operator.yml) 就在当前文件夹内。
