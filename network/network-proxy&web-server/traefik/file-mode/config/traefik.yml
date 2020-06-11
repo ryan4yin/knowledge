@@ -1,0 +1,23 @@
+providers:
+  docker: {}
+  file:
+    # 使用单个文件进行配置
+    filename: "/etc/traefik/dynamic.yml"
+    # 也可以将配置拆分成多个文件，放在一个文件夹中
+    # directory: "/etc/traefik/dynamic"
+
+    # 监控配置文件的动态更新，实现配置文件 CURD 的自动热加载。
+    watch: true
+
+log:
+  level: DEBUG
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# 启用 traefik dashboard，它的路由规则在 dynamic.yml 中配置
+api:
+  dashboard: true

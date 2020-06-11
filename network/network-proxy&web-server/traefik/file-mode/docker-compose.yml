@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  traefik:
+    image: "traefik:2.2"
+    container_name: "traefik"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      # 通过 50000，代理 jenkins-master 连接 slave 的 jnlp4 协议
+      - "50000:50000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # 绑定配置目录
+      - "./config:/etc/traefik"

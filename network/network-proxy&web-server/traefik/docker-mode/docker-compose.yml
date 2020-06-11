@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  traefik:
+    image: "traefik:2.2"
+    container_name: "traefik"
+    restart: always
+    command: --api.dashboard=true --providers.docker
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      # 设置通过 traefik.local 访问 traefik dashboard
+      - "traefik.http.routers.api.rule=Host(`traefik.local`)"
+      - "traefik.http.routers.api.service=api@internal"
+      # 为 dashboard 设置身份验证
+      # - "traefik.http.routers.api.middlewares=auth"
+      # - "traefik.http.middlewares.auth.basicauth.users=......"
+#     networks:  # 如果使用了自定义的虚拟网络，traefik 必须额外添加这项配置
+#       - my-service1
+
+# networks: 
+#   my-service1:
+#     external:  # 加入 my-service 中已定义好的虚拟网络。否则 traefik 将无法访问 my-service
+#       name: my-service1
