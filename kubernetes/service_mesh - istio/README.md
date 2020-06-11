@@ -20,7 +20,7 @@ istioctl manifest apply \
 
 其中 `profile` 的选择，参见 [Installation Configuration Profiles - Istio Docs](https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
 
-生产环境建议使用 `default`，试用 istio 建议使用 `demo`。
+生产/测试环境建议使用 `default`，开发环境/试用 istio 建议使用 `demo`。
 
 
 #### 1.1 自定义部署（推荐方式）
