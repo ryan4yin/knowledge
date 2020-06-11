@@ -50,7 +50,25 @@ istioctl manifest generate --set profile=default --set values.prometheus.enabled
 istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
 ```
 
-### 2. 监控：istioctl + prometheus-operator
+### 2. 部署应用
+
+#### 2.1 [Sidecar 注入](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/)
+
+启动 Sidecar 自动注入：
+
+```shell
+kubectl label namespace default istio-injection=enabled
+```
+
+对某些不需要 Sidecar 的应用（如某些 Job/CronJob），可以在 Pod 模板上添加注解以禁止 Sidecar 注入：
+
+```yaml
+metadata:
+  annotations:
+    sidecar.istio.io/inject: "false"
+```
+
+### 3. 监控：istioctl + prometheus-operator
 
 部署 Istio 时可以不部署它自带的 Prometheus+Grafana，而是使用以 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 部署的监控系统进行监控。
 
