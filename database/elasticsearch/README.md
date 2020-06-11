@@ -12,7 +12,7 @@
 
 如果你有 github 代理，请直接修改 `docker-elk/elasticsearch/Dockerfile`，示例如下：
 
-```
+```dockerfile
 ARG ELK_VERSION
 
 # https://www.docker.elastic.co/
@@ -25,7 +25,24 @@ RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis
 RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-pinyin-6.3.0.zip
 ```
 
-没有代理，网速慢的话，建议手动解压上面的两个 zip 文件到两个文件夹中，然后通过数据卷将文件夹挂载到 `/usr/share/elasticsearch/plugins` 下。
+没有代理，网速慢的话，可以手动下载 zip 包到 ``docker-elk/elasticsearch/` 目录下，然后修改 `docker-elk/elasticsearch/Dockerfile`:
+
+```dockerfile
+ARG ELK_VERSION
+
+FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+# 下面这行不能省略！
+ARG ELK_VERSION
+ADD elasticsearch-analysis-ik-${ELK_VERSION}.zip .
+# 多阶段构建，第一步解压 zip
+RUN unzip elasticsearch-analysis-ik-${ELK_VERSION}.zip -d /ik
+
+# https://github.com/elastic/elasticsearch-docker
+FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+
+# 从上一阶段的容器中，拷贝解压完成的 elasticsearch 插件
+COPY --from=0 /ik /usr/share/elasticsearch/plugins/ik
+```
 
 
 ## 修改宿主机的内核参数
