@@ -30,7 +30,7 @@ RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis
 ```dockerfile
 ARG ELK_VERSION
 
-FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+FROM buildpack-deps:buster
 # 下面这行不能省略！
 ARG ELK_VERSION
 ADD elasticsearch-analysis-ik-${ELK_VERSION}.zip .
