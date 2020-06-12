@@ -2,7 +2,7 @@
 
 主要使用 [Docker-ELK](https://github.com/deviantony/docker-elk.git)
 
-需要注意的有
+需要注意的有: 
 
 1. 要在 `docker-compose.yml` 中添加容器日志的大小限制，elk 的日志比较多，不加限制可能会吃光存储空间。
 1. 磁盘空间不足时，ElasticSearch 会自动将索引设为 `read only`。
