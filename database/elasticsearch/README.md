@@ -2,8 +2,14 @@
 
 主要使用 [Docker-ELK](https://github.com/deviantony/docker-elk.git)
 
-需要注意的，主要是防止磁盘使用率过高，导致 ElasticSearch 自动将索引设为 `read only`。
+需要注意的有
 
+1. 要在 `docker-compose.yml` 中添加容器日志的大小限制，elk 的日志比较多，不加限制可能会吃光存储空间。
+1. 磁盘空间不足时，ElasticSearch 会自动将索引设为 `read only`。
+2. ELK 系统启动很慢。（Java 程序的通病）
+3. ELK 系统非常吃 CPU 和内存，空载状态下这三件套也要用掉近 2G 的内存。
+   1. 建议 ElasticSearch  和 Logstash 的内存上下限都设为 4G-8G。
+   2. Logstash 的 pipelines （定时同步）越多，启动就越慢，也越吃性能。要给足 CPU 和 RAM.
 
 ## 安装中文分词插件
 
