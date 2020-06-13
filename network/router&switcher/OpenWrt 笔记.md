@@ -1,4 +1,9 @@
-# [OpenWrt](https://github.com/openwrt/openwrt)
+# [OpenWrt](https://github.com/openwrt)
 
 
 
+官方文档：https://openwrt.org/docs/start
+
+## 入门知识
+
+待续
