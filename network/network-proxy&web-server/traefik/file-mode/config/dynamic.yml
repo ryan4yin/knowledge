@@ -20,3 +20,22 @@ tcp:
   routers:
   service:
 
+
+# TLS 加密
+tls:
+  options:
+    default:  # 默认参数
+      minVersion: VersionTLS12
+      # 验证客户端证书（mTLS，双向 TLS）
+      clientAuth:
+        caFiles:
+        # 客户端证书的 CA 证书
+        - /etc/certs/client-ca.crt
+        clientAuthType: RequireAndVerifyClientCert
+      sniStrict: true
+      preferServerCipherSuites: true
+  stores:
+    default: # 默认参数
+      defaultCertificate:
+        certFile: /etc/certs/server.crt
+        keyFile: /etc/certs/server.key

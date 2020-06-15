@@ -334,6 +334,32 @@ mTLS 和「公钥锁定/证书锁定」对比：
 
 待续
 
+
+## 四、通过 OpenSSL 对 TLS 证书进行 CURD（增删查改）
+
+### 1. 查询与验证
+
+```shell
+# 查看证书(crt)信息
+openssl x509 -noout -text -in ca.crt
+
+# 查看证书请求(csr)信息
+openssl req -noout -text -in server.csr
+
+# 查看 RSA 私钥(key)信息
+openssl rsa -noout -text -in server.key
+
+# 验证证书是否可信
+## 1. 使用系统的证书链进行验证。因为是自签名证书，会验证失败
+openssl verify server.crt
+## 2. 使用 ca.crt 进行验证。验证成功。
+openssl verify -CAfile ca.crt server.crt
+```
+
+### 2. 证书格式转换
+
+待续
+
 ## 参考
 
 - [Certificates - Kubernetes Docs](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
@@ -358,4 +384,8 @@ mTLS 和「公钥锁定/证书锁定」对比：
 
 加密/签名算法相关：
 
-1. [RSA算法原理（二）](http://www.ruanyifeng.com/blog/2013/07/rsa_algorithm_part_two.html)
+- [RSA算法原理（二）](http://www.ruanyifeng.com/blog/2013/07/rsa_algorithm_part_two.html)
+
+其他：
+
+- [openssl 查看证书](https://www.jianshu.com/p/f5f93c89155e)
