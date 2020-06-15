@@ -31,6 +31,11 @@ gRPC 的 Request 只使用 HTTP 的 POST 方法；
 | _All other codes_          | UNKNOWN            |
 
 
+## 应用场景
+
+1. 微服务之间的调用
+2. 使用 gRPC 替换掉 RESTful API / GraphQL，提供 Web 服务。
+
 ## 参考
 
 - [HTTP to gRPC Status Code Mapping](https://github.com/grpc/grpc/blob/master/doc/http-grpc-status-mapping.md)
