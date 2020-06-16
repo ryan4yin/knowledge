@@ -1,6 +1,6 @@
 # dataclass 注意事项
 
-```python3
+```python
 from dataclasses import dataclass
 
 
@@ -17,11 +17,10 @@ class DataType1:
     # 不带类型注解的是类属性（所有实例公用），类属性一定要注意只使用不可变类型！
     d = "class attribute"
 
-    @property
-    def tt(self):
+    def __post__init__(self):
         """
-        如果实在需要公共属性，又不方便将它改成不可变类型，推荐改用这种动态初始化的方式，但是会影响性能。
-        每次调用都会实例化新的值，就不用担心实例之间互相影响。
+        如果实在需要公共属性，又不方便将它改成不可变类型，推荐改用这种动态初始化的方式。
+        在实例化完成之后再初始化这些属性，就不用担心实例之间互相影响。
         """
     return ""
 ```
