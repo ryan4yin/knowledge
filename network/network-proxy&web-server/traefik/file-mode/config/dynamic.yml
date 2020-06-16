@@ -9,9 +9,14 @@ http:
       rule: "Host(`traefik.local`)"
       # 也支持使用正则表达式，注意正则必须写在 {} 中，并且指定一个没什么用的名称(如 prefix/root/subdomain)
       # rule: "HostRegexp(`{prefix:.+}.traefik.{root:(local|lan|srv)}`)"
+
+      # 转发到指定 service，api@internal 是 dashboard 的内部路由
       service: api@internal
       # 当请求能匹配上多个 routers 时，会使用优先级最高的。
       priority: 100
+      tls:  # 只支持 TLS 访问！
+        options: default  # 这里引用后面的 tls 配置，默认使用 default 配置
+        stores: default  # 同上
   services:
 
 # tcp 协议只支持通过 tls 协议的 sni 参数进行路由
