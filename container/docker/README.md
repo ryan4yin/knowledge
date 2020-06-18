@@ -44,6 +44,22 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 参考了 [让 K8S 在国内愉快的航行](https://www.cnblogs.com/ants/p/12663724.html?utm_source=tuicool&utm_medium=referral)。
 
+### 使用 HTTPS 代理拉取镜像
+
+如果没有可用的镜像仓库，可以考虑设置 HTTPS 代理进行镜像拉取。
+
+通用的做法是使用下列三个环境变量设置 HTTP 代理：
+```shell
+HTTP_PROXY=http://<user>:<password>@<ip_addr>:<port>/
+HTTPS_PROXY=https://<user>:<password>@<ip_addr>:<port>/
+NO_PROXY=*.xxx.local,*aaa.local
+```
+
+将上面的环境变量添加到 docker 的 systemd 配置文件中就 ok 了。
+
+>这三个环境变量貌似是通用的，比如 git 也可以会走它设置的代理。
+而且在 windows 上也有效。
+
 ## daemon.json 样例
 
 限制容器日志大小，配置 dockerhub 的国内镜像仓库，信任 harbor 私有镜像仓库。其他参见前面提到的 `Docker 调优`
