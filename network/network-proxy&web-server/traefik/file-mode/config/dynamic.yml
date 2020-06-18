@@ -17,7 +17,20 @@ http:
       tls:  # 只支持 TLS 访问！
         options: default  # 这里引用后面的 tls 配置，默认使用 default 配置
         stores: default  # 同上
+    
+    # 代理 wiki 应用
+    wiki:
+      entryPoints:
+        - "web"
+      rule: "Host(`wiki.local`) "
+      service: wiki
+
   services:
+    wiki:
+      loadBalancer:
+        servers:
+        - url: "http://<host>:<port>/"
+
 
 # tcp 协议只支持通过 tls 协议的 sni 参数进行路由
 # 非 tls 协议，不能分辨数据
