@@ -380,8 +380,12 @@ openssl verify -CAfile ca.crt server.crt
 openssl 模式使用 PEM 格式的证书，这个证书格式将证书编码为 base64 格式进行保存。
 另外一类使用广泛的证书，是 PKCS#12、PKCS#8，以及 Windows 上常用的 DER 格式。
 
-待续
+```shell
+# pem 格式转 pkcs12
+openssl pkcs12 -export -in clientprivcert.pem -out clientprivcert.p12
+```
 
+微信/支付宝等支付相关的数字证书，通常就使用 pkcs12 格式，后缀为 `.p12`
 
 
 ## 参考
