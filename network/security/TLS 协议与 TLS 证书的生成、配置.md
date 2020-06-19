@@ -246,6 +246,11 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 因为相比传统的 TLS，mTLS 只是添加了「验证客户端」这样一个步骤，所以这项技术也被称为「Client Authetication」.
 
+mTLS 需要用到两套 TLS 证书：
+
+1. 服务端证书：这个证书签名已经介绍过了。
+2. 客户端证书：它和服务端证书的相同点是——域名必须能匹配上。而别的信息，则可以修改为客户端相关的信息。
+
 mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界网络」中。
 比如微服务之间的互相访问，就可以使用 mTLS。
 这样就能保证每个 RPC 调用的客户端，都是其他微服务（或者别的可信方），防止黑客入侵后为所欲为。
@@ -257,7 +262,7 @@ mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界
 1. Nginx: [Using NGINX Reverse Proxy for client certificate authentication](https://community.openhab.org/t/using-nginx-reverse-proxy-for-client-certificate-authentication-start-discussion/43064)
    1. 主要参数是两个：`ssl_client_certificate /etc/nginx/client-ca.pem` 和 `ssl_verify_client on`
 
->mTLS 是一项比较新的技术，目前资料还比较少。能查阅到的信息中，大部分都是 2017 年之后的。
+>mTLS 目前资料还比较少。能查阅到的信息中，大部分都是 2017 年之后的。
 目前查到的比较正式的 mTLS 相关的 RFC 只有 [RFC8705](https://www.rfc-editor.org/rfc/rfc8705.html)，另外只在[TLS1.3 规范（RFC8446）](https://tools.ietf.org/html/rfc8446) 中看到了
 「mutual TLS」相关的内容，更低版本的 TLS 规范中没有任何说明。
 
