@@ -235,6 +235,9 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 #### 1.2 TLS 双向认证(Mutual TLS authentication, mTLS)
 
+TLS 协议（tls1.1+，RFC: [TLS1.2 - RFC5246](https://tools.ietf.org/html/rfc5246#section-7.4.4)）中，定义了服务端请求验证客户端证书的方法。这
+个方法是可选的。如果使用上这个方法，那客户端和服务端就会在 TLS 协议的握手阶段进行互相认证。这种验证方式被称为双向 TLS 认证(mTLS, mutual TLS)。
+
 传统的「TLS 单向认证」技术，只在客户端去验证服务端是否可信。
 而「TLS 双向认证（mTLS）」，则添加了服务端验证客户端是否可信的步骤（第三步）：
 
@@ -276,9 +279,6 @@ mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界
 2. Nginx: [Using NGINX Reverse Proxy for client certificate authentication](https://community.openhab.org/t/using-nginx-reverse-proxy-for-client-certificate-authentication-start-discussion/43064)
    1. 主要参数是两个：`ssl_client_certificate /etc/nginx/client-ca.pem` 和 `ssl_verify_client on`
 
->mTLS 目前资料还比较少。能查阅到的信息中，大部分都是 2017 年之后的。
-目前查到的比较正式的 mTLS 相关的 RFC 只有 [RFC8705](https://www.rfc-editor.org/rfc/rfc8705.html)，另外只在[TLS1.3 规范（RFC8446）](https://tools.ietf.org/html/rfc8446) 中看到了
-「mutual TLS」相关的内容，更低版本的 TLS 规范中没有任何说明。
 
 ### 2. 客户端的 TLS 证书配置（针对本地签名的证书）
 
