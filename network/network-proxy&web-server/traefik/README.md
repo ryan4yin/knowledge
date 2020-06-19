@@ -43,5 +43,6 @@ session.cert = ("./client.crt", "./client.key")
 url = "https://traefik.xxx.local"
 for i in range(30):
     # 连续请求 30 次
-    session.get(url)
+    resp = session.get(url)
+    print(resp.status_code, resp.headers)
 ```
