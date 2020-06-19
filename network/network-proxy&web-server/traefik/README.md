@@ -23,7 +23,7 @@ traefik 可以在第 4 层(tcp/udp)和第 5 层(http/tls/websocket/grpc)进行�
 cd certs
 # 验证双向 TLS 认证，-v 选项查看详细的 HTTP 请求过程
 ## 1. 使用客户端证书
-curl -v --cacert ca.crt --cert ./client.crt --key client.key --tlsv1.2 https://traefik.local
+curl -v --cacert ca.crt --cert ./client.crt --key client.key --tls-max 1.2 https://traefik.xxx.local
 ## 2. 不使用客户端证书，会报错： SSL peer cannot verify your certificate.
-curl -v --cacert ca.crt --tlsv1.2 https://traefik.local
+curl -v --cacert ca.crt --tls-max 1.2 https://traefik.xxx.local
 ```
