@@ -251,6 +251,20 @@ mTLS 需要用到两套 TLS 证书：
 1. 服务端证书：这个证书签名已经介绍过了。
 2. 客户端证书：它和服务端证书的相同点是——域名必须能匹配上。而别的信息，则可以修改为客户端相关的信息。
 
+使用 openssl 生成 TLS 客户端证书（ca 和 csr.conf 可以直接使用前面生成服务端证书用到的，也可以另外生成）：
+
+```shell
+# 1. 生成 2048 位 的 RSA 密钥
+openssl genrsa -out client.key 2048
+# 2. 通过第一步编写的配置文件，生成证书签名请求
+openssl req -new -key client.key -out client.csr -config csr.conf
+# 3. 生成最终的证书，这里指定证书有效期 3650 天
+### 使用前面生成的 ca 证书对客户端证书进行签名（客户端和服务端共用 ca 证书）
+openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key \
+-CAcreateserial -out client.crt -days 3650 \
+-extensions v3_ext -extfile csr.conf
+```
+
 mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界网络」中。
 比如微服务之间的互相访问，就可以使用 mTLS。
 这样就能保证每个 RPC 调用的客户端，都是其他微服务（或者别的可信方），防止黑客入侵后为所欲为。
@@ -259,7 +273,7 @@ mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界
 目前查到如下几个Web服务器/代理支持 mTLS:
 
 1. Traefik: [Docs - Client Authentication (mTLS)](https://docs.traefik.io/v2.0/https/tls/#client-authentication-mtls)
-1. Nginx: [Using NGINX Reverse Proxy for client certificate authentication](https://community.openhab.org/t/using-nginx-reverse-proxy-for-client-certificate-authentication-start-discussion/43064)
+2. Nginx: [Using NGINX Reverse Proxy for client certificate authentication](https://community.openhab.org/t/using-nginx-reverse-proxy-for-client-certificate-authentication-start-discussion/43064)
    1. 主要参数是两个：`ssl_client_certificate /etc/nginx/client-ca.pem` 和 `ssl_verify_client on`
 
 >mTLS 目前资料还比较少。能查阅到的信息中，大部分都是 2017 年之后的。
@@ -363,7 +377,12 @@ openssl verify -CAfile ca.crt server.crt
 
 ### 2. 证书格式转换
 
+openssl 模式使用 PEM 格式的证书，这个证书格式将证书编码为 base64 格式进行保存。
+另外一类使用广泛的证书，是 PKCS#12、PKCS#8，以及 Windows 上常用的 DER 格式。
+
 待续
+
+
 
 ## 参考
 
