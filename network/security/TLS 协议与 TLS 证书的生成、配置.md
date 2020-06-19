@@ -235,7 +235,7 @@ JWT 选用 ECDSA(如 ES256) 的最大好处，就是签名变短了，JWT 本身
 
 #### 1.2 TLS 双向认证(Mutual TLS authentication, mTLS)
 
-TLS 协议（tls1.1+，RFC: [TLS1.2 - RFC5246](https://tools.ietf.org/html/rfc5246#section-7.4.4)）中，定义了服务端请求验证客户端证书的方法。这
+TLS 协议（tls1.0+，RFC: [TLS1.2 - RFC5246](https://tools.ietf.org/html/rfc5246#section-7.4.4)）中，定义了服务端请求验证客户端证书的方法。这
 个方法是可选的。如果使用上这个方法，那客户端和服务端就会在 TLS 协议的握手阶段进行互相认证。这种验证方式被称为双向 TLS 认证(mTLS, mutual TLS)。
 
 传统的「TLS 单向认证」技术，只在客户端去验证服务端是否可信。
