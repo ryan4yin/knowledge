@@ -4,9 +4,9 @@ http:
     # 配置 traefik dashboard 的入口域名
     api:
       entryPoints:
-        - "web"
+        - "websecure"
       # Host 插件的域名必须完全匹配，不支持通配符 *
-      rule: "Host(`traefik.local`)"
+      rule: "Host(`traefik.xxx.local`)"
       # 也支持使用正则表达式，注意正则必须写在 {} 中，并且指定一个没什么用的名称(如 prefix/root/subdomain)
       # rule: "HostRegexp(`{prefix:.+}.traefik.{root:(local|lan|srv)}`)"
 
@@ -21,9 +21,18 @@ http:
     # 代理 wiki 应用
     wiki:
       entryPoints:
-        - "web"
-      rule: "Host(`wiki.local`) "
+        - "websecure"
+      rule: "Host(`wiki.xxx.local`) "
       service: wiki
+      tls: {} # 只支持 TLS 访问！默认使用 default 配置
+    
+    # 代理 websocket 协议
+    wss-test:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`wss-test.xxx.local`) "
+      service: wss-test
+      tls: {} # 只支持 TLS 访问！默认使用 default 配置
 
   services:
     wiki:
@@ -31,6 +40,11 @@ http:
         servers:
         - url: "http://<host>:<port>/"
 
+    wss-test:
+      loadBalancer:
+        servers:
+        # Traefik 将 WebSocket 当成 Http 流量看待，这里的 url 也用 http://，不能用 ws://
+        - url: "http://<host>:<port>/"
 
 # tcp 协议只支持通过 tls 协议的 sni 参数进行路由
 # 非 tls 协议，不能分辨数据
