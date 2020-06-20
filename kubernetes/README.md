@@ -6,13 +6,13 @@
 
 > `-` 表示未测试，待考察。
 
-| 安装工具     | 安装难度 |  集群可靠程度  |  集群修改难度（升级/降级）
+| 安装工具     | 安装难度 |  集群可靠程度  |  集群自定义难度 |  升级降级难度  |
 | --------     | -----:   | :----:  | :----:  |
-| [rke(rancher)](https://docs.rancher.cn/rke/) |    1     |   3     |    1    |
-| kubeadm      |    -     |   -     |    -    |
-| KubeOperator |    -     |   -     |    -    |
-| KubeSpray    |    3     |   -     |    -    |
-
+| [rke(rancher)](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
+| kubeadm      |    -     |   -     |    -    | - |
+| KubeOperator |    -     |   -     |    -    | - |
+| KubeSpray    |    3     |   -     |    -    | - |
+| SealOS       |    1     |   4     |    3    | - |
 
 ### 1. Minikube: 部署一个本地测试用的单节点集群
 
