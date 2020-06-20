@@ -6,7 +6,7 @@ http:
       entryPoints:
         - "websecure"
       # Host 插件的域名必须完全匹配，不支持通配符 *
-      rule: "Host(`traefik.xxx.local`)"
+      rule: "Host(`traefik.svc.local`)"
       # 也支持使用正则表达式，注意正则必须写在 {} 中，并且指定一个没什么用的名称(如 prefix/root/subdomain)
       # rule: "HostRegexp(`{prefix:.+}.traefik.{root:(local|lan|srv)}`)"
 
@@ -22,7 +22,7 @@ http:
     wiki:
       entryPoints:
         - "websecure"
-      rule: "Host(`wiki.xxx.local`) "
+      rule: "Host(`wiki.svc.local`) "
       service: wiki
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
     
@@ -30,7 +30,7 @@ http:
     wss-test:
       entryPoints:
         - "websecure"
-      rule: "Host(`wss-test.xxx.local`) "
+      rule: "Host(`wss-test.svc.local`) "
       service: wss-test
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
 

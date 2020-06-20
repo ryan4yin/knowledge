@@ -13,7 +13,7 @@ istioctl manifest apply --set profile=default --set values.prometheus.enabled=fa
 istioctl manifest apply \
   --set profile=default \
   --set values.prometheus.enabled=false \
-  --set hub=registry.xxx.local > istio-manifest.yaml
+  --set hub=registry.svc.local > istio-manifest.yaml
 ```
 
 这种方式适合自定义参数比较少，而且只是临时测试的情形。

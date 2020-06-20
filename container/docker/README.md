@@ -52,7 +52,7 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 ```shell
 HTTP_PROXY=http://<user>:<password>@<ip_addr>:<port>/
 HTTPS_PROXY=https://<user>:<password>@<ip_addr>:<port>/
-NO_PROXY=*.xxx.local,*aaa.local
+NO_PROXY=*.local,*.lan
 ```
 
 将上面的环境变量添加到 docker 的 systemd 配置文件中就 ok 了。
@@ -74,7 +74,7 @@ NO_PROXY=*.xxx.local,*aaa.local
   },
   "max-concurrent-downloads": 10,
   "max-concurrent-uploads": 10,
-  "insecure-registries": ["registry.local"],
+  "insecure-registries": ["image-registry.svc.local"],
   "registry-mirrors": [
     "https://xd6he1w9.mirror.aliyuncs.com",
     "https://hub-mirror.c.163.com"
