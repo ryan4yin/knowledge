@@ -13,7 +13,6 @@ from .file import tar_files
 通过 ssh 协议与远程主机交互：
     1. 使用 Connection.run() 远程执行命令（或者 Connection.sudo()，执行 root 命令）
     2. 使用 Connection.put()/Connection.get()，通过 sftp 协议传输文件
-    3. TODO 使用 SerialGroup 在多台主机上批量执行命令
 """
 
 
@@ -25,16 +24,37 @@ class SSH(object):
         3. 添加了额外的中文 docstring
     """
 
-    def __init__(self, host: str, port: int, username: str,
-                 password: Optional[str] = None,
-                 private_key_fp: IO = None,
-                 key_file_path: Optional[Path] = None,
-                 key_file_passphrase: Optional[str] = None):
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        username: str,
+        password: Optional[str] = None,
+        key_file_obj: IO = None,
+        key_file_path: Optional[Path] = None,
+        key_file_passphrase: Optional[str] = None,
+    ):
+        """
+        使用示例：
+        ```python3
+        # 1. 使用密码登录远程主机
+        ssh_con = SSH("<host>", 22, username="<username>", password="<password>")
+
+        # 2. 使用私钥登录远程主机（私钥没有设置 passphrase）
+        ## 2.1 指定密钥位置
+        ssh_con = SSH("<host>", 22, username="<username>", key_file_path=Path("~/.ssh/id_rsa"))
+        ## 2.2 给出密钥的 IO 对象
+        ssh_con = SSH("<host>", 22, username="<username>", key_file_obj=Path("~/.ssh/id_rsa").open(encoding='utf-8'))
+        ```
+        """
         connect_kwargs = dict()
-        if private_key_fp is not None:  # TODO 私钥 fp 未测试
-            private_key = paramiko.RSAKey.from_private_key(private_key_fp, key_file_passphrase)
+        if key_file_obj is not None:
+            private_key = paramiko.RSAKey.from_private_key(
+                key_file_obj,
+                key_file_passphrase
+            )
             connect_kwargs['pkey'] = private_key
-        elif key_file_path is not None:  # TODO 私钥路径 未测试
+        elif key_file_path is not None:
             connect_kwargs = {
                 "key_filename": str(key_file_path.resolve()),
                 "passphrase": key_file_passphrase
@@ -70,12 +90,27 @@ class SSH(object):
             warn=False,
             hide=False,
             echo=True,
-            shell="/bin/bash",
-            encoding='utf-8',
             **kwargs):
         """
         远程执行命令
 
+        使用示例：
+        ```python3
+        # 1. 执行命令，打印出被执行的命令，以及命令的输出。命令失败抛出异常
+        ssh_con.run("ls -al")
+        # 2. 执行命令，命令失败只抛出 warn（对程序的运行没有影响），这样可以手动处理异常情况。
+        result = ssh_con.run("ls -al", warn=True)
+        if result.return_code != 0:  # 命名执行失败
+            # 处理失败的情况
+
+        # 3. 拉取 docker 镜像，只在命令失败的情况下，才输出 docker 命令的日志。
+        result = ssh_con.run("docker pull xxxx", hide=True, warn=True)
+        if result.return_code != 0:  # 运行失败
+            logger.error(result.stdout)  # 打印出错误日志，这里 stdout 一般会包含 stderr
+            # 然后考虑要不要抛出异常
+        ```
+
+        ==================
         注意！！！run/sudo 并不记录 cd 命令切换的路径！
         如果需要改变 self.cwd （当前工作目录），必须使用 self.cd() 函数，详细的用法参见该函数的 docstring
 
@@ -95,6 +130,7 @@ class SSH(object):
         """
         return self.conn.run(
             command=cmd,
+            warn=warn,
             hide=hide,
             echo=echo,
             **kwargs
@@ -159,7 +195,8 @@ class SSH(object):
                 if mkdirs:
                     local_path_parent.mkdir(parents=True)
                 else:
-                    raise FileNotFoundError("directory '{}' not exist!".format(local_path_parent))
+                    raise FileNotFoundError(
+                        "directory '{}' not exist!".format(local_path_parent))
 
         return self.conn.get(
             remote=str(remote_file_path),
@@ -208,7 +245,8 @@ class SSH(object):
         try:
             self.conn.run(f"test -d {Path(remote_path).as_posix()}")
         except UnexpectedExit:
-            raise RuntimeError("remote_path 必须是一个已经存在的文件夹路径！请给定正确的 remote_path，或者使用默认参数！")
+            raise RuntimeError(
+                "remote_path 必须是一个已经存在的文件夹路径！请给定正确的 remote_path，或者使用默认参数！")
 
         stream = tar_files(local_dir_path, c_type="gz", get_stream=True)
         tar_name = local_dir_path.name + ".tar.gz"
@@ -220,4 +258,3 @@ class SSH(object):
         with self.cd(remote_path):
             self.run("tar -ax -f {}".format(tar_name))
             self.run("rm {}".format(tar_name))
-
