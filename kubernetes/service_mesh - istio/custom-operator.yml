@@ -5,7 +5,7 @@ spec:
   # profile=default 是官方推荐的用于生产环境部署。它只部署 pilot/ingressgateway/prometheus
   # 建议：prometheus/grafana/jaeger(tracing)/kiali 都使用比较流行的 operator/helm 进行安装，不要使用 istio 自带的
   profile: default
-  hub: registry.xxx.local/istio  # 使用私有 dockerhub 镜像仓库
+  hub: image-registry.svc.local/istio  # 使用私有 dockerhub 镜像仓库
   components:
     pilot:
       k8s:

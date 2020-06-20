@@ -4,13 +4,13 @@
 
 ### 强制走 ssh 协议
 
-以下命令将对 gitlab.local 的 https 请求，强制转换成 ssh 请求。
+以下命令将对 gitlab.svc.local 的 https 请求，强制转换成 ssh 请求。
 ```
-git config --global url."git@gitlab.local:".insteadOf "https://gitlab.local"
+git config --global url."git@gitlab.svc.local:".insteadOf "https://gitlab.svc.local"
 ```
 
 在 CI/CD 中可用上述方法强制走 ssh 协议，配合 ssh-agent 插件动态注入 ssh 密钥。
-这样你使用 `git clone https://gitlab.local/xxx.git` 时，底层实际上使用的是 ssh 协议。
+这样你使用 `git clone https://gitlab.svc.local/xxx.git` 时，底层实际上使用的是 ssh 协议。
 
 也可以用同样的手法转换 http/git 协议，但是不能同时转换多种协议。。
 

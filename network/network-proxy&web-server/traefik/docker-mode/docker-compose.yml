@@ -11,8 +11,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
-      # 设置通过 traefik.local 访问 traefik dashboard
-      - "traefik.http.routers.api.rule=Host(`traefik.local`)"
+      # 设置通过 traefik.svc.local 访问 traefik dashboard
+      - "traefik.http.routers.api.rule=Host(`traefik.svc.local`)"
       - "traefik.http.routers.api.service=api@internal"
       # 为 dashboard 设置身份验证
       # - "traefik.http.routers.api.middlewares=auth"

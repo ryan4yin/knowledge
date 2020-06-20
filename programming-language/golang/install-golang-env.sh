@@ -1,5 +1,5 @@
 # 只在 Ubuntu 上测试过
-PRIVATE_GIT_HOST=gitlab.local
+PRIVATE_GIT_HOST=gitlab.svc.local
 GOLANG_VERSION=1.14.2
 
 

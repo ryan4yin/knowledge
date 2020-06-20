@@ -59,7 +59,7 @@ pipeline {
                         // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
                         // 2.2 扫描 dotnet core 代码
                         // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
-                        // sh "dotnet restore -s http://baget.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
+                        // sh "dotnet restore -s http://baget.svc.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
                         // sh "dotnet build --no-restore"
                         // sh "dotnet sonarscanner end"
                     }

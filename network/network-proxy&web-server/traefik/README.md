@@ -24,9 +24,9 @@ traefik 可以在第 4 层(tcp/udp)和第 5 层(http/tls/websocket/grpc)进行�
 cd certs
 # 验证双向 TLS 认证，-v 选项查看详细的 HTTP 请求过程
 ## 1. 使用客户端证书
-curl -v --cacert ca.crt --cert ./client.crt --key client.key --tls-max 1.2 https://traefik.xxx.local
+curl -v --cacert ca.crt --cert ./client.crt --key client.key --tls-max 1.2 https://traefik.svc.local
 ## 2. 不使用客户端证书，会报错： SSL peer cannot verify your certificate.
-curl -v --cacert ca.crt --tls-max 1.2 https://traefik.xxx.local
+curl -v --cacert ca.crt --tls-max 1.2 https://traefik.svc.local
 ```
 
 使用 python requests 测试 mTLS:
@@ -40,7 +40,7 @@ session.verify = "./ca.crt"
 # 设置客户端证书与密钥
 session.cert = ("./client.crt", "./client.key")
 
-url = "https://traefik.xxx.local"
+url = "https://traefik.svc.local"
 for i in range(30):
     # 连续请求 30 次
     resp = session.get(url)

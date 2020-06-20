@@ -133,12 +133,12 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     L = <city>
     O = <organization>
     OU = <organization unit>
-    CN = *.xxx.local  # 泛域名
+    CN = *.svc.local  # 泛域名
 
     [ alt_names ]
-    DNS.1 = *.xxx.local  # 一级泛域名
-    DNS.1 = *.aaa.xxx.local  # 二级泛域名
-    DNS.1 = *.bbb.xxx.local  # 二级泛域名
+    DNS.1 = *.svc.local  # 一级泛域名
+    DNS.1 = *.aaa.svc.local  # 二级泛域名
+    DNS.1 = *.bbb.svc.local  # 二级泛域名
 
     [ req_ext ]
     subjectAltName = @alt_names
@@ -163,7 +163,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     ### ca 私钥
     openssl genrsa -out ca.key 2048
     ### ca 公钥
-    openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.local" -days 10000 -out ca.crt
+    openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.svc.local" -days 10000 -out ca.crt
     ### 签名
     openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
     -CAcreateserial -out server.crt -days 10000 \
