@@ -41,6 +41,8 @@ USB Key 就像一个黑箱子，它将数字证书封装在硬件内部，所有
 
 FIDO/U2F 是一个开源开放的硬件两步验证标准，目前主流浏览器均已支持该项标准，Github 已经支持使用 FIDO/U2F 进行身份验证。
 
+- [开源 FIDO U2F 安全密钥：nRF52-U2F](https://zhuanlan.zhihu.com/p/47577107)
+
 ## 相关工具
 
 - [vuls](https://github.com/future-architect/vuls): 基于 SSH 协议的漏洞扫描服务。
