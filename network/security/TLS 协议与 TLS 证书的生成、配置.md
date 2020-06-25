@@ -383,6 +383,7 @@ openssl 模式使用 PEM 格式的证书，这个证书格式将证书编码为 
 ```shell
 # pem 格式转 pkcs12，公钥和私钥都放里面
 openssl pkcs12 -export -in client.crt -inkey client.key -out client.p12
+# 按提示输入保护密码
 ```
 
 微信/支付宝等支付相关的数字证书，通常就使用 pkcs12 格式，后缀为 `.p12`
