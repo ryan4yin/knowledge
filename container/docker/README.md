@@ -12,6 +12,12 @@
 
 - [Docker Docs - docker-compose 配置参考](https://docs.docker.com/compose/compose-file/)：此文档也适用于 docker-swarm.
 
+`docker-compose` 为容器添加资源限制的方法：
+
+1. 在 `services.<service-name>.deploy.resources` 中设定好资源限制。
+2. 通过 `dockere-compose  --compatibility up` 运行。
+   1. `--compatibility` 会尝试将 v3 版本的 docker-compose 参数转换成对应的 non-Swarm 版本。
+
 ## Docker Swarm Mode
 
 Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmKit），已经被集成进了 docker 本身。
