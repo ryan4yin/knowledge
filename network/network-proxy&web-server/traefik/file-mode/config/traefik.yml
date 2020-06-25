@@ -1,5 +1,5 @@
 providers:
-  docker: {}
+  # docker: {}  # 启用 docker provider
   file:
     # 使用单个文件进行配置
     filename: "/etc/traefik/dynamic.yml"
