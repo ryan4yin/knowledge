@@ -57,3 +57,5 @@ Traefik 支持通过 tlsChallenge/httpChallenge/dnsChallenge 三种验证方式�
 1. httpChallenge: 最常用的验证方式。如果你的服务器是公网可访问的，这是不二之选。
 2. dnsChallenge: 第二选择，通过配置 DNS TXT 记录进行验证。即使服务器外部不可访问也能用。traefik 支持 AliDNS/DNSPod 等国内知名 DNS 服务商。
 
+
+详见 [Traefik - Let's Encrypt](https://docs.traefik.io/https/acme/)
