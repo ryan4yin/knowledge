@@ -17,6 +17,7 @@ entryPoints:
     address: ":80"
     http:
       # 将所有 http 请求重定向到 https
+      # 如果要按请求内容决定是否重定向，请通过动态配置(/etc/traefik/dynamic/)来设定。
       redirections:
         entryPoint:
           to: websecure
