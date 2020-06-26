@@ -46,3 +46,14 @@ for i in range(30):
     resp = session.get(url)
     print(resp.status_code, resp.headers)
 ```
+
+
+## Let's Encrypt 免费 TLS 证书
+
+向 Let's Encrypt 申请证书时，它需要确认你是该域名的拥有者，它提供的所有验证方式参见[Let's Encrypt - 验证方式（challenge types）](https://letsencrypt.org/zh-cn/docs/challenge-types/)
+
+Traefik 支持通过 tlsChallenge/httpChallenge/dnsChallenge 三种验证方式。最常用的两种验证方式是：
+
+1. httpChallenge: 最常用的验证方式。如果你的服务器是公网可访问的，这是不二之选。
+2. dnsChallenge: 第二选择，通过配置 DNS TXT 记录进行验证。即使服务器外部不可访问也能用。traefik 支持 AliDNS/DNSPod 等国内知名 DNS 服务商。
+
