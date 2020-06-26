@@ -1,14 +1,6 @@
 # 详见 https://docs.traefik.io/reference/dynamic-configuration/file/
 http:
   routers:
-    # 将所有 http 请求重定向到 https
-    http_catchall:
-      entryPoints:
-      - "web"
-      rule: HostRegexp(`{any:.+}`)
-      middlewares:
-      - "https_redirect"
-
     # 配置 traefik dashboard 的入口域名
     api:
       entryPoints:
@@ -41,14 +33,6 @@ http:
       rule: "Host(`wss-test.svc.local`) "
       service: wss-test
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
-
-  middlewares:
-    # http 重定向到 https
-    https_redirect:
-      redirectScheme:
-        scheme: https
-        port: "443"  # 注意使用字符串，不是整数
-        permanent: true  # 使用 301 永久重定向（默认使用 302 临时重定向）
 
   services:
     wiki:

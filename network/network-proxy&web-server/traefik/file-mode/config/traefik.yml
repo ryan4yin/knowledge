@@ -15,6 +15,12 @@ log:
 entryPoints:
   web:
     address: ":80"
+    http:
+      # 将所有 http 请求重定向到 https
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: ":443"
 
