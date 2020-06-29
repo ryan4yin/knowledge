@@ -75,6 +75,9 @@ helm pull fluxcd/flux --untar  # 下载并解压 chart
 
 # 安装或更新
 helm upgrade flux --namespace flux -f custom-values.yaml ./flux
+
+# 卸载
+helm uninstall flux --namespace flux
 ```
 
 部署中用到了自定义配置文件 `custom-values.yaml`，请自行查看详细内容。
