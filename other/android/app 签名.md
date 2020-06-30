@@ -1,5 +1,6 @@
 
-需要提前安装好 JDK 环境，可参考 [java 环境安装说明](/programming-language/java/README.md)。
+需要提前安装好 JDK8，可参考 [java 环境安装说明](/programming-language/java/README.md)。
+**注意一定要使用 JDK8，不要用其他版本的 JDK!!!**
 
 ## KeyStore
 
