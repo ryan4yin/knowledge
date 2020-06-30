@@ -5,15 +5,15 @@
 
 >如果你使用的是 windows 10 utf-8 编码，使用 keytool 前需要先通过 `chcp 936` 临时切换回 gbk 编码，否则中文会乱码。
 
-生成 KeyStore 密钥+密钥库：
+生成 KeyStore 密钥对+密钥库：
 
 ```shell
-keytool -genkey -v -keyalg RSA -keysize 2048 -validity 3650 -alias my-app-key -keystore my-keystore.jks
+keytool -genkeypair -v -keyalg RSA -keysize 2048 -validity 3650 -alias my-app-key -keystore my-keystore.jks
 
 # 然后在交互式地输入名称、城市省份等信息，以及密钥库密码、密钥本身的密码，就生成成功了。
 ```
 
-查看证书信息，获得证书指纹（应用市场和某些第三方 API 需要验证这个 APP 的密钥签名）。
+查看密钥对信息，获得证书指纹（应用市场和某些第三方 API 需要验证这个 APP 的证书签名）。
 
 ```shell
 keytool -list -v -keystore my-keystore.jks  
