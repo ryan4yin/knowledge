@@ -23,6 +23,14 @@ Enter keystore password: //输入密码，回车
 一般需要记录下证书的 SHA1 信息，提供给应用市场/第三方API提供商。
 
 
+## 签名相关的敏感信息
+
+个人开发，可以使用被 git 忽略的 `key.properties` 存放密钥库密码等敏感信息。
+
+做自动化构建时，使用环境变量传递敏感信息更方便，`build.gradle` 里通过 `System.getenv("XXX")` 就能读取环境变量。
+
+
 ## 参考
 
 - [Android平台签名证书(.keystore)生成指南 ](https://ask.dcloud.net.cn/article/id-35777__page-2)
+- [关于gradle打包keystore密码的安全问题](https://www.cnblogs.com/liming-saki/p/5016330.html)
