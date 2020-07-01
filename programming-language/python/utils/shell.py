@@ -6,6 +6,9 @@ import shutil
 import shlex
 import subprocess
 from pathlib import Path
+from contextlib import contextmanager
+
+from typing import Union
 
 import logging
 logger = logging.getLogger(__name__)
@@ -71,3 +74,26 @@ def run_cmd(cmd: str,
                             cwd=str(cwd.resolve()) if cwd else None,
                             **kwargs)
     return result
+
+
+
+@contextmanager
+def cd(newdir: Union[Path, str]):
+    """
+    通过 with 上下文管理器来管理 current working directory
+
+    ```python
+    from utils import shell
+
+    with shell.cd("xxx"):
+        shell.run_cmd("ls -al")
+    ```
+
+    参考：https://stackoverflow.com/questions/431684/how-do-i-change-the-working-directory-in-python
+    """
+    prevdir = Path.cwd()
+    os.chdir(Path(newdir).resolve().as_posix())
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
