@@ -64,14 +64,14 @@ VMware ESXi 请使用专用版本：https://github.com/shanyungyang/esxi-unlocke
 1. 硬件兼容性选择：WOrkstation 15.x
 2. 选择使用之前创建好的 iso 映像文件
 3. 操作系统选择：[Apple Mac OS X] - [macOS 10.15]，版本和你的 iso 文件要对应
-4. 设置好 CPU/RAM 大小。
-5. 硬盘兼容 APFS: 
+4. 设置好 CPU/RAM 大小。其他参数全部使用默认的就行。
+5. 然后启动，正常情况下应该就会显示一个白苹果和进度条。
+6. 进入硬盘工具，将 VMware 创建好的空硬盘格式化为 APFS 格式。
+7. 选择「Install macOS」，后面就完全是走流程，傻瓜式操作了。
 
-然后启动，正常情况下应该就会显示一个白苹果和进度条，后面就都是走流程了。
 
 ## 参考
 
 - [制作macOS系统dmg包及iso可引导镜像](https://www.newlearner.site/2019/03/07/macos-dmg-iso.html)
 - [使用PD和VM虚拟机安装macOS](https://www.newlearner.site/2019/03/23/macos-pd-vm.html)
 - [macOS完整安装包下载方法](https://www.newlearner.site/2019/07/22/full-size-macos.html)
-
