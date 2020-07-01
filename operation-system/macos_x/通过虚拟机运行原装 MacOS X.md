@@ -66,7 +66,7 @@ VMware ESXi 请使用专用版本：https://github.com/shanyungyang/esxi-unlocke
 3. 操作系统选择：[Apple Mac OS X] - [macOS 10.15]，版本和你的 iso 文件要对应
 4. 设置好 CPU/RAM 大小。其他参数全部使用默认的就行。
 5. 然后启动，正常情况下应该就会显示一个白苹果和进度条。
-6. 进入硬盘工具，将 VMware 创建好的空硬盘格式化为 APFS 格式。
+6. 进入磁盘工具，将 VMware 创建好的空硬盘格式化为 APFS 格式。
 7. 选择「Install macOS」，后面就完全是走流程，傻瓜式操作了。
 
 
