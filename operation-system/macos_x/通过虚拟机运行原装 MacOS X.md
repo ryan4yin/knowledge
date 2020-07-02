@@ -49,6 +49,7 @@ mv Install_macOS_10.15.5-19F2200.cdr Install_macOS_10.15.5-19F2200.iso
 ### 2. 安装 unlocker 补丁
 
 最初的 unlocker 仓库已经被 404 了，接盘侠提供的下载路径：https://github.com/paolo-projects/unlocker
+请直接使用 master 分支，不要用 releases，因为 releases 更新可能不及时。
 
 这个脚本会从官方拉取 fusion 相关的两个 `zip.tar` 文件，其中有个文件比较大，有 600M+，下载速度比较慢。
 可以自己用 aria2 开多线程下载好，然后修改 `gettool.py` 让它使用已下载好的文件。
