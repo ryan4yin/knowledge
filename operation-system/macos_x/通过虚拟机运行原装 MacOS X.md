@@ -110,3 +110,4 @@ custom.vgz     false   32486592 B
 - [制作macOS系统dmg包及iso可引导镜像](https://www.newlearner.site/2019/03/07/macos-dmg-iso.html)
 - [使用PD和VM虚拟机安装macOS](https://www.newlearner.site/2019/03/23/macos-pd-vm.html)
 - [macOS完整安装包下载方法](https://www.newlearner.site/2019/07/22/full-size-macos.html)
+- [VMWare ESXI 配置macOS虚拟机](https://o0xmuhe.github.io/2019/05/10/macOS-on-ESXi/)
