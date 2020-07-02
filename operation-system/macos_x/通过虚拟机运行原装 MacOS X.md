@@ -63,7 +63,7 @@ vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
 #### 2) vShpere ESXi
 
-虽然 ESXi 创建虚拟机时，默认就有 macOS 相关的参数，但是它要求使用 Apple 专用硬件。如果使用不兼容的硬件，macOS 会无限重启！！！
+虽然 ESXi 创建虚拟机时，默认就可以选择 macOS 系统，但是它要求使用 Apple 专用硬件。如果使用不兼容的硬件，macOS 会无限重启！！！
 
 为了在常用的服务器上通过 ESXi 运行 macOSs，就需要通过 unlocker 打系统补丁。unlocker 仓库如下：
 
