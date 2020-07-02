@@ -48,17 +48,35 @@ VMware Workstation 应该不需要解释，桌面虚拟机软件，很常用。
 
 vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
-### 2. VMware Workstation 安装 unlocker 补丁
+### 2. 安装 unlocker 补丁
 
->vShpere ESXi 原生支持运行 macOS 系统，不需要安装 unlocker 补丁。因此可以跳过这一步。
+#### 1) VMware Workstation
 
-最初的 unlocker 仓库已经被 404 了，接盘侠提供的下载路径：https://github.com/paolo-projects/unlocker
-请直接使用 master 分支，不要用 releases，因为 releases 更新可能不及时。
+要在 Windows/Linux 上通过 VMware Workstation 运行 macOS，需要先通过 unlocker 打补丁。使用如下脚本：
+
+1. Unlocker for VMware Workstation ：https://github.com/paolo-projects/unlocker
 
 这个脚本会从官方拉取 fusion 相关的两个 `zip.tar` 文件，其中有个文件比较大，有 600M+，下载速度比较慢。
 可以自己用 aria2 开多线程下载好，然后修改 `gettool.py` 让它使用已下载好的文件。
 
 直接通过仓库提供的 `win-install.sh`/`lnx-install.sh` 安装补丁就行。
+
+#### 2) vShpere ESXi
+
+虽然 ESXi 创建虚拟机时，默认就有 macOS 相关的参数，但是它要求使用 Apple 专用硬件。如果使用不兼容的硬件，macOS 会无限重启！！！
+
+为了在常用的服务器上通过 ESXi 运行 macOSs，就需要通过 unlocker 打系统补丁。unlocker 仓库如下：
+
+1. Unlocker for ESXi：https://github.com/shanyungyang/esxi-unlocker
+
+打补丁步骤：
+
+2. 在一台 macOS 上克隆前面提供的 unlocker 仓库（Linux 应该也可以，因为这个脚本只是使用 tar 压缩而已。未测试过）
+3. 运行 `python esxi-build.py` 构建好 unlocker 补丁。
+4. ESXi 启动 ssh 服务（安全 shll），然后通过 scp 命令（或 winscp 等带 UI 的工具）将上一步得到的东西拷贝到 ESXi 的 `/vmfs/volumes/datastore1/` 中
+5. 参考 unlocker 的 README，解压然后运行 `esxi-install.sh`。
+6. 完毕
+
 
 ### 3. 使用 iso 镜像创建 MacOS X 虚拟机
 
