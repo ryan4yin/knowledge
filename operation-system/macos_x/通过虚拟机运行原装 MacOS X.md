@@ -105,6 +105,17 @@ custom.vgz     false   32486592 B
 
 详细的兼容性参见官方页面：[VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php?deviceCategory=software&details=1&operatingSystems=261&productNames=15&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc&testConfig=16)
 
+
+## 三、安装 vmtools for mac
+
+为了用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmtools.
+
+需要用到的就是 unlocker for vmware workstation 安装在主机上的 `darwin.iso` 镜像。它里面就包含 vmtools for mac.
+
+unlocker for esxi 没有自动安装这个镜像。我们可以手动使用 `scp` 将 `darwin.iso` 从本地上传到 ESXi 的 `/usr/lib/vmware/isoimages/` 目录下。
+
+然后在 ESXi 的 Web Client 中选择「Install Vmware Tools」，就能自动安装了。
+
 ## 参考
 
 - [制作macOS系统dmg包及iso可引导镜像](https://www.newlearner.site/2019/03/07/macos-dmg-iso.html)
