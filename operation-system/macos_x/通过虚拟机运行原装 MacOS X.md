@@ -107,9 +107,13 @@ custom.vgz     false   32486592 B
 详细的兼容性参见官方页面：[VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php?deviceCategory=software&details=1&operatingSystems=261&productNames=15&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc&testConfig=16)
 
 
-## 三、安装 vmtools for mac
+## 三、安装 vmware tools for mac
 
-为了用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmtools.
+为了更流畅地使用 MacOS 虚拟机，并且用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmware tools。
+
+vmware tools 是一个安装在 VMware 虚拟机中的组件，它能优化虚拟机的性能、并让用户能更方便地与虚拟机进行交互。
+
+>对于 Linux，可以直接通过 `apt`/`yum` 安装 [vmware/open-vm-tools](https://github.com/vmware/open-vm-tools)
 
 ### Vmware Workstation
 
