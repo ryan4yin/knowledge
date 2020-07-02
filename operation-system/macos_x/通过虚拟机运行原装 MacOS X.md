@@ -42,11 +42,15 @@ mv Install_macOS_10.15.5-19F2200.cdr Install_macOS_10.15.5-19F2200.iso
 
 ## 二、通过 VMware Workstation 运行 MacOS X 虚拟机
 
-### 1. 安装 VMware Workstation
+### 1. 安装 VMware Workstation 或者 vShpere ESXi
 
-这个应该不需要解释，很常用。
+VMware Workstation 应该不需要解释，桌面虚拟机软件，很常用。
 
-### 2. 安装 unlocker 补丁
+vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
+
+### 2. VMware Workstation 安装 unlocker 补丁
+
+>vShpere ESXi 原生支持运行 macOS 系统，不需要安装 unlocker 补丁。因此可以跳过这一步。
 
 最初的 unlocker 仓库已经被 404 了，接盘侠提供的下载路径：https://github.com/paolo-projects/unlocker
 请直接使用 master 分支，不要用 releases，因为 releases 更新可能不及时。
@@ -55,8 +59,6 @@ mv Install_macOS_10.15.5-19F2200.cdr Install_macOS_10.15.5-19F2200.iso
 可以自己用 aria2 开多线程下载好，然后修改 `gettool.py` 让它使用已下载好的文件。
 
 直接通过仓库提供的 `win-install.sh`/`lnx-install.sh` 安装补丁就行。
-
-VMware ESXi 请使用专用版本：https://github.com/shanyungyang/esxi-unlocker
 
 ### 3. 使用 iso 镜像创建 MacOS X 虚拟机
 
@@ -70,6 +72,10 @@ VMware ESXi 请使用专用版本：https://github.com/shanyungyang/esxi-unlocke
 6. 进入磁盘工具，将 VMware 创建好的空硬盘格式化为 APFS 格式。
 7. 选择「Install macOS」，后面就完全是走流程，傻瓜式操作了。
 
+在 ESXi 上安装 MacOS 也是差不多的流程。需要注意的是兼容性问题。
+只有 ESXi 6.7U3+ 的版本才支持最新的 macOS 10.15。因此你可能需要先升级最新的 ESXi 系统。
+
+详细的兼容性参见官方页面：[VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php?deviceCategory=software&details=1&operatingSystems=261&productNames=15&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc&testConfig=16)
 
 ## 参考
 
