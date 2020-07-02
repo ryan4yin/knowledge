@@ -77,8 +77,16 @@ vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 2. 运行 `python esxi-build.py` 构建好 unlocker 补丁。
 3. ESXi 启动 ssh 服务（安全 shll），然后通过 scp 命令（或 winscp 等带 UI 的工具）将上一步得到的东西拷贝到 ESXi 的 `/vmfs/volumes/datastore1/` 中
 4. 参考 unlocker 的 README，解压然后运行 `esxi-install.sh`。
-5. 完毕
+5. 根据提示重启 ESXi.
+6. 完成。
 
+重启好后，可以再次启用安全 Shell，然后运行 `/vmfs/volumes/datastore1/esxi-smctest.sh` 确认补丁是否生效。正常情况下应该输出如下内容：
+
+```
+/bin/vmx
+smcPresent = true
+custom.vgz     false   32486592 B
+```
 
 ### 3. 使用 iso 镜像创建 MacOS X 虚拟机
 
