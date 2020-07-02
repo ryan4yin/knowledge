@@ -99,6 +99,7 @@ custom.vgz     false   32486592 B
 5. 然后启动，正常情况下应该就会显示一个白苹果和进度条。
 6. 进入磁盘工具，将 VMware 创建好的空硬盘格式化为 APFS 格式。
 7. 选择「Install macOS」，后面就完全是走流程，傻瓜式操作了。
+8. 安装好 macOS 并进入 macOS 系统后，记得在「Finder（访达）」中推出安装镜像「Install Catalina」，否则无法从虚拟机中卸载对应的 iso 文件。
 
 在 ESXi 上安装 MacOS 也是差不多的流程。需要注意的是兼容性问题。
 只有 ESXi 6.7U3+ 的版本才支持最新的 macOS 10.15。因此你可能需要先升级最新的 ESXi 系统。
@@ -110,11 +111,26 @@ custom.vgz     false   32486592 B
 
 为了用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmtools.
 
-需要用到的就是 unlocker for vmware workstation 安装在主机上的 `darwin.iso` 镜像。它里面就包含 vmtools for mac.
+### Vmware Workstation
+
+安装 vmtools，需要用到的就是 VMware 官方提供的 `darwin.iso` 镜像。在运行 unlocker for vmware workstation 的 `win-install.bat` 时，
+这个 iso 文件会被自动下载到 VMware Workstation 的安装目录下，比如 `C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso`.
+
+安装方法：
+
+1. 确认你的 macOS 安装镜像已经被推出。
+   1. 可以在「访达」中手动推出安装镜像「Install Catalina」
+   2. 或者也可以使用命令推出：`hdiutil detach /Volumes/Install\ macOS\ Catalina/`
+2. 在 VMware Workstation 中直接点击「安装 Vmware Tools」就行。
+3. 接下来都是按流程操作。
+
+### ESXi 系统
 
 unlocker for esxi 没有自动安装这个镜像。我们可以手动使用 `scp` 将 `darwin.iso` 从本地上传到 ESXi 的 `/usr/lib/vmware/isoimages/` 目录下。
-
 然后在 ESXi 的 Web Client 中选择「Install Vmware Tools」，就能自动安装了。
+
+后续的安装流程和 VMware Workstation 完全一样，不再赘述。
+
 
 ## 参考
 
