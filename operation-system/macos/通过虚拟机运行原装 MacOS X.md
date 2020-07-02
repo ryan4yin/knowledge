@@ -3,7 +3,14 @@
 通过 VMware/VirtualBox 虚拟机运行 MacOS X，可以用来无痛尝鲜 MacOS X，也可以用来完成一些苹果相关的自动化任务。
 
 
-## 一、下载制作 MacOS X 原版镜像
+## 一、在 virtualbox 上安装 MacOS X
+
+参见 [macos-virtualbox](https://github.com/myspaghetti/macos-virtualbox)
+
+
+## 二、在 VMware Workstation/ESXi 上安装 MacOS X
+
+### 1. 下载制作 MacOS X 原版镜像
 
 首先你得有一台可用的 MacOS X 机器。
 
@@ -40,15 +47,15 @@ mv Install_macOS_10.15.5-19F2200.cdr Install_macOS_10.15.5-19F2200.iso
 
 大功告成。
 
-## 二、通过 VMware Workstation 运行 MacOS X 虚拟机
+## 2. 通过 VMware Workstation 运行 MacOS X 虚拟机
 
-### 1. 安装 VMware Workstation 或者 vShpere ESXi
+### 2.1. 安装 VMware Workstation 或者 vShpere ESXi
 
 VMware Workstation 应该不需要解释，桌面虚拟机软件，很常用。
 
 vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
-### 2. 安装 unlocker 补丁
+### 2.2. 安装 unlocker 补丁
 
 #### 1) VMware Workstation
 
@@ -88,7 +95,7 @@ smcPresent = true
 custom.vgz     false   32486592 B
 ```
 
-### 3. 使用 iso 镜像创建 MacOS X 虚拟机
+### 2.3. 使用 iso 镜像创建 MacOS X 虚拟机
 
 安装好 unlocker 后，通过 VMware Workstation 创建虚拟机流程如下：
 
@@ -107,7 +114,7 @@ custom.vgz     false   32486592 B
 详细的兼容性参见官方页面：[VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php?deviceCategory=software&details=1&operatingSystems=261&productNames=15&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc&testConfig=16)
 
 
-## 三、安装 vmware tools for mac
+## 3. 安装 vmware tools for mac
 
 为了更流畅地使用 MacOS 虚拟机，并且用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmware tools。
 
