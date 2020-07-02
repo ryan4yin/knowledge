@@ -133,6 +133,14 @@ vmware tools 是一个安装在 VMware 虚拟机中的组件，它能优化虚�
 unlocker for esxi 没有自动安装这个镜像。我们可以手动使用 `scp` 将 `darwin.iso` 从本地上传到 ESXi 的 `/usr/lib/vmware/isoimages/` 目录下。
 然后在 ESXi 的 Web Client 中选择「Install Vmware Tools」，就能自动安装了。
 
+以我从 Windows 传输到 ESXi 为例，命令为：
+
+```
+# 需要提前在 ESXi 的 Web Client 中打开安全 Shell(SSH) 服务。
+scp "C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso" root@esxi-3.vshpere.local:/usr/lib/vmware/isoimages/
+# 然后输入 root 密码，就拷贝成功了
+```
+
 后续的安装流程和 VMware Workstation 完全一样，不再赘述。
 
 
