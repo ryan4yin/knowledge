@@ -71,11 +71,13 @@ vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
 打补丁步骤：
 
-2. 在一台 macOS 上克隆前面提供的 unlocker 仓库（Linux 应该也可以，因为这个脚本只是使用 tar 压缩而已。未测试过）
-3. 运行 `python esxi-build.py` 构建好 unlocker 补丁。
-4. ESXi 启动 ssh 服务（安全 shll），然后通过 scp 命令（或 winscp 等带 UI 的工具）将上一步得到的东西拷贝到 ESXi 的 `/vmfs/volumes/datastore1/` 中
-5. 参考 unlocker 的 README，解压然后运行 `esxi-install.sh`。
-6. 完毕
+1. 在一台 macOS 上克隆前面提供的 unlocker 仓库
+   1. macOS 上需要提前通过 `brew install gnu-tar` 安装好 gnu-tar，对应 gtar 命令！
+   2. Linux 应该也可以（未测试），因为这个脚本只是使用 tar 进行压缩而已。不过需要将 `esxi-build.py` 中的 `/usr/local/bin/gtar` 替换成 `tar`。
+2. 运行 `python esxi-build.py` 构建好 unlocker 补丁。
+3. ESXi 启动 ssh 服务（安全 shll），然后通过 scp 命令（或 winscp 等带 UI 的工具）将上一步得到的东西拷贝到 ESXi 的 `/vmfs/volumes/datastore1/` 中
+4. 参考 unlocker 的 README，解压然后运行 `esxi-install.sh`。
+5. 完毕
 
 
 ### 3. 使用 iso 镜像创建 MacOS X 虚拟机
