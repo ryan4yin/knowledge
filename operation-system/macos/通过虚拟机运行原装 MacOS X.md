@@ -8,7 +8,11 @@
 参见 [macos-virtualbox](https://github.com/myspaghetti/macos-virtualbox)
 
 
-## 二、在 VMware Workstation/ESXi 上安装 MacOS X
+## 二、在 ProxmoxVE 上安装 MacOS X
+
+
+
+## 三、在 VMware Workstation/ESXi 上安装 MacOS X
 
 ### 1. 下载制作 MacOS X 原版镜像
 

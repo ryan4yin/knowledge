@@ -28,6 +28,6 @@
    2. 成熟稳定，用户众多。但是各大云服务提供商全都用 KVM 做了自己的虚拟化平台，因为免费且自主可控。
    3. ESXi 搭配 vCenter 可以中心化地管理 ESXi 集群，搭配 terraform/python sdk 可以实现虚拟机的自动化创建等功能。
 2. [ProxmoxVE](https://pve.proxmox.com/wiki/Main_Page): 一个开源免费的服务器虚拟化系统，基于 Debian + QEMU/KVM + LXC.
-   1. 体验和 ESXi 基本一致，但是开源免费。
+   1. 体验和 ESXi 基本一致，虽然也是商业软件，但是开源免费。
    2. 适合个人使用。或者搭测试环境
 3. KVM: 直接搞 KVM，有一定难度。适合进阶用户，或者大厂自己 DIY。
