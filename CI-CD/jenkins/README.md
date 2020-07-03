@@ -26,6 +26,14 @@ Jenkins 是当下最流行的 CI/CD 工具之一，优势在于：
 Jenkinsfile 和 Git 仓库之间，通过 `JOB_NAME` 关联起来，这个关联关系也可以存放在这个 Git 仓库中
 这样维护起来方便，不需要每次都批量修改所有 Git 仓库中的 Jenkinsfile。缺点是耦合度增加了。
 
+## 使用建议
+
+轻量级任务可以考虑直接通过 Jenkins Pipeline 和 Jenkins 插件完成。
+如果复杂度上升，肯定就要在 pipeline 中嵌入 groovy/python 脚本才能实现功能，
+但是 Jenkinsfile 不方便测试，语法提示也很垃圾，报错信息混乱一片，也没有很方便的代码复用能力。因此只建议用于轻量级任务。
+
+更复杂的任务，建议使用 Python 脚本来完成。Python 脚本要规划好目录结构，我使用的结构参见 [Jenkinsfile 与 CI/CD 代码管理](./jenkinsfile-templates/README.md)。
+
 ## Python SDK
 
 >总的来说，jenkins 的两个 python sdk 都不是很好用。。。
