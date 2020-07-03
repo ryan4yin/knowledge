@@ -39,9 +39,24 @@ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebre
 source ~/.bash_profile
 ```
 
-## 2. 通过 Homebrew 安装 Python3/AdopetOpenJDK 等软件
+## 2. 安装常用软件
 
-待续
+### 2.1 Python3
+
+最新的 macOS 10.15 已经自带 Python3.7 了，对版本没有要求的话可以直接使用系统默认的 python，然后使用 venv/poetry 管理虚拟环境。
+
+### 2.2 OpenJDK
+
+推荐安装 AdoptOpenJDK：
+
+1. Homebrew 安装：https://github.com/AdoptOpenJDK/homebrew-openjdk
+   1. 不翻墙的话速度有些感人。
+2. 手动安装：https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot
+   1. 手动下载安装包进行安装。
+
+### 2.3 设置环境变量
+
+macOS 10.15 将默认 shell 由 bash 替换为了 zsh，要记得修改环境变量配置文件。
 
 ## 3. 设置软件开机自启（Service）
 
