@@ -21,3 +21,23 @@ security unlock-keychain -p <password> "$HOME/Library/Keychains/login.keychain"
 security import $basepath/$p12File -k ~/Library/Keychains/login.keychain -P password -A
 ```
 
+
+## 参考
+
+- 在macOS上搭建Flutter开发环境
+
+- 通过命令行安装Xcode
+
+- Install Developer Command Line Tools with SSH
+
+- Create IPA from CLI
+
+## 可能遇到的问题
+
+- warning: 'sqlite3_wal_checkpoint_v2' is only available on iOS 5.0 or newer
+
+- xcodebuild command failing on codesign but logs show incorrect profile uuid being used
+
+- Invalid Podfile file: invalid byte sequence in US-ASCII
+
+- Xcode, Codesign Error from Jenkins / SSH 
