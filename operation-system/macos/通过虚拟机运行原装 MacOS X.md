@@ -144,7 +144,8 @@ unlocker for esxi 没有自动安装这个镜像。我们可以手动使用 `scp
 
 ```
 # 需要提前在 ESXi 的 Web Client 中打开安全 Shell(SSH) 服务。
-scp "C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso" root@esxi-3.vshpere.local:/usr/lib/vmware/isoimages/
+cd "C:\Program Files (x86)\VMware\VMware Workstation\"
+scp darwin.iso root@esxi-3.vshpere.local:/usr/lib/vmware/isoimages/
 # 然后输入 root 密码，就拷贝成功了
 ```
 
