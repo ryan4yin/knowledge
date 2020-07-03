@@ -26,7 +26,24 @@
 ├───operation  # 上述 Jenkinsfiles 需要用到的 Python 代码
 │   ├─── vmware  # 与 vmware 相关的脚本（虚拟机的 CURD）
 │   ├─── ftp  # 与 ftp 服务器相关的脚本（数据清理）
+├─── tests   # python 代码的单元测试
+├─── run.py   # 所有脚本的启动入口。
+├─── README.md
 ```
+
+所有的脚本都包含一个无参的 `main()` 函数，根目录下的 `run.py` 会根据参数去调用对应模块的 `main()` 函数。
+比如 `python3 run.py operation.ftp.clean` 就会调用 `operation.ftp.clean.main()` 这个函数。
+
+这样做的好处有：
+
+1. 仓库结构清晰，也方便代码复用。
+2. `run.py` 中可以进行一些全局的设置：
+  1. 日志格式、输出级别
+  2. 捕获代码异常，然后打印出更友好的错误信息。（可以自定义一些任务相关的异常，然后在 `run.py` 中根据异常打印出对应的错误信息。）
+  3. 需要注意的是，使用这种代码结构时，Python 代码中一定要抛出有意义的异常，不能直接 `sys.exit`（非常坏的习惯）. 否则 `run.py` 的异常控制就失去了意义。
+
+
+### 代码仓库分类
 
 我们目前是将 jenkinsfiles 和 CI/CD 代码分成了七个 Git 仓库进行管理：
 
