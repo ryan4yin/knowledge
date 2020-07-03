@@ -152,8 +152,19 @@ scp "C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso" root@esxi-3.vs
 # 然后输入 root 密码，就拷贝成功了
 ```
 
+拷贝完成后在 Web Client 上点击安装 VMware Tools，会报错 `vix 错误代码 21004`...
+检查发现它自动填入的镜像文件路径是 `[] /usr/lib/vmware/isoimages/darwin.iso`，不知道为啥这个文件夹链接就是不能用，手动挂载也会报路径不存在。
+
+解决办法是手动修改这个挂载路径为 `[] /vmimages/tools-isoimages/darwin.iso`。直接在 iso 文件浏览时选中这个路径就好了。
+
 后续的安装流程和 VMware Workstation 完全一样，不再赘述。
 
+
+## 制作 ova 镜像
+
+装好 vmware tools 后，再配好环境，就可以将虚拟机导出为 ova/ovf 镜像了，方便环境的复用、备份等。
+
+这个还没有测试过可不可行。
 
 ## 参考
 
