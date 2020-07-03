@@ -31,3 +31,10 @@
    1. 体验和 ESXi 基本一致，虽然也是商业软件，但是开源免费。
    2. 适合个人使用。或者搭测试环境
 3. KVM: 直接搞 KVM，有一定难度。适合进阶用户，或者大厂自己 DIY。
+
+
+## 参考
+
+- [KVM 虚拟化环境搭建 - ProxmoxVE](https://zhuanlan.zhihu.com/p/49118355)
+- [KVM 虚拟化环境搭建 - WebVirtMgr](https://zhuanlan.zhihu.com/p/49120559)
+
