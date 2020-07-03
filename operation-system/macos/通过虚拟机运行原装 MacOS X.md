@@ -8,11 +8,7 @@
 参见 [macos-virtualbox](https://github.com/myspaghetti/macos-virtualbox)
 
 
-## 二、在 ProxmoxVE 上安装 MacOS X
-
-
-
-## 三、在 VMware Workstation/ESXi 上安装 MacOS X
+## 二、在 VMware Workstation/ESXi 上安装 MacOS X
 
 ### 1. 下载制作 MacOS X 原版镜像
 
@@ -165,6 +161,12 @@ scp "C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso" root@esxi-3.vs
 装好 vmware tools 后，再配好环境，就可以将虚拟机导出为 ova/ovf 镜像了，方便环境的复用、备份等。
 
 这个还没有测试过可不可行。
+
+## 三、MacOS on KVM
+
+1. 直接用 QEMU/KVM: https://github.com/kholia/OSX-KVM
+2. 用 Proxmox VE: https://www.nicksherlock.com/2019/10/installing-macos-catalina-10-15-on-proxmox-6/
+
 
 ## 参考
 
