@@ -46,3 +46,9 @@ source ~/.bash_profile
 ## 3. 设置软件开机自启（Service）
 
 参见 [使用 supervisord 设置应用开机启动 ](https://www.cnblogs.com/kirito-c/p/12170126.html)
+
+
+## 设置静态 IP、启用 SSH 远程登录
+
+1. 在「设置」-「网络」中设置静态 IP、路由器、DNS 等网络参数。
+2. 在「设置」-「共享」中启用「远程登录」，即 SSH 服务器。
