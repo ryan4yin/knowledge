@@ -47,17 +47,17 @@ mv Install_macOS_10.15.5-19F2200.cdr Install_macOS_10.15.5-19F2200.iso
 
 大功告成。
 
-## 2. 通过 VMware Workstation 运行 MacOS X 虚拟机
+### 2. 通过 VMware Workstation 运行 MacOS X 虚拟机
 
-### 2.1. 安装 VMware Workstation 或者 vShpere ESXi
+#### 2.1. 安装 VMware Workstation 或者 vShpere ESXi
 
 VMware Workstation 应该不需要解释，桌面虚拟机软件，很常用。
 
 vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
-### 2.2. 安装 unlocker 补丁
+#### 2.2. 安装 unlocker 补丁
 
-#### 1) VMware Workstation
+##### 1) VMware Workstation
 
 要在 Windows/Linux 上通过 VMware Workstation 运行 macOS，需要先通过 unlocker 打补丁。使用如下脚本：
 
@@ -68,7 +68,7 @@ vShpere ESXi 是 VMware 家的服务器虚拟化系统，基于 Linux。
 
 直接通过仓库提供的 `win-install.sh`/`lnx-install.sh` 安装补丁就行。
 
-#### 2) vShpere ESXi
+##### 2) vShpere ESXi
 
 虽然 ESXi 创建虚拟机时，默认就可以选择 macOS 系统，但是它要求使用 Apple 专用硬件。如果使用不兼容的硬件，macOS 会无限重启！！！
 
@@ -95,7 +95,7 @@ smcPresent = true
 custom.vgz     false   32486592 B
 ```
 
-### 2.3. 使用 iso 镜像创建 MacOS X 虚拟机
+#### 2.3. 使用 iso 镜像创建 MacOS X 虚拟机
 
 安装好 unlocker 后，通过 VMware Workstation 创建虚拟机流程如下：
 
@@ -114,7 +114,7 @@ custom.vgz     false   32486592 B
 详细的兼容性参见官方页面：[VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php?deviceCategory=software&details=1&operatingSystems=261&productNames=15&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc&testConfig=16)
 
 
-## 3. 安装 vmware tools for mac
+### 3. 安装 vmware tools for mac
 
 为了更流畅地使用 MacOS 虚拟机，并且用上剪切版同步、分辨率自适应等功能，我们还需要在 macOS 虚拟机中安装 vmware tools。
 
@@ -122,7 +122,7 @@ vmware tools 是一个安装在 VMware 虚拟机中的组件，它能优化虚�
 
 >对于 Linux，可以直接通过 `apt`/`yum` 安装 [vmware/open-vm-tools](https://github.com/vmware/open-vm-tools)
 
-### Vmware Workstation
+#### Vmware Workstation
 
 安装 vmtools，需要用到的就是 VMware 官方提供的 `darwin.iso` 镜像。在运行 unlocker for vmware workstation 的 `win-install.bat` 时，
 这个 iso 文件会被自动下载到 VMware Workstation 的安装目录下，比如 `C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso`.
@@ -135,7 +135,7 @@ vmware tools 是一个安装在 VMware 虚拟机中的组件，它能优化虚�
 2. 在 VMware Workstation 中直接点击「安装 Vmware Tools」就行。
 3. 接下来都是按流程操作。
 
-### ESXi 系统
+#### ESXi 系统
 
 unlocker for esxi 没有自动安装这个镜像。我们可以手动使用 `scp` 将 `darwin.iso` 从本地上传到 ESXi 的 `/usr/lib/vmware/isoimages/` 目录下。
 然后在 ESXi 的 Web Client 中选择「Install Vmware Tools」，就能自动安装了。
@@ -156,11 +156,12 @@ scp "C:\Program Files (x86)\VMware\VMware Workstation\darwin.iso" root@esxi-3.vs
 后续的安装流程和 VMware Workstation 完全一样，不再赘述。
 
 
-## 制作 ova 镜像
+### 4. 制作 ova 镜像
 
 装好 vmware tools 后，再配好环境，就可以将虚拟机导出为 ova/ovf 镜像了，方便环境的复用、备份等。
 
 这个还没有测试过可不可行。
+
 
 ## 三、MacOS on KVM
 
