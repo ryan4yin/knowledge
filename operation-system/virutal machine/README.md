@@ -33,6 +33,15 @@
 3. KVM: 直接搞 KVM，有一定难度。适合进阶用户，或者大厂自己 DIY。
 
 
+## 虚拟机集群管理 - OpenStack
+
+OpenStack 与虚拟机的关系，和 Kubernetes 与容器的关系一样。
+
+OpenStack 管理虚拟机集群，底层的虚拟化可以是 ESXi，也可以是 KVM.
+
+Kubernetes 管理容器集群，它底层的容器化可以由 Docker 提供，也可以使用 cri-o
+
+
 ## 参考
 
 - [KVM 虚拟化环境搭建 - ProxmoxVE](https://zhuanlan.zhihu.com/p/49118355)
