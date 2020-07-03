@@ -66,10 +66,17 @@
 
 拉取 git 仓库：
 ```groovy
-// 使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion
+// 方法一：使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion
 dir("sub_git_dir"){  // 如果此文件夹不存在，会自动创建它
   // 使用 git 插件，好处是插件会记录当前的 git reversion(web 页面上能看到)，方便排查。
   git branch: 'dev', credentialsId: 'git-ssh-credentials-ID', url: 'http://gitlab.svc.local/test_repo'
+}
+
+// 方法二：直接通过 git 命令拉取
+sshagent (credentials: ['git-ssh-credentials-ID']) {
+    sh """
+    git clone -b dev http://gitlab.svc.local/test_repo sub_git_dir
+    """
 }
 ```
 
