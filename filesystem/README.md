@@ -21,6 +21,12 @@
 1. RAID
 2. mergefs
 
+
+### 参考文档
+
+- [raid5 磁盘阵列真的不安全么？ - 知乎](https://www.zhihu.com/question/20164654/answer/348274179)
+
+
 ## Distributed File System
 
 磁盘阵列是在一台主机上插多个磁盘，通过磁盘阵列卡或者软件的方式将多个磁盘合并成一个存储空间。
