@@ -59,3 +59,7 @@ show grants for 'test'@'localhost';
 ```sql
 DROP USER 'test'@'localhost';
 ```
+
+## SQL 语句分析
+
+- [MySQL Explain 详解](https://www.cnblogs.com/xuanzhi201111/p/4175635.html)
