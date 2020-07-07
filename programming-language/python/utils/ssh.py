@@ -205,7 +205,7 @@ class SSH(object):
         )
 
     def put(self, local: Union[Path, IO],
-            remote_file_path: Union[Path, str] = None,
+            remote_file_path: Union[Path, str] = Path("."),
             preserve_mode: bool = True,
             mkdirs=False):
         """
@@ -229,7 +229,7 @@ class SSH(object):
         )
 
     def put_dir(self, local_dir_path: Union[Path, IO],
-                remote_path: Union[Path, str] = None,
+                remote_path: Union[Path, str] = Path("."),
                 preserve_mode: bool = True,
                 mkdirs=False):
         """
