@@ -6,6 +6,42 @@
 参考了 [docker_practice - Etcd 集群](https://github.com/yeasy/docker_practice/blob/master/etcd/cluster.md)
 
 
+## 使用 etcdctl 直接修改/查看 kubernetes 数据
+
+>官方文档：[Interacting with etcd](https://etcd.io/docs/v3.4.0/dev-guide/interacting_v3/)
+
+以容器方式部署的 etcd，可以直接通过 `kubectl exec` 进入 etcd 容器执行命令：
+
+```shell
+$ kubectl -n kube-system exec -it etcd-<node-name> -- sh
+```
+
+然后使用容器中自带的 etcdctl 操作 etcd 数据：
+
+```shell
+# 使用最新版的 etcd api
+$ export ETCDCTL_API=3
+$ etcdctl version
+etcdctl version: 3.3.15
+API version: 3.3
+
+# kubernetes 的 etcd 默认启用双向 tls 认证
+$ cd /etc/kubernetes/pki/etcd/
+$ ls
+ca.crt  ca.key  healthcheck-client.crt  healthcheck-client.key  peer.crt  peer.key  server.crt  server.key
+# 列出所有数据
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key get / --prefix --keys-only
+# 列出所有名字空间
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key get /registry/namespaces --prefix --keys-only
+# 列出所有 deployments
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key get /registry/deployments --prefix --keys-only
+# 查看 kube-system 空间的详细信息
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --write-out="json" get /registry/namespaces/kube-system
+
+# （谨慎操作！！！）强制删除名字空间 `monitoring`，尚不清楚这样做会导致什么问题。
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespaces/monitoring
+```
+
 ## Etcd 集群运维需知
 
 1. Etcd 集群的节点数量越多，写入速度越慢。因为 raft 协议要求超过 1/2 的节点写入成功，才算是一次成功的写操作。
