@@ -28,7 +28,7 @@ Jenkins 无疑是目前市面上最强大的 CI/CD 工具，可以 hold 住绝�
 
 1. 前后端代码的 CI/CD
 2. 自动化测试平台，通过定时任务进行自动化测试，使用 ningx/ftp 仓库进行测试记录的保存与查看，通过邮件通知或钉钉插件实现告警，。
-3. 自动化运维平台：提供数据定时清理、服务器维护、k8s集群维护、其他资源维护等等运维相关的任务。
+3. CMDB 配置管理系统 资产管理系统：提供数据定时清理、服务器维护、k8s集群维护、其他资源维护等等 CMDB 功能。
    1. 比如通过 Jenkins 调用 ansible/terraform/kubeadm 等工具，进行服务器/云资源/kubernetes集群的维护。
 
 但是 Jenkins 也存在很多问题，详见 [Jenkins Notes](jenkins/README.md)
@@ -38,4 +38,15 @@ Jenkins 无疑是目前市面上最强大的 CI/CD 工具，可以 hold 住绝�
 
 ### 2. Gitlab-CI
 
-待续
+Gitlab 去年相比 Jenkins 还有很多欠缺，今年（2020）加入了多项新功能，也许有希望替换掉 Jenkins：
+
+1. Multi-project pipelines(仅付费版): 同一个 Git 仓库可以有多个独立的 Pielines
+2. Parent-Child Pipelines：可以实现层次化的 CI/CD
+
+另外 Gitlab-CI 和 Gitlab 无缝融合，CI/CD 很方便。
+
+Gitlab-CI 也支持定时任务、通过 API 运行 Pipeline（可自定义参数）等功能。原生支持通过邮件发送通知。
+
+和 Jenkins 区别比较大的地方，是它没有「视图-文件夹-任务」这样的层次结构，所有的 Pipeline 其实都是附属于一个 Git 仓库的。
+
+这样的话一些批量构建的任务，可能只能附在运维代码仓库上。尚不清楚这种组织结构合不合适。
