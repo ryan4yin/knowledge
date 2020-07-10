@@ -33,7 +33,7 @@ Jenkins 无疑是目前市面上最强大的 CI/CD 工具，可以 hold 住绝�
 
 但是 Jenkins 也存在很多问题，详见 [Jenkins Notes](jenkins/README.md)
 
-因为 Jenkins 本身的这些问题，我目前正在寻找替代方案——能不能用多个小而美的工具来实现上述的所有功能。
+因为 Jenkins 本身的这些问题，我目前正在寻找替代方案——能不能用多个工具来实现上述的所有功能。
 
 
 ### 2. Gitlab-CI
