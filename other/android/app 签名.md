@@ -38,6 +38,28 @@ java -jar apksigner.jar verify -v xxx.apk
 
 如果你使用的 build-tools 版本 >= `30.0.1`，那么你可能需要 JDK11 才能正常执行上述命令。
 
+
+## 应用签名
+
+在第三方平台进行了应用加固后，需要重新对 APK 进行签名，方法如下：
+
+```shell
+# 需要使用此文件夹下的 jar 包
+cd /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib
+# 1. 方法一，交互式地输入密钥库密码、密钥密码
+java -jar apksigner.jar sign \
+    --ks <my-app>.jks \
+    --ks-key-alias <my-app> \
+    --out <my-app>-shield-signed.apk \
+    <my-app>-shield.apk
+# 2. 方法二，通过环境变量指定密码，适合自动化 CI/CD 时使用。
+java -jar apksigner.jar sign \
+    --ks <my-app>.jks --ks-pass env:KEYSTORE_PASSWORD\
+    --ks-key-alias <my-app> --key-pass env:KEY_PASSWORD\
+    --out <my-app>-shield-signed.apk \
+    <my-app>-shield.apk
+```
+
 ## 签名相关的敏感信息
 
 个人开发，可以使用被 git 忽略的 `key.properties` 存放密钥库密码等敏感信息。
