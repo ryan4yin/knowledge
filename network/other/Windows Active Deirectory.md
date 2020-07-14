@@ -21,3 +21,7 @@
 4. CI/CD 自动化使用专用账户访问域内各项服务（Gitlab/FTP服务器等）。
    1. 细分下去，还可以分为 frontend-ops、backend-ops、autotest-ops、operation-ops 等 CI/CD 账户。
 
+
+## 参考
+
+- [Acitve Directory Domain Service 入门 - 官方文档](https://docs.microsoft.com/zh-cn/windows-server/identity/ad-ds/ad-ds-getting-started)
