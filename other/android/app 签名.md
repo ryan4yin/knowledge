@@ -25,6 +25,19 @@ Enter keystore password: //输入密码，回车
 
 **注：**部分 API 提供商要求使用证书的 MD5 指纹！比如微信分享API。
 
+
+## 查看 APK 签名证书的指纹
+
+```shell
+# 需要使用此文件夹下的 jar 包
+cd /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib
+java -jar apksigner.jar verify -v xxx.apk
+```
+
+上述命令中用到的 `apksigner.jar` 来自 Android build-tools，Android Studio 会自动安装该组件，你也可以尝试手动下载。
+
+如果你使用的 build-tools 版本 >= `30.0.1`，那么你可能需要 JDK11 才能正常执行上述命令。
+
 ## 签名相关的敏感信息
 
 个人开发，可以使用被 git 忽略的 `key.properties` 存放密钥库密码等敏感信息。
