@@ -60,6 +60,8 @@ java -jar apksigner.jar sign \
     <my-app>-shield.apk
 ```
 
+如果你使用 Windows Powershell，请将 shell 换行符 `\` 替换成反引号。
+
 ## 签名相关的敏感信息
 
 个人开发，可以使用被 git 忽略的 `key.properties` 存放密钥库密码等敏感信息。
