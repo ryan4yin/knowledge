@@ -1,19 +1,34 @@
-# Windows AD 域的建立与管理
+# Windows Acitve Directory
+
+AD 域，是微软提供的一个网络身份认证(identity)与网络资源访问管理(access management)服务。
+主要用途有：
+
+1. 用户相关：
+   1. 集成验证(AD/LDAP): 使用同一个身份登录所有企业应用、企业设备。
+   2. 单点登录(OSS): 如果支持 OSS，那用户只需要登录一次，就能通过该身份访问所有企业内部的应用。
+   3. 对用户进行统一的分组、权限控制。
+2. 资产管理：分组管理电脑、打印机、NAS 等。
+   1. 使用域控能在域 PC 上自动执行脚本，管理员拥有 PC 的最高权限！
+
+
+## Windows AD 域的建立与管理
 
 要想让企业内部成员方便地使用各类内部服务，最好的办法就是组建一个 AD 域/LDAP 域控，
 统一使用同一套身份验证系统登录使用各类应用，如 Gitlab、Wiki、NAS、CI/CD、Docker 镜像仓库、APP 包仓库等等。
+通过集成 radius 认证，还可以直接使用域控账号连接公司的 WiFi.
 
-## AD 域介绍
+AD 域其实就是一个单纯的目录系统，或者叫文件夹系统。通过 UI 界面在 AD 域中创建群组/用户，和通过「文件资源管理器」在文件系统中创建「文件夹」/「文件」非常类似。
 
-待续。
+参考：
 
+- [AD域控 - 盐树枝](https://zhuanlan.zhihu.com/p/102694636)
 
 ## 最佳实践
 
 我目前想到的 AD 域最佳配置：
 
 1. 管理员账户 administrator 设置强密码，保存好密码，然后封存。紧急情况才使用这个账户。
-2. 新建一个 ldap-ops 管理员账户，专门用于各类应用、主机加入域控。
+2. 新建一个 ldap-ops 账户，给它加入域控的权限，专门用于各类应用、主机加入域控使用。
 3. 将办公 PC 加入域控后，需要将该 PC 用户的域账号加入到【本地用户和组】-【本地管理员组】中！
    1. 【本地管理员组】只拥有对该 PC 的管理权限，域控仍然是安全的。
    2. 如果不将用户加入【本地管理员组】，很多对 C盘/注册表的操作（比如安装软件）都会要求通过管理员账户授权（输入账号密码），导致管理员账户密码半公开，域控安全形同虚设。
@@ -22,6 +37,11 @@
    1. 细分下去，还可以分为 frontend-ops、backend-ops、autotest-ops、operation-ops 等 CI/CD 账户。
 
 
+## 进阶
+
+- [Windows认证 | 域认证 - Kerberos 协议](https://zhuanlan.zhihu.com/p/89399579)
+
 ## 参考
 
 - [Acitve Directory Domain Service 入门 - 官方文档](https://docs.microsoft.com/zh-cn/windows-server/identity/ad-ds/ad-ds-getting-started)
+- [Active Directory的基本概念](https://www.cnblogs.com/IFire47/p/6672176.html)
