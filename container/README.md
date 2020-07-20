@@ -90,9 +90,9 @@ CNI 主要是提供给 Kubernetes 这类容器集群系统的，这是一个蓬�
 
 除了 Podman 对标 `Docker Engine`，大厂还推出了各种工具，势要完全消除掉 Docker 的不可替代性。
 
-镜像构建：
+镜像构建工具：
 
-1. [Kaniko - GoogleContainerTools](https://github.com/GoogleContainerTools/kaniko): Goole 家的
+1. [Kaniko - GoogleContainerTools](https://github.com/GoogleContainerTools/kaniko): Goole 家的，不需要运行一个后台程序。
 2. [buildah](https://github.com/containers/buildah): RedHat 贡献给社区的
 3. [buildkit](https://github.com/moby/buildkit): Docker 家的
 
