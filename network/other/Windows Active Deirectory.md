@@ -1,10 +1,13 @@
 # Windows Acitve Directory
 
+当一个组织或企业的用户和PC越来越多时，这么多用户的分组与权限管理，谁能使用哪台电脑？能访问哪些应用？有没有修改的权限？
+这些都会成为一个复杂的问题。
+
 AD 域，是微软提供的一个网络身份认证(identity)与网络资源访问管理(access management)服务。
-主要用途有：
+它被广泛应用在各企业/组织的统一身份认证与资产管理中，主要用途有：
 
 1. 用户相关：
-   1. 集成验证(AD/LDAP): 使用同一个身份登录所有企业应用、企业设备。
+   1. 集成验证(LDAP+Kerberos): 使用同一个身份登录所有企业应用、企业设备。
    2. 单点登录(OSS): 如果支持 OSS，那用户只需要登录一次，就能通过该身份访问所有企业内部的应用。
    3. 对用户进行统一的分组、权限控制。
 2. 资产管理：分组管理办公电脑、打印机等。
@@ -46,3 +49,4 @@ AD 域其实就是一个单纯的目录系统，或者叫文件夹系统。通�
 
 - [Acitve Directory Domain Service 入门 - 官方文档](https://docs.microsoft.com/zh-cn/windows-server/identity/ad-ds/ad-ds-getting-started)
 - [Active Directory的基本概念](https://www.cnblogs.com/IFire47/p/6672176.html)
+- [LDAP, Active Directory and Federated Identity: What You Need to Know](https://doubleoctopus.com/blog/ldap-active-directory-and-federated-identity-what-you-need-to-know/)
