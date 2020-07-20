@@ -94,14 +94,21 @@ nc <remote-host> 11111 | wireshark -k -S -i -
 如果是抓取 Android 手机的数据，方便起见，可以通过 adb 多进行一次数据转发：
 
 ```shell
-# 1. 在 adb shell 里使用 tcpdump 抓包
+# 1. 在 adb shell 里使用 tcpdump 抓 WiFi 的数据包，转发到 11111 端口
+## 需要先获取到 root 权限，将 tcpdump 拷贝到 /system/bin/ 目录下
 tcpdump -i wlan0 -s0 -w - | nc -l -p 11111
 
-# 2. 在本机使用 adb forward 将本机的 11111 端口和手机的 11111 端口绑定
-adb forward tcp:11233 tcp:11233
+# 2. 在本机使用 adb forward 将手机的 11111 端口绑定到本机(PC)的 11111 端口
+adb forward tcp:11111 tcp:11111
 
-# 3. 直接从本机的 11111 端口读取数据，提供给 wireshark
+# 3. 直接从本机(PC)的 11111 端口读取数据，提供给 wireshark
 nc localhost 11111 | wireshark -k -S -i -
+## 通过数据转发，本机 11111 端口的数据，就是安卓手机内 tcmpdump 的 stdout 内容。
+
+# 方案二：
+# 如果手机不方便 root，推荐 PC 开启 WiFi 热点，手机连上这个热点访问网络。
+# 这样手机的数据就一定会走 PC，直接在 PC 上通过 wireshark 抓包就行。
+# 如果你只需要简单地抓 http/https 包，请使用 fiddler/mitmproxy
 ```
 
 如果需要对 Kubernetes 集群中的容器进行抓包，推荐直接使用 [ksniff](https://github.com/eldadru/ksniff)!
