@@ -74,8 +74,16 @@ tls:
         clientAuthType: RequireAndVerifyClientCert
       sniStrict: true
       preferServerCipherSuites: true
+  certificates:  # 服务端的 TLS 证书列表
+  # traefik 会遍历此列表，使用第一个 SNI 信息对应的证书建立连接。
+  - certFile: /etc/certs/server.crt
+    keyFile: /etc/certs/server.key
+    stores:
+      - default
   stores:
     default: # 默认参数
-      defaultCertificate:
-        certFile: /etc/certs/server.crt
-        keyFile: /etc/certs/server.key
+      # defaultCertificate:
+      #   # 当 SNI 信息不匹配时，就会使用这个默认证书建立 TLS 连接。
+      #   # 如果不指定，traefik 会自动生成一个默认证书。
+      #   certFile: /etc/certs/server.crt
+      #   keyFile: /etc/certs/server.key
