@@ -7,6 +7,8 @@
     ```shell
     mongo --eval 'rs.initiate( { _id : "rs0",members: [{ _id: 0, host: "mongo1.db.local:27017" },{ _id: 1, host: "mongo2.db.local:27018" },{ _id: 2, host: "mongo3.db.local:27019" }   ]})'
     ```
+1. 查看副本集状态：`mongo --eval "rs.status()"`
+2. 也可以通过 `mongo shell` 直接进 shell 运行上述命令
 
 注意：上述命令中的 `mongox.db.local` 必须是正确的可使用的域名！并且客户端能正常解析！
 如果没有私有 DNS 服务器/域名，建议将这三个域名修改成 `IP` 地址！
