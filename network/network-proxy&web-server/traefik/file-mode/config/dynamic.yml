@@ -75,7 +75,7 @@ tls:
       sniStrict: true
       preferServerCipherSuites: true
   certificates:  # 服务端的 TLS 证书列表
-  # traefik 会通过 SNI 信息来查找证书。如果多个证书的 SAN 等信息相同，目前并不清楚哪个证书会被选择上！！
+  # traefik 会通过 SNI 信息来查找证书。多个证书的 SAN 等信息不能相同！！！否则可能会相互覆盖！！！
   # TLS 连接比 http/dns 更底层，因此不能通过 Host 等参数来选择证书！！
   - certFile: /etc/certs/server.crt
     keyFile: /etc/certs/server.key
