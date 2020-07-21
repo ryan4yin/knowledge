@@ -137,8 +137,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
     [ alt_names ]
     DNS.1 = *.svc.local  # 一级泛域名
-    DNS.1 = *.aaa.svc.local  # 二级泛域名
-    DNS.1 = *.bbb.svc.local  # 二级泛域名
+    DNS.2 = *.aaa.svc.local  # 二级泛域名
+    DNS.3 = *.bbb.svc.local  # 二级泛域名
 
     [ req_ext ]
     subjectAltName = @alt_names
@@ -166,8 +166,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.svc.local" -days 10000 -out ca.crt
     ### 签名
     openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
-    -CAcreateserial -out server.crt -days 10000 \
-    -extensions v3_ext -extfile csr.conf
+      -CAcreateserial -out server.crt -days 10000 \
+      -extensions v3_ext -extfile csr.conf
     ```
 
 #### 1.1 拓展1：基于 ECC 算法的 TLS 证书
@@ -264,8 +264,8 @@ openssl req -new -key client.key -out client.csr -config csr.conf
 # 3. 生成最终的证书，这里指定证书有效期 3650 天
 ### 使用前面生成的 ca 证书对客户端证书进行签名（客户端和服务端共用 ca 证书）
 openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key \
--CAcreateserial -out client.crt -days 3650 \
--extensions v3_ext -extfile csr.conf
+   -CAcreateserial -out client.crt -days 3650 \
+   -extensions v3_ext -extfile csr.conf
 ```
 
 mTLS 的应用场景主要在「零信任网络架构」，或者叫「无边界网络」中。
