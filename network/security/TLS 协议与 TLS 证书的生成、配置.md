@@ -150,6 +150,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     keyUsage=keyEncipherment,dataEncipherment,digitalSignature
     extendedKeyUsage=serverAuth,clientAuth
     ```
+   - 此文件的详细文档：[OpenSSL file formats and conventions](https://www.openssl.org/docs/man1.1.1/man5/)
 2. 生成证书：
     ```shell
     # 1. 生成 2048 位 的 RSA 密钥
