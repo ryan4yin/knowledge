@@ -170,6 +170,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
       -extensions v3_ext -extfile csr.conf
     ```
 
+上述流程生成一个 x509 证书链，详细的参数说明，参见 [RFC5280 - Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile](https://tools.ietf.org/html/rfc5280)
+
 #### 1.1 拓展1：基于 ECC 算法的 TLS 证书
 
 >Let's Encrypt 目前也已经支持了 ECC 证书。
