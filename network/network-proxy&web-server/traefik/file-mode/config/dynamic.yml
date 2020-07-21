@@ -15,8 +15,9 @@ http:
       # 当请求能匹配上多个 routers 时，会使用优先级最高的。
       priority: 100
       tls:  # 只支持 TLS 访问！
-        options: default  # 这里引用后面的 tls 配置，默认使用 default 配置
-        stores: default  # 同上
+        # 这里引用后面的 tls 配置，默认使用 default 配置
+        # 也可以在这里设置专用配置
+        options: default
     
     # 代理 wiki 应用
     wiki:
