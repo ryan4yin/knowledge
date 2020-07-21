@@ -76,6 +76,7 @@ tls:
       preferServerCipherSuites: true
   certificates:  # 服务端的 TLS 证书列表
   # traefik 会遍历此列表，使用第一个 SNI 信息对应的证书建立连接。
+  # TLS 连接比 http/dns 更底层，因此不能通过 Host 等参数来选择证书！！
   - certFile: /etc/certs/server.crt
     keyFile: /etc/certs/server.key
     stores:
