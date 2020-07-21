@@ -35,12 +35,12 @@ http:
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
 
   middlewares:
-  # # http 重定向到 https
-  # # traefik.yml 中的重定向设置是全局的，这个重定向配置只有引用了它的路由才会使用。
-  # https-redirect:
-  #   redirectScheme:
-  #     scheme: https
-  #     permanent: true
+    # http 重定向到 https
+    # traefik.yml 中的重定向设置是全局的，这个重定向配置只有引用了它的路由才会使用。
+    secure-it:
+      redirectScheme:
+        scheme: https
+        permanent: true  # 301 永久重定向(moved permanently)，否则会使用 301 临时重定向。
 
   services:
     wiki:
