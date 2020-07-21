@@ -18,6 +18,7 @@ http:
         # 这里引用后面的 tls 配置，默认使用 default 配置
         # 也可以在这里设置专用配置
         options: default
+        # 这里不支持设置 store 参数！
     
     # 代理 wiki 应用
     wiki:
