@@ -363,7 +363,7 @@ mTLS 和「公钥锁定/证书锁定」对比：
 
 ```shell
 # 查看证书(crt)信息
-openssl x509 -noout -text -in ca.crt
+openssl x509 -noout -text -in server.crt
 
 # 查看证书请求(csr)信息
 openssl req -noout -text -in server.csr
