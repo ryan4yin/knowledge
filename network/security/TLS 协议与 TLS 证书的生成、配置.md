@@ -157,7 +157,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     openssl genrsa -out server.key 2048
     # 2. 通过第一步编写的配置文件，生成证书签名请求
     openssl req -new -key server.key -out server.csr -config csr.conf
-    # 3. 生成最终的证书，这里指定证书有效期 10000 天
+    # 3. 生成最终的证书，这里指定证书有效期 3650 天
     ## 3.1 方法一：使用 server.key 进行自签名。这种方式得到的证书不包含 SAN！不支持多域名！
     openssl req -x509 -sha256 -days 3650 -key server.key -in server.csr -out server.crt
     ## 3.2 方法二：生成 ca 证书，并且使用 CA 证书、CA 密钥对 `csr` 文件进行签名
@@ -165,13 +165,16 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     openssl genrsa -out ca.key 2048
     ### ca 公钥
     openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.svc.local" -days 10000 -out ca.crt
-    ### 签名，建议证书有效期不要超过 825！否则苹果设备会禁止访问！
+    ### 签名
     openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
       -CAcreateserial -out server.crt -days 825 \
       -extensions v3_ext -extfile csr.conf
     ```
 
 上述流程生成一个 x509 证书链，详细的参数说明，参见 [RFC5280 - Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile](https://tools.ietf.org/html/rfc5280)
+
+>如果证书是用于 Web 服务，建议设置的有效期不要超过 825 天！一是为了安全，二是苹果等部分设备可能会强制不信任证书有效期过长的证书。
+其他用途的证书，如果更换起来很麻烦，可以考虑放宽条件。比如 kubernetes 集群的加密证书，官方给出的示例就把证书有效期设为了 10000 天。
 
 #### 1.1 拓展1：基于 ECC 算法的 TLS 证书
 
