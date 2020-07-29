@@ -59,3 +59,9 @@ Traefik 支持通过 tlsChallenge/httpChallenge/dnsChallenge 三种验证方式�
 
 
 详见 [Traefik - Let's Encrypt](https://docs.traefik.io/https/acme/)
+
+
+## 问题
+
+1. 如何像 nginx 那样去控制 traefik 到后端的连接池大小？
+1. http 层代理时，traefik 会不会转发 keep-alive 头？如何设置 client-traefik 连接的超时时间？
