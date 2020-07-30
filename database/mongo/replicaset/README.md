@@ -25,6 +25,12 @@ docker-compose up -d
 
 ## 客户端
 
-在只有一个副本集的情况下，客户端可以不指定副本集。
+使用 python 测试 mongodb 可用性：
 
+```python3
+from pymongo import MongoClient
 
+# 在只有一个副本集的情况下，可以省略参数 replicaset
+client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
+client.list_database_names()
+```

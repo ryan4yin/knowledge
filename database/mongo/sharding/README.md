@@ -37,3 +37,14 @@ helm upgrade --install mongo-sharded -f custom-values.yaml ./mongodb-sharded
 ### 二、生产环境
 
 建议二进制方式部署，或者购买云服务。
+
+
+### 三、测试可用性
+
+使用 python 测试 mongo 分片集群的可用性
+
+```python3
+from pymongo import MongoClient
+client = MongoClient("mongo-sharded.db.local", 27017, username="root", password="")
+client.list_database_names()
+```
