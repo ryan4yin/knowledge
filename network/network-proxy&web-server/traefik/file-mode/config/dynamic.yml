@@ -71,7 +71,7 @@ tls:
       # 验证客户端证书（mTLS，双向 TLS）
       clientAuth:
         caFiles:
-        # 客户端证书的 CA 证书
+        # 客户端证书的 CA 证书，可以配置多个，只要有一个能匹配上，就能通过验证。
         - /etc/certs/client-ca.crt
         clientAuthType: RequireAndVerifyClientCert
       sniStrict: true
