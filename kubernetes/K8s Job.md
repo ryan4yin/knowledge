@@ -23,7 +23,7 @@ Job 这里需要注意的一个点，是 `spec.template.spec.restartPolicy` 和 
 1. **只应该使用 CronJob 运行幂等的任务！（类比 HTTP 的 PUT 方法）**因为 k8s 不能保证 CronJob 只被运行一次。
    - CronJob 创建 Job 对象，每个 Job 的执行次数**大约**为一次。 我们之所以说 “大约”，是因为在某些情况下，可能会创建两个 Job，或者不会创建任何 Job。 我们试图使这些情况尽量少发生，但不能完全杜绝。
    - 如果您不指定 startingDeadlineSeconds 值，则 CronJob 永远不会超时。这可能会导致同一个 CronJob 同时运行多次。
-
+1. 可通过 `spec.concurrencyPolicy` 设置禁止任务并行执行。
 
 
 ## 参考
