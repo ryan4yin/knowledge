@@ -164,7 +164,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     ### ca 私钥
     openssl genrsa -out ca.key 2048
     ### ca 证书，ca 证书的有效期尽量设长一点，因为不方便更新换代。
-    openssl req -x509 -new -nodes -key ca.key -subj "/CN=xxx.svc.local" -days 10000 -out ca.crt
+    openssl req -x509 -new -nodes -key ca.key -subj "/CN=MyRootCA" -days 10000 -out ca.crt
     ### 签名，服务端证书的有效期建议不要超过 825 天。
     openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
       -CAcreateserial -out server.crt -days 825 \
