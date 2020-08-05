@@ -55,6 +55,8 @@ SSH 协议会使用 SSH 指纹对服务端进行验证，防止中间人攻击�
 ssh-keyscan gitlab.svc.local >> known_hosts
 ```
 
+扫描得到的 known_hosts 文件的内容，需要配置在 `custom-values.yaml` 的 `ssh.known_hosts` 属性中，后续部署会使用到这个配置文件。
+
 ### 4. 将部署 Flux 部署到集群中
 
 接下来将 flux 部署到一个专用名字空间 `flux` 中，需要提前安装好 `helm3` 和 `fluxctl`
