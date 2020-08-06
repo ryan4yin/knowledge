@@ -238,8 +238,9 @@ class SSH(object):
         将文件夹从本地传输给远程主机
 
         :param local_dir_path: 本机的文件夹路径
-        :param remote_path: 远程主机中，已经存在的一个文件夹的路径（不会解析 `~` 符号！建议用绝对路径！）
+        :param remote_path: 远程主机中的文件夹路径（不会解析 `~` 符号！建议用绝对路径！）
                             默认传输到远程的 home 目录下
+                            如果此文件夹路径不存在，会提前创建它
         :param preserve_mode: 是否保存文件的 mode 信息（可读/可写/可执行），默认 True
         :param mkdirs: 如果路径不存在，是否自动创建中间文件夹。
         :return
@@ -247,8 +248,7 @@ class SSH(object):
         try:
             self.conn.run(f"test -d {Path(remote_path).as_posix()}")
         except UnexpectedExit:
-            raise RuntimeError(
-                "remote_path 必须是一个已经存在的文件夹路径！请给定正确的 remote_path，或者使用默认参数！")
+            self.conn.run(f"mkdir -p {Path(remote_path).as_posix()}")
 
         stream = tar_files(local_dir_path, c_type="gz", get_stream=True)
         tar_name = local_dir_path.name + ".tar.gz"
