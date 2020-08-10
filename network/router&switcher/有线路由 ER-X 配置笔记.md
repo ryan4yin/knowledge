@@ -117,17 +117,16 @@ set protocols static table 11 interface-route 0.0.0.0/0 next-hop-interface pppoe
 set protocols static table 12 description "route all traffic to 192.168.2.1"
 set protocols static table 12 route 0.0.0.0/0 next-hop 192.168.2.1
 # 2. 切换到 firewall.modify 中
-edit firewall modify
 ## 2.1 根据 source address 选择路由表
 ## 这里的 `traffic_out` 只是一个配置名称，只要求它是唯一的
-set traffic_out description "route traffic to wan"  # 简要说明下配置的用途
-set traffic_out rule 10 description "route all traffic to pppoe0"  # 其中的 10 是一个 id，只要求它是一个唯一的数字。
-set traffic_out rule 10 source address 192.168.5.0/24
-set traffic_out rule 40 modify table 11  # 让被匹配的流量使用 id 为 11 的路由（也就是从 pppoe0 出去）
+set firewall modify traffic_out description "route traffic to wan"  # 简要说明下配置的用途
+set firewall modify traffic_out rule 10 description "route all traffic to pppoe0"  # 其中的 10 是一个 id，只要求它是一个唯一的数字。
+set firewall modify traffic_out rule 10 source address 192.168.5.0/24
+set firewall modify traffic_out rule 10 modify table 11  # 让被匹配的流量使用 id 为 11 的路由（也就是从 pppoe0 出去）
 
 # 3. 指定哪些接口需要使用 traffic_out 这个策略路由配置
 # 这里的 `in` 匹配穿透该接口的流量，也就是说会过滤掉访问接口本身的流量（比如访问路由器主页）。
-set interfaces ethernet eth1 firewall in modify traffic_out
+set interfaces ethernet eth0 firewall in modify traffic_out
 set interfaces ethernet eth2 firewall in modify traffic_out
 
 # 4. 保存修改
