@@ -116,8 +116,7 @@ set protocols static table 11 interface-route 0.0.0.0/0 next-hop-interface pppoe
 ## 或者也可以通过 ip 地址指定路由的下一跳
 set protocols static table 12 description "route all traffic to 192.168.2.1"
 set protocols static table 12 route 0.0.0.0/0 next-hop 192.168.2.1
-# 2. 切换到 firewall.modify 中
-## 2.1 根据 source address 选择路由表
+## 2. 根据 source address 选择路由表
 ## 这里的 `traffic_out` 只是一个配置名称，只要求它是唯一的
 set firewall modify traffic_out description "route traffic to wan"  # 简要说明下配置的用途
 set firewall modify traffic_out rule 10 description "route all traffic to pppoe0"  # 其中的 10 是一个 id，只要求它是一个唯一的数字。
