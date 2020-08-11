@@ -63,8 +63,12 @@ DROP USER 'test'@'localhost';
 ## 运行 SQL
 
 ```shell
-# 直接运行某个 sql 文件
+# 1. 直接运行某个 sql 文件
 mysql --user="username" --database="databasename" --password="yourpassword" < "/path/to/xxx.sql"
+# 2. 在 mysql shell 里运行 sql 文件
+$ mysql -u root -p
+mysql> USE mydb;
+mysql> source /path/to/xxx.sql
 ```
 
 ## SQL 语句分析
