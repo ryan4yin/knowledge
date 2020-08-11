@@ -60,6 +60,13 @@ show grants for 'test'@'localhost';
 DROP USER 'test'@'localhost';
 ```
 
+## 运行 SQL
+
+```shell
+# 直接运行某个 sql 文件
+mysql --user="username" --database="databasename" --password="yourpassword" < "/path/to/xxx.sql"
+```
+
 ## SQL 语句分析
 
 - [MySQL Explain 详解](https://www.cnblogs.com/xuanzhi201111/p/4175635.html)
