@@ -12,7 +12,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<your-password>';
 FLUSH PRIVILEGES;
 ```
 
-内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（危险操作！）：
+内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（危险操作！另外很多应用都不支持使用空密码连接 MySQL！）：
 
 ```sql
 # 使本机访问 mysql 不需要密码

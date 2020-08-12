@@ -17,3 +17,7 @@ Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + He
    3. 详见[Apollo 分布式部署指南-kubernetes部署](https://github.com/ctripcorp/apollo/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97#24-kubernetes%E9%83%A8%E7%BD%B2)
 
 
+## 注意事项
+
+1. 目前 Portral 貌似是使用服务端 Session，Cookie 只包含 SessionID，Session 具体的内容保存在服务端内存中。
+   这导致 Portral 本身成了一个有状态应用，Session 不能跨副本！因此多副本情况下必须配置基于 ClientIP 的会话亲和！
