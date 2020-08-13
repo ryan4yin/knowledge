@@ -28,7 +28,7 @@ UI 查询界面：`http://<jaeger-agent>:16686`
 简单介绍：
 
 1. jaeger-agent: 监听通过 UDP 上报的 spans，然后批量提交给 jaeger-collector.
-   1. 可作为 sidecar 使用
+   1. 建议作为 sidecar 使用，否则 UDP 数据可能会丢失！
 2. jaeger-collector: 接收 jaeger-agent 上报的 spans，然后通过一个 pipeline 对 spans 进行验证、索引、转换，最后保存它们。
    1. 客户端也可以直接通过 http 协议将 span 上报给 jaeger-collector.
    2. 后端存储目前支持 cassandra、elasticsearch 和 kafka
