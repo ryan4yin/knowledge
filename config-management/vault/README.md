@@ -1,7 +1,10 @@
 # [Vault](https://github.com/hashicorp/vault)
 
-Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完善。
-它不仅支持保存各种自定义信息、自动生成各类密钥，还支持接入各大云厂商的账号权限体系，支持各种敏感信息的自动轮转，非常方便。
+Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完善：
+
+1. 支持保存各种自定义信息、自动生成各类密钥，vault 自动生成的密钥还能自动轮转(rotate)
+2. 支持接入各大云厂商的账号权限体系（比如阿里云RAM子账号），实现 APIKey/APISecret 的自动轮转。
+3. 支持接入 kubernetes rbac 权限体系，通过 serviceaccount+role 为每个 Pod 单独配置权限。
 
 ## 部署 Vault
 
