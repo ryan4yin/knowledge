@@ -15,5 +15,7 @@ docker-compose 部署：
 
 常用的两个数据上报 API：
 
-1. ZipKin 格式协议: `http://jaeger-collector:9411/api/v2/spans`
-1. Jaeger 原生协议(Thrift over HTTP): `http://jaeger-collector:14268/api/traces`
+1. ZipKin 格式协议: `http://<jaeger-collector>:9411/api/v2/spans`
+1. Jaeger 原生协议(Thrift over HTTP): `http://<jaeger-collector>:14268/api/traces`
+
+UI 查询界面：`http://<jaeger-agent>:16686`
