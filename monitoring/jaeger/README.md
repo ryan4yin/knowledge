@@ -17,7 +17,7 @@ docker-compose 部署：
 
 1. ZipKin 格式协议: `http://<jaeger-collector>:9411/api/v2/spans`
 1. Jaeger 原生协议(Thrift over HTTP): `http://<jaeger-collector>:14268/api/traces`
-2. grpc 协议(agent 上报到 `jaeger-collector` 的默认方式)：14250 端口
+2. grpc 协议(Protobuf via gRPC)：14250 端口，这是 jaeger-agent 上报数据到 `jaeger-collector` 的推荐方式
 
 两个 UDP 数据上报 API（上报给 `jaeger-agent`）: 
 
