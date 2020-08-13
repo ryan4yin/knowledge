@@ -19,3 +19,8 @@ docker-compose 部署：
 1. Jaeger 原生协议(Thrift over HTTP): `http://<jaeger-collector>:14268/api/traces`
 
 UI 查询界面：`http://<jaeger-agent>:16686`
+
+
+# 三、架构
+
+https://www.jaegertracing.io/docs/1.18/architecture/
