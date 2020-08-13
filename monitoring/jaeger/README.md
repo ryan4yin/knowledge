@@ -22,8 +22,9 @@ docker-compose 部署：
 两个 UDP 数据上报 API（上报给 `jaeger-agent`）: 
 
 1. 6831 端口	UDP	agent	accept jaeger.thrift over compact thrift protocol
-   1. 测试发现 python 的 jaeger-client 默认使用这个协议。
+   1. 大多数 jaeger 客户端都使用这种协议上报数据，比如 python
 2. 6832 端口	UDP	agent	accept jaeger.thrift over binary thrift protocol
+   1. 少量不支持 compact 编码的客户端，会使用这个协议上报数据。
 
 UI 查询界面：`http://<jaeger-query>:16686`
 
