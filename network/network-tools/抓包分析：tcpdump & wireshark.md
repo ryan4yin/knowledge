@@ -94,6 +94,7 @@ nc <remote-host> 11111 | wireshark -k -S -i -
 如果是抓取 Android 手机的数据，方便起见，可以通过 adb 多进行一次数据转发：
 
 ```shell
+# 方案一：root 手机后，将 arm 版的 tcpdump 拷贝到手机内进行抓包
 # 1. 在 adb shell 里使用 tcpdump 抓 WiFi 的数据包，转发到 11111 端口
 ## 需要先获取到 root 权限，将 tcpdump 拷贝到 /system/bin/ 目录下
 tcpdump -i wlan0 -s0 -w - | nc -l -p 11111
