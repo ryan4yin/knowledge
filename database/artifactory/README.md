@@ -8,6 +8,11 @@ nexus3 支持很多主流语言(pypi/nuget/npm/rubygems/maven 等)的包仓库�
 
 简而言之，这就是 The One Repository Rules Them All.
 
+优点：
+
+1. 大一统，降低维护成本
+2. 用户众多，代码是企业维护，稳定性有保障。
+
 缺点：大一统的制品库对最新协议的支持，往往不如各大社区中那些小而美的制品库。比如 nexus3 对 nuget v3 json api 的支持比社区的 [baget](https://github.com/loic-sharma/BaGet) 晚了一年多。
 
 ## 2. Harbor 容器镜像仓库
