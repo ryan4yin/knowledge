@@ -6,7 +6,7 @@
 
 nexus3 支持很多主流语言(pypi/nuget/npm/rubygems/maven 等)的包仓库协议、Linux 两个主流的包管理器仓库 apt/yum、docker 容器镜像仓库、Helm 仓库 等等。
 
-简而言之，这就是 The One Repository Rules Them All.
+简而言之，这就是 The One Repository Rules Them All，国内很多的开源镜像站，都有 nexus3 的影子。
 
 优点：
 
