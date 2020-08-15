@@ -1,5 +1,6 @@
-# Arch Linux 安装 QEMU-KVM 环境
+>个人笔记，不保证正确
 
+# Arch Linux 安装 QEMU-KVM 环境
 
 ## 一、安装 QUEU/KVM
 
@@ -26,14 +27,14 @@ sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-n
 完了还需要安装 ebtables 和 iptables 两个网络组件，这两个工具也是用来做网络虚拟化的。
 了解 docker 的应该知道，docker 就是使用 iptables 实现的容器虚拟网络。
 
-最后，安装虚拟机磁盘映像工具 [libguestfs](http://libguestfs.org/):
+最后，安装虚拟机磁盘映像工具 [libguestfs](https://libguestfs.org/):
 
 ```shell
 # community 仓库里就有这个包，不需要出动 aur
 sudo pacman -S libguestfs
 ```
 
-libguestfs 可用于直接修改/查看虚拟机映像，比如：
+libguestfs 可用于直接修改/查看虚拟机映像：
 
 1. `virt-df centos.img`: 查看硬盘使用情况
 2. `virt-ls centos.img /`: 列出目录文件
@@ -41,7 +42,14 @@ libguestfs 可用于直接修改/查看虚拟机映像，比如：
 4. `virt-list-filesystems /file/xx.img`：查看文件系统信息
 5. `virt-list-partitions /file/xx.img`：查看分区信息
 6. `guestmount -a /file/xx.qcow2(raw/qcow2都支持) -m /dev/VolGroup/lv_root --rw /mnt`：直接将分区挂载到宿主机
+7. `guestfish`: 交互式 shell，可运行上述所有命令。 
 
+另外还有两个最近（1.42+）从 libguestfs 中分离出来的镜像转换工具：
+
+1. `virt-v2v`: 将其他格式的虚拟机(比如 ova) 转换成 kvm 虚拟机。
+2.  `virt-p2v`: 将一台物理机转换成虚拟机。
+
+libguestfs 的详细说明后面再给出。
 
 ## 二、启动 QEMU/KVM
 
@@ -90,6 +98,45 @@ echo "options kvm-intel nested=1" | sudo tee /etc/modprobe.d/kvm-intel.conf
 ```shell
 $ cat /sys/module/kvm_intel/parameters/nested 
 Y
+```
+
+
+## 五、创建/导入/导出/克隆虚拟机
+
+qemu/kvm 目前使用的映像格式是 qcow2（QEMU copy-on-write format 2），而 vmware 使用的是 vmdk.
+另外 vmware 还支持将虚拟机导出为 ova 文件。
+
+>虽然 virtualbox 也支持 ova，但是测试发现它和 vmware 的 ova 并不通用。
+
+普通虚拟机的创建流程没啥好说的，使用 virt-manager 的 GUI 界面很简单地就能创建好。
+
+### 1. 导入 vmware 镜像
+
+直接从 vmware ova 文件导入 kvm，这种方式转换得到的镜像应该能直接用（网卡需要重新配置）：
+
+```shell
+virt-v2v -i ova centos7-test01.ova -o local -os /vmhost/centos7-01  -of qcow2
+```
+
+将 vmware 的  vmdk 文件转换成 qcow2 格式，然后再导入 kvm（网卡需要重新配置）：
+
+```shell
+# 转换映像格式
+qemu-img convert -p -f vmdk -O qcow2 centos7-test01-disk1.vmdk centos7-test01.qcow2
+# 查看转换后的映像信息
+qemu-img info centos7-test01.qcow2
+```
+
+直接转换 vmdk 文件得到的 qcow2 镜像，启动如果报错说磁盘无法挂载，先将 disk bus 修改为 IDE 再启动试试。
+
+
+### 2. 导入 img 镜像
+
+img 镜像文件，就是所谓的 raw 格式镜像，也被称为裸镜像，IO 速度比 qcow2 快，但是体积大，而且不支持快照等高级特性。
+如果不追求 IO 性能的话，建议将它转换成 qcow2 再使用。
+
+```shell
+qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 ```
 
 ## 参考
