@@ -2,6 +2,8 @@
 
 # Arch Linux 安装 QEMU-KVM 环境
 
+本文的目标是搭建一个 QEMU/KVM 学习环境，带 GUI。
+
 ## 一、安装 QUEU/KVM
 
 QEMU/KVM 环境需要安装很多的组件，它们各司其职：
@@ -142,6 +144,11 @@ img 镜像文件，就是所谓的 raw 格式镜像，也被称为裸镜像，IO
 ```shell
 qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 ```
+
+## 进阶
+
+1. 通过命令行操作 qemu/kvm
+2. 使用 ceph/iscsi 等分布式文件系统做虚拟机的存储。
 
 ## 参考
 
