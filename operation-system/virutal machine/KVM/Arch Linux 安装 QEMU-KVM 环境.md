@@ -10,8 +10,9 @@ QEMU/KVM 环境需要安装很多的组件，它们各司其职：
     - qemu 底层使用 kvm 模拟 CPU 和 RAM，比软件模拟的方式快很多。
 1. libvirt: 提供简单且统一的工具和 API，用于管理虚拟机，屏蔽了底层的复杂结构。（支持 qemu-kvm/virtualbox/vmware）
 1. ovmf: 为虚拟机启用 UEFI 支持
-1. virt-manager/virt-viewer: 用于管理虚拟机的 GUI 界面。
-1. dnsmasq vde2 bridge-utils openbsd-netcat: 网络相关组件，提供了以太网虚拟化、网络桥接、NAT网络等虚拟网络功能。
+1. virt-manager: 用于管理虚拟机的 GUI 界面。
+2. virt-viewer: 通过 GUI 界面直接与虚拟机交互。
+3. dnsmasq vde2 bridge-utils openbsd-netcat: 网络相关组件，提供了以太网虚拟化、网络桥接、NAT网络等虚拟网络功能。
     - dnsmasq 提供了 NAT 虚拟网络的 DHCP 及 DNS 解析功能。
     - vde2: 以太网虚拟化
     - bridge-utils: 顾名思义，提供网络桥接相关的工具。
