@@ -18,7 +18,7 @@ QEMU/KVM 环境需要安装很多的组件，它们各司其职：
     - dnsmasq 提供了 NAT 虚拟网络的 DHCP 及 DNS 解析功能。
     - vde2: 以太网虚拟化
     - bridge-utils: 顾名思义，提供网络桥接相关的工具。
-    - openbsd-netcat: TCP/IP 的瑞士军刀，详见 [/network/network-tools/socat 和 netcat](/network/network-tools/socat%20和%20netcat.md)
+    - openbsd-netcat: TCP/IP 的瑞士军刀，详见 [/network/network-tools/socat 和 netcat](/network/network-tools/socat%20和%20netcat.md)，这里不清楚是哪个网络组件会用到它。
 
 
 安装命令：
