@@ -24,7 +24,15 @@ QEMU/KVM 环境需要安装很多的组件，它们各司其职：
 安装命令：
 
 ```shell
+# archlinux/manjaro
 sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat
+
+# ubuntu,参考了官方文档，但未测试
+sudo apt install qemu-kvm libvirt-daemon-system virt-manager virt-viewer virtinst bridge-utils
+
+# centos,参考了官方文档，但未测试
+sudo yum groupinstall "Virtualization Host"
+sudo yum install virt-manager virt-viewer virt-install 
 ```
 
 完了还需要安装 ebtables 和 iptables 两个网络组件，这两个工具也是用来做网络虚拟化的。
@@ -33,8 +41,14 @@ sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-n
 最后，安装虚拟机磁盘映像工具 [libguestfs](https://libguestfs.org/):
 
 ```shell
-# community 仓库里就有这个包，不需要出动 aur
+# archlinux/manjaro
 sudo pacman -S libguestfs
+
+# ubuntu
+sudo apt install libguestfs-tools
+
+# centos
+sudo yum install libguestfs-tools
 ```
 
 libguestfs 可用于直接修改/查看虚拟机映像：
@@ -75,7 +89,7 @@ qumu/kvm 装好后，默认情况下需要 root 权限才能正常使用它。
 
 ```shell
 newgrp libvirt
-sudo usermod -aG libvirt $(whoami)
+sudo usermod -aG libvirt $USER
 ```
 
 最后重启 libvirtd 服务，应该就能正常使用了：
@@ -153,3 +167,5 @@ qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 ## 参考
 
 - [Complete Installation of KVM, QEMU and Virt Manager on Arch Linux and Manjaro](https://computingforgeeks.com/complete-installation-of-kvmqemu-and-virt-manager-on-arch-linux-and-manjaro/)
+- [virtualization-libvirt - ubuntu docs](https://ubuntu.com/server/docs/virtualization-libvirt)
+- [RedHat Docs - KVM](https://developers.redhat.com/products/rhel/hello-world#fndtn-kvm)
