@@ -44,10 +44,10 @@ libguestfs 可用于直接修改/查看虚拟机映像：
 6. `guestmount -a /file/xx.qcow2(raw/qcow2都支持) -m /dev/VolGroup/lv_root --rw /mnt`：直接将分区挂载到宿主机
 7. `guestfish`: 交互式 shell，可运行上述所有命令。 
 
-另外还有两个最近（1.42+）从 libguestfs 中分离出来的镜像转换工具：
+另外还有两个最近（1.42+）从 libguestfs 中分离出来的镜像转换工具(这两个工具目前（2020.8.16）没有 arch/manjaro 安装包，只能手动编译。)：
 
 1. `virt-v2v`: 将其他格式的虚拟机(比如 ova) 转换成 kvm 虚拟机。
-2.  `virt-p2v`: 将一台物理机转换成虚拟机。
+2. `virt-p2v`: 将一台物理机转换成虚拟机。
 
 libguestfs 的详细说明后面再给出。
 
