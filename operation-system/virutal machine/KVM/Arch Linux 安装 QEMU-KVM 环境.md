@@ -129,6 +129,9 @@ qemu-img info centos7-test01.qcow2
 
 直接转换 vmdk 文件得到的 qcow2 镜像，启动如果报错说磁盘无法挂载，先将 disk bus 修改为 IDE 再启动试试。
 
+网上搜到的资料说先改成 IDE 总线，启动成功后再安装 virtio 驱动，然后改回 virtio 总线。
+可问题是我发现没有 IDE 总线可选......不知道是缺了什么组件没安装。
+
 
 ### 2. 导入 img 镜像
 
