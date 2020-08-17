@@ -32,7 +32,8 @@ from pymongo import MongoClient
 
 # 连接时指定副本集为 rs0，pymongo 会自动发现其他所有副本地址。
 client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
-client.list_database_names()
+print(client.nodes())
+print(client.list_database_names())
 
 # 测试插入数据
 test_db = client.test_db
