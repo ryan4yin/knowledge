@@ -30,7 +30,7 @@ docker-compose up -d
 ```python
 from pymongo import MongoClient
 
-# 在只有一个副本集的情况下，可以省略参数 replicaset
+# 连接时指定副本集为 rs0，pymongo 会自动发现其他所有副本地址。
 client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
 client.list_database_names()
 
