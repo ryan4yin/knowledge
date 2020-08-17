@@ -45,6 +45,8 @@ helm upgrade --install mongo-sharded -f custom-values.yaml ./mongodb-sharded
 
 ```python3
 from pymongo import MongoClient
+
+# 使用账号密码连接分片集群
 client = MongoClient("mongo-sharded.db.local", 27017, username="root", password="<your-password>")
 client.list_database_names()
 
