@@ -1,7 +1,16 @@
 # Go 语言
 
+## Go 环境变量
 
-## GO 命令行
+1. `$GOPATH`: Go 的工作目录，和 Python 的包导入路径 `$PYTHONPATH` 类似但含义有区别。
+    - 它的默认值为 `$HOME/go`
+    - $GOPATH 下通常有三个约定好的子目录：src pkg bin
+    - 目前依赖管理已经改用 go modules 实现，依赖缓存存放在 
+    - 和系统的 $PATH 变量一样，$GOPATH 也支持使用同样的语法设置多个目录，靠前的目录将被优先检索。
+1. $GOROOT: Go SDK 的安装位置
+
+
+## Go 常用命令
 
 
 ### 依赖管理
