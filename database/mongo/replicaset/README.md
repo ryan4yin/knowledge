@@ -27,10 +27,18 @@ docker-compose up -d
 
 使用 python 测试 mongodb 可用性：
 
-```python3
+```python
 from pymongo import MongoClient
 
 # 在只有一个副本集的情况下，可以省略参数 replicaset
 client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
 client.list_database_names()
+
+# 测试插入数据
+test_db = client.test_db
+test_collection = test_db.test_collection
+test_collection.insert({
+    "auther": "Mike",
+    "phone": "15000000001",
+})
 ```
