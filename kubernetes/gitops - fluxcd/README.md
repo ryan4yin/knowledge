@@ -16,7 +16,7 @@ Flux 就会帮你完成接下来的一切工作。
 
 参考：[FluxCD、ArgoCD或Jenkins X，哪个才是适合你的GitOps工具？ ](http://dockone.io/article/10175)
 
-## 一、安装使用 Flux
+## 一、安装 Flux
 
 ### 1. 生成 ssh 密钥对
 
@@ -66,6 +66,9 @@ ssh-keyscan gitlab.svc.local >> known_hosts
 kubectl create ns flux
 # 使用生成好的 SSH 私钥创建 k8s secret，后面 flux 会挂载这个 secret
 kubectl create --namespace flux secret generic flux-git-deploy --from-file=identity=id_rsa_flux
+
+# 部署 flux 的自定义资源
+kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/crds.yaml
 ```
 
 最后使用 helm 进行部署：
@@ -104,6 +107,22 @@ fluxctl list-workloads --all-namespaces
 
 ```shell
 helm upgrade flux --namespace flux -f custom-values.yaml ./flux
+```
+
+## 二、使用 Flux
+
+```shell
+# 测试阶段可以暴露 api 端口出来
+export FLUX_URL=http://flux.k8s.local:3030/api/flux
+
+# 连接 Flux 实例所在的命名空间 flux
+fluxctl --k8s-fwd-ns=flux list-workloads
+ 
+# 查询 Flux 使用的 SSH 密钥，flux 容器日志中也可以查看
+fluxctl identity --k8s-fwd-ns flux
+ 
+# Flux 同步 git 仓库默认为5分钟，此命令可立即同步
+fluxctl sync --k8s-fwd-ns flux
 ```
 
 
