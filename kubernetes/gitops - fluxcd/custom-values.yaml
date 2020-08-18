@@ -1,3 +1,10 @@
+
+# 本地测试可以通过 NodePort 暴露 api
+service:
+  type: NodePort
+  port: 3030
+  nodePort: 3030
+
 git:
   # URL of git repo with Kubernetes manifests; e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
   url: "ssh://git@github.com/fluxcd/flux-get-started"
