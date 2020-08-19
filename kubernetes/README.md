@@ -18,9 +18,9 @@
 
 kubeadm/kubespray 也许适合自建生产级别的集群，但是我目前不怎么熟悉。
 
-kubeoperator 没有用过，不做评论。
+kubeoperator 没有用过，不做评论。kubesphere 全家桶可以考虑试试。
 
-另外还有个 redshift 国内貌似用的人少，不怎么了解。
+另外还有个 openshift 国内貌似用的人少，不怎么了解。
 
 ### 1. Minikube: 部署一个本地测试用的单节点集群
 
