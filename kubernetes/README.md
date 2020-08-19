@@ -9,10 +9,18 @@
 | 安装工具     | 安装难度 |  集群可靠程度  |  集群自定义难度 |  升级降级难度  |
 | --------     | -----:   | :----:  | :----:  | :----:  |
 | [rke(rancher)](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
+| SealOS       |    1     |   4     |    3    | - |
+| KubeSpray    |    3     |   -     |    -    | - |
 | kubeadm      |    -     |   -     |    -    | - |
 | KubeOperator |    -     |   -     |    -    | - |
-| KubeSpray    |    3     |   -     |    -    | - |
-| SealOS       |    1     |   4     |    3    | - |
+
+个人观点：sealos/rke 很适合用于部署测试环境，方便快捷，其中 sealos 对离线部署的支持非常简便。
+
+kubeadm/kubespray 也许适合自建生产级别的集群，但是我目前不怎么熟悉。
+
+kubeoperator 没有用过，不做评论。
+
+另外还有个 redshift 国内貌似用的人少，不怎么了解。
 
 ### 1. Minikube: 部署一个本地测试用的单节点集群
 
