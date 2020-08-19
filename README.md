@@ -6,7 +6,7 @@
 
 主要包含：
 
-1. 用于容器化部署常见应用的 docker-compose 脚本。
+1. 用于容器化部署常见应用的 docker-compose 配置。
 1. Linux 系统配置：ulimit/sysctl
 1. Docker 相关：镜像仓库（Harbor）管理等
 2. Kubernetes 相关：部署、配置、组件
