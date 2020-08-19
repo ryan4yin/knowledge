@@ -35,3 +35,14 @@ docker-compose up -d
 需要注意的点：
 
 1. nuget 的 v3 api 地址为：`http://localhost:8081/repository/nuget-hosted/index.json`，目前首页没有写明。
+
+
+## 从其他制品库迁移到 Nexus3
+
+迁移各语言的依赖包（比如从 pypiserver/baget 迁移到 nexus3）：
+
+1. 找到所有依赖包(.whl/.nupkg)所在的文件夹
+2. 编写脚本遍历其中所有的包，使用 `python -m twine upload`/`dotnet nuget push`，将所有包上传到 nexus3
+
+对于其他仓库如 Harbor，可以编写脚本通过 api 获取所有包的索引，然后通过客户端工具(如 docker 客户端)拉包、推送到 nexus3.
+
