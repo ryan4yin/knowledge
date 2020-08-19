@@ -43,11 +43,13 @@ helm upgrade --install mongo-sharded -f custom-values.yaml ./mongodb-sharded
 
 使用 python 测试 mongo 分片集群的可用性
 
-```python3
+```python
 from pymongo import MongoClient
 
 # 使用账号密码连接分片集群
 client = MongoClient("mongo-sharded.db.local", 27017, username="root", password="<your-password>")
+# 也可以通过一个 URI 设置好所有的连接参数
+# client = MongoClient("mongodb://root：<password>@<mongo1>:<port1>,<mongo2>:<port2>,<mongo3>:<port3>/admin")
 client.list_database_names()
 
 # 测试插入数据
@@ -58,3 +60,6 @@ test_collection.insert({
     "phone": "15000000001",
 })
 ```
+
+用户连接分片集群的方式跟连接单例Mongo完全类似，区别在于用户可以配置多个 mongos 的地址。
+所有 mongos 的地位和功能完全对等，而且都是无状态应用，可以任意扩容。
