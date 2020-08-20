@@ -54,17 +54,21 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 如果没有可用的镜像仓库，可以考虑设置 HTTPS 代理进行镜像拉取。
 
-通用的做法是使用下列三个环境变量设置 HTTP 代理：
+代理设置方法是在 `/usr/lib/systemd/system/docker.service` 中添加下列三个 PROXY 通用环境变量：
 ```shell
-HTTP_PROXY=http://<user>:<password>@<ip_addr>:<port>/
-HTTPS_PROXY=https://<user>:<password>@<ip_addr>:<port>/
-NO_PROXY=*.local,*.lan
+[Service]
+Environment="HTTP_PROXY=http://<proxy-host>:8889"
+Environment="HTTPS_PROXY=http://<proxy-host>:8889"
+Environment="NO_PROXY=localhost,127.0.0.1"
 ```
 
-将上面的环境变量添加到 docker 的 systemd 配置文件中就 ok 了。
+修改好上述的 systemd 配置文件后，重启 docker 服务就能正常使用了：
 
->这三个环境变量貌似是通用的，比如 git 也可以会走它设置的代理。
-而且在 windows 上也有效。
+```shell
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 
 ## daemon.json 样例
 
