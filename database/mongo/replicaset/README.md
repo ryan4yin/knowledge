@@ -30,7 +30,7 @@ docker-compose up -d
 ```python
 from pymongo import MongoClient
 
-# 连接时指定副本集为 rs0，pymongo 会自动发现其他所有副本地址。
+# 连接时需要指定副本集为 rs0，pymongo 会自动发现其他所有副本地址。
 client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
 # 也可以通过一个 URI 设置好所有的连接参数
 # client = MongoClient("mongodb://root：<password>@<mongo1>:<port1>,<mongo2>:<port2>,<mongo3>:<port3>/admin?replicaSet=rs0")
