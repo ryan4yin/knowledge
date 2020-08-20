@@ -23,7 +23,9 @@ Flux 就会帮你完成接下来的一切工作。
 Flux 通过 ssh 协议定时 pull Git 仓库，因此需要首先生成一个密钥对：
 
 ```shell
-ssh-keygen -C "ssh key for flux test" -f id_rsa_flux
+# -m 私钥使用 pem 格式
+# -C 描述
+ssh-keygen -f id_rsa_flux -m pem -C "ssh key for flux test"
 ```
 
 直接回车跳过 `passphrase` （密钥的密码）的设置，然后当前目录下就会多出如下两个文件：
