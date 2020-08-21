@@ -6,15 +6,12 @@ import paramiko
 from fabric import Connection
 from invoke import UnexpectedExit
 
-from .common import random_string
-from .file import tar_files
+from ..utils.file import tar_files
 
 """
 通过 ssh 协议与远程主机交互：
     1. 使用 Connection.run() 远程执行命令（或者 Connection.sudo()，执行 root 命令）
     2. 使用 Connection.put()/Connection.get()，通过 sftp 协议传输文件
-
-更复杂的操作建议使用 ansible
 """
 
 
@@ -40,13 +37,14 @@ class SSH(object):
         使用示例：
         ```python3
         # 1. 使用密码登录远程主机
-        ssh_con = SSH("<host>", 22, username="<username>", password="<password>")
+        ssh_con = SSH("192.168.1.xxx", 22, username="root", password="123456")
 
         # 2. 使用私钥登录远程主机（私钥没有设置 passphrase）
         ## 2.1 指定密钥位置
-        ssh_con = SSH("<host>", 22, username="<username>", key_file_path=Path("~/.ssh/id_rsa"))
+        ssh_con = SSH("192.168.1.xxx", 22, username="root", key_file_path=Path("~/.ssh/id_rsa"))
         ## 2.2 给出密钥的 IO 对象
-        ssh_con = SSH("<host>", 22, username="<username>", key_file_obj=Path("~/.ssh/id_rsa").open(encoding='utf-8'))
+        ssh_con = SSH("192.168.1.xxx", 22, username="root", key_file_obj=Path("~/.ssh/id_rsa").open(encoding='utf-8'))
+        ssh_con = SSH("192.168.1.xxx", 22, username="root", key_file_obj=StringIO("<private-key-content>"))
         ```
         """
         connect_kwargs = dict()
@@ -226,11 +224,11 @@ class SSH(object):
 
         return self.conn.put(
             local=local,
-            remote=str(remote_file_path),
+            remote=Path(remote_file_path).as_posix(),
             preserve_mode=preserve_mode
         )
 
-    def put_dir(self, local_dir_path: Union[Path, IO],
+    def put_dir(self, local_dir_path: Path,
                 remote_path: Union[Path, str] = Path("."),
                 preserve_mode: bool = True,
                 mkdirs=False):
@@ -238,9 +236,8 @@ class SSH(object):
         将文件夹从本地传输给远程主机
 
         :param local_dir_path: 本机的文件夹路径
-        :param remote_path: 远程主机中的文件夹路径（不会解析 `~` 符号！建议用绝对路径！）
+        :param remote_path: 远程主机中，已经存在的一个文件夹的路径（不会解析 `~` 符号！建议用绝对路径！）
                             默认传输到远程的 home 目录下
-                            如果此文件夹路径不存在，会提前创建它
         :param preserve_mode: 是否保存文件的 mode 信息（可读/可写/可执行），默认 True
         :param mkdirs: 如果路径不存在，是否自动创建中间文件夹。
         :return
@@ -248,15 +245,17 @@ class SSH(object):
         try:
             self.conn.run(f"test -d {Path(remote_path).as_posix()}")
         except UnexpectedExit:
-            self.conn.run(f"mkdir -p {Path(remote_path).as_posix()}")
+            raise RuntimeError(
+                "remote_path 必须是一个已经存在的文件夹路径！请给定正确的 remote_path，或者使用默认参数！")
 
         stream = tar_files(local_dir_path, c_type="gz", get_stream=True)
         tar_name = local_dir_path.name + ".tar.gz"
         stream.name = tar_name
         self.put(local=stream,
-                 remote_file_path=str(remote_path),
+                 remote_file_path=Path(remote_path).as_posix(),
                  preserve_mode=preserve_mode,
                  mkdirs=mkdirs)
         with self.cd(remote_path):
-            self.run("tar -ax -f {}".format(tar_name))
+            # 显示出传输了哪些文件
+            self.run("tar -avx -f {}".format(tar_name))
             self.run("rm {}".format(tar_name))
