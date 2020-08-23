@@ -24,7 +24,9 @@ Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + He
    这导致 Portral 本身成了一个有状态应用，Session 不能在 Pod 之间共享！因此多副本情况下必须配置基于 ClientIP 的会话亲和！使用 Istio/Ingress 时还需要在 Istio/Ingress 配置中配上基于 ClientIP 的路由策略。
 
 
-## 二、使用
+## 二、使用 Apollo
+
+### 1. 添加配置
 
 Apollo 支持通过 RESTful API 自动添加修改配置，也可以通过 Portal 面板手动添加修改配置。
 
@@ -35,3 +37,9 @@ Apollo 支持通过 RESTful API 自动添加修改配置，也可以通过 Porta
 
 待续
 
+
+### 2. 微服务读取配置 
+
+Apollo 为微服务提供 HTTP API 来读取与更新配置，并且支持以长轮询的方式动态更新微服务的配置。
+
+官方及社区有提供各语言的 SDK，请自行在 Apollo WiKi 上查看。
