@@ -16,6 +16,7 @@ Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + He
    2. 部署 apollo-portal，这个是 Apollo 的 UI/API 面板，所有环境公用。
    3. 详见[Apollo 分布式部署指南-kubernetes部署](https://github.com/ctripcorp/apollo/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97#24-kubernetes%E9%83%A8%E7%BD%B2)
 
+部署完成后就能直接用浏览器登入 portal 面板了，默认账号 apollo 密码 admin，helm 配置中没找到自定义密码的参数。
 
 ## 注意事项
 
