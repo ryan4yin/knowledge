@@ -151,5 +151,8 @@ kubectl create -f wordpress.yaml
 我测试 rook-ceph 遇到的问题有：
 
 1. [node-hangs-after-reboot](https://rook.io/docs/rook/v1.4/ceph-common-issues.html#node-hangs-after-reboot): 先 drain 掉异常节点，重启节点，最后 uncordon 节点。
+   1. 文档说这个 bug 早就解决了，可能还是我内核版本太低导致的问题。
 
 可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一堆问题。rook-ceph 写明推荐的内核版本为 `4.17+`
+
+[将 CentOS7 内核升级到 5.8](/operation-system/linux/Centos%207%20升级内核版本.md) 后，貌似问题消失了，待观察。
