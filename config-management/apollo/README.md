@@ -4,7 +4,7 @@ Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
 它功能强大，支持配置的继承，也有提供 API 方便自动化配置。缺点是权限管理比较弱，也不支持信息加密，不适合直接存储敏感信息。
 
 
-## 部署流程
+## 一、部署流程
 
 Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + Helm.
 流程如下：
@@ -18,7 +18,20 @@ Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + He
 
 部署完成后就能直接用浏览器登入 portal 面板了，默认账号 apollo 密码 admin，helm 配置中没找到自定义密码的参数。
 
-## 注意事项
+### 注意事项
 
 1. 目前 Portral 貌似是使用服务端 Session，Cookie 只包含 SessionID，Session 具体的内容保存在服务端内存中。
    这导致 Portral 本身成了一个有状态应用，Session 不能在 Pod 之间共享！因此多副本情况下必须配置基于 ClientIP 的会话亲和！使用 Istio/Ingress 时还需要在 Istio/Ingress 配置中配上基于 ClientIP 的路由策略。
+
+
+## 二、使用
+
+Apollo 支持通过 RESTful API 自动添加修改配置，也可以通过 Portal 面板手动添加修改配置。
+
+手动添加的流程略过，下面介绍一下通过 RESTful API 自动化添加修改配置的方法。
+它很适合用于搭建与刷新测试环境，不然一套微服务成百上千的配置项，不可能每次测试都去通过面板手动配置。
+
+>RESTful API 的官方文档：[Apollo开放平台](https://github.com/ctripcorp/apollo/wiki/Apollo%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0)
+
+待续
+
