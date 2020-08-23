@@ -2,6 +2,8 @@
 
 Kubernetes 存储编排工具，这里主要记录 rook-ceph 相关内容。
 
+rook-ceph 支持块存储、对象存储、共享文件存储(CephFS)及 NFS，但是只有 NFS 和对象存储可以在集群外部使用，
+块存储(iSCSI)好像不支持在外部使用？（还不确定）
 
 ## 一、使用 rook 在集群内部署 ceph 分布式存储
 
@@ -71,6 +73,8 @@ helm install --namespace rook-ceph rook-release/rook-ceph -f custom-values.yaml
 ```shell
 kubectl apply -f cluter.yaml
 ```
+
+>注意：如果想要在 kubernetes 外部使用这个 ceph 集群，请将 `cluster.yaml` 的 `network.hostNetwork` 设为 `true`.
 
 集群创建完成后，应该能观察到新创建了 rook-ceph-mon, rook-ceph-mgr, rook-ceph-osd 三类 Pod。
 
