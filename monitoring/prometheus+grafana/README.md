@@ -27,3 +27,9 @@
 ## 自定义 Grafana 面板
 
 待续
+
+
+## 监控数据持久化
+
+常用的手段：集群内部的 prometheus 和集群外部的 prometheus 组建联邦。
+内部 prometheus 设置数据保留时间为 24h 甚至更短，外部 prometheus 设置数据保留时间为 1 个月。
