@@ -35,7 +35,7 @@ Apollo 支持通过 RESTful API 自动添加修改配置，也可以通过 Porta
 
 >RESTful API 的官方文档：[Apollo开放平台](https://github.com/ctripcorp/apollo/wiki/Apollo%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0)
 
-待续
+使用 Apollo Open API 需要先通过 Portal 面板创建一个 APP 并给予权限，这个流程也可以使用脚本直接调 Portal API 实现。
 
 
 ### 2. 微服务读取配置 
