@@ -3,7 +3,22 @@
 Kubernetes 存储编排工具。
 
 
-## 使用 rook 在集群内部署 ceph 分布式存储
+## 一、使用 rook 在集群内部署 ceph 分布式存储
+
+部署流程中需要使用到 git 仓库中的部分 yaml 配置，请提前拉取仓库：
+
+```shell
+git clone --single-branch --branch release-1.4 https://github.com/rook/rook.git
+# 后续需要用到的所有 yaml 配置文件都在这个文件夹下
+cd rook/cluster/examples/kubernetes/ceph
+```
+
+具体而言，需要用到的配置文件大概有：
+
+1. `cluster.yaml`: 创建 ceph cluster
+2. `toolbox.yaml`: ceph 的 cli 工具箱，用于操作 ceph
+3. `csi/rbd/storageclass.yaml`: 创建 CephBlockPool 和 StorageClass
+4. `csi/rbd/pvc.yaml`: 创建 PersistenceVolumeClaim
 
 ### 1. 预留存储空间
 
@@ -54,7 +69,6 @@ helm install --namespace rook-ceph rook-release/rook-ceph -f self-values.yaml
 使用 [cluster.yaml] 创建一个生产级别的 ceph cluster:
 
 ```shell
-wget https://raw.githubusercontent.com/rook/rook/release-1.4/cluster/examples/kubernetes/ceph/cluster.yaml
 kubectl apply -f cluter.yaml
 ```
 
@@ -83,3 +97,48 @@ vda                                                                             
 vdb                                                                                                  252:16   0   20G  0 disk 
 └─ceph--70212ffb--ab90--40d6--b574--3c8a3c698ea1-osd--data--7b6eafa3--a0c2--474f--a865--eb0767390c91 253:2    0   20G  0 lvm  
 ```
+
+这是因为上面的 `cluster.yaml` 有这样一个配置项：`useAllDevices: true`，于是 rook 会自动发现并使用挂载在 node 的 `/dev` 路径下的裸硬盘（`raw disks`）.
+
+### 4. 问题排查
+
+可以使用 DashBoard 进行问题排查，也可以使用 CLI：
+
+```shell
+kubectl apply -f toolbox.yaml
+```
+
+之后通过登入 toolbox 容器中，就可以进行问题排查了。
+
+
+## 二、使用 Ceph 做集群内部的块存储
+
+rook-ceph 部署完成后，要通过它的块存储提供数据卷给容器，配置及依赖关系如下：
+
+```shell
+CephBlockPool -> StorageClass -> PersistenceVolumeClaim （动态生成 PersistemceVolume）-> Pod(volume -> volumeMount) 
+```
+
+首先创建 CephBlockPool 和 StorageClass:
+
+```shell
+# 详细的 yaml 定义请自行查看。
+# CephBlockPool 的关键参数：副本个数（一般定义为 3）
+# StorageClass 的 reclaimPolicy 为 Delete 时，删除 PVC 会导致数据被删除。
+kubectl create -f csi/rbd/storageclass.yaml
+```
+
+OK，现在就可以定义 PVC+Pod 来使用这个 storageclass 了。
+
+```shell
+cd ..  # cd 到仓库的 cluster/examples/kubernetes 文件夹中
+
+# 创建 mysql 的 pvc+pod
+# 需要注意的主要有 pvc 的 Capacity（容量），这里设了 20Gi
+kubectl create -f mysql.yaml
+# 创建 wordpress 的 pvc+pod
+kubectl create -f wordpress.yaml
+```
+
+创建完成后，可以通过 k9s/kubectl 查看 default 名字空间中的 PVC 和 Pod 内容。
+
