@@ -1,6 +1,6 @@
 # [rook](https://github.com/rook/rook)
 
-Kubernetes 存储编排工具。
+Kubernetes 存储编排工具，这里主要记录 rook-ceph 相关内容。
 
 
 ## 一、使用 rook 在集群内部署 ceph 分布式存储
@@ -142,3 +142,14 @@ kubectl create -f wordpress.yaml
 
 创建完成后，可以通过 k9s/kubectl 查看 default 名字空间中的 PVC 和 Pod 内容。
 
+
+## 三、注意事项
+
+和状态有关的东西，都比较娇贵。因此服务器的关机、重启、异常宕机，都可能导致 ceph 集群出现问题。
+另外 Pod 自身的异常，也可能导致数据损坏。
+
+我测试 rook-ceph 遇到的问题有：
+
+1. [node-hangs-after-reboot](https://rook.io/docs/rook/v1.4/ceph-common-issues.html#node-hangs-after-reboot): 先 drain 掉异常节点，重启节点，最后 uncordon 节点。
+
+可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一堆问题。
