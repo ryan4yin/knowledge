@@ -249,7 +249,7 @@ class SSH(object):
                 "remote_path 必须是一个已经存在的文件夹路径！请给定正确的 remote_path，或者使用默认参数！")
 
         stream = tar_files(local_dir_path, c_type="gz", get_stream=True)
-        tar_name = local_dir_path.name + ".tar.gz"
+        tar_name = local_dir_path.resolve().name + ".tar.gz"
         stream.name = tar_name
         self.put(local=stream,
                  remote_file_path=Path(remote_path).as_posix(),
