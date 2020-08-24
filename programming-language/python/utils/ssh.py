@@ -256,6 +256,5 @@ class SSH(object):
                  preserve_mode=preserve_mode,
                  mkdirs=mkdirs)
         with self.cd(remote_path):
-            # 显示出传输了哪些文件
-            self.run("tar -avx -f {}".format(tar_name))
+            self.run("tar -ax -f {}".format(tar_name))
             self.run("rm {}".format(tar_name))
