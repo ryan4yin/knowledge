@@ -8,6 +8,8 @@
 
 其中 1 和 2 是可以跨平台使用的，不局限于 k8s.
 
+个人感觉 OAM 的主要应用场景在各大企业内部，开源项目主要还是会用 helm。
+因为 OAM 标榜的运维特征与应用组件分离，对开源应用的意义不大，但是对企业内部成百上千的微服务部署而言，就意义重大了。
 
 ## Kubernetes 标准实现：[CrossPlane](https://github.com/crossplane/crossplane)
 
