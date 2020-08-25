@@ -12,3 +12,7 @@
 
 - [Fluentd 报错：`Worker 0 finished unexpectedly with signal SIGKILL`](https://github.com/fluent/fluentd/issues/2408): 内存不足，增加 `resources.limits.memory` 的值。
 
+
+## 日志分析 - EFK
+
+数据采集到 ElasticSearch 中，通过 Kibana 面板进行数据分析。
