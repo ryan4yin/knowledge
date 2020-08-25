@@ -1,3 +1,7 @@
+# 配置文档：
+# 1. https://docs.traefik.io/routing/overview/
+# 2. https://docs.traefik.io/routing/entrypoints/
+
 providers:
   # docker: {}  # 启用 docker provider
   file:
@@ -9,8 +13,13 @@ providers:
     # 监控配置文件的动态更新，实现配置文件 CURD 的自动热加载。
     watch: true
 
+# 日志等级
 log:
   level: INFO
+
+# 启用 traefik dashboard，它的路由规则在 dynamic.yml 中配置
+api:
+  dashboard: true
 
 entryPoints:
   web:
@@ -25,6 +34,6 @@ entryPoints:
   websecure:
     address: ":443"
 
-# 启用 traefik dashboard，它的路由规则在 dynamic.yml 中配置
-api:
-  dashboard: true
+serversTransport:
+  # 最大空闲连接数，默认为 2
+  maxIdleConnsPerHost: 2
