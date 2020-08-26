@@ -15,6 +15,11 @@
 
 ## 各 MQ 对比
 
+待续
+
+1. Kafka
+2. rabbitmq
+
 ## 参考
 
 - [新手也能看懂，消息队列其实很简单 - 知乎](https://zhuanlan.zhihu.com/p/52773169)
