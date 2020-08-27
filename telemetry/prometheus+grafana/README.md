@@ -27,8 +27,14 @@ helm search repo stable/prometheus-operator -l | head
 # 下载并解压 chart
 helm pull stable/prometheus-operator --untar --version 9.3.1
 
+# 使用 helm3 进行部署
+# 注意： prometheusOperator.createCustomResource 是一个仅适用于 helm2 的参数，helm3 要关闭它！
+#     因为 helm3 会自动部署 ./prometheus-operator/crds 中的自定义资源，除非设定参数 `--skip-crds`
 kubectl create ns monitoring
-helm upgrade --namespace monitoring --install prometheus-operator ./prometheus-operator
+helm upgrade --namespace monitoring \
+  --install prometheus-operator \
+  --set prometheusOperator.createCustomResource=false \
+  ./prometheus-operator
 ```
 
 ## 高可用 Prometheus
