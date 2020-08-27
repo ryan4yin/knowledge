@@ -78,7 +78,10 @@ kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/d
 ```shell
 # 下载 flux 的 charts，我们需要修改其中一些配置
 helm repo add fluxcd https://charts.fluxcd.io
-helm pull fluxcd/flux --untar  # 下载并解压 chart
+# 查看历史版本
+helm search repo fluxcd/flux -l | head
+# 下载并解压 chart
+helm pull fluxcd/flux --untar --version 1.5.0
 
 # 安装或更新
 helm upgrade flux --namespace flux -f custom-values.yaml ./flux

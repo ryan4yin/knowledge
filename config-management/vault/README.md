@@ -56,7 +56,7 @@ ui:
 # 添加 valut 仓库
 helm repo add hashicorp https://helm.releases.hashicorp.com
 # 查看 vault 版本号
-helm search repo hashicorp/vault -l
+helm search repo hashicorp/vault -l | head
 # 下载某个版本号的 vault
 helm pull hashicorp/vault --version 0.6.0 --untar
 # 安装/升级 valut
