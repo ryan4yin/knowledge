@@ -51,16 +51,20 @@ vdb                                                                             
 使用 helm 部署 ceph-operator:
 
 ```sehll
-# 1. 创建名字空间
-kubectl create ns rook-ceph
-
-# 2. 获取 helm chart
+# 1. 获取 helm chart
 helm repo add rook-release https://charts.rook.io/release
-helm pull rook-release/rook-ceph --untar # 下载并解压 chart
 
-# 3. 查看 chart 的 values.yaml 内容，将需要自定义的参数写入 custom-values.yaml 中
+# 查看历史版本
+helm search repo rook-release/rook-ceph -l | head
+# 下载并解压 chart
+helm pull rook-release/rook-ceph --untar --version v1.4.1
 
-# 4. 安装 chart
+# 2. 查看 chart 的 values.yaml 内容，将需要自定义的参数写入 custom-values.yaml 中
+
+# 3. 安装
+# 创建名字空间
+kubectl create ns rook-ceph
+# 安装 chart
 helm install --namespace rook-ceph rook-release/rook-ceph -f custom-values.yaml
 ```
 
