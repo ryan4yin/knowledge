@@ -89,7 +89,13 @@ services:
     # ...省略...
 ```
 
-好现在可以通过 `docker-compose up -d` 启动了。
+
+1. 创建 ES 数据文件夹 `es_data`，权限设为 777。否则可能航报错 Access Denied。
+   1. 这应该是因为 ES 使用的账号有问题，或者是 SELinux 的问题。
+2. 构建镜像：`docker-compose build`，如果更新了镜像相关的配置，一定要提前运行这个命令！
+3. 通过 `docker-compose up -d` 启动 ELK。
+
+
 
 ## ELK 监控
 
