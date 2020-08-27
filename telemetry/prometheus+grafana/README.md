@@ -1,15 +1,15 @@
 # 通用监控方案：Prometheus + Grafana + Altermanager
 
 
-## Docker 方式部署
+## 一、Docker 方式部署
 
 这种方式可以部署单机版的一整套监控方案：
 
 - [github - dockprom](https://github.com/stefanprodan/dockprom)
 
-## Kubernetes 监控
+## 二、Kubernetes 监控
 
-两个部署方案，都是基于 [prometheus-operator](https://github.com/prometheus-operator/prometheus-operator)：
+有两个部署方案，都是基于 [prometheus-operator](https://github.com/prometheus-operator/prometheus-operator)：
 
 - [prometheus-operator helm chart](https://github.com/helm/charts/tree/master/stable/prometheus-operator): 简明快捷地部署一个 prometheus operator。
   - 由于 helm 正在着手废除 stable/incubator 仓库，这个 chart 将会被迁移，详见 [Create a new git repo for prometheus-community helm charts](https://github.com/prometheus-community/community/issues/28)
@@ -27,27 +27,34 @@ helm search repo stable/prometheus-operator -l | head
 # 下载并解压 chart
 helm pull stable/prometheus-operator --untar --version 9.3.1
 
-# 使用 helm3 进行部署
-# 注意： prometheusOperator.createCustomResource 是一个仅适用于 helm2 的参数，helm3 要关闭它！
-#     因为 helm3 会自动部署 ./prometheus-operator/crds 中的自定义资源，除非设定参数 `--skip-crds`
+# 使用自定义的 cutome-values.yaml 进行部署（helm3）
 kubectl create ns monitoring
 helm upgrade --namespace monitoring \
   --install prometheus-operator \
-  --set prometheusOperator.createCustomResource=false \
+  -f custome-values.yaml \
   ./prometheus-operator
 ```
 
-## 高可用 Prometheus
+## 三、使用 Prometheus
+
+`custom-values.yaml` 中将 grafana/altermanager/prometheus 均通过 NodePort 方式暴露到了外部，可以通过如下端口号访问这三个服务：
+
+1. grafana：30880 端口，账号 admin，密码在 `grafana.adminPassword` 中定义，请进入 `custom-values.yaml` 查看。
+1. prometheus: 30090 端口
+2. altermanager: 30903 端口
+
+
+## 四、高可用 Prometheus
 
 由于 Prometheus 本身不支持高可用（就像 MySQL 一样，本身只是一个单机数据库），因此也有专门提供集群版 Prometheus 的工具比较被看好的有：
 
-- [thanos](https://github.com/thanos-io/thanos): Highly available Prometheus setup with long term storage capabilities.
+- [thanos](https://github.com/thanos-io/thanos): Highly available Prometheus setup with long term storage capabilities，prometheus-operator 可以与它结合使用。
 - [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics): 一个相当新的解决方案，支持 PromQL 等多种协议，永久性存储，据说还很快。
 
 还有另外两个 Prometheus 集群方案也可以考虑：
 
-- [m3db](https://github.com/m3db/m3): Distributed TSDB, Aggregator and Query Engine, Prometheus Sidecar, Graphite Compatible, Metrics Platform 
-- [cortex](https://github.com/cortexproject/cortex): A horizontally scalable, highly available, multi-tenant, long term Prometheus.
+- [m3db](https://github.com/m3db/m3): Distributed TSDB, Aggregator and Query Engine, Prometheus Sidecar, Graphite Compatible, Metrics Platform，由 Uber 开源
+- [cortex](https://github.com/cortexproject/cortex): A horizontally scalable, highly available, multi-tenant, long term Prometheus. 和 Thanos 类似，但是 Thanos 据说更简单，因此更受欢迎些。
 
 
 

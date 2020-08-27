@@ -40,7 +40,7 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 
 因此使用国内镜像源就显得很有必要了。
 
-1. `gcr.io`: 替换成 `registry.cn-hangzhou.aliyuncs.com/google_containers/`
+1. `k8s.gcr.io`: 替换成 `registry.cn-hangzhou.aliyuncs.com/google_containers/`
 2. `dockerhub`
    1. 网易镜像源地址：`https://hub-mirror.c.163.com`
    2. [阿里云镜像加速器](https://cr.console.aliyun.com/cn-shenzhen/instances/mirrors)，需要使用阿里云账号登录，登录后会给出一个专用加速地址。

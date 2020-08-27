@@ -25,13 +25,19 @@ from pathlib import Path
 REPO_IMAGES_DICT = {
     "quay.io": (
         # rook-ceph v1.4.1 的镜像
-        "cephcsi/cephcsi:v3.1.0",
-        "k8scsi/csi-node-driver-registrar:v1.2.0",
-        "k8scsi/csi-provisioner:v1.6.0",
-        "k8scsi/csi-snapshotter:v2.1.1",
-        "k8scsi/csi-attacher:v2.1.0",
-        "k8scsi/csi-resizer:v0.4.0",
-    )
+        # "cephcsi/cephcsi:v3.1.0",
+        # "k8scsi/csi-node-driver-registrar:v1.2.0",
+        # "k8scsi/csi-provisioner:v1.6.0",
+        # "k8scsi/csi-snapshotter:v2.1.1",
+        # "k8scsi/csi-attacher:v2.1.0",
+        # "k8scsi/csi-resizer:v0.4.0",
+
+        # prometheus-operator 镜像
+        "prometheus/alertmanager:v0.21.0",
+        "prometheus/prometheus:v2.18.2",
+        "coreos/prometheus-operator:v0.38.1",
+        "coreos/prometheus-config-reloader:v0.38.1",
+    ),
 }
 
 # 我的阿里云容器镜像仓库
@@ -43,11 +49,14 @@ TGZ_DIR.mkdir(exist_ok=True)
 
 def sync_images(src_repo, dest_repo, image_tags):
     for tag in image_tags:
+        # 阿里云镜像仓库不支持嵌套路径
+        # tag = tag.replace("/", "_")
+
         src_tag = f"{src_repo}/{tag}"
         dest_tag = f"{dest_repo}/{tag}"
 
-        # print(f">>> pull image: {src_tag}")
-        # subprocess.run(["docker", "pull", src_tag])
+        print(f">>> pull image: {src_tag}")
+        subprocess.run(["docker", "pull", src_tag])
 
         # print(f">>> rename image: {src_tag} => {dest_tag}")
         # subprocess.run(["docker", "tag", src_tag, dest_tag])
