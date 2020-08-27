@@ -7,11 +7,11 @@
 这类似磁盘阵列中的 RAID10.
 
 
-## 部署
+## 一、部署
+
+>以下部署流程只适合开发/测试环境，不保证稳定性。
 
 分片的 MongoDB 集群组件比较多，部署起来比较麻烦。
-
-### 一、测试/开发环境
 
 可以考虑使用 docker-compose 在单机上部署分片 MongoDB，
 或者最简单的，使用 k8s+helm 一行命令部署：
@@ -34,12 +34,8 @@ helm upgrade --install mongo-sharded ./mongodb-sharded
 helm upgrade --install mongo-sharded -f custom-values.yaml ./mongodb-sharded
 ```
 
-### 二、生产环境
 
-建议二进制方式部署，或者购买云服务。
-
-
-### 三、测试可用性
+### 二、测试可用性
 
 使用 python 测试 mongo 分片集群的可用性
 
@@ -63,3 +59,8 @@ test_collection.insert({
 
 用户连接分片集群的方式跟连接单例Mongo完全类似，区别在于用户可以配置多个 mongos 的地址。
 所有 mongos 的地位和功能完全对等，而且都是无状态应用，可以任意扩容。
+
+
+## 三、 Mongo 分片集群架构介绍
+
+待续
