@@ -34,8 +34,8 @@ docker-compose up -d
 
 需要注意的点：
 
-1. nuget 的 v3 api 地址为：`http://localhost:8081/repository/nuget-hosted/index.json`，目前首页没有写明。
-
+1. nuget 的 v3 api 地址为：`http://localhost:8081/repository/nuget-hosted/index.json`，注意末尾需要添加 `index.json`！
+1. pypi 的仓库地址为:`http://localhost:8081/repository/pypi-hosted/simple`，注意末尾需要添加 `simple`！
 
 ## 从其他制品库迁移到 Nexus3
 
