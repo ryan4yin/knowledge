@@ -6,4 +6,9 @@ Flagger 是一个 Kubernetes 上的渐进式交付 Operator，可以根据监控
 Flagger 可以和 fluxcd 集成，实现整个部署流程的自动化。
 
 
+## 注意事项
 
+1. 网关只支持南北向流量（用户->网关）的灰度，只有服务网格才支持东西向流量（微服务->微服务）的灰度。
+    - 使用 Istio 进行网格内的流量灰度，需要在 Canary 的 `spec.service.gateways` 中添加 `mesh` 表示网格内部流量，同时 `spec.service.hosts` 中也得添加上内部 Service 的名称。
+1. 通过 Canary 的 `spec.service.trafficPolicy.tls.mode` 可以强制微服务使用 mtls 双向认证。
+1. Flagger 可以自定义 MetricTemplate，支持设定 prometheus 地址，通过 PromQL 计算指标。
