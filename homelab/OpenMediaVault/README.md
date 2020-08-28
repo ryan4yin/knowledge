@@ -15,5 +15,6 @@ OMV 是目前比较流行的 NAS 系统，基于 Debian 系统，集成了 SMB/N
 
 ## 参考文档
 
+- [OpenMediaVault-Plugin-Developers/installScript](https://github.com/OpenMediaVault-Plugin-Developers/installScript)
 - [树莓派 配置 OMV 5 搭建 NAS（一） 安装 OMV 5](https://www.cnblogs.com/Yogile/p/12577321.html)
 - [OpenMediaVault (OMV) 切换国内源](https://zhuanlan.zhihu.com/p/138552148)
