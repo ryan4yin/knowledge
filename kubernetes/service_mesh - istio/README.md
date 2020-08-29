@@ -1,5 +1,7 @@
 # Service Mesh
 
+> 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
+
 ## 一、Istio
 
 ### 1. 简单部署
@@ -25,11 +27,11 @@ istioctl manifest apply \
 
 #### 1.1 自定义部署（推荐方式）
 
-可以通过 `istioctl manifest apply -f custom-operator.yml` 进行自定义部署，[custom-operator.yml](./custom-operator.yml) 就在当前文件夹内。
+可以通过 `istioctl manifest apply -f istio-operator-values.yaml` 进行自定义部署，[istio-operator-values.yaml](./istio-operator-values.yaml) 就在当前文件夹内。
 
-通过 [custom-operator.yml](./custom-operator.yml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
+通过 [istio-operator-values.yaml](./istio-operator-values.yaml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
 
-可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [custom-operator.yml](./custom-operator.yml) 的参考。
+可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [istio-operator-values.yaml](./istio-operator-values.yaml) 的参考。
 
 更多自定义部署的信息，参见官方文档 [istioctl: configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
@@ -41,7 +43,7 @@ istioctl manifest apply \
 ```shell
 # TODO 我使用此命令从 1.5.0 升级到 1.5.2 时一直卡住，没升级成功。
 # 最后只好先删除掉 1.5.0 然后重新安装 1.5.2
-istioctl upgrade -f custom-operator.yml
+istioctl upgrade -f istio-operator-values.yaml
 ```
 
 删除 istio：
@@ -52,7 +54,7 @@ istioctl manifest generate <your original installation options> | kubectl delete
 # 示例一：使用 --set 指定自定义参数
 istioctl manifest generate --set profile=default --set values.prometheus.enabled=false | kubectl delete -f -
 # 示例二：使用 istiooperator 配置指定自定义参数
-istioctl manifest generate -f custom-operator.yml | kubectl delete -f -
+istioctl manifest generate -f istio-operator-values.yaml | kubectl delete -f -
 ```
 
 ### 2. 部署应用
@@ -75,20 +77,29 @@ metadata:
 
 ### 3. 监控：istioctl + prometheus-operator
 
-部署 Istio 时可以不部署它自带的 Prometheus+Grafana，而是使用以 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 部署的监控系统进行监控。
+Istio 官方推荐在集群外部使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
+Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
+
+另一种方案是部署 Istio 时不部署它自带的 Prometheus+Grafana，直接使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 部署的监控系统进行监控。
 
 配置步骤如下：
 1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)。
-2. 修改 [custom-operator.yml](./custom-operator.yml)。最后面带 prometheus/prometheusOperator 的配置就是需要添加的内容。
-3. `istioctl manifest apply -f custom-operator.yml`：通过修改好的配置部署 istio 或更新 istio 配置。
+2. 修改 [istio-operator-values.yaml](./istio-operator-values.yamll)。最后几行 prometheus/prometheusOperator 相关的配置就是需要添加的内容。
+  - 这一步实际做的是：关闭 Istio 自带的 Prometheus，改为创建 prometheusOperator 的自定义资源（`ServiceMonitor`）
+  - prometheusOperator 如果默认就监控了 `istio-system` 这个名字空间，它就会根据 `ServiceMonitor` 的内容采集 Istio 数据。
+3. `istioctl manifest apply -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
 
-或者根据官方推荐的生产环境配置，在集群外部使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
-Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
 
 
-#### Grafana 面板
+#### Istio 的 Grafana 面板
 
-Istio 官方提供的 Grafana 面板：https://grafana.com/orgs/istio
+Prometheus Operator 会自动部署 Grafana 面板，详见 [prometheus+grafana](/telemetry/prometheus+grafana/README.md)
+
+再者我们前面部署 Istio 时已经为 Prometheus Operator 创建了 `ServiceMoniter` 抓取规则，没问题的话现在 Prometheus 中已经有 Istio 的数据了。
+现在只缺少展示数据的 Grafana 面板。
+
+Istio 官方有提供 Grafana 面板：https://grafana.com/orgs/istio，在这个页面上找到面板的 ID，
+然后进入集群的 Grafana 页面中，使用 ID 就可一键导入 Istio 面板。
 
 ### 4. 链路追踪（Istio + Jaeger + OpenTelemetry）
 
@@ -115,6 +126,75 @@ Istio 链路追踪说是可以减少链路追踪对应用层的侵入，应用�
 其实就只是拆出了一部分链路追踪的功能给 Istio 做了，另一部分还得自己处理。
 具体实现还没仔细验证，我怀疑会比「不使用 Istio 链路追踪」更复杂也说不定。
 
+#### 部署 jaeger
+
+生产环境不建议部署 Istio 提供的 jaeger，它是一个 fat 容器（all in one），建议自己使用 jaeger operator 进行部署。
+
+如果打算使用 Istio 的链路追踪，那么 jaeger 需要开启 zipkin 协议支持，并且修改 istio 的 `values.global.tracer.zipkin.address` 指向 jager 的 zipkin 端口。
+
+否则就和 Istio 没啥关系了，应用自身向 jaeger-agent(udp) 或者 jaeger-collector(http/grpc) 上报追踪数据。
+
+使用 helm 安装 jaeger operator:
+
+```shell
+# 添加　chart 仓库
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+# 查看历史版本
+helm search repo jaegertracing/jaeger-operator -l | head
+# 下载并解压 chart
+helm pull jaegertracing/jaeger-operator  --untar --version 2.15.1
+
+# 安装或更新
+kubectl create namespace tracing
+helm upgrade --install jaeger-operator --namespace tracing -f jaeger-operator-values.yaml ./jaeger-operator
+```
+
+建议提前使用 helm 部署 elasticsearch operator，挂载分布式数据卷做长期数据存储。
+
+生产环境建议使用 jaeger agent 收集数据，然后通过 grpc 协议将数据上报到 jaeger-collector.
+jaeger agent 有两种部署方式：
+
+1. 自动注入 sidecar：这种方式的链路追踪非常灵活，不注入 sidecar 就可以忽略掉该服务的链路信息。
+   1. 缺点：sidecar 额外消耗一些性能。
+   2. 这种方式貌似是比较推荐的用法。
+2. daemonset: 在每个节点上运行一个 jaeger agent，没有 sidecar 方式灵活。
+
+更复杂的环境下可以对接 kafka，这个以后有需要再研究。
+
 ### 5. Kiali 网络拓扑/流量拓扑
 
-待续
+从 Istio 1.7 开始，Istioctl 不再安装 kiali，推荐使用 helm 部署最新稳定版的 kiali.
+
+首先安装 helm-operator:
+
+```shell
+# 下载 flux 的 charts，我们需要修改其中一些配置
+helm repo add kiali https://kiali.org/helm-charts
+# 查看历史版本
+helm search repo kiali/kiali-operator -l | head
+# 下载并解压 chart
+helm pull kiali/kiali-operator --untar --version 1.23.0
+
+# 安装或更新
+kubectl create namespace kiali-operator
+helm upgrade --install kiali-operator --namespace kiali-operator -f kiali-operator-values.yaml ./kiali-operator
+
+# 卸载
+helm uninstall kiali-operator --namespace kiali-operator
+```
+
+然后手动下载并修改 [kiali_cr.yaml](https://github.com/kiali/kiali-operator/blob/master/deploy/kiali/kiali_cr.yaml) 并部署。
+kiali-operator 会根据 `kiali_cr.yaml` 的内容，创建/更新/修改 kiali 服务。
+
+需要修改的配置有：
+
+1. prometheus+grafana: kiali 需要从 prometheus 中查询 istio 网格的各项指标。
+   1. 我们使用 prometheus operator，需要自定义 prometheus 的 url 为 `http://prometheus-operator-prometheus.monitoring:9090`
+   2. kiali 需要使用 grafana 中定义好的 istio 相关 PromQL，因此得自定义 grafana 的 url 为 `http://prometheus-operator-grafana.monitoring:80`
+1. jaeger: kiali 还需要查询链路追踪的数据，因此还得配置 jaeger-query　的　api url: `http://jaeger.tracing:80`
+1. Web UI 相关：kiali 通过 Web UI 展示网格数据。
+   1. `auth`: 测试环境可设置为 `anonymous`，方便测试。
+
+```shell
+kubectl apply -f my-kiali-cr.yaml -n istio-system
+```

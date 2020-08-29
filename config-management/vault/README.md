@@ -60,7 +60,7 @@ helm search repo hashicorp/vault -l | head
 # 下载某个版本号的 vault
 helm pull hashicorp/vault --version 0.6.0 --untar
 # 安装/升级 valut
-helm upgrade vault ./vault --namespace vault -f custom-values.yaml
+helm upgrade --install vault ./vault --namespace vault -f custom-values.yaml
 ```
 
 ### 2. 初始化(initalize)并解封(unseal) vault
