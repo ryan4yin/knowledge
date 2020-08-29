@@ -29,9 +29,10 @@ helm pull stable/prometheus-operator --untar --version 9.3.1
 
 # 使用自定义的 cutome-values.yaml 进行部署（helm3）
 kubectl create ns monitoring
-helm upgrade --namespace monitoring \
-  --install prometheus-operator \
+helm upgrade --install \
+  --namespace monitoring \
   -f custome-values.yaml \
+  prometheus-operator \
   ./prometheus-operator
 ```
 

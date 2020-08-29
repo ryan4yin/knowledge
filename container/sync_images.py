@@ -37,6 +37,9 @@ REPO_IMAGES_DICT = {
         "prometheus/prometheus:v2.18.2",
         "coreos/prometheus-operator:v0.38.1",
         "coreos/prometheus-config-reloader:v0.38.1",
+
+        # istio 相关
+        "kiali/kiali-operator:v1.23.0",
     ),
 }
 

@@ -84,7 +84,7 @@ helm search repo fluxcd/flux -l | head
 helm pull fluxcd/flux --untar --version 1.5.0
 
 # 安装或更新
-helm upgrade flux --namespace flux -f custom-values.yaml ./flux
+helm upgrade --install flux --namespace flux -f custom-values.yaml ./flux
 
 # 卸载
 helm uninstall flux --namespace flux

@@ -5,7 +5,7 @@ services:
     container_name: "envoy"
     restart: always
     environment:
-    # 只有 root 账户才能绑定 80/443 端口。
+    # 只有 root 账户才能绑定 1-1024 端口。
     # 因此需要将 envoy 用户的 uid 设为 0，也就是设为 root 账户。
     - "ENVOY_UID=0"  
     ports:
