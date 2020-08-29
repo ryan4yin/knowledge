@@ -2,7 +2,7 @@
 
 ## 一、Istio
 
-### 1. 部署
+### 1. 简单部署
 
 使用 istioctl 部署 istio:
 ```shell
@@ -81,6 +81,10 @@ metadata:
 1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)。
 2. 修改 [custom-operator.yml](./custom-operator.yml)。最后面带 prometheus/prometheusOperator 的配置就是需要添加的内容。
 3. `istioctl manifest apply -f custom-operator.yml`：通过修改好的配置部署 istio 或更新 istio 配置。
+
+或者根据官方推荐的生产环境配置，在集群外部使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
+Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
+
 
 #### Grafana 面板
 
