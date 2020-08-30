@@ -6,15 +6,15 @@
 
 主要包含：
 
-1. 用于容器化部署常见应用的 docker-compose 配置。
-1. 操作系统：Linux 系统、KVM 虚拟化等
-1. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
+1. 用于容器化部署常见应用的 docker-compose 配置（单机）。
 2. Kubernetes 生态：部署、配置、组件及使用笔记。
-3. CI/CD：Jenkins/GitLabCI 等
 4. Telemetry：监控、日志、链路追踪
-1. 测试笔记：性能测试、集成测试、单元测试、API/UI 测试等
+1. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
+3. CI/CD：Jenkins/GitLabCI 等
+1. 操作系统：Linux 系统、KVM 虚拟化等。
 5. DevOps 实用脚本
 6. 编程语言学习笔记：Python/Golang/Java
+7. Homelab: 家庭服务器相关，以及一些个人爱好。
 
 ## docker-compose
 
