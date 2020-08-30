@@ -128,7 +128,7 @@ Istio 链路追踪说是可以减少链路追踪对应用层的侵入，应用�
 
 #### 部署 jaeger operator
 
-生产环境不建议部署 Istio 提供的 jaeger，它是一个 fat 容器（all in one），建议自己使用 jaeger operator 进行部署。
+生产环境不建议部署 Istio 提供的 jaeger，它是一个 fat 容器（all in one），建议自己使用 [jaeger operator](https://github.com/jaegertracing/jaeger-operator) 进行部署。
 
 如果打算使用 Istio 的链路追踪，那么 jaeger 需要开启 zipkin 协议支持，并且修改 istio 的 `values.global.tracer.zipkin.address` 指向 jager 的 zipkin 端口。
 
@@ -149,24 +149,50 @@ kubectl create namespace tracing
 helm upgrade --install jaeger-operator --namespace tracing -f jaeger-operator-values.yaml ./jaeger-operator
 ```
 
-建议提前使用 helm 部署 elasticsearch operator，挂载分布式数据卷做长期数据存储。
-
 
 #### 通过 jaeger operator 部署 jaeger
 
+[jaeger operator](https://github.com/jaegertracing/jaeger-operator) 只是一个单纯的 jaeger 管理器。
+我们还需要部署 operator 定义的资源，operator 才会去部署真正的 jaeger。
 
+可以使用如下 yaml 配置进行测试，它告诉 operator 部署一个 all in one 的 jaeger:
 
-#### jaeger agent
+```yaml
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: simplest
+```
 
-生产环境建议使用 jaeger agent 收集数据，然后通过 grpc 协议将数据上报到 jaeger-collector.
-jaeger agent 有两种部署方式：
+所有的 jaeger 属性，都可以通过 `Jaeger.jaegertracing.io/v1` 这个 CRD 进行配置。
 
-1. 自动注入 sidecar：这种方式的链路追踪非常灵活，不注入 sidecar 就可以忽略掉该服务的链路信息。
-   1. 缺点：sidecar 额外消耗一些性能。
-   2. 这种方式貌似是比较推荐的用法。
-2. daemonset: 在每个节点上运行一个 jaeger agent，没有 sidecar 方式灵活。
+完整的 yaml 配置：
 
-更复杂的环境下可以对接 kafka，这个以后有需要再研究。
+```yaml
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: my-jaeger
+spec:
+  strategy: allInOne # 生产环境请改成 production/streaming
+  allInOne:
+    image: jaegertracing/all-in-one:latest
+    options:   # 所有与存储无关的命令行参数
+      log-level: debug # 将被转换成 --log-level=debug
+  storage:
+    type: memory # 后端存储，生产环境需要改成 Cassandra, Elasticsearch, Kafka
+    options: # 所有存储相关的命令行参数
+      memory: 
+        max-traces: 100000
+  ingress:  # 网关
+    enabled: false
+  agent:
+    strategy: DaemonSet
+  annotations:  # 所有 jaeger deployment 统一添加这个注解
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+```
+
+其他参数请自行参阅文档。
 
 ### 5. Kiali 网络拓扑/流量拓扑
 
