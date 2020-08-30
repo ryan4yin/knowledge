@@ -163,7 +163,7 @@ jaeger-operator 自身的部署参数很少，基本没什么可定制的。
 apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:
-  name: simplest
+  name: jaeger-allinone
 ```
 
 所有的 jaeger 属性，都可以通过 `Jaeger.jaegertracing.io/v1` 这个 CRD 进行配置。
@@ -195,6 +195,14 @@ spec:
 ```
 
 其他参数请自行参阅文档。
+
+部署命令：
+
+```shell
+# 注意要部署在 tracing 名字空间，默认情况下 jaeger-operator 只在它自己的名字空间里工作
+kubectl apply -f my-jaeger.yaml --namespace tracing
+```
+
 
 ### 5. Kiali 网络拓扑/流量拓扑
 
