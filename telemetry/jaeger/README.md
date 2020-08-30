@@ -42,7 +42,7 @@ metadata:
   name: jaeger-allinone
 ```
 
-所有的 jaeger 属性，都可以通过 `Jaeger.jaegertracing.io/v1` 这个 CRD 进行配置。
+所有的 jaeger 属性，都可以通过 `Jaeger.jaegertracing.io/v1` 这个 CR (自定义资源)进行配置。
 
 完整的 yaml 配置：
 
@@ -76,7 +76,7 @@ spec:
 
 ```shell
 # 注意要部署在 tracing 名字空间，默认情况下 jaeger-operator 只在它自己的名字空间里工作
-kubectl apply -f my-jaeger.yaml --namespace tracing
+kubectl apply -f jaeger-cr.yaml --namespace tracing
 ```
 
 
