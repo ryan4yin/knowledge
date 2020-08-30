@@ -172,6 +172,7 @@ kiali-operator 会根据 `kiali_cr.yaml` 的内容，创建/更新/修改 kiali 
 1. jaeger: kiali 还需要查询链路追踪的数据，因此还得配置 jaeger-query　的　api url: `http://jaeger.tracing:80`
 1. Web UI 相关：kiali 通过 Web UI 展示网格数据。
    1. `auth`: 测试环境可设置为 `anonymous`，方便测试。
+   2. 本地测试环境使用 NodePort 暴露出 Web UI 端口。
 
 ```shell
 kubectl apply -f my-kiali-cr.yaml -n istio-system

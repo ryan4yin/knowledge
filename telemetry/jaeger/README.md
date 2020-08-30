@@ -70,7 +70,7 @@ spec:
     scheduler.alpha.kubernetes.io/critical-pod: ""
 ```
 
-其他参数请自行参阅文档。
+其他参数请自行参阅文档。建议使用 ingress/nodeport 暴露出 jaeger-query 的 Web UI。
 
 部署命令：
 
