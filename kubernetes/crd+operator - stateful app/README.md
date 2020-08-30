@@ -15,3 +15,14 @@ StatefulSet 只适合用于部署比较简单的有状态应用，比如 [mqtt/e
 另一方面不止数据库，其他诸如 Istio 这类复杂有状态应用，也面临着同样的问题。
 
 于是 Operator 应运而生，它由 CoreOS 首先提出，现在已经成了 Kubernetes 上部署与管理复杂有状态应用的事实标准。
+
+
+
+## 注意事项
+
+使用 operator 时，operator 和 cr 的删除必须遵循如下顺序：
+
+1. 删除 cr，等待 cr 被 operator 完全清理
+2. 删除 operator
+
+如果你先删了 operator，将导致 cr 无法完全清理，从而无法被删除！
