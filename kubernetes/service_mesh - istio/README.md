@@ -149,6 +149,8 @@ kubectl create namespace tracing
 helm upgrade --install jaeger-operator --namespace tracing -f jaeger-operator-values.yaml ./jaeger-operator
 ```
 
+jaeger-operator 自身的部署参数很少，基本没什么可定制的。
+这是因为它只是一个 jager 管理器，真正的 jaeger 还需要在后面创建，请看下一节。
 
 #### 通过 jaeger operator 部署 jaeger
 
@@ -216,7 +218,9 @@ helm upgrade --install kiali-operator --namespace kiali-operator -f kiali-operat
 helm uninstall kiali-operator --namespace kiali-operator
 ```
 
-然后手动下载并修改 [kiali_cr.yaml](https://github.com/kiali/kiali-operator/blob/master/deploy/kiali/kiali_cr.yaml) 并部署。
+>和 jaeger-operator 一样，kiali-operator 自身也没几个参数可配置。
+
+operator 有了，现在手动下载并修改 [kiali_cr.yaml](https://github.com/kiali/kiali-operator/blob/master/deploy/kiali/kiali_cr.yaml) 并部署。
 kiali-operator 会根据 `kiali_cr.yaml` 的内容，创建/更新/修改 kiali 服务。
 
 需要修改的配置有：
