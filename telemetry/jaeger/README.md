@@ -10,7 +10,6 @@
 
 ### 2. kubernetes operator 部署（推荐）
 
-
 使用 helm 安装 jaeger operator:
 
 ```shell
