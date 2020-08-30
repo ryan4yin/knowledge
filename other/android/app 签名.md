@@ -31,7 +31,10 @@ Enter keystore password: //输入密码，回车
 ```shell
 # 需要使用此文件夹下的 jar 包
 cd /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib
-java -jar apksigner.jar verify -v xxx.apk
+java -jar apksigner.jar verify --print-certs -v xxx.apk
+
+# 如果是 v1 签名，也可以使用如下命令
+keytool -printcert -jarfile my-app.apk
 ```
 
 上述命令中用到的 `apksigner.jar` 来自 Android build-tools，Android Studio 会自动安装该组件，你也可以尝试手动下载。
