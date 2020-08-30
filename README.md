@@ -12,9 +12,9 @@
 1. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
 3. CI/CD：Jenkins/GitLabCI 等
 1. 操作系统：Linux 系统、KVM 虚拟化等。
-5. DevOps 实用脚本
 6. 编程语言学习笔记：Python/Golang/Java
 7. Homelab: 家庭服务器相关，以及一些个人爱好。
+5. DevOps 实用脚本
 
 ## docker-compose
 
