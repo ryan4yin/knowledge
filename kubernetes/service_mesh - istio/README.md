@@ -134,74 +134,7 @@ Istio 链路追踪说是可以减少链路追踪对应用层的侵入，应用�
 
 否则就和 Istio 没啥关系了，应用自身向 jaeger-agent(udp) 或者 jaeger-collector(http/grpc) 上报追踪数据。
 
-使用 helm 安装 jaeger operator:
-
-```shell
-# 添加　chart 仓库
-helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
-# 查看历史版本
-helm search repo jaegertracing/jaeger-operator -l | head
-# 下载并解压 chart
-helm pull jaegertracing/jaeger-operator  --untar --version 2.15.1
-
-# 安装或更新
-kubectl create namespace tracing
-helm upgrade --install jaeger-operator --namespace tracing -f jaeger-operator-values.yaml ./jaeger-operator
-```
-
-jaeger-operator 自身的部署参数很少，基本没什么可定制的。
-这是因为它只是一个 jager 管理器，真正的 jaeger 还需要在后面创建，请看下一节。
-
-#### 通过 jaeger operator 部署 jaeger
-
-[jaeger operator](https://github.com/jaegertracing/jaeger-operator) 只是一个单纯的 jaeger 管理器。
-我们还需要部署 operator 定义的资源，operator 才会去部署真正的 jaeger。
-
-可以使用如下 yaml 配置进行测试，它告诉 operator 部署一个 all in one 的 jaeger:
-
-```yaml
-apiVersion: jaegertracing.io/v1
-kind: Jaeger
-metadata:
-  name: jaeger-allinone
-```
-
-所有的 jaeger 属性，都可以通过 `Jaeger.jaegertracing.io/v1` 这个 CRD 进行配置。
-
-完整的 yaml 配置：
-
-```yaml
-apiVersion: jaegertracing.io/v1
-kind: Jaeger
-metadata:
-  name: my-jaeger
-spec:
-  strategy: allInOne # 生产环境请改成 production/streaming
-  allInOne:
-    image: jaegertracing/all-in-one:latest
-    options:   # 所有与存储无关的命令行参数
-      log-level: debug # 将被转换成 --log-level=debug
-  storage:
-    type: memory # 后端存储，生产环境需要改成 Cassandra, Elasticsearch, Kafka
-    options: # 所有存储相关的命令行参数
-      memory: 
-        max-traces: 100000
-  ingress:  # 网关
-    enabled: false
-  agent:
-    strategy: DaemonSet
-  annotations:  # 所有 jaeger deployment 统一添加这个注解
-    scheduler.alpha.kubernetes.io/critical-pod: ""
-```
-
-其他参数请自行参阅文档。
-
-部署命令：
-
-```shell
-# 注意要部署在 tracing 名字空间，默认情况下 jaeger-operator 只在它自己的名字空间里工作
-kubectl apply -f my-jaeger.yaml --namespace tracing
-```
+部署流程参见 [/telemetry/jaeger/README.md](/telemetry/jaeger/README.md)
 
 
 ### 5. Kiali 网络拓扑/流量拓扑
