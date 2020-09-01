@@ -36,6 +36,7 @@ http:
       service: wss-test
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
 
+  # 详见 https://docs.traefik.io/middlewares/overview/
   middlewares:
     # http 重定向到 https
     # traefik.yml 中的重定向设置是全局的，这个重定向配置只有引用了它的路由才会使用。
@@ -43,6 +44,33 @@ http:
       redirectScheme:
         scheme: https
         permanent: true  # 301 永久重定向(moved permanently)，否则会使用 301 临时重定向。
+
+    # 在 http path 中添加前缀：/xxx => /foo/xxx
+    add-prefix-foo:
+      addPrefix:
+        prefix: "/foo"
+
+    # 使用正则将 http path 中的 /foo/xxx 替换成 /bar/xxx
+    replacepath-foo-bar:
+      replacePathRegex:
+        regex: "^/foo/(.*)"
+        replacement: "/bar/$1"
+
+    # 启用 gzip 压缩
+    compress-gzip:
+      compress:
+        excludedContentTypes:
+          # 不压缩二进制流
+          - text/event-stream
+
+    # 使用 chain 复用中间件链路
+    chain-secured:
+      chain:
+        middlewares:
+          # 顺序使用以下中间件处理请求
+          - https-only
+          - rate-limits
+          - auth-users
 
   services:
     wiki:
