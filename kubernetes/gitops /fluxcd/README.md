@@ -91,7 +91,7 @@ helm uninstall flux --namespace flux
 fluxctl identity --k8s-fwd-ns flux
 
 # 立即同步 git 仓库配置到 k8s 集群中（默认是 5m 同步一次）
-fluxctl sync
+fluxctl sync --k8s-fwd-ns flux
 
 # 查看所有 flux 管理的工作负载
 fluxctl list-workloads --all-namespaces
@@ -109,7 +109,7 @@ helm upgrade flux --namespace flux -f custom-values.yaml ./flux
 ## 二、使用 Flux
 
 ```shell
-# 测试阶段可以暴露 api 端口出来
+# 测试阶段可以暴露 api 端口出来，这样不需要 kubeconfig 就能使用 fluxctl
 export FLUX_URL=http://flux.k8s.local:3030/api/flux
 
 # 连接 Flux 实例所在的命名空间 flux

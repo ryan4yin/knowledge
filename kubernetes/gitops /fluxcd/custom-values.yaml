@@ -6,8 +6,9 @@ service:
   nodePort: 3030
 
 git:
-  # URL of git repo with Kubernetes manifests; e.g. git.url=ssh://git@github.com/fluxcd/flux-get-started
-  url: "ssh://git@github.com/fluxcd/flux-get-started"
+  # URL of git repo with Kubernetes manifests; e.g. git.url=git@github.com/fluxcd/flux-get-started
+  # 这里千万别用 ssh:// 开头，坑！
+  url: "git@gitee.com:ryan_yin/flux-get-started"
   # Branch of git repo to use for Kubernetes manifests
   branch: "master"
   # Path within git repo to locate Kubernetes manifests (relative path)
