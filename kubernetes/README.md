@@ -12,7 +12,7 @@
 | SealOS       |    1     |   4     |    3    | - |
 | KubeSpray    |    3     |   -     |    -    | - |
 | [KubeSphere](https://github.com/kubesphere/kubesphere)    |    3     |   -     |    -    | - |
-| kubeadm      |    2     |   2     |    2    | 3 |
+| [kubeadm](https://kuboard.cn/install/install-k8s.html)      |    2     |   2     |    2    | 3 |
 | KubeOperator |    -     |   -     |    -    | - |
 | openshift |    -     |   -     |    -    | - |
 
