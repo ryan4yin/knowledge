@@ -12,13 +12,15 @@
 | SealOS       |    1     |   4     |    3    | - |
 | KubeSpray    |    3     |   -     |    -    | - |
 | [KubeSphere](https://github.com/kubesphere/kubesphere)    |    3     |   -     |    -    | - |
-| kubeadm      |    -     |   -     |    -    | - |
+| kubeadm      |    2     |   2     |    2    | 3 |
 | KubeOperator |    -     |   -     |    -    | - |
 | openshift |    -     |   -     |    -    | - |
 
 个人观点：sealos/rke 很适合用于部署测试环境，方便快捷，其中 sealos 对离线部署的支持非常简便。
 
-kubespray 也许适合自建生产级别的集群，但是我目前不怎么熟悉。
+kubeadm 自建集群也还算简单，只是手动操作多一些。
+
+kubespray 也许适合自建生产级别的集群，但是东西太多了有些复杂。
 
 
 
@@ -49,7 +51,3 @@ minikube start  start --driver=hyperv \
 
 另外主节点性能也受集群 Pods 个数的影响，上述配置应该可以支撑到每个 Worker 节点跑 100 个 Pod.
 
-
-## 日志收集
-
-参见 [monitoring/fluentd](/monitoring/fluentd/README.md)
