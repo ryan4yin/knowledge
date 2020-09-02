@@ -1,5 +1,14 @@
+# Kubernetes 中的负载均衡
 
-# Kubernetes Service - 服务发现与流量代理
+Kubernetes 集群中有多种流量转发的方法：
+
+1. Service - ClusterIP: 四层负载均衡。群内部使用广泛的一种流量转发方式。
+   - 四层负载均衡，主要适合短连接。它均衡不了 tcp 长连接中的七层请求（比如 HTTP/1.1 gRPC 等）。
+2. Service - Internal LoadBalancer: 四层/七层的负载均衡。云上环境中的内部负载均衡器，在 LoadBalancer 类型的 Service 上使用注解可配置。
+   1. 这种用法貌似很少见？LoadBalancer 主要还是被用于将服务暴露给外部访问。
+3. Istio 服务网格：最灵活，性能损耗也最大的一种负载均衡策略。但是它能实现最丰富的负载均衡策略，甚至按比例切分流量。
+
+## Kubernetes Service - 服务发现与流量代理
 
 Kubernetes 的内部服务发现是基于 Service + DNS 解析实现的，默认情况下解析到的是一个稳定的虚拟 IP 地址（Service），该虚拟 IP 再通过 kube_proxy 将流量均衡到后端的 Pods 上。
 
@@ -31,4 +40,7 @@ Kubernetes Service 有多种类型可选:
    1. 这类 Service 只是单纯地添加了一条内部 DNS CNAME 解析。
 
 上面提到的 LoadBalancer 主要是做外部负载均衡，但是各大云厂商都提供一类注解，可以单纯创建一个内部负载均衡。
-内部负载均衡的主要用途是：使得 Kubernetes 群集所在的同一虚拟网络中运行的应用程序能够访问 Kubernetes 服务,同时也支持配置更高级的负载均衡策略。
+内部负载均衡的主要用途：
+
+   1. 使得 Kubernetes 群集所在的同一虚拟网络中运行的应用程序能够访问 Kubernetes 服务
+   2. 支持四层/七层转发与负载均衡，相比普通 Service，它多了一个第七层均衡的功能。
