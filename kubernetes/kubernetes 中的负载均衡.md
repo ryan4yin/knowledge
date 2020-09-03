@@ -10,6 +10,22 @@ Kubernetes 集群中有多种流量转发的方法：
 4. 底层的网络插件，有可能提供更高级的负载均衡功能
 
 
+## 请求亲和性
+
+Kubernetes Service 可以通过设置 `service.spec.sessionAffinity` 为 `ClientIP`，以客户端 IP 地址设置会话关联。
+还可以通过设置 `service.spec.sessionAffinityConfig.clientIP.timeoutSeconds` 来修改会话的最大有效时长.（默认值为 10800 秒，即 3 小时）
+
+如果使用 Istio 服务网格，就可以配置非常智能的请求均衡策略，比如可以按 Header/Cookie/QueryParameter 等 HTTP 属性设置会话关联。详见 [Istio DestinationRule - ConsistentHashLB](https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB)
+
+用途：
+
+1. 微服务-微服务：
+   1. 基于 IP 的会话亲和性，主要功能就是用于保持微服务-微服务的会话。
+2. 用户-微服务：
+   1. 可以在 Istio 服务网格上配置基于 Cookie/Header 的会话关联，提升微服务缓存的利用率。
+   2. 利用 Header 进行金丝雀发布（策略路由），只有带有特定 Header 的请求会被转发给测试 Pod。
+
+
 ## 四层负载均衡和七层负载均衡
 
 主要区别在于：
