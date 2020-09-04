@@ -1,8 +1,17 @@
 # Service Mesh
 
-> 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
+服务网格的优势：
+
+1. 流量切分与流量镜像。
+1. 东西向与南北向流量的四/七层负载均衡。
+2. 集群内流量的可观察性，提供丰富的流量监控能力。
+3. 东西向与南北向流量的 mTLS 加密，JWT 鉴权。
+4. 请求自动重试、故障注入。
+5. Rewrite HTTP URIs and Authority(HOST) headers
 
 ## 一、Istio
+
+> 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
 
 ### 1. 简单部署
 
