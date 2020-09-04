@@ -86,7 +86,9 @@ kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.y
 而新建的 Pod 在启动的瞬间可能特别脆弱，瞬间的 50 个并发请求就可以将它压垮。
 然后 Pod 一重启就被压垮，进入 CrashLoopBackoff 循环。
 
-解决方法：正在找。。。
+解决方法：
+
+1. 在就绪探针 API 的实现里面，依次调用所有需要预热的接口。这样 Pod 开始接受请求时，就已经预热完成了。
 
 ## 参考
 
