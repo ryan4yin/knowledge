@@ -1,5 +1,8 @@
 # [Flux](https://github.com/fluxcd/flux)
 
+>Flux 基本没有可视化，目前提供的唯一 UI 还需要用到 grafana，不是很方便。
+而且只支持单仓库单集群，可以说是很简陋。
+
 Flux 是一个 K8s 集群的配置同步工具，
 它遵循 GitOps 理念，以一个 Git 仓库为数据来源，始终保持集群状态和 Git 仓库中的配置描述一致。
 
