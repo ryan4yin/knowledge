@@ -6,6 +6,24 @@ Flagger 是一个 Kubernetes 上的渐进式交付 Operator，可以根据监控
 Flagger 可以和 fluxcd 集成，实现整个部署流程的自动化。
 
 
+## 部署 Flagger
+
+```shell
+helm repo add flagger https://flagger.app
+# 查看 flagger 版本号
+helm search repo flagger/flagger -l | head
+# 下载并解压 chart
+helm pull flagger/flagger --untar --version 1.1.0
+
+# 使用自定义的 cutome-values.yaml 进行部署（helm3）
+kubectl create ns flagger
+helm upgrade --install \
+  --namespace flagger \
+  -f custome-values.yaml \
+  flagger \
+  ./flagger
+```
+
 ## 注意事项
 
 1. 网关只支持南北向流量（用户->网关）的灰度，只有服务网格才支持东西向流量（微服务->微服务）的灰度。
