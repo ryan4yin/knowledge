@@ -35,7 +35,7 @@ Kubernetes Service 可以通过设置 `service.spec.sessionAffinity` 为 `Client
    2. TLS（也被分到第七层）: TLS Client Hello 中的 Host
    3. 第七层：HTTP 中的 Host/Path 等信息
 2. 四层负载均衡不查看七层信息，因此它无法负载均衡一个 TCP 长连接中的 HTTP 请求，也无法负载均衡 gRPC 请求。
-   1. 这将造成一 Pod 有难，多 Pod 围观的情况。
+   1. 因此在 kubernetes 中直接使用 Service+gRPC，将造成一 Pod 有难，多 Pod 围观的情况。
    2. 七层负载均衡器只负责做 NAT，客户端和服务端是在 TCP 层直连的。
 3. 七层负载均衡会查看七层信息，如果客户端通过一个 TCP 连接发送过来多个 HTTP/2 请求，它能够将请求均衡到多个后端去。
    1. 七层负载均衡器是分别与客户端、服务端建立 TCP 连接，然后解析客户端发来的七层请求，将请求内容均衡发送给后端。
@@ -85,3 +85,12 @@ Kubernetes Service 有多种类型可选:
 
    1. 使得 Kubernetes 群集所在的同一虚拟网络中运行的应用程序能够访问 Kubernetes 服务
    2. 支持四层/七层转发与负载均衡，相比普通 Service，它多了一个第七层均衡的功能。
+
+
+## Kubernetes 集群中的客户端负载均衡
+
+除了使用 Istio 服务网格做集群内的七层负载均衡，还有另一种方法：客户端负载均衡。
+
+也就是使用 Headless Service，让客户端自己去轮询有多少的服务端 Pod，自行与所有 Pod 建立连接，然后自己在这些连接上做负载均衡。
+
+这种方案性能比 Istio 要高，但是实现复杂。
