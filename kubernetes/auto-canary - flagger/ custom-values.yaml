@@ -1,0 +1,35 @@
+# 接入 prometheus operator
+metricsServer: "http://prometheus-operator-prometheus.monitoring:9090"
+
+# accepted values are kubernetes, istio, linkerd, appmesh, nginx, gloo or supergloo:mesh.namespace (defaults to istio)
+meshProvider: "istio"
+
+# single namespace restriction
+namespace: ""
+
+# when specified, flagger will publish events to the provided webhook
+# 可用于设置钉钉机器人事件通知，或者结合　mirai 发送 ＱＱ 消息，结合 telegram-bot 发送 tg 消息。
+eventWebhook: ""
+
+leaderElection:
+  enabled: false
+  replicaCount: 1
+
+crd:
+  # helm2 专用参数，目前已经废弃！请设为 false
+  # helm3 默认会自动部署 /crds 文件夹下的 crds
+  create: false
+
+nodeSelector: {}
+
+tolerations: []
+
+#  Istio multi-cluster service mesh (shared control plane single-network)
+# https://istio.io/docs/setup/install/multicluster/shared-vpn/
+# 比如阿里云 ASM(一个托管控制层的服务网格，控制层与数据层分离)，就需要通过这个参数设定控制层的 kubeconfig
+istio:
+  kubeconfig:
+    # istio.kubeconfig.secretName: The name of the secret containing the Istio control plane kubeconfig
+    secretName: ""
+    # istio.kubeconfig.key: The name of secret data key that contains the Istio control plane kubeconfig
+    key: "kubeconfig"
