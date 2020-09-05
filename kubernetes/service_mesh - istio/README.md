@@ -191,3 +191,7 @@ kiali-operator 会根据 `kiali_cr.yaml` 的内容，创建/更新/修改 kiali 
 ```shell
 kubectl apply -f my-kiali-cr.yaml -n istio-system
 ```
+
+## 参考
+
+- [servicemesher/istio-handbook](https://github.com/servicemesher/istio-handbook)
