@@ -16,6 +16,7 @@
 ### 依赖管理
 
 全局安装（安装到 GOPATH 下）：
+
 1. `go install`: 下载依赖源码到 `$GOPATH/src` 目录下。然后编译源码
    1. 编译出的静态链接库（`xxx.a`）将被放到 `$GOPATH/pkg` 目录下
    2. 编译得到的可执行文件将会被放到 `$GOROOT/bin` 目录下。
@@ -26,6 +27,7 @@
 
 
 使用 go modules 安装（针对项目）：
+
 3. `go mod`: 提供了一整套完善的依赖管理机制，和 python-`poetry`/node-`npm` 有点相似。
 
 
