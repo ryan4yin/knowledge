@@ -30,7 +30,7 @@ Enter keystore password: //输入密码，回车
 
 ```shell
 # 需要使用此文件夹下的 jar 包
-cd /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib
+cp /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib/apksigner.jar .
 java -jar apksigner.jar verify --print-certs -v xxx.apk
 
 # 如果是 v1 签名，也可以使用如下命令
@@ -48,7 +48,7 @@ keytool -printcert -jarfile my-app.apk
 
 ```shell
 # 需要使用此文件夹下的 jar 包
-cd /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib
+cp /<path-to-android>/Android/Sdk/build-tools/30.0.1/lib/apksigner.jar .
 # 1. 方法一，交互式地输入密钥库密码、密钥密码
 java -jar apksigner.jar sign \
     --ks <my-app>.jks \
