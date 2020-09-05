@@ -43,7 +43,14 @@
 首推阿里云镜像源，稳定可靠速度快。
 
 
-## 相关资料
+## DevOps 理论指导与最佳实践
+
+不论是写前后端代码，做性能测试，还是实现 DevOps 功能，都不应该仅依靠直觉去编程、调试、排查问题。
+如果能熟悉一些相关理论，了解一些最佳实践，并且在做事情的时候有意识地去比较、代入，往往能事半功倍。
+
+这个笔记仓库记录的最多的，应该算是我个人的最佳实践，但是缺乏理论相关的东西。我对理论目前也算不上熟悉。
+
+下面列出的是我目前可能比较欠缺的理论知识，从中也能学到些归纳总结的技巧：
 
 - [Ledge —— DevOps knowledge learning platform](https://github.com/phodal/ledge)
 - [Everything as code architecture design patten and rules](https://github.com/phodal/ascode.ink)
