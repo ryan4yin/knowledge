@@ -72,3 +72,10 @@ helm upgrade --install \
 内部 prometheus 设置数据保留时间为 24h 甚至更短，外部 prometheus 设置数据保留时间为 1 个月。
 
 多个集群及其他主机的监控数据，都通过联邦汇总到一个外部 prometheus 中，再通过 grafana 提供统一的监控面板。
+
+
+## 参考
+
+- [prometheus-book - github](https://github.com/yunlzheng/prometheus-book)
+- [容器监控方案汇总  - github](https://github.com/yasongxu/container-monitor)
+- [这篇文章，让运维监控不再成为你的短板!](https://segmentfault.com/a/1190000020990098)
