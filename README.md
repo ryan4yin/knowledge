@@ -1,5 +1,7 @@
 # DevOps Notes & Scripts
 
+>Everything on Containers, Everything as Code
+
 我日常总结出来的一些 DevOps 笔记与脚本。
 
 个人笔记，并不是教程，也不保证正确！
@@ -39,3 +41,9 @@
 4. [腾讯镜像源](https://mirrors.cloud.tencent.com/): 才推出没多久的镜像源，还没用过。
 
 首推阿里云镜像源，稳定可靠速度快。
+
+
+## 相关资料
+
+- [Ledge —— DevOps knowledge learning platform](https://github.com/phodal/ledge)
+- [Everything as code architecture design patten and rules](https://github.com/phodal/ascode.ink)
