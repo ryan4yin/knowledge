@@ -15,3 +15,5 @@ kubectl apply -f loucst-slaves.yaml
 ```
 
 然后就开始自动化压测了，可以修改 slaves 的 replicas 数量以增减 worker 数，记得同步修改 master 的 `--expect-workers`。
+
+这是 `locustfile.py` 比较简单的情况，如果有各类依赖，可能最好的办法是使用 `GitPath` 存储卷，或者使用自定义容器镜像。
