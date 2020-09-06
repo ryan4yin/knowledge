@@ -30,6 +30,7 @@ tolerations: []
 istio:
   kubeconfig:
     # istio.kubeconfig.secretName: The name of the secret containing the Istio control plane kubeconfig
-    secretName: ""
+    # `kubectl -n flagger create secret generic istio-kubeconfig --from-file=kubeconfig=istio-config`
+    secretName: ""  # istio-kubeconfig
     # istio.kubeconfig.key: The name of secret data key that contains the Istio control plane kubeconfig
     key: "kubeconfig"
