@@ -38,8 +38,7 @@ $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key get /registry/deploymen
 # 查看 kube-system 空间的详细信息
 $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --write-out="json" get /registry/namespaces/kube-system
 
-# （谨慎操作！！！）强制删除名字空间 `monitoring`。
-# 这会导致相关资源无法释放！比如 NodePort/HostPort 这类资源，强制删除名字空间后，可能需要重启对应的节点，才能释放掉。
+# （谨慎操作！！！）强制删除名字空间 `monitoring`，有可能导致某些资源无法被 GC。
 $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespaces/monitoring
 ```
 
