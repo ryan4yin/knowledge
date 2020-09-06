@@ -31,3 +31,6 @@ helm upgrade --install \
 1. 通过 Canary 的 `spec.service.trafficPolicy.tls.mode` 可以强制微服务使用 mtls 双向认证。
 1. Flagger 可以自定义 MetricTemplate，支持设定 prometheus 地址，通过 PromQL 计算指标。
     - 比如通过 Istio 在网格内灰度一个 gRPC 服务，就需要通过 PromQL 从 Prometheus 中查询 Istio 提供的 gRPC 状态码等指标。
+1. Flagger 对多端口的支持有些问题，`spec.service.portDiscovery: true` 只能智能将识别到的 containerPort 添加到 `Service` 中。但是 `VirtualService` 的灰度端口只能是 `spec.service.port` 指定的端口号！别的端口不会灰度！
+2. `spec.service.portName` 默认是 `http`，如果灰度 `grpc` 端口，必须要将这个参数设为 `grpc`！！！
+  - flagger 只支持灰度 http/grpc 协议！
