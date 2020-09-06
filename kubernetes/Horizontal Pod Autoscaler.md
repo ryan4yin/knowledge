@@ -92,6 +92,7 @@ kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.y
 
 1. 在就绪探针 API 的后端控制器里面，依次调用所有需要预热的接口，提前初始化好所有资源。
    1. 就绪探针的控制器中，可以通过 `localhost` 回环地址调用它自身的接口。
+1. 尝试 AOT 技术：预热，通常都是因为 JIT 即时编译技术导致的问题，在需要用到时它才编译。而 AOT 是提前编译，在使用前完成编译，因此 AOT 能解决预热的问题。
 
 ## 参考
 
