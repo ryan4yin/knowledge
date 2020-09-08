@@ -17,38 +17,7 @@ Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完
 
 vault 支持很多的数据存储方式，简单起见，下面的示例与 Apollo 一样使用 MySQL 做数据存储。
 
-以 mysql 为后端存储的 HA 高可用的 `custom-vault.yaml` 内容大概如下：
-
-```yaml
-server:
-  ha:
-    enabled: true
-    config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-      }
-
-      storage "mysql" {
-        address = "<host>:3306"
-        username = "<username>"
-        password = "<password>"
-        database = "vault"
-        ha_enabled = "true"
-      }
-
-      service_registration "kubernetes" {}
-
-
-ui:
-  enabled: true
-  # 本地测试环境可以考虑通过 nodeport 暴露 Web UI
-  serviceType: NodePort
-  serviceNodePort: 8200
-```
+以 mysql 为后端存储的 HA 高可用的 `custom-vault.yaml` 可以在此文件夹中找到。
 
 通过 helm 部署：
 
@@ -58,7 +27,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 # 查看 vault 版本号
 helm search repo hashicorp/vault -l | head
 # 下载某个版本号的 vault
-helm pull hashicorp/vault --version 0.6.0 --untar
+helm pull hashicorp/vault --version 0.7.0 --untar
 # 安装/升级 valut
 helm upgrade --install vault ./vault --namespace vault -f custom-values.yaml
 ```
