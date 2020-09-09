@@ -4,7 +4,7 @@
 
 ## CI/CD 相关
 
-- [jenkins: docker-jnlp-slave](https://github.com/jenkinsci/docker-jnlp-slave)
+- [jenkins: docker-inbound-agent](https://github.com/jenkinsci/docker-inbound-agent)
 
 - [docker-android-build-box](https://github.com/mingchen/docker-android-build-box)
 
