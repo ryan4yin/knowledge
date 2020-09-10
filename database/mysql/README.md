@@ -62,13 +62,31 @@ DROP USER 'test'@'localhost';
 
 ## 运行 SQL
 
+使用 mysqldump 备份数据为 sql 文件：
+
+```shell
+mysqldump --all-databases --user=root --password="$MYSQL_ROOT_PASSWORD" > /some/path/on/your/host/all-databases.sql
+```
+
+将 sql 文件还原到数据库：
+
 ```shell
 # 1. 直接运行某个 sql 文件
-mysql --user="username" --database="databasename" --password="yourpassword" < "/path/to/xxx.sql"
+mysql --database="databasename" --user="username" --password="yourpassword" < "/path/to/xxx.sql"
 # 2. 在 mysql shell 里运行 sql 文件
 $ mysql -u root -p
 mysql> USE mydb;
 mysql> source /path/to/xxx.sql
+```
+
+在 mysql 容器中执行备份还原：
+
+```shell
+# 备份
+docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
+
+# 还原
+docker exec -i some-mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < /some/path/on/your/host/all-databases.sql
 ```
 
 ## SQL 语句分析

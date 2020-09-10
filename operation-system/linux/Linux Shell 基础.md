@@ -28,7 +28,7 @@ do
 done  # sh/bash 都支持
 ```
 
-if 语句：
+## 2. if 语句
 
 ```shell
 # 单行 if 语句
@@ -42,3 +42,8 @@ else
    Statement(s) to be executed if expression is not true
 fi
 ```
+
+
+## 3. Shell脚本中的set指令，比如set -x 和 set -e
+
+参见：[Shell脚本中的set指令，比如set -x 和 set -e](https://www.cnblogs.com/robinunix/p/11635560.html)
