@@ -28,3 +28,17 @@ do
 done  # sh/bash 都支持
 ```
 
+if 语句：
+
+```shell
+# 单行 if 语句
+if [ true ]; then <command>; fi
+
+#  if else
+if [ expression ]
+then
+   Statement(s) to be executed if expression is true
+else
+   Statement(s) to be executed if expression is not true
+fi
+```
