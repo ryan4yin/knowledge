@@ -8,7 +8,7 @@ services:
     ports:
     - 3306:3306
     volumes:
-    # 可以手动设定初始化脚本，通过 `mysql` 命令执行建数据库等动作。容器启动后会自动调用这个脚本。
+    # 可以手动设定初始化脚本，通过 `mysql` 命令执行批量建数据库建表等动作。容器启动后会自动调用这个脚本。
     - create-databases.sh:/docker-entrypoint-initdb.d/create-databases.sh
     # 内存模式（tmpfs）的 mysql，速度非常快！但是重启 PC 会丢数据！可用于单元测试/集成测试等环境。
     ## https://docs.docker.com/storage/tmpfs/
