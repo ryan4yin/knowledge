@@ -1,6 +1,6 @@
 # Git 相关
 
-## Git 命令
+## 一、Git 命令
 
 ### 强制走 ssh 协议
 
@@ -14,7 +14,18 @@ git config --global url."git@gitlab.svc.local:".insteadOf "https://gitlab.svc.lo
 
 也可以用同样的手法转换 http/git 协议，但是不能同时转换多种协议。。
 
-## Git 部署方案
+### Git 使用指定的私钥
+
+1. 设置环境变量 `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_example"`
+2. 使用 Git 命令 `git config core.sshCommand "ssh -i ~/.ssh/id_rsa_example -F /dev/null"`
+3. 使用 ssh-agent: `ssh-agent sh -c 'ssh-add ~/.ssh/id_rsa; git fetch user@host'`
+4. 修改 `~/.ssh/config`
+
+详见：
+
+- [How to tell git which private key to use?](https://superuser.com/questions/232373/how-to-tell-git-which-private-key-to-use)
+
+## 二、Git 部署方案
 
 ### Gitlab
 
