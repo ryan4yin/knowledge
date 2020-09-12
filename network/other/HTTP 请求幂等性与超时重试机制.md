@@ -29,5 +29,41 @@ requests 为何不重试失败的连接？主要是因为， requests 不知道�
 
 ## Istio/Envoy 重试机制
 
+Istio/Envoy 提供功能非常丰富的重试机制，可以设置各种各样的重试触发条件。
+但是在 API 非幂等的情况下，贸然使用 Istio/Envoy 的重试功能，会导致非常严重的问题！！！
 
-待续
+所以一定要搞清楚 Istio/Envoy 的各类重试条件的具体意义，再去使用！
+
+就比如 Istio 官方提供的 [HTTPRetry 示例](https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPRetry)：
+
+```yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ratings-route
+spec:
+  hosts:
+  - ratings.prod.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        host: ratings.prod.svc.cluster.local
+        subset: v1
+    retries:
+      attempts: 3  # 重试次数
+      perTryTimeout: 2s  # 重试间隔
+      # 触发重试的条件
+      retryOn: gateway-error,connect-failure,refused-stream
+```
+
+一旦 retry 机制被触发，Envoy 就会以两秒的间隔进行重试，直到请求成功，或者达到重试上限 3 次。
+
+yaml 中的三个重试触发条件，详细说明如下：
+
+1. gateway-error:
+2. connect-failure:
+3. refused-stream:
+
+但是实际测试发现，`perTryTimeout` 貌似会影响普通请求的超时时间！
+将 `perTryTimount` 设为 `1s`，结果普通请求一旦超过 1s，就触发了重试机制。。
+当然也有可能是我们测试有什么地方不对劲，等明天详细测过再来补充。
