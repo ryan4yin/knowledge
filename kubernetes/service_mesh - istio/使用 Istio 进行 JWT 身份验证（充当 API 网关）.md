@@ -21,7 +21,7 @@ Istio 使用 JWK 描述验证签名所需要的信息。在使用 RSA 签名算�
     "alg": "RS256",  # 算法「可选参数」
     "kty": "RSA",    # 密钥类型
     "use": "sig",    # 被用于签名「可选参数」
-    "kid": "NjVBRjY5MDlCMUIwNzU4RTA2QzZFMDQ4QzQ2MDAyQjVDNjk1RTM2Qg",  # key id，在有多个 jwk 时(如 jwks 中)被用于区分各 jwk
+    "kid": "NjVBRjY5MDlCMUIwNzU4RTA2QzZFMDQ4QzQ2MDAyQjVDNjk1RTM2Qg",  # key 的唯一 id
     "n": "yeNlzlub94YgerT030codqEztjfU_S6X4DbDA_iVKkjAWtYfPHDzz_sPCT1Axz6isZdf3lHpq_gYX4Sz-cbe4rjmigxUxr-FgKHQy3HeCdK6hNq9ASQvMK9LBOpXDNn7mei6RZWom4wo3CMvvsY1w8tjtfLb-yQwJPltHxShZq5-ihC9irpLI9xEBTgG12q5lGIFPhTl_7inA1PFK97LuSLnTJzW0bj096v_TMDg7pOWm_zHtF53qbVsI0e3v5nmdKXdFf9BjIARRfVrbxVxiZHjU6zL6jY5QJdh1QCmENoejj_ytspMmGW7yMRxzUqgxcAqOBpVm0b-_mW3HoBdjQ",
     "e": "AQAB"
 }
@@ -153,13 +153,14 @@ spec:
     matchLabels:
       istio: ingressgateway
   jwtRules:
+  # issuer 即签发者，需要和 JWT payload 中的 iss 属性完全一致。
   - issuer: "testing@secure.istio.io"
     jwks: |
     {
         "keys": [
             {
                 "e": "AQAB",
-                "kid": "oyYwZSLCLVVPHdVp0jXIcLNpGn6dMCumlY-6wSenmFo",
+                "kid": "oyYwZSLCLVVPHdVp0jXIcLNpGn6dMCumlY-6wSenmFo",  # kid 需要与 jwt header 中的 kid 完全一致。
                 "kty": "RSA",
                 "n": "t1cKkQqPh8iOv5BhKh7Rx6A2-1ldpO_jczML_0GBKu4X-lHrY8YbJrt29jyAXlWM8vHC7tXsqgUG-WziRD0D8nhnh10XC14SeH-3mVuBqph-TqhXTWsh9gtAIbeUHJjEI4I79QK4_wquPHHIGZBQDQQnuMh6vAS3VaUYJdEIoKvUBnAyY35kJZgyJSbrxLsEExL2zujUD_OY-_In2bq_3rFtDGNlgHyC7Gu2zXSXvfOA4O5m9BBXOc7eEqj7PoOKNaTxLN3YcuRtgR6NIXL4KLb6oyvIzoeiprt4-9q7sc3Dnkc5EV9kwWlEW2DHzhP6VYca0WXIIXc53U1AM3ewxw"
             }
@@ -177,7 +178,7 @@ spec:
 JWT 的验证规则是：
 
 1. JWT 的 payload 中有 issuer 属性，首先通过 issuer 匹配到对应的 istio 中配置的 jwks。
-2. JWT 的 header 中有 kid 属性，第二步在 jwks 中找到 kid 相同的公钥。
+2. JWT 的 header 中有 kid 属性，第二步在 jwks 的公钥列表中，中找到 kid 相同的公钥。
 3. 使用找到的公钥进行 JWT 签名验证。
 
 
