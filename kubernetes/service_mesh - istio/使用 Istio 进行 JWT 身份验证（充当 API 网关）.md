@@ -214,7 +214,7 @@ spec:
     forwardOriginalToken: true  # 转发 Authorization 请求头
 ```
 
-加了转发后，流程图如下：
+加了转发后，流程图如下（需要 mermaid 渲染）：
 
 ```mermaid
 sequenceDiagram
