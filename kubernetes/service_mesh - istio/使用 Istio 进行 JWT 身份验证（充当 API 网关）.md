@@ -1,5 +1,3 @@
-# 使用 Istio 进行 JWT 身份验证（充当 API 网关）
-
 >本文基于 Istio1.5 编写测试
 
 Istio 支持使用 JWT 对终端用户进行身份验证（Istio End User Authentication），支持多种 JWT 签名算法。
@@ -83,13 +81,13 @@ private_key = Path("key.pem").read_bytes()
 jwk = JWK.from_pem(private_key)
 
 # 导出公钥 RSA Public Key
-public_key = k.public().export_to_pem()
+public_key = jwk.public().export_to_pem()
 print(public_key)
 
 print("="*30)
 
 # 导出 JWK
-jwk_bytes = k.public().export()
+jwk_bytes = jwk.public().export()
 print(jwk_bytes)
 ```
 
@@ -173,7 +171,15 @@ spec:
 
 现在 `kubectl apply` 一下，JWT 验证就添加到全局了。
 
-可以看到 jwtRules 是一个列表，因此可以为多个 issuers 配置不同的 jwtRule.
+可以看到 jwtRules 是一个列表，因此可以为每个 issuers 配置不同的 jwtRule.
+
+对同一个 issuers（jwt 签发者），可以通过 jwks 设置多个公钥，以实现JWT签名密钥的轮转。
+JWT 的验证规则是：
+
+1. JWT 的 payload 中有 issuer 属性，首先通过 issuer 匹配到对应的 istio 中配置的 jwks。
+2. JWT 的 header 中有 kid 属性，第二步在 jwks 中找到 kid 相同的公钥。
+3. 使用找到的公钥进行 JWT 签名验证。
+
 
 ### 6. 启用 Payload 转发/Authorization 转发
 
@@ -206,6 +212,23 @@ spec:
     }
 # ===================== 添加如下参数===========================
     forwardOriginalToken: true  # 转发 Authorization 请求头
+```
+
+加了转发后，流程图如下：
+
+```mermaid
+sequenceDiagram
+autonumber
+participant User as 用户
+participant Auth as 授权服务
+participant IG as IngressGateway
+participant SVC as 某服务
+User->>+Auth: Login
+Auth-->>-User: 返回 JWT
+User->>+IG: 请求信息（带 JWT）
+IG->>-SVC: 请求信息（转发 JWT）
+SVC-->>IG: 返回信息
+IG-->>User: 返回信息
 ```
 
 ## 其他
