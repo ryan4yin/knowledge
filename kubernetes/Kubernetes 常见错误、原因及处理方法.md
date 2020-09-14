@@ -82,6 +82,9 @@ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespaces/
 
 ## 批量清理 Evicted 记录
 
+有时候 Pod 因为节点选择器的问题，被不断调度到有问题的 Node 上，就会不断被 Evicted，导致出现大量的 Evicted Pods。
+排查完问题后，需要手动清理掉这些 Evicted Pods.
+
 批量删除 Evicted 记录: 
 ```shell
 kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
