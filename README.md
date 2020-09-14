@@ -40,32 +40,3 @@
 
 首推阿里云镜像源，稳定可靠速度快。
 
-
-## 关于 DevOps
-
-DevOps，即开发+运维。DevOps经常被描述为“开发团队与运维团队之间更具协作性、更高效的关系”。
-
-我们通常听到的「DevOps 工程师」，更多的是指一类新的运维工程师，他们行事的核心思想有：
-
-1. Everything as Code（GitOps）: 所有代码/流程/基础设施/文档/规范都通过 Git 做版本控制。保证任何操作的可重复性。
-   1. 基础设施即代码
-   2. 文档即代码：任何事件的处理流程都应该有对应的文档及规范。
-2. 持续集成/持续交付: 容器化、微服务化，自动化。加快产品迭代速度，也减少人为操作引入的错误。
-   1. Everything on Containers.
-   2. Automate what can be automated.
-3. 待补充
-
-DevOps 并没有权威的解释，我个人觉得，使用上述思想构建与维护运维系统的运维工程师，就是一名 DevOps 工程师。
-
-
-## DevOps 理论指导
-
-不论是写前后端代码，做性能测试，还是实现 DevOps 功能，都不应该仅依靠直觉去编程、调试、排查问题。
-如果能熟悉一些相关理论，了解一些最佳实践，并且在做事情的时候有意识地去比较、代入，往往能事半功倍。
-
-这个笔记仓库记录的最多的，应该算是我个人的最佳实践，但是缺乏理论相关的东西。我对理论目前也算不上熟悉。
-
-下面列出的是我目前可能比较欠缺的理论知识，从中也能学到些归纳总结的技巧：
-
-- [Ledge —— DevOps knowledge learning platform](https://github.com/phodal/ledge)
-- [Everything as code architecture design patten and rules](https://github.com/phodal/ascode.ink)
