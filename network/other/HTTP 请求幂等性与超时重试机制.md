@@ -75,7 +75,7 @@ yaml 中的三个重试触发条件，详细说明如下：
 2. connect-failure: 连接失败
 3. refused-stream: 上游服务器重置了连接
 
-但是实际测试发现，`perTryTimeout` 貌似会影响普通请求的超时时间！
+但是实际测试发现，`perTryTimeout` 貌似会影响普通请求的超时时间！（测试版本: 1.6.8）
 将 `perTryTimount` 设为 `1s`，结果普通请求一旦超过 1s，就触发了重试机制，`spec.http.timeout` 完全失效了。
 
 看起来是因为请求超时，报错 504，触发了 gateway-error 这个重试条件。
