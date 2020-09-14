@@ -28,7 +28,7 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
 
 比如 CA 证书，就是 CA 公钥+CA机构相关信息构成的一个文件。
 
-而 TLS 证书，则包含 公钥+申请者(你)和颁发者(CA)的信息+签名(使用 CA 私钥加密)
+而 TLS 证书，则包含公钥+申请者信息(你)，颁发者(CA)的信息+签名(使用 CA 私钥加密)
 
 ## 一、TLS 证书支持保护的域名类型
 
@@ -169,7 +169,7 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     ```shell
     # 1. 生成 2048 位 的 RSA 密钥
     openssl genrsa -out server.key 2048
-    # 2. 通过第一步编写的配置文件，生成证书签名请求
+    # 2. 通过第一步编写的配置文件，生成证书签名请求（公钥+申请者信息）
     openssl req -new -key server.key -out server.csr -config csr.conf
     # 3. 生成最终的证书，这里指定证书有效期 3650 天
     ## 3.1 方法一：使用 server.key 进行自签名。这种方式得到的证书不包含 SAN！不支持多域名！
@@ -179,7 +179,8 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
     openssl genrsa -out ca.key 2048
     ### ca 证书，ca 证书的有效期尽量设长一点，因为不方便更新换代。
     openssl req -x509 -new -nodes -key ca.key -subj "/CN=MyLocalRootCA" -days 10000 -out ca.crt
-    ### 签名，服务端证书的有效期建议不要超过 825 天。
+    ### 签名，得到最终的 TLS 证书，它包含四部分内容：公钥+申请者信息 + 颁发者(CA)的信息+签名(使用 CA 私钥加密)
+    ###  服务端证书的有效期建议不要超过 825 天。
     openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key \
       -CAcreateserial -out server.crt -days 825 \
       -extensions v3_ext -extfile csr.conf
