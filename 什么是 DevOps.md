@@ -1,5 +1,5 @@
 
-## 关于 DevOps
+## 什么是 DevOps
 
 要理解 DevOps 开发+运维的含义，需要先从传统的「瀑布开发模式」讲起。
 
@@ -22,6 +22,12 @@ DevOps 模式下的运维人员，要兼顾「快速地、高效地迭代」与�
    2. Automate what can be automated.
 3. 容器化、微服务化：这是后端在 DevOps 模式下需要做的改造。但是运维人员也需要了解其中关窍。
 
+
+## DevOps 运维人员需要掌握哪些技能
+
+参见全球最火的路线图：
+
+- [developer-roadmap#devops-roadmap](https://github.com/kamranahmedse/developer-roadmap#devops-roadmap)
 
 ## 参考
 
