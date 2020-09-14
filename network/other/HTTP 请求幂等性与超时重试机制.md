@@ -12,7 +12,7 @@ urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='xxx.com', port=80): M
 max_retries: Note, this applies only to failed DNS lookups, socket connections and connection timeouts, never to requests where data has made it to the server. By default, Requests does not retry failed connections.
 ```
 
-只有在 DNS 解析失败、socket 连接以及连接超时三种情况下，requests 才会重试一个请求。
+**只有在 DNS 解析失败、socket 连接失败以及连接超时三种情况下，requests 才会重试一个请求。**
 如果数据已经被发送到服务端，requests 绝对不会重试。默认情况下，requests 也不会重试一个失败的连接。
 
 ## 幂等性
@@ -26,6 +26,13 @@ requests 为何不重试失败的连接？主要是因为， requests 不知道�
 
 灵活的重试策略，可以提高应用的容错能力。尤其是对于复杂的微服务间调用而言。
 
+### 什么情况下可以重试一个「非幂等请求」
+
+**对于非幂等请求，只有在 DNS 解析失败、socket 连接失败（第四层连接失败）以及连接超时（第四层连接超时）三种情况下，才可以重试。**
+
+要注意的是「连接超时」!=「请求超时」！「连接超时」是 TCP 连接超时无法建立，而请求超时是 TCP 连接已经建立成功了，数据发送到服务器了但是没得到响应。
+
+总而言之，对非幂等请求，只有在确定服务端没有收到数据的情况下，才允许重试。
 
 ## Istio/Envoy 重试机制
 
@@ -54,16 +61,22 @@ spec:
       perTryTimeout: 2s  # 重试间隔
       # 触发重试的条件
       retryOn: gateway-error,connect-failure,refused-stream
+    timeout: 10s
 ```
 
 一旦 retry 机制被触发，Envoy 就会以两秒的间隔进行重试，直到请求成功，或者达到重试上限 3 次。
 
 yaml 中的三个重试触发条件，详细说明如下：
 
-1. gateway-error:
-2. connect-failure:
-3. refused-stream:
+1. gateway-error: only retry requests that result in a 502, 503, or 504.
+   1. 502 Bad Gateway，上游返回给网关无效的信息。
+   1. 503 服务目前不可用
+   2. 504 网关超时，后端无响应或者后端 IP 不存在，会导致报这个错。
+2. connect-failure: 连接失败
+3. refused-stream: 上游服务器重置了连接
 
 但是实际测试发现，`perTryTimeout` 貌似会影响普通请求的超时时间！
-将 `perTryTimount` 设为 `1s`，结果普通请求一旦超过 1s，就触发了重试机制。。
-当然也有可能是我们测试有什么地方不对劲，等明天详细测过再来补充。
+将 `perTryTimount` 设为 `1s`，结果普通请求一旦超过 1s，就触发了重试机制，`spec.http.timeout` 完全失效了。
+
+看起来是因为请求超时，报错 504，触发了 gateway-error 这个重试条件。
+
