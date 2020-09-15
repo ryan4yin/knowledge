@@ -188,8 +188,18 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
 上述流程生成一个 x509 证书链，详细的参数说明，参见 [RFC5280 - Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile](https://tools.ietf.org/html/rfc5280)
 
->如果证书是用于 Web 服务，建议设置的有效期不要超过 825 天！一是为了安全，二是苹果等部分设备可能会强制不信任证书有效期过长的证书。
-其他用途的证书，如果更换起来很麻烦，可以考虑放宽条件。比如 kubernetes 集群的加密证书，官方给出的示例就把证书有效期设为了 10000 天。
+##### 关于证书寿命
+
+对于公开服务，服务端证书的有效期不要超过 825 天（27 个月）！而 2020 年 11 月起，新申请的服务端证书有效期缩短到了 398 天（13 个月）。目前 Apple/Mozilla/Chrome 都发表了相应声明，证书有效期超过上述限制的，将被浏览器/Apple设备禁止使用。
+
+对于其他用途的证书，如果更换起来很麻烦，可以考虑放宽条件。
+比如 kubernetes 集群的加密证书，可以考虑有效期设长一些。
+
+据[云原生安全破局｜如何管理周期越来越短的数字证书？](https://mp.weixin.qq.com/s?__biz=MzA4MTQ2MjI5OA==&mid=2664079008&idx=1&sn=dede1114d5705880ea757f8d9ae4c92d)所述，大量知名企业如 特斯拉/微软/领英/爱立信 都曾因未及时更换 TLS 证书导致服务暂时不可用。
+
+因此 TLS 证书最好是设置自动轮转！人工维护不可靠！
+目前很多 Web 服务器/代理，都支持自动轮转 Let's Encrypt 证书。
+另外 Vault 等工具，也支持自动轮转私有证书。
 
 #### 1.1 拓展1：基于 ECC 算法的 TLS 证书
 
@@ -419,6 +429,7 @@ openssl pkcs12 -export -in client.crt -inkey client.key -out client.p12
 - [前向保密(Forward Secrecy) - WikiPedia](https://zh.wikipedia.org/wiki/%E5%89%8D%E5%90%91%E4%BF%9D%E5%AF%86)
 
 - [证书选型和购买 - 阿里云文档](https://help.aliyun.com/document_detail/28542.html)
+- [云原生安全破局｜如何管理周期越来越短的数字证书？](https://mp.weixin.qq.com/s?__biz=MzA4MTQ2MjI5OA==&mid=2664079008&idx=1&sn=dede1114d5705880ea757f8d9ae4c92d)
 
 另外两个关于 CN(Common Name) 和 SAN(Subject Altnative Name) 的问答：
 
