@@ -10,6 +10,8 @@
 3. ELK 系统非常吃 CPU 和内存，空载状态下这三件套也要用掉近 2G 的内存。
    1. 建议 ElasticSearch  和 Logstash 的内存上下限都设为 4G-8G。
    2. Logstash 的 pipelines （定时同步）越多，启动就越慢，也越吃性能。要给足 CPU 和 RAM.
+4. 设定 ElasticSearch JVM 堆的大小：添加环境变量 `ES_JAVA_OPTS: "-Xmx4g -Xms4g"`
+   1. JVM 堆的大量应该低于 50% 物理内存。
 
 ## 安装中文分词插件
 
