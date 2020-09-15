@@ -5,7 +5,8 @@ services:
     container_name: mongo1
     image: mongo:4.2
     restart: always
-    entrypoint: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+    # wiredTigerCacheSizeGB 限制缓存（内存）上限
+    entrypoint: ["mongod", "--bind_ip_all", "--replSet=rs0", "--wiredTigerCacheSizeGB=2"]
     volumes:
       - ./mongo-data1:/data/db
     ports:

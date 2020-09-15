@@ -5,7 +5,8 @@ services:
     container_name: mongo1
     image: mongo:4.2
     restart: always
-    entrypoint: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+    # wiredTigerCacheSizeGB 限制缓存（内存）上限
+    entrypoint: ["mongod", "--bind_ip_all", "--replSet=rs0", "--wiredTigerCacheSizeGB=2"]
     volumes:
       - ./mongo-data1:/data/db
     ports:
@@ -14,7 +15,7 @@ services:
     container_name: mongo2
     image: mongo:4.2
     restart: always
-    entrypoint: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+    entrypoint: ["mongod", "--bind_ip_all", "--replSet=rs0", "--wiredTigerCacheSizeGB=2"]
     volumes:
       - ./mongo-data2:/data/db
     ports:
@@ -23,7 +24,7 @@ services:
     container_name: mongo3
     image: mongo:4.2
     restart: always
-    entrypoint: ["mongod", "--bind_ip_all", "--replSet", "rs0"]
+    entrypoint: ["mongod", "--bind_ip_all", "--replSet=rs0", "--wiredTigerCacheSizeGB=2"]
     volumes:
       - ./mongo-data3:/data/db
     ports:
