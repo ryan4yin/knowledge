@@ -14,7 +14,7 @@ services:
     ## https://docs.docker.com/storage/tmpfs/
     ## 也可以通过 volumes 将文件夹映射到 /dev/shm 中实现「内存模式」
     tmpfs:
-      - /var/lib/mysql:size=512m
+      - /var/lib/mysql:size=1G
       # 模板如下：
       # - /tempFiles:exec,mode=777,size=1G,uid=104,gid=107
     environment:
