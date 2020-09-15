@@ -219,14 +219,16 @@ spec:
 
 ```mermaid
 sequenceDiagram
-autonumber
+# autonumber
 participant User as 用户
 participant Auth as 授权服务
 participant IG as IngressGateway
 participant SVC as 某服务
 User->>+Auth: Login
+Auth->>Auth: 用私钥生成 JWT 签名
 Auth-->>-User: 返回 JWT
 User->>+IG: 请求信息（带 JWT）
+IG->>IG: 用公钥验证 JWT 签名
 IG->>-SVC: 请求信息（转发 JWT）
 SVC-->>IG: 返回信息
 IG-->>User: 返回信息
