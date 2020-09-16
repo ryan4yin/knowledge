@@ -4,7 +4,7 @@
 
 个人笔记，并不是教程，也不保证正确！
 
-[点击通过 GitBook 查看](https://devops.ryan4yin.space/)
+>[点击通过 GitBook 查看](https://devops.ryan4yin.space/)，注意 GitBook 只支持查看 Markdown 文档，看不到 .yaml/.py/.go 等配置或代码。
 
 主要包含：
 
