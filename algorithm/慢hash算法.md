@@ -12,4 +12,5 @@
 
 ## 参考
 
+- [Practical Cryptography for Developers](https://cryptobook.nakov.com/)
 - [怎样的 Hash 算法能对抗硬件破解](https://www.cnblogs.com/index-html/p/hardware-resistant-hash-algorithm.html)
