@@ -4,17 +4,19 @@
 
 个人笔记，并不是教程，也不保证正确！
 
+[点击通过 GitBook 查看](https://devops.ryan4yin.space/)
+
 主要包含：
 
 1. 用于容器化部署常见应用的 docker-compose 配置（单机）。
 2. Kubernetes 生态：部署、配置、组件及使用笔记。
-4. Telemetry：监控、日志、链路追踪
-1. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
-3. CI/CD：Jenkins/GitLabCI 等
-1. 操作系统：Linux 系统、KVM 虚拟化等。
-6. 编程语言学习笔记：Python/Golang/Java
-7. Homelab: 家庭服务器相关，以及一些个人爱好。
-5. DevOps 实用脚本
+3. Telemetry：监控、日志、链路追踪
+4. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
+5. CI/CD：Jenkins/GitLabCI 等
+6. 操作系统：Linux 系统、KVM 虚拟化等。
+7. 编程语言学习笔记：Python/Golang/Java
+8. Homelab: 家庭服务器相关，以及一些个人爱好。
+9. DevOps 实用脚本
 
 ## docker-compose
 
