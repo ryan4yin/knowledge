@@ -27,7 +27,15 @@ PC 连接方法：
 
 ### Linux 通过命令行连接 WireGuard 服务器
 
-待续
+Linux 各发行版根据前面提供的官方下载页面安装好 wireguard 后，就能获得一个命令行客户端 `wg-quick`
+
+`wq-quick` 使用 `/etc/wireguard/<interface>.conf` 作为 vpn 的配置文件。
+
+使用步骤如下：
+
+1. 新建文件 `/etc/wireguard/wg0.conf`，内容拷贝自服务端的 `./config/peer1/peer1.conf`。
+1. 运行命令 `wq-quick up wg0`，这会通过上面说的 `wg0.conf` 启动一个 vpn.
+
 
 ## 其他 VPN
 
