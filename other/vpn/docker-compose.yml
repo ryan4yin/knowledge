@@ -20,6 +20,7 @@ services:
     volumes:
       - ./config:/config
       - /lib/modules:/lib/modules
+      # 非 ubuntu/debian/raspbian 官方版本的系统，可以尝试将 /usr/src 映射到容器内
       # - /usr/src:/usr/src
     ports:
       - 51820:51820/udp
