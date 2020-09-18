@@ -13,6 +13,10 @@ OMV 是目前比较流行的 NAS 系统，基于 Debian 系统，集成了 SMB/N
 虚拟机安装，可以选择 FreeNAS，基于 FreeBSD，但是用户众多。
 虽然用不了 Docker，但是 Docker 可以跑在别的虚拟机里面啊。
 
+NAS 功能比较多，可能不适合容器化，或者容器化维护难度比较大。因此目前没看到有还在维护的容器版 OMV。
+
+目前 NAS 系统推荐使用虚拟机方式部署。
+
 ## 参考文档
 
 - [OpenMediaVault-Plugin-Developers/installScript](https://github.com/OpenMediaVault-Plugin-Developers/installScript)
