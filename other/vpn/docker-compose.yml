@@ -13,10 +13,10 @@ services:
       - PGID=1000
       - TZ=Asia/Shanghai
       - SERVERURL=wireguard.xxx.com #optional，改成你自己的域名
-      - SERVERPORT=51820 #optional
-      - PEERS=1 #optional
+      - SERVERPORT=51820 #optional，安全起见可以更换端口号
+      - PEERS=1 #optional，生成的客户端数量，启动时会生成这么多个公私钥对
       - PEERDNS=auto #optional
-      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional，可以手动修改 vpn 的私有网段，避免网段冲突。
     volumes:
       - ./config:/config
       - /lib/modules:/lib/modules
