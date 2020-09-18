@@ -37,6 +37,11 @@ Linux 各发行版根据前面提供的官方下载页面安装好 wireguard 后
 1. 运行命令 `wq-quick up wg0`，这会通过上面说的 `wg0.conf` 启动一个 vpn.
 
 
+### Windows
+
+GUI，傻瓜式操作。
+
+
 ## 其他 VPN
 
 - [ipsec vpn](https://github.com/hwdsl2/docker-ipsec-vpn-server)
