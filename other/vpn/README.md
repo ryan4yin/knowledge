@@ -35,7 +35,7 @@ Linux 各发行版根据前面提供的官方下载页面安装好 wireguard 后
 
 1. 新建文件 `/etc/wireguard/wg0.conf`，内容拷贝自服务端的 `./config/peer1/peer1.conf`。
 1. 运行命令 `wq-quick up wg0`，这会通过上面说的 `wg0.conf` 启动一个 vpn.
-
+1. 关闭 VPN 的命令：`wq-quick down wg0`
 
 ### Windows
 
