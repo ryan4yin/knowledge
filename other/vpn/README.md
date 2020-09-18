@@ -2,13 +2,29 @@
 
 ## [wireguard vpn](https://github.com/linuxserver/docker-wireguard)
 
+
+**使用前提**：docker-wireguard 要求宿主机也是 debian/ubuntu 系统，否则可能会无法运行。
+这是因为它需要编译 wireguard 并让它与宿主机内核正常交互。
+
+启动命令：
+
 ```shell
 docker-compose -f docker-compose-wireguard.yml up -d
 ```
 
-docker-wireguard 要求宿主机也是 debian/ubuntu 系统，否则可能会无法运行。
-这是因为它需要编译 wireguard 并让它与宿主机内核正常交互。
+## 使用客户端连接  WireGuard 服务器
 
+Wireguard 官方客户端下载页面：https://www.wireguard.com/install/
+
+wireguard 使用公私钥的方式进行认证，因此客户端和服务端都不需要设定任何密码/预共享密钥啥的。
+
+手机连接方法：
+
+通过 `docker-compose` 启动完成后，容器日志中会打印出二维码供手机端扫描。
+
+PC 连接方法：
+
+对于 PC 端，可以直接拷贝 `./config/peer1/peer1.conf`，导入到 wireguard 客户端中，即可完成连接。 
 
 ## 其他 VPN
 
