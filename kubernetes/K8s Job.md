@@ -24,6 +24,9 @@ Job 这里需要注意的一个点，是 `spec.template.spec.restartPolicy` 和 
    - 如果您不指定 startingDeadlineSeconds 值，则 CronJob 永远不会超时。这可能会导致同一个 CronJob 同时运行多次。
 1. 可通过 `spec.concurrencyPolicy` 设置禁止任务并行执行。
 
+如果不能接受上面提到的这些 CronJob 的问题，可以考虑修改代码，让容器自己常驻后台，自行处理定时执行的任务。
+这样因为 Pod 常驻后台，就成了一个 Deployment 了，也就不受不可靠的 Cronjob 影响。
+任务的超时、并发等问题，都可以在自己的代码中去处理，更灵活也更复杂。
 
 ## 参考
 
