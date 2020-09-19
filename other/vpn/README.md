@@ -1,6 +1,6 @@
 # VPN
 
-## [wireguard vpn](https://github.com/linuxserver/docker-wireguard)
+## 一、[wireguard vpn](https://github.com/linuxserver/docker-wireguard)
 
 
 **使用前提**：因为 wireguard 是一个内核模块，宿主机必须是 debian/ubuntu 系统，否则容器可能会无法运行。
@@ -42,6 +42,15 @@ Linux 各发行版根据前面提供的官方下载页面安装好 wireguard 后
 GUI，傻瓜式操作。
 
 
-## 其他 VPN
+## 二、其他 VPN
+
+vpn 协议五花八门一大堆，为了节约生命，我只推荐 WireGuard —— 新一代 vpn 协议，配置简单，全平台客户端支持。
+
+如果你不想用 wireguard，可以参考如下 github 项目。
 
 - [ipsec vpn](https://github.com/hwdsl2/docker-ipsec-vpn-server)
+- [algo](https://github.com/trailofbits/algo)
+
+但是这些别的协议，有的不安全漏洞多，有的使用固定端口容易被屏蔽，还有的就配置复杂。。都不建议考虑。。
+
+>部分企业使用的是 cisco/microsoft 的私有 vpn 协议，通过 cisco anyconnect 连接。
