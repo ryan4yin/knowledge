@@ -44,7 +44,7 @@ istioctl manifest apply \
 
 通过 [istio-operator-values.yaml](./istio-operator-values.yaml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
 
-可以通过 `istioctl profile dump` 查看完整的 IstioOperator 配置，作为编写 [istio-operator-values.yaml](./istio-operator-values.yaml) 的参考。
+可以通过 `istioctl profile dump demo` 查看完整的 IstioOperator 配置，作为编写 [istio-operator-values.yaml](./istio-operator-values.yaml) 的参考。
 
 更多自定义部署的信息，参见官方文档 [istioctl: configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
