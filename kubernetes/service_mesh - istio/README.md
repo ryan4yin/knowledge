@@ -70,6 +70,13 @@ istioctl manifest generate --set profile=default --set values.prometheus.enabled
 istioctl manifest generate -f istio-operator-values.yaml | kubectl delete -f -
 ```
 
+#### 1.3 查看与动态修改 Istio 配置
+
+部署完成后，Istio 的配置将会以 configmap 的形式，保存在 istio-system 名字空间中：
+
+1. `istio`: 这个 configmap 包含了 `spec.meshConfig` 的几乎所有内容。
+2. `istio-sidecar-injector`: 这个 configmap 包含了 sidecar 的所有配置。
+
 ### 2. 部署应用
 
 #### 2.1 [Sidecar 注入](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/)
