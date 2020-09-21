@@ -17,6 +17,8 @@
 
 > 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
 
+>当前针对的 Istio 版本：1.7.x
+
 ### 1. 简单部署
 
 使用 istioctl 部署 istio:
@@ -40,7 +42,15 @@ istioctl manifest apply \
 
 #### 1.1 自定义部署（推荐方式）
 
-可以通过 `istioctl manifest apply -f istio-operator-values.yaml` 进行自定义部署，[istio-operator-values.yaml](./istio-operator-values.yaml) 就在当前文件夹内。
+可以通过 [istio-operator-values.yaml](./istio-operator-values.yaml) 配置文件进行自定义部署：
+
+```shell
+# istioctl 1.5+
+istioctl manifest apply -f istio-operator-values.yaml
+
+# istioctl 1.7+
+istioctl install -f istio-operator-values.yaml
+```
 
 通过 [istio-operator-values.yaml](./istio-operator-values.yaml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
 
@@ -54,8 +64,7 @@ istioctl manifest apply \
 滚动升级 istio:
 
 ```shell
-# TODO 我使用此命令从 1.5.0 升级到 1.5.2 时一直卡住，没升级成功。
-# 最后只好先删除掉 1.5.0 然后重新安装 1.5.2
+# 还未测试成功
 istioctl upgrade -f istio-operator-values.yaml
 ```
 
@@ -68,6 +77,9 @@ istioctl manifest generate <your original installation options> | kubectl delete
 istioctl manifest generate --set profile=default --set values.prometheus.enabled=false | kubectl delete -f -
 # 示例二：使用 istiooperator 配置指定自定义参数
 istioctl manifest generate -f istio-operator-values.yaml | kubectl delete -f -
+
+# istioctl 1.7+ 提供更简单的命令
+istioctl x uninstall -f istio-operator-values.yaml
 ```
 
 #### 1.3 查看与动态修改 Istio 配置
@@ -100,14 +112,11 @@ metadata:
 Istio 官方推荐在集群外部使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
 Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
 
-另一种方案是部署 Istio 时不部署它自带的 Prometheus+Grafana，直接使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 部署的监控系统进行监控。
-
 配置步骤如下：
 1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)。
-2. 修改 [istio-operator-values.yaml](./istio-operator-values.yamll)。最后几行 prometheus/prometheusOperator 相关的配置就是需要添加的内容。
-  - 这一步实际做的是：关闭 Istio 自带的 Prometheus，改为创建 prometheusOperator 的自定义资源（`ServiceMonitor`）
-  - prometheusOperator 如果默认就监控了 `istio-system` 这个名字空间，它就会根据 `ServiceMonitor` 的内容采集 Istio 数据。
-3. `istioctl manifest apply -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
+2. 修改 [istio-operator-values.yaml](./istio-operator-values.yamll)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true.
+   1. 启用这项配置后，istio 将在数据层注入 prometheus 相关注解，使 prometheus-operator 开箱即用.
+3. `istioctl install -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
 
 
 
