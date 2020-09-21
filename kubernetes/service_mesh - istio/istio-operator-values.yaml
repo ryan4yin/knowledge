@@ -11,7 +11,9 @@ spec:
   meshConfig:
     # 改为 `/dev/stdout` 可将 access log 输出到容器日志中。但是注意，access log 会非常多，可能影响性能！
     accessLogFile: ""  # 不收集 access log。
-    enableEnvoyAccessLogService: false
+    accessLogEncoding: TEXT  # 日志格式，默认为 JSON
+    enableEnvoyAccessLogService: false  # 启动 Envoy 的 ALS **服务**，暂时不清楚其含义。不开启也能收集 access log
+
     enableAutoMtls: true # 启用自动双向认证
     enableTracing: true  # 启用链路追踪
     outboundTrafficPolicy:
