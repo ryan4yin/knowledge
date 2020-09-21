@@ -55,15 +55,19 @@ spec:
           service: # 测试集群需通过 NodePort 导出 ingressgateway
             ports:
               - name: status-port
-                port: 15020
-                targetPort: 15020
+                port: 15021
+                targetPort: 15021
               - name: http2
                 port: 80
                 nodePort: 80
                 targetPort: 8080
               - name: https
                 port: 443
+                # nodePort: 443
                 targetPort: 8443
+              - name: tcp
+                port: 31400
+                targetPort: 31400
               - name: tls
                 port: 15443
                 targetPort: 15443
