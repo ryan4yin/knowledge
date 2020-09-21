@@ -90,6 +90,9 @@ spec:
       defaultNodeSelector:
         network: "true" # 使用网络组件专用节点
       jwtPolicy: first-party-jwt # 不使用第三方 jwt 验证。
+      logAsJson: false  # 日志使用 json 格式
+      logging:  # 日志级别
+        level: default:info
       proxy:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
