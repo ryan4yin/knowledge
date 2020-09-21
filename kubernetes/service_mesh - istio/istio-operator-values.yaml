@@ -6,24 +6,33 @@ spec:
   # profile=default 是官方推荐的用于生产环境部署。它只部署 pilot/ingressgateway/prometheus
   # 建议：prometheus/grafana/jaeger(tracing)/kiali 都使用比较流行的 operator/helm 进行安装，不要使用 istio 自带的
   profile: default
-  hub: image-registry.svc.local/istio  # 使用私有 dockerhub 镜像仓库
+  hub: image-registry.svc.local/istio # 使用私有 dockerhub 镜像仓库
+  # meshConfig 的所有参数：https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
+  meshConfig:
+    # 改为 `/dev/stdout` 可将 access log 输出到容器日志中。但是注意，access log 会非常多，可能影响性能！
+    accessLogFile: ""  # 不收集 access log。
+    enableEnvoyAccessLogService: false
+    enableAutoMtls: true # 启用自动双向认证
+    enableTracing: true  # 启用链路追踪
+    outboundTrafficPolicy:
+      mode: ALLOW_ANY # 允许任意流量出网。改为 REGISTRY_ONLY 将只允许访问已注册的域名。
   components:
     pilot:
       k8s:
         # 启用实验性功能：记录 mysql/redis 的指标(metrics)
         #（mysql/redis 流量不基于 http，加不了 trace headers，我们的应用只能主动上报这类 trace 信息）
         env:
-        - name: PILOT_ENABLE_MYSQL_FILTER
-          value: "true"
-        - name: PILOT_ENABLE_REDIS_FILTER
-          value: "true"
+          - name: PILOT_ENABLE_MYSQL_FILTER
+            value: "true"
+          - name: PILOT_ENABLE_REDIS_FILTER
+            value: "true"
         resources:
           requests:
             cpu: 1000m # override from default 500m
             memory: 4096Mi # ... default 2048Mi
         hpaSpec:
           maxReplicas: 3 # ... default 5
-          minReplicas: 2  # ... default 1
+          minReplicas: 2 # ... default 1
     ingressGateways:
       - name: istio-ingressgateway
         enabled: true
@@ -32,52 +41,69 @@ spec:
             requests:
               cpu: 1000m
               memory: 1024Mi
-            limits:  # 实测发现这东西还挺吃资源的
+            limits: # 实测发现这东西还挺吃资源的
               cpu: 2000m
               memory: 2048Mi
           hpaSpec:
             maxReplicas: 5 # ... default 5
-            minReplicas: 2  # ... default 1
-          service:  # 测试集群需通过 NodePort 导出 ingressgateway
+            minReplicas: 2 # ... default 1
+          service: # 测试集群需通过 NodePort 导出 ingressgateway
             ports:
-            - name: status-port
-              port: 15020
-              targetPort: 15020
-            - name: http2
-              port: 80
-              nodePort: 80
-              targetPort: 8080
-            - name: https
-              port: 443
-              targetPort: 8443
-            - name: tls
-              port: 15443
-              targetPort: 15443
+              - name: status-port
+                port: 15020
+                targetPort: 15020
+              - name: http2
+                port: 80
+                nodePort: 80
+                targetPort: 8080
+              - name: https
+                port: 443
+                targetPort: 8443
+              - name: tls
+                port: 15443
+                targetPort: 15443
+    egressGateways:
+      - name: istio-egressgateway
+        enabled: true
+        k8s:
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 10m
+              memory: 40Mi
+          hpaSpec:
+            maxReplicas: 5 # ... default 5
+            minReplicas: 2 # ... default 1
   values:
-    global:  # 全局配置
+    global: # 全局配置
       defaultNodeSelector:
-        network: "true"     # 使用网络组件专用节点
-      jwtPolicy: first-party-jwt  # 不使用第三方 jwt 验证。
+        network: "true" # 使用网络组件专用节点
+      jwtPolicy: first-party-jwt # 不使用第三方 jwt 验证。
       proxy:
-        logLevel: info  # 开发环境，启用更详细的日志输出
+        logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
       tracer:
         # 不使用 istio 自带的 jaeger，改用 Jaeger Operator 部署（或者测试环境可以使用集群外部的 jaeger）
-        zipkin:  # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
-          address: "<jaeger-service>.<jager-space>:9411"  # 应该也可以使用外部的 jaeger
+        zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
+          address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
     pilot:
-      traceSampling: 0.1  # 链路追踪的采样率
+      traceSampling: 0.1 # 链路追踪的采样率
     gateways:
       istio-ingressgateway:
-        type: NodePort  # 本地测试集群用不了 LoadBalancer
-    prometheus:  # 不使用 istio 自带的 prometheus
+        type: NodePort # 本地测试集群用不了 LoadBalancer
+        autoscaleEnabled: true
+      istio-egressgateway: # 出网流量管控
+        autoscaleEnabled: true
+    prometheus: # 不使用 istio 自带的 prometheus
       enabled: false
-    
+
     # 改用**预先部署好的** prometheus-operator 管理 prometheus
     # 参考了 https://github.com/istio/istio/issues/21187#issuecomment-610744178
     prometheusOperator:
-      createPrometheusResource: false  # 不创建 prometheus（也就是只创建 CRDs）
-      scrapeInterval: 15s   # 指标的抓取间隔
+      createPrometheusResource: false # 不创建 prometheus（也就是只创建 CRDs）
+      scrapeInterval: 15s # 指标的抓取间隔
   addonComponents:
     # 必须在这里启用 prometheusOperator 支持，前面的 prometheusOperator 配置才能生效。
     prometheusOperator:
