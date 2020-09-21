@@ -35,7 +35,8 @@ client = MongoClient("mongo.db.local", 27017, replicaset="rs0")
 # 也可以通过一个 URI 设置好所有的连接参数
 # client = MongoClient("mongodb://root：<password>@<mongo1>:<port1>,<mongo2>:<port2>,<mongo3>:<port3>/admin?replicaSet=rs0")
 print(client.nodes)  # 打印出连接的所有节点
-print(client.list_database_names())
+print(client.list_database_names())  # 列出所有 database 名称
+print(client.config.list_collections_names())  # 列出 config 的所有 collectioons 名称
 
 # 测试插入数据
 test_db = client.test_db
