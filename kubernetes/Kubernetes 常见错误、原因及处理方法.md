@@ -90,6 +90,27 @@ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespaces/
 kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 ```
 
+## 容器镜像GC、Pod驱逐以及节点压力
+
+节点压力 DiskPressure 会导致 Pod 被驱逐，也会触发容器镜像的 GC。
+
+根据官方文档 [配置资源不足时的处理方式](https://kubernetes.io/zh/docs/tasks/administer-cluster/out-of-resource)，Kubelet 提供如下用于配置容器 GC 及 Evicetion 的阈值：
+
+1. `--eviction-hard` 和 `eviction-soft`: 对应旧参数 `--image-gc-high-threshold`，这两个参数配置镜像 GC 及驱逐的触发阈值。磁盘使用率的阈值默认为 85%
+   1. 区别在于 `eviction-hard` 是立即驱逐，而 `eviction-soft` 在超过 `eviction-soft-grace-period` 之后才驱逐。
+2. `--eviction-minimum-reclaim`: 对应旧参数 `--image-gc-low-threshold`。镜像垃圾回收试图释放资源后达到的磁盘使用率百分比。磁盘使用率的阈值默认值为 80%。
+
+
+能否为 ImageGC 设置一个比 DiskPressure 更低的阈值？
+这应该可以通过设置 `eviction-soft` 和长一点的 `eviction-soft-grace-period` 来实现。
+另外 `--eviction-minimum-reclaim` 也可以设小一点，清理得更干净。示例如下：
+
+```shell
+--eviction-soft=memory.available<1Gi,nodefs.available<2Gi,imagefs.available<200Gi
+--eviction-soft-grace-period=3m
+--eviction-minimum-reclaim=memory.available=0Mi,nodefs.available=1Gi,imagefs.available=2Gi
+```
+
 ## 参考
 
 - [Kubernetes管理经验](https://yq.aliyun.com/articles/703971?type=2)
