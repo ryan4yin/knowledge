@@ -234,7 +234,9 @@ SVC-->>IG: 返回信息
 IG-->>User: 返回信息
 ```
 
-## 其他
+## 其他问题
+
+### 1. AuthorizationPolicy
 
 Istio 的 JWT 验证规则，默认情况下会直接忽略不带 Authorization 请求头的流量，因此这类流量能直接进入网格内部。如果需要禁止不带 Authorization 头的流量，需要额外配置 AuthorizationPolicy 策略。
 
@@ -242,6 +244,14 @@ RequestsAuthentication 验证失败的请求，Istio 会返回 401 状态码。
 AuthorizationPolicy 验证失败的请求，Istio 会返回 403 状态码。
 
 这会导致在使用 AuthorizationPolicy 禁止了不带 Authorization 头的流量后，这类请求会直接被返回 403。。。在使用 RESTful API 时，这种情况可能会造成一定的问题。
+
+### 2. Response Headers
+
+RequestsAuthentication 不支持自定义响应头信息，这导致对于前后端分离的 Web API 而言，
+一旦 JWT 失效，Istio 会直接将 401 返回给前端 Web 页面。
+因为响应头中不包含 `Access-Crontrol-Allow-Origin`，响应将被浏览器拦截！
+
+这可能需要通过 EnvoyFilter 自定义响应头，添加跨域信息。
 
 ## 参考
 
