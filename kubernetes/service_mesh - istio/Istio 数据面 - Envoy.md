@@ -17,6 +17,11 @@ curl localhost:15000/config_dump?resource=static_listeners
 
 官方文档：[Administration interface - Enovy Docs](https://www.envoyproxy.io/docs/envoy/latest/operations/admin#)
 
+
+## [EnvoyFilter](https://istio.io/latest/docs/reference/config/networking/envoy-filter/)
+
+可以通过 Istio 提供的 EnvoyFilter 自定义 Envoy 的配置。
+
 ## Istio 数据面性能优化
 
 待续
