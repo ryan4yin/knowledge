@@ -24,11 +24,18 @@ Istio 有 IngressGateway 作为集中式的流量入口，方便统一管理入�
 部署完成后，还有个问题：Istio 只能管控经过 sidecar 的流量。如果未注入 sidecar，那 Pod 的流量就不受 istio 管控了！
 为此需要设置 Kubernetes 的网络策略（NetworkPolicy），禁止掉所有不是源自 EgressGateway 的出集群流量。
 
+具体的配置内容待续。。
+
 ## 二、使用 EgressGateway
 
 按前面的方法部署好带 EgressGateway 的 Istio 后，集群内带 Sidecar 的容器应该就无法访问外部网络了。
 
-我们设了只允许已注册的 host 可以出网（outboundTrafficPolicy），但是现在没有任何已注册的 host，所以无法访问外部网络。
+我们设了只允许已注册的 host 出网（outboundTrafficPolicy），但是现在没有任何已注册的 host，所以无法访问外部网络。
 
-现在测试一下注册一个外部 host，
+以知乎 `zhihu.com` 为例，使用 curl/wget 进行测试，流程如下：
+
+1. 首先确认 Pod 中无法访问知乎。
+1. 将知乎 `zhihu.com` 注册为外部 host
+2. 确认现在可以在 Pod 中访问知乎了。
+
 
