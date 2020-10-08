@@ -11,6 +11,7 @@ def gitall(args: List[str]):
     遍历当前文件夹下所有的 git 仓库，在每个仓库中执行某个 git 命令.
     """
     for git_dir in Path(".").glob("**/.git"):
+        print("-"*50)  # 分隔线
         git_root_dir = git_dir.parent
 
         cmd = ["git", *args]
