@@ -1,5 +1,11 @@
 """
-使用方式：python gitall.py pull
+在当前文件夹内的所有 Git 仓库中，执行某个 git 命令。
+
+使用方式：
+
+1. 批量拉取: python gitall.py pull
+1. 批量清理: python gitall.py clean -fxd
+1. 批量提交: python gitall.py commit -m "xxx"
 """
 import sys
 import subprocess
