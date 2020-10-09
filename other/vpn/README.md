@@ -8,7 +8,7 @@
 启动命令：
 
 ```shell
-docker-compose -f docker-compose-wireguard.yml up -d
+docker-compose up -d
 ```
 
 ## 使用客户端连接 WireGuard 服务器
