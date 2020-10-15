@@ -10,7 +10,7 @@
 
 1. 用于容器化部署常见应用的 docker-compose 配置（单机）。
 2. Kubernetes 生态：部署、配置、组件及使用笔记。
-3. Telemetry：监控、日志、链路追踪
+3. Telemetry：监控、日志、链路追踪（学习中。。）
 4. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
 5. CI/CD：Jenkins/GitLabCI 等
 6. 操作系统：Linux 系统、KVM 虚拟化等。
