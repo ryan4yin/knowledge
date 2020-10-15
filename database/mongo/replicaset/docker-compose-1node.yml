@@ -24,7 +24,7 @@ services:
           "mongo",
           "--eval",
           # 注意：下述命令中的 `mongo.db.local` 必须替换成正确可用的域名！并且客户端能正常解析！
-          'rs.initiate( { _id : "rs0",members: [{ _id: 0, host: "192.168.5.162:27017" }] })',
+          'rs.initiate( { _id : "rs0",members: [{ _id: 0, host: "mongo.db.local:27017" }] })',
         ]
       interval: 30s
       timeout: 5s
