@@ -73,6 +73,8 @@ vault 提供三种添加/更新敏感信息的方式：Web UI、HTTP API 以及 
 
 ### 2. 将 vault 配置注入到 Pod 中
 
+#### 2.1 部署并配置 vault
+
 前面提到过 vault 支持通过 Kubernetes 的 ServiceAccount + Role 为每个 Pod 单独分配权限。
 
 首先启用启用 Kubernetes 身份验证:
@@ -93,6 +95,8 @@ vault write auth/kubernetes/config \
     kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 ```
 
+#### 2.2 关联 k8s rbac 权限系统和 vault
+
 接下来需要做的事：
 
 2. 通过 vault policy 定义好每个 role（微服务）能访问哪些资源。
@@ -107,9 +111,15 @@ vault write auth/kubernetes/config \
 >上述配置中，kubernetes role 起到一个承上启下的作用，它关联了 k8s serviceaccount 和 vault policy 两个配置。
 
 完成这四步后，每个微服务就能通过 serviceaccount 从 vault 中获取信息了。
+
+#### 2.3 部署 Pod
+
 下一步就是将配置注入到微服务容器中，这需要使用到 Agent Sidecar Injector。
 vault 通过 sidecar 实现配置的自动注入与动态更新。
 
 具体而言就是在 Pod 上加上一堆 Agent Sidecar Injector 的注解，如果配置比较多，也可以使用 configmap 保存，在注解中引用。
 
+需要注意的是 vault-inject-agent 有两种运行模式：
 
+1. init 模式: 仅在 Pod 启动前初始化一次，跑完就退出（Completed）
+2. 常驻模式: 容器不退出，持续监控 vault 的配置更新，维持 Pod 配置和 vualt 配置的同步。
