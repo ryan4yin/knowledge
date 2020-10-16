@@ -261,9 +261,51 @@ iotop
 
 Socket 的状态查看方法，参见 [Socket 状态变迁图及命令行查看方法](https://www.cnblogs.com/kirito-c/p/12251900.html)
 
-查看监听 80 端口的进程信息
+
 ```shell
+# 查看 socket 连接的统计信息
+# 主要统计处于各种状态的 tcp sockets 数量，以及其他 sockets 的统计信息
+ss --summary
+ss -s  # 缩写
+
+# 查看哪个进程在监听 80 端口
+# --listening 列出所有正在被监听的 socket
+# --processes 显示出每个 socket 对应的 process 名称和 pid
 ss --listening --processes | grep 80
+ss -lp | grep 80  # 缩写
+## 使用过时的 netstat
+### -t tcp
+### -u udp
+netstat -tunlp | grep ":80"
+
+# 查看 sshd 当前使用的端口号
+ss --listening --processes | grep sshd
+## 使用过时的 netstat
+netstat -tunlp | grep <pid>  # pid 通过 ps 命令获得
+
+# 列出所有的 tcp sockets，包括所有的 socket 状态
+ss --tcp --all
+
+# 只列出正在 listen 的 socket
+ss --listening
+
+# 列出所有 ESTABLISHED 的 socket（默认行为）
+ss
+
+# 统计 TCP 连接数
+ss | grep ESTAB | wc -l
+
+# 列出所有 ESTABLISHED 的 socket，并且给出连接的计时器
+ss --options
+
+# 查看所有来自 192.168.5 的 sockets
+ss dst 192.168.1.5
+
+# 查看本机与服务器 192.168.1.100 建立的 sockets
+ss src 192.168.1.5
+
+# 查看路由表
+routel
 ```
 
 ### 3. 网络延迟、丢包率
