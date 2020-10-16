@@ -73,7 +73,7 @@ vault 提供三种添加/更新敏感信息的方式：Web UI、HTTP API 以及 
 
 ### 2. 将 vault 配置注入到 Pod 中
 
-前面提到过 vault 支持通过 Kubernetes 的 ServiceAccount 及 Role 为每个 Pod 单独分配权限。
+前面提到过 vault 支持通过 Kubernetes 的 ServiceAccount + Role 为每个 Pod 单独分配权限。
 
 首先启用启用 Kubernetes 身份验证:
 
@@ -86,7 +86,7 @@ export VAULT_ADDR='http://localhost:8200'
 # 启用 Kubernetes 身份验证
 vault auth enable kubernetes
  
-# 添加 vault 用于访问 kube-apiserver 的配置：jwt 内容、apiserver url、CA证书
+# 添加 vault 用于访问 kube-apiserver API 的配置：jwt 内容、apiserver url、CA证书
 vault write auth/kubernetes/config \
     token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
     kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
@@ -95,13 +95,16 @@ vault write auth/kubernetes/config \
 
 接下来需要做的事：
 
-2. 通过 vault policy 定义好每个 role（微服务）能访问哪些资源
-1. 为每个微服务生成一个 kubernetes role，role 需要绑定对应的 vault policy
-3. 创建一个 ServiceAccount，绑定对应的 kubernetes role.
-4. 部署微服务时，使用这个 ServiceAccount.
+2. 通过 vault policy 定义好每个 role（微服务）能访问哪些资源。
+1. 为每个微服务生成一个 kubernetes role，这个 role 需要绑定对应的 vault policy 及 kubernetes serviceaccount
+3. 创建一个 ServiceAccount，并使用这个 使用这个 ServiceAccount 部署微服务
 
 其中第一步和第二步都可以通过 vault api 自动化完成.
-第三步和第四步可以通过 kubectl 部署时完成。
+第三步可以通过 kubectl 部署时完成。
+
+方便起见，vault policy / k8s role / k8s serviceaccount 这三个配置，都建议和微服务使用相同的名称。
+
+>上述配置中，kubernetes role 起到一个承上启下的作用，它关联了 k8s serviceaccount 和 vault policy 两个配置。
 
 完成这四步后，每个微服务就能通过 serviceaccount 从 vault 中获取信息了。
 下一步就是将配置注入到微服务容器中，这需要使用到 Agent Sidecar Injector。
@@ -109,4 +112,4 @@ vault 通过 sidecar 实现配置的自动注入与动态更新。
 
 具体而言就是在 Pod 上加上一堆 Agent Sidecar Injector 的注解，如果配置比较多，也可以使用 configmap 保存，在注解中引用。
 
-待续
+
