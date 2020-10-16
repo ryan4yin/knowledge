@@ -110,7 +110,22 @@ vault write auth/kubernetes/config \
 
 >上述配置中，kubernetes role 起到一个承上启下的作用，它关联了 k8s serviceaccount 和 vault policy 两个配置。
 
-完成这四步后，每个微服务就能通过 serviceaccount 从 vault 中获取信息了。
+比如创建一个名为 `my-app-policy` 的 vault policy，内容为:
+
+```hcl
+# 命名规则："<engine-name>/data/<path>/*"
+path "my-app/data/*" {
+   # 只读权限
+   capabilities = ["read", "list"]
+}
+```
+
+然后在 vault 中创建 k8s role `my-app-role`:
+1. 关联 k8s default 名字空间中的 serviceaccount `my-app-account`，并创建好这个 serviceaccount.
+2. 关联 vault token policy，这就是前面创建的 `my-app-policy`
+3. 设置 token period（有效期）
+
+这之后，每个微服务就能通过 serviceaccount 从 vault 中读取 `my-app` 中的所有信息了。
 
 #### 2.3 部署 Pod
 
