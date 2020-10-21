@@ -1,0 +1,17 @@
+version: "3.6"
+services:
+  drone:
+    image: drone/drone
+    volumes:
+      - ./data:/data
+    ports:
+    - 80:80
+    - 443:443
+    environment:
+      DRONE_GITLAB_SERVER: https://gitlab.svc.local
+      DRONE_GITLAB_CLIENT_ID: change_me
+      DRONE_GITLAB_CLIENT_SECRET: change_me
+      DRONE_RPC_SECRET: change_me
+      DRONE_SERVER_HOST: drone.svc.local
+      DRONE_SERVER_PROTO: http
+
