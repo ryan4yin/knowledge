@@ -2,6 +2,9 @@
 
 如果需要在 Kubernetes 中部署类似 rook-ceph/istio/mysql-cluster/prometheus-cluster/mongo-cluster 之类的复杂有状态应用，最好的方式就是 CRD+Operator。
 
+## 什么是 Operator?
+
+- [operator-framework](github.com/operator-framework/operator-sdk)
 
 ## 为什么需要 CRD+Operator
 
