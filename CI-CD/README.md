@@ -76,8 +76,6 @@ Drone 是目前 Github 上最火的 CICD 项目，它以容器为核心，每个
 CDS 是与我们目前期望最接近的一个平台。
 前面讲到了，我们目前在把 Jenkins 当成一个自动化运维平台使用，CI/CD，自动化测试，自动化运维等功能，都是用 Python 实现，通过 Jenkins 运行。
 
-但是 Jenkins 是单节点的，而且 Bug 一堆，插件老旧，性能也不咋滴。
-
 目前正在调研 CDS，看看它会不会是我们新的选择。
 
 CDS 原生支持各种 worker 的自动伸缩，而且 CDS 组件非常多，使用到了 postgre/redis/elasticsearch，我觉得性能上绝对是可以超越 Jenkins 的。
