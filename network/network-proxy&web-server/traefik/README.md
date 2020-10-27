@@ -45,6 +45,8 @@ for i in range(30):
     # 连续请求 30 次
     resp = session.get(url)
     print(resp.status_code, resp.headers)
+
+# 注意事项：环境变量「REQUESTS_CA_BUNDLE」可能会使上述的证书设置失效
 ```
 
 
