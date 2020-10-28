@@ -1,0 +1,14 @@
+# 将 caddy 用做一个带有索引页的静态资源服务器
+version: "3.3"
+services:
+  caddy:
+    image: "caddy:2.2.1-alpine"
+    container_name: "caddy"
+    restart: always
+    # 文件服务器模式，启用文件索引页
+    command: caddy file-server --browse --root /data/static
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./static:/data/static"
