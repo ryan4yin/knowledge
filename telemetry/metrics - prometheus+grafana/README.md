@@ -11,8 +11,7 @@
 
 有两个部署方案，都是基于 [prometheus-operator](https://github.com/prometheus-operator/prometheus-operator)：
 
-- [prometheus-operator helm chart](https://github.com/helm/charts/tree/master/stable/prometheus-operator): 简明快捷地部署一个 prometheus operator。
-  - 由于 helm 正在着手废除 stable/incubator 仓库，这个 chart 将会被迁移，详见 [Create a new git repo for prometheus-community helm charts](https://github.com/prometheus-community/community/issues/28)
+- [kube-prometheus-stack helm chart](https://github.com/prometheus-community/helm-charts): 简明快捷地部署一个 prometheus operator + 其他相关应用。
 - [coreos/kube-prometheus](https://github.com/coreos/kube-prometheus): prometheus operator 官方提供的部署方案，使用了 jsonnet，深入学习的话，比 helm 版的要更复杂一些。
 
 上述两个工具部署的 prometheus-operator 都可以和 istio 集成，替换掉 istioctl 自带的 prometheus+grafana，参见 [istioctl + prometheus-operator](/kubernetes/service_mesh/README.md)
@@ -20,20 +19,19 @@
 以 helm 部署为例，部署命令：
 
 ```shell
-# 添加 helm 官方 stable 仓库，需要翻墙（这个仓库将在今年年底被废除）
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-# 查看 mongo-sharded 版本号
-helm search repo stable/prometheus-operator -l | head
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+# 查看 kube-prometheus-stack 版本号
+helm search repo prometheus-community/kube-prometheus-stack -l | head
 # 下载并解压 chart
-helm pull stable/prometheus-operator --untar --version 9.3.1
+helm pull prometheus-community/kube-prometheus-stack --untar --version 9.3.1
 
 # 使用自定义的 cutome-values.yaml 进行部署（helm3）
 kubectl create ns monitoring
 helm upgrade --install \
   --namespace monitoring \
   -f custome-values.yaml \
-  prometheus-operator \
-  ./prometheus-operator
+  pkube-prometheus-stack \
+  ./kube-prometheus-stack
 ```
 
 ## 三、使用 Prometheus
