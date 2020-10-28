@@ -26,6 +26,9 @@ http:
         - "websecure"
       rule: "Host(`wiki.svc.local`) "
       service: wiki
+      middlerwares:
+      # 按顺序使用多个中间件，对请求进行 preprocess/postprocess
+      - chain-secured
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
     
     # 代理 websocket 协议
