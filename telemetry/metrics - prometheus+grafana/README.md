@@ -1,76 +1,24 @@
 # 通用监控方案：Prometheus + Grafana + Altermanager
 
+Prometheus + Grafana + Altermanager 也是目前云原生社区最流行的开源监控告警方案:
 
-## 一、Docker 方式部署
-
-这种方式可以部署单机版的一整套监控方案：
-
-- [github - dockprom](https://github.com/stefanprodan/dockprom)
-
-## 二、Kubernetes 监控
-
-有两个部署方案，都是基于 [prometheus-operator](https://github.com/prometheus-operator/prometheus-operator)：
-
-- [kube-prometheus-stack helm chart](https://github.com/prometheus-community/helm-charts): 简明快捷地部署一个 prometheus operator + 其他相关应用。
-- [coreos/kube-prometheus](https://github.com/coreos/kube-prometheus): prometheus operator 官方提供的部署方案，使用了 jsonnet，深入学习的话，比 helm 版的要更复杂一些。
-
-上述两个工具部署的 prometheus-operator 都可以和 istio 集成，替换掉 istioctl 自带的 prometheus+grafana，参见 [istioctl + prometheus-operator](/kubernetes/service_mesh/README.md)
-
-以 helm 部署为例，部署命令：
-
-```shell
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-# 查看 kube-prometheus-stack 版本号
-helm search repo prometheus-community/kube-prometheus-stack -l | head
-# 下载并解压 chart
-helm pull prometheus-community/kube-prometheus-stack --untar --version 9.3.1
-
-# 使用自定义的 cutome-values.yaml 进行部署（helm3）
-kubectl create ns monitoring
-helm upgrade --install \
-  --namespace monitoring \
-  -f custome-values.yaml \
-  pkube-prometheus-stack \
-  ./kube-prometheus-stack
-```
-
-## 三、使用 Prometheus
-
-`custom-values.yaml` 中将 grafana/altermanager/prometheus 均通过 NodePort 方式暴露到了外部，可以通过如下端口号访问这三个服务：
-
-1. grafana：30880 端口，账号 admin，密码在 `grafana.adminPassword` 中定义，请进入 `custom-values.yaml` 查看。
-1. prometheus: 30090 端口
-2. altermanager: 30903 端口
+1. Prometheus: 指标暴露、抓取、存储以及告警
+   1. expoter: 通常由被抓取目标主动 export 可供抓取的 http metrics endpoint.
+   2. 抓取指标：prometheus 根据 `prometheus.yml` 中 `scrape_configs` 的配置，进行指标抓取。
+   3. 存储：指标直接存储到本机硬盘中，可以配置指标保留时间。
+   4. 告警：alertrules 在 `prometheus.yml` 的 `rule_files` 中配置。
+2. Grafana: 指标的展示面板，可以通过 json 配置完全自定义自己的监控面板。
+   1. Grafana 也自带一个报警的功能，但是貌似没啥人用（据说很繁琐，而且功能不强）。
+3. Altermanager: prometheus 的告警组件，它接收 prometheus 给出的告警，然后通过 web_hook/mail 等方式，将信息发给正确的接收者。
+   1. alertmanager 是「联系人」和「prometheus」的一个中间层，用于解耦具体的报警方式。
 
 
-## 四、高可用 Prometheus
+这套监控系统有两种主流的部署方式：
 
-由于 Prometheus 本身不支持高可用（就像 MySQL 一样，本身只是一个单机数据库），因此也有专门提供集群版 Prometheus 的工具比较被看好的有：
+1. docker-compose 方式：这种方式适合用于监控非 kubernetes 目标，或者用于和集群内部的 prometheus 做联邦集群。
+2. kube-prometheus 方式：在集群内部部署 prometheus，适合用于监控 kubernetes 集群。
 
-- [thanos](https://github.com/thanos-io/thanos): Highly available Prometheus setup with long term storage capabilities，prometheus-operator 可以与它结合使用。
-- [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics): 一个相当新的解决方案，支持 PromQL 等多种协议，永久性存储，据说还很快。
-
-还有另外两个 Prometheus 集群方案也可以考虑：
-
-- [m3db](https://github.com/m3db/m3): Distributed TSDB, Aggregator and Query Engine, Prometheus Sidecar, Graphite Compatible, Metrics Platform，由 Uber 开源
-- [cortex](https://github.com/cortexproject/cortex): A horizontally scalable, highly available, multi-tenant, long term Prometheus. 和 Thanos 类似，但是 Thanos 据说更简单，因此更受欢迎些。
-
-
-
-可以通过上述几种高可用部署方式实现 prometheus 数据的聚合（也可用 Prometheus 文档介绍的联邦集群实现）、永久性存储。
-
-## 自定义 Grafana 面板
-
-待续
-
-
-## 监控数据的汇总、可视化与持久化
-
-常用的手段：集群内部的 prometheus 和集群外部的 prometheus 组建联邦。
-内部 prometheus 设置数据保留时间为 24h 甚至更短，外部 prometheus 设置数据保留时间为 1 个月。
-
-多个集群及其他主机的监控数据，都通过联邦汇总到一个外部 prometheus 中，再通过 grafana 提供统一的监控面板。
-
+详细的内容参见 `dockprom` 和 `kube-prometheus` 文件夹。
 
 ## 参考
 

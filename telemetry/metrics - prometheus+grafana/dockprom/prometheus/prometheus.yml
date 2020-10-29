@@ -1,0 +1,69 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'docker-host-alpha'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  # 告警规则
+  - "alert.rules"
+
+  # 也可以配置 record.rules，预先计算常用的 PromQL 结果。
+  # 可以使用通配符
+  # - 'recording/*_record.yml'
+
+# A scrape configuration containing exactly one endpoint to scrape.
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 10s
+    # 静态配置的 targets，如果要修改，必须重启 prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'pushgateway'
+    scrape_interval: 10s
+    honor_labels: true
+    static_configs:
+      - targets: ['pushgateway:9091']
+
+  # job 通常是同类 targes 的集合，可直接用「类别」命名
+  # job_name 会作为一个标签打在抓到的指标上。
+  - job_name: 'nodeexporter'
+    scrape_interval: 5s
+    # 基于文件的服务发现(service discovery)来配置 targets，支持动态更新（不需要重启 prometheus）。
+    file_sd_configs:
+      - files:
+        # 支持 yaml/json 格式，支持通配符。
+        - targets/nodeexpoters.yml
+        refresh_interval: 30s
+
+    relable_configs:
+
+    metric_relabel_configs:
+
+
+  - job_name: 'cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+
+# 将报警发送到这里设定好的 alertmanager
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - 'alertmanager:9093'
+
+
+# 远程读写，主要被用于长期存储指标数据。
+# prometheus 本身不适合用做长期存储，可通过 remote_write 将数据过滤后，存储到 influxdb 等 TSDB 中。
+# 再通过 remote_read 进行查询。
+# https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage
+remote_write:
+remote_read:
