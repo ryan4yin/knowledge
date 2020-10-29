@@ -10,6 +10,7 @@ additionalPrometheusRules: []
 #        - record: my_record
 #          expr: 100 * my_record
 
+# 指标告警管理器，可通过插件实现钉钉群报警：https://github.com/timonwong/prometheus-webhook-dingtalk
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
 ##
@@ -554,8 +555,9 @@ prometheus:
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
     additionalScrapeConfigs: []
-    # - job_name: kube-etcd
-    #   kubernetes_sd_configs:
+    # - job_name: kube-etcd  # 自定义的指标抓取任务
+        # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config
+    #   kubernetes_sd_configs:  # kubernetes 自动发现 targets，指标抓取的目标
     #     - role: node
     #   scheme: https
     #   tls_config:

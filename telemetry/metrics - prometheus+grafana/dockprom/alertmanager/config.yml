@@ -1,0 +1,13 @@
+route:
+    receiver: 'slack'
+
+receivers:
+  # 钉钉告警组件：https://github.com/timonwong/prometheus-webhook-dingtalk
+  - name: send_to_dingding_webhook1
+    webhook_configs:
+    - send_resolved: false
+      url: http://localhost:8060/dingtalk/webhook1/send
+  - name: send_to_dingding_webhook2
+    webhook_configs:
+    - send_resolved: false
+      url: http://localhost:8060/dingtalk/webhook2/send

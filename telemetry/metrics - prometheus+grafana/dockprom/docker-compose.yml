@@ -1,0 +1,142 @@
+version: '2.1'
+
+networks:
+  monitor-net:
+    driver: bridge
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
+services:
+
+  # 指标的抓取、存储以及告警
+  prometheus:
+    image: prom/prometheus:v2.22.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      # 指标的保留时间
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    expose:
+      - 9090
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 告警管理器，负责将告警通过具体的手段（web_hook/mail）发送给正确的报警联系人
+  alertmanager:
+    image: prom/alertmanager:v0.21.0
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    restart: unless-stopped
+    expose:
+      - 9093
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 节点导出器，导出当前系统的各项指标
+  nodeexporter:
+    image: prom/node-exporter:v1.0.1
+    container_name: nodeexporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    expose:
+      - 9100
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 容器指标导出器，可以导出所有 docker 容器的基础指标
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.37.0
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    expose:
+      - 8080
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 指标可视化面板
+  grafana:
+    image: grafana/grafana:7.2.2
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      # 设置面板的账号及密码
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    expose:
+      - 3000
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 基于 push 的指标网关，可将只支持 push 的应用监控，也集成到 prometheus 体系中来。
+  pushgateway:
+    image: prom/pushgateway:v1.3.0
+    container_name: pushgateway
+    restart: unless-stopped
+    expose:
+      - 9091
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  # 前端代理，可提供 basic 认证及 https 加密。
+  caddy:
+    image: stefanprodan/caddy
+    container_name: caddy
+    ports:
+      - "3000:3000"
+      - "9090:9090"
+      - "9093:9093"
+      - "9091:9091"
+    volumes:
+      - ./caddy:/etc/caddy
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+    restart: unless-stopped
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
