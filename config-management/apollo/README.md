@@ -6,6 +6,21 @@ Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
 
 ## 一、部署流程
 
+
+### 1. Docker-Compose 部署
+
+官方只提供了 Docker 命令部署，docker-compose.yml 需要自己组织。
+
+需要注意的有：
+
+1. configservice 和 adminservice 及对应的 apolloconfigdb 数据库，是每个环境一套，dev/fat/uat/pro 四个环境就需要四套
+2. configservice 和 adminservice 都是通过 `ServerConfig` 表 `eureka.service.url` 的属性来访问注册中心(eruka) 的。
+   1. 而 Apollo 官方给的默认值是 `http://localhost:8080/eureka/`，使用 docker 网络时必须要手动修改 `localhost` 为 configservice 的名称（因为 eruka 和 configservice 在同一个容器中）。
+3. 不管有多少个环境，portal 都只需要一个。只需要在 portal 环境变量中添加所有 XXX_META url （configservice）即可。 
+
+
+### Kubernetes + Helm 部署
+
 Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + Helm.
 流程如下：
 
