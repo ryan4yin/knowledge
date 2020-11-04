@@ -7,6 +7,19 @@
 
 ======
 需要提前安装依赖：python-gitlab
+
+======
+用法示例：
+
+```python3
+from pathlib import Path
+# 克隆所有仓库
+gl = CustomGitlab("http://gitlab.svc.local", private_token="<token>", ssl_verify=False)
+group = gl.get_group("ryan4yin")
+
+# 将所有仓库克隆到 codes 文件夹下
+gl.clone_projects_under_group(Path("codes"), group)
+```
 """
 
 import time
