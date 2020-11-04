@@ -1,5 +1,7 @@
 # [Apollo](https://github.com/ctripcorp/apollo)
 
+>此文档基于 1.7.1 版本编写
+
 Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
 它功能强大，支持配置的继承，也有提供 API 方便自动化配置。缺点是权限管理比较弱，也不支持信息加密，不适合直接存储敏感信息。
 
@@ -14,9 +16,14 @@ Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
 需要注意的有：
 
 1. configservice 和 adminservice 及对应的 apolloconfigdb 数据库，是每个环境一套，dev/fat/uat/pro 四个环境就需要四套
+   1. 数据库可以通过后缀区分环境：ApolloConfigDB_DEV / ApolloConfigDB_FAT. 简单起见，测试环境可以使用同一个 mysql.
 2. configservice 和 adminservice 都是通过 `ServerConfig` 表 `eureka.service.url` 的属性来访问注册中心(eruka) 的。
    1. 而 Apollo 官方给的默认值是 `http://localhost:8080/eureka/`，使用 docker 网络时必须要手动修改 `localhost` 为 configservice 的名称（因为 eruka 和 configservice 在同一个容器中）。
 3. 不管有多少个环境，portal 都只需要一个。只需要在 portal 环境变量中添加所有 XXX_META url （configservice）即可。 
+   1. 也可以直接在 sql 的 `apollo.portal.envs` 中添加环境。
+4. portal 的 `organizations`（部门列表）目前只能通过 `apolloportaldb.sql` 末尾的 INSERT 语句设置。不提供 API 进行修改。
+5. `apolloportaldb.sql` 末尾的 `consumer.token.salt` 需要自行设置随机值！使用默认值安全性太低。
+6. portal 的默认账号在 `apolloportaldb.sql` 中被插入 `Users` 表，默认账号密码`apollo/admin`。密码可在登录后修改。
 
 
 ### Kubernetes + Helm 部署
