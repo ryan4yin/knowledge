@@ -6,9 +6,18 @@ Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完
 2. 支持接入各大云厂商的账号权限体系（比如阿里云RAM子账号），实现 APIKey/APISecret 的自动轮转。
 3. 支持接入 kubernetes rbac 权限体系，通过 serviceaccount+role 为每个 Pod 单独配置权限。
 
-## 部署 Vault
+## 一、部署 Vault
 
-### 1. 通过 helm 部署 vault 
+### 1. docker-compose 部署
+
+>推荐用于本地开发测试环境
+
+docker-compose 方式部署比较简单，暂时略过。。
+大体流程和 helm 部署差不多，都需要部署、初始化并解封
+
+### 2. 通过 helm 部署 vault 
+
+>推荐用于生产环境
 
 官方建议[通过 Helm 部署 vault](https://www.vaultproject.io/docs/platform/k8s/helm/run)，大概流程：
 
@@ -69,7 +78,9 @@ $ kubectl exec -ti vault-0 -- vault operator unseal # ... Unseal Key 3
 
 vault 提供三种添加/更新敏感信息的方式：Web UI、HTTP API 以及 CLI。
 
-比较方便的自动化方法，应该是使用 vault 的 python sdk: [vac](https://github.com/hvac/hvac)
+比较方便的自动化方法，应该是使用 vault 的 python sdk: [hvac](https://github.com/hvac/hvac)
+
+Web UI 适合手工操作，sdk 则适合用于搭建与更新测试环境的 vault 配置。
 
 ### 2. 将 vault 配置注入到 Pod 中
 
