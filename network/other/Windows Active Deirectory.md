@@ -8,12 +8,15 @@ AD 域，是微软提供的一个网络身份认证(identity)与网络资源访�
 
 1. 用户相关：
    1. 集成验证(LDAP+Kerberos): 使用同一个身份登录所有企业应用、企业设备。
+      1. 如 Wiki(Confluence)/Windows系统/Gitlab/Jenkins/云平台
    2. 单点登录(OSS): 如果支持 OSS，那用户只需要登录一次，就能通过该身份访问所有企业内部的应用。
    3. 对用户进行统一的分组、权限控制。
 2. 资产管理：分组管理办公电脑、打印机等。
    1. 使用域控能在域 PC 上自动执行脚本，管理员拥有 PC 的最高权限！
 
 它在 Linux 上的开源替代品是 LDAP+Kerberos，这两个协议都有相关的开源实现。
+
+>如果你不想使用 Windows 服务器，可以考虑直接使用群晖提供的 LDAP Server 或者 Directory Server，或者自己使用开源项目搭建。
 
 ## Windows AD 域的建立与管理
 
