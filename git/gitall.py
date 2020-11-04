@@ -1,11 +1,13 @@
 """
-在当前文件夹内的所有 Git 仓库中，执行某个 git 命令。
+在当前文件夹内的所有 Git 仓库中，批量执行某个 git 命令。
 
 使用方式：
 
 1. 批量拉取: python gitall.py pull
-1. 批量清理: python gitall.py clean -fxd
+1. 还原仓库内容: python gitall.py checkout -- .
+1. 批量清理未跟踪文件: python gitall.py clean -fxd
 1. 批量提交: python gitall.py commit -m "xxx"
+1. 批量推送: python gitall.py push origin master
 """
 import sys
 import subprocess
