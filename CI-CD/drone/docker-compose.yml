@@ -1,17 +1,33 @@
-version: "3.6"
+version: "3"
 services:
   drone:
-    image: drone/drone
+    image: drone/drone:1
     volumes:
-      - ./data:/data
+    - ./data:/data
     ports:
     - 80:80
     - 443:443
     environment:
-      DRONE_GITLAB_SERVER: https://gitlab.svc.local
-      DRONE_GITLAB_CLIENT_ID: change_me
-      DRONE_GITLAB_CLIENT_SECRET: change_me
-      DRONE_RPC_SECRET: change_me
+      DRONE_GITLAB_SERVER: http://gitlab.svc.local
+      DRONE_GITLAB_CLIENT_ID: <gitlab-application-id>
+      DRONE_GITLAB_CLIENT_SECRET: <gitlab-application-secret>
+      # DRONE_GITLAB_SKIP_VERIFY: "false"
+      DRONE_RPC_SECRET: <random-rpc-secret>
       DRONE_SERVER_HOST: drone.svc.local
       DRONE_SERVER_PROTO: http
+      # DRONE_LOGS_DEBUG: "true"
 
+  drone-runner-docker:
+    image: drone/drone-runner-docker:1
+    ports:
+    - 3000:3000
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DRONE_RPC_SECRET: <random-rpc-secret>
+      DRONE_RPC_HOST: drone.svc.local
+      DRONE_RPC_PROTO: http
+      DRONE_RUNNER_CAPACITY: "2"
+      DRONE_RUNNER_NAME: "runner-1"
+      # DRONE_UI_USERNAME: root
+      # DRONE_UI_PASSWORD: <password>
