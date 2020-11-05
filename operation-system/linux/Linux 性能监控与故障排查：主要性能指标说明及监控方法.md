@@ -271,8 +271,11 @@ ss -s  # 缩写
 # 查看哪个进程在监听 80 端口
 # --listening 列出所有正在被监听的 socket
 # --processes 显示出每个 socket 对应的 process 名称和 pid
-ss --listening --processes | grep 80
-ss -lp | grep 80  # 缩写
+# --numeric 直接打印数字端口号（不解析协议名称）
+ss --listening --processes --numeric | grep 80
+ss -nlp | grep 80  # 缩写
+ss -lp | grep http  # 解析协议名称，然后通过协议名搜索监听
+
 ## 使用过时的 netstat
 ### -t tcp
 ### -u udp
