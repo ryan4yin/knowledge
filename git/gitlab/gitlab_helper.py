@@ -110,12 +110,9 @@ class GitlabHelper:
             print(f"work_dir: {parent_dir},command: {cmd}")
             subprocess.run(shlex.split(cmd), cwd=parent_dir)  # 失败不报错
 
-    def export_projects_under_group(self, group, recursive=True):
+    def export_groject(self, project):
         """
-        将给定 group 下的所有 git 项目导出为 tar.gz
-        :param recursive: 是否递归导出 sub_group（子文件夹）下的 git 项目？
-        :return : 返回一个迭代器，每一次迭代得到一个 (project, stream) 元组。
-            project 为 git 项目的对象，stream 为导出的 tar.gz 流对象。
+        导出给定的 project 为 tar.gz 流对象
         """
         def wait_until_export_finished(export):
             export.refresh()
@@ -130,17 +127,28 @@ class GitlabHelper:
             bio.seek(0)
             return bio
 
+        # 导出 project
+        export = project.exports.create()
+        # 等待导出完毕
+        wait_until_export_finished(export)
+        # 下载 tar.gz 流
+        stream = get_export_stream(export)
+        return stream
+
+    def export_projects_under_group(self, group, recursive=True):
+        """
+        将给定 group 下的所有 git 项目导出为 tar.gz
+        :param recursive: 是否递归导出 sub_group（子文件夹）下的 git 项目？
+        :return : 返回一个迭代器，每一次迭代得到一个 (project, stream) 元组。
+            project 为 git 项目的对象，stream 为导出的 tar.gz 流对象。
+        """
         for p in self.get_projects_under_group(group, recursive=recursive):
             print("export project: ", p.path_with_namespace)
             p = self.gl.projects.get(p.id)
-            export = p.exports.create()
 
-            wait_until_export_finished(export)
+            yield p, self.export_groject(p)
 
-            stream = get_export_stream(export)
-            yield p, stream
-
-    def import_project(self, stream, project_full_path, override=False):
+    def import_project(self, stream, project_full_path, overwrite=False):
         """
         将导出的 tar.gz 导入 Gitlab 中。
         """
@@ -148,19 +156,16 @@ class GitlabHelper:
         namespace = full_path.parent.as_posix() # 父文件夹路径
         name = full_path.name # 项目名称
 
-        if not override and self.gl.projects.get(project_full_path):
-            raise DuplicatedException(f"{project_full_path} 项目已经存在！不允许覆盖！")
-        else:
-            output = gl.projects.import_project(
+        output = self.gl.projects.import_project(
                 stream,
                 name=name,  # 显示名称（仅页面显示用）
                 namespace=namespace, # Group （父文件夹）的完整路径
                 path=name,  # 路径中的仓库名称（真正的仓库名）
-                # override=True
+                overwrite=overwrite
             )
         
         # Get a ProjectImport object to track the import status
-        project_import = gl.projects.get(output['id'], lazy=True).imports.get()
+        project_import = self.gl.projects.get(output['id'], lazy=True).imports.get()
         while project_import.import_status != 'finished':
             time.sleep(1)
             project_import.refresh()
