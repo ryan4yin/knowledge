@@ -20,6 +20,26 @@ group = gl.get_group("ryan4yin")
 # 将所有仓库克隆到 codes 文件夹下
 gl.clone_projects_under_group(Path("codes"), group)
 ```
+
+```python3
+# 拷贝部分仓库到新路径下（既不是克隆，也不是迁移）
+repos = [
+    "repo_a",
+    "repo_b",
+    "repo_c",
+]
+old_group_path = "old_group"
+new_group_path = "new_group"
+
+gh = GitlabHelper("http://gitlab.svc.local", private_token="<token>")
+
+for repo in repos:
+    project = gh.get_project(old_group_path + "/" + repo)
+    new_path = new_group_path + "/" + repo
+    print("copy project:", new_path)
+    stream = gh.export_groject(project)
+    gh.import_project(stream, new_path, overwrite=False)
+```
 """
 
 import time
