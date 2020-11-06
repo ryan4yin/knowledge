@@ -52,7 +52,7 @@ class DuplicatedException(RuntimeError):
         self.msg = msg
 
 
-class CustomGitlab:
+class GitlabHelper:
     def __init__(self, url, private_token, **kwargs):
         """
         使用 token 登录 Gitlab
