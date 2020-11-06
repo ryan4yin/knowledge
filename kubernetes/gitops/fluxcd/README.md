@@ -78,6 +78,10 @@ helm search repo fluxcd/flux -l | head
 # 下载并解压 chart
 helm pull fluxcd/flux --untar --version 1.5.0
 
+# 查看生成出的 kubernetes yaml 内容
+helm template ./flux --namespace flux -f custome-values.yaml > flux-all.yaml
+
+
 # 安装或更新
 helm upgrade --install flux --namespace flux -f custom-values.yaml ./flux
 

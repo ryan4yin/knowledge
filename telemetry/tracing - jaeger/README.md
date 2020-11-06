@@ -20,9 +20,14 @@ helm search repo jaegertracing/jaeger-operator -l | head
 # 下载并解压 chart
 helm pull jaegertracing/jaeger-operator  --untar --version 2.15.1
 
+# 查看生成出的 kubernetes yaml 内容
+helm template ./jaeger-operator --namespace tracing \
+  -f jaeger-operator-values.yaml > jaeger-operator-all.yaml
+
 # 安装或更新
 kubectl create namespace tracing
-helm upgrade --install jaeger-operator --namespace tracing -f jaeger-operator-values.yaml ./jaeger-operator
+helm upgrade --install jaeger-operator --namespace tracing \
+  -f jaeger-operator-values.yaml ./jaeger-operator
 ```
 
 jaeger-operator 自身的部署参数很少，基本没什么可定制的。
