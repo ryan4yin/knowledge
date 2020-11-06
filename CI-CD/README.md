@@ -71,17 +71,6 @@ Drone 是目前 Github 上最火的 CICD 项目，它以容器为核心，每个
    1. 也就是说，用它来实现自动化测试平台、运维平台，可能是「歪门邪道」hhh
 
 
-### 4. [CDS](https://github.com/ovh/cds)
-
-CDS 是与我们目前期望最接近的一个平台。
-前面讲到了，我们目前在把 Jenkins 当成一个自动化运维平台使用，CI/CD，自动化测试，自动化运维等功能，都是用 Python 实现，通过 Jenkins 运行。
-
-目前正在调研 CDS，看看它会不会是我们新的选择。
-
-CDS 原生支持各种 worker 的自动伸缩，而且 CDS 组件非常多，使用到了 postgre/redis/elasticsearch，我觉得性能上绝对是可以超越 Jenkins 的。
-
-待继续调研。
-
 ### 5. 云原生流水线 - Tekton
 
 从我个人感受来看，Tekton 目前主要被 Knative/Jenkins-X 作为底层流水线引擎使用。
