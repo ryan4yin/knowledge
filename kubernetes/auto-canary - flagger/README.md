@@ -15,6 +15,9 @@ helm search repo flagger/flagger -l | head
 # 下载并解压 chart
 helm pull flagger/flagger --untar --version 1.1.0
 
+# 查看生成出的 kubernetes yaml 内容
+helm template ./flagger --namespace flagger -f custome-values.yaml > flagger-all.yaml
+
 # 使用自定义的 cutome-values.yaml 进行部署（helm3）
 kubectl create ns flagger
 helm upgrade --install \
