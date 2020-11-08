@@ -13,7 +13,7 @@
 
 ```python3
 from pathlib import Path
-# 克隆所有仓库
+# 克隆 `ryan4yin` 路径下的所有仓库
 gl = CustomGitlab("http://gitlab.svc.local", private_token="<token>", ssl_verify=False)
 group = gl.get_group("ryan4yin")
 
@@ -22,7 +22,7 @@ gl.clone_projects_under_group(Path("codes"), group)
 ```
 
 ```python3
-# 拷贝部分仓库到新路径下（既不是克隆，也不是迁移）
+# 拷贝 repos 列表中的仓库到新路径下（既不是克隆，也不是迁移）
 repos = [
     "repo_a",
     "repo_b",
