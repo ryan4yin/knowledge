@@ -21,6 +21,7 @@ docker-compose up -d
     - `Pipeline Utility Steps`: 一些实用的 steps
     - `ansiColor`: 彩色日志输出
     - `Workspace Cleanup Plugin`: 构建完成后清理工作目录，防止 slave 磁盘满溢
+    - `Job DSL`: 批量创建 Jobs，而且自动提前解析 parameters。（还未测试）
     - `Localization: Chinese (Simplified)`: 中文本地化插件
     - `SSH Agent`: SSH 密钥注入，可用于 git ssh 拉取代码/连接远程主机
     - `Build Name and Description Setter`: 通过插件设置 Build Name 和 Description
