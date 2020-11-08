@@ -12,17 +12,19 @@
 用法示例：
 
 ```python3
-from pathlib import Path
 # 克隆 `ryan4yin` 路径下的所有仓库
-gl = CustomGitlab("http://gitlab.svc.local", private_token="<token>", ssl_verify=False)
-group = gl.get_group("ryan4yin")
+
+from pathlib import Path
+gh = GitlabHelper("http://gitlab.svc.local", private_token="<token>", ssl_verify=False)
+group = gh.get_group("ryan4yin")
 
 # 将所有仓库克隆到 codes 文件夹下
-gl.clone_projects_under_group(Path("codes"), group)
+gh.clone_projects_under_group(Path("codes"), group)
 ```
 
 ```python3
 # 拷贝 repos 列表中的仓库到新路径下（既不是克隆，也不是迁移）
+
 repos = [
     "repo_a",
     "repo_b",
@@ -39,6 +41,18 @@ for repo in repos:
     print("copy project:", new_path)
     stream = gh.export_groject(project)
     gh.import_project(stream, new_path, overwrite=False)
+```
+
+```python3
+# 打印出给定 Group 中所有仓库的完整路径
+
+gh = GitlabHelper("http://gitlab.svc.local", private_token="<token>", ssl_verify=False)
+group = gh.get_group("ryan4yin")
+
+paths = [project.path_with_namespace for project in gh.get_projects_under_group(group)]
+Path("git-repo.list").write_text(
+    "\n".join(paths)
+)
 ```
 """
 
