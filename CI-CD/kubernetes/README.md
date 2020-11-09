@@ -8,6 +8,8 @@
    3. 阿里云就有重度使用 Argo Workflow 和 ArgoCD.
 3. ArgoCD: GitOps 的 k8s 自动化部署工具
 4. Knative: 全生命周期管理(从源码到上线)，Serverless 平台。
+5. Jenkins-X: Jenkins 团队推出的云原生 CI/CD 系统，集成了 Knative/Tekton/Helm 等一堆云原生 CI/CD 工具。
+   - 目前感觉 Jenkins-X 太依赖命令行了，在水平低的团队中很难推广开来。而且不翻墙基本不可能部署成功。。
 
 详细的文档参见 [kubernetes](/kubernetes/) 文件夹。
 
