@@ -15,7 +15,3 @@
 
 详细的文档参见 [kubernetes](/kubernetes/) 文件夹。
 
-
-## 参考
-
-- [Argo加入CNCF孵化器，一文解析Kubernetes原生工作流](https://www.infoq.cn/article/fFZPvrKtbykg53x03IaH)
