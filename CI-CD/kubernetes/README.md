@@ -11,6 +11,7 @@
 5. Jenkins-X: Jenkins 团队推出的云原生 CI/CD 系统，集成了 Knative/Tekton/Helm 等一堆云原生 CI/CD 工具。
    - 目前感觉 Jenkins-X 太依赖命令行了，在水平低的团队中很难推广开来。
    - 而且大量依赖 Github 和 gcr.io，不翻墙基本不可能部署成功。。。
+   - 看 Stars 数量也能判断出，这东西目前不是很受欢迎。
 
 详细的文档参见 [kubernetes](/kubernetes/) 文件夹。
 
