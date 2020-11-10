@@ -45,3 +45,20 @@
 
 首推阿里云镜像源，稳定可靠速度快。
 
+
+## DevOps 资料
+
+系统化的文档：
+
+- [devops-exercises](https://github.com/bregman-arie/devops-exercises)
+- [test-your-sysadmin-skills](https://github.com/trimstray/test-your-sysadmin-skills)
+- [sdn-handbook](https://github.com/feiskyer/sdn-handbook)
+- [docker_practice](https://github.com/yeasy/docker_practice)
+
+文章集锦：
+
+- [StabilityGuide - 打造国内稳定性领域知识库](https://github.com/StabilityMan/StabilityGuide)
+- [awesome-scalability](https://github.com/binhnguyennus/awesome-scalability)
+- [awesome-sre](https://github.com/dastergon/awesome-sre)
+- [阿里云容器服务 - DevOps 收藏夹](https://github.com/AliyunContainerService/DevOps)
+
