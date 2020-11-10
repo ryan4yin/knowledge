@@ -1,4 +1,4 @@
-# 这个 custome-values.yaml 相当于 chart 中 values.yaml 的一个 patch
+# 这个 custom-values.yaml 相当于 chart 中 values.yaml 的一个 patch
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
