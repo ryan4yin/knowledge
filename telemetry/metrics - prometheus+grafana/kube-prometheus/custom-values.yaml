@@ -1,0 +1,48 @@
+# 这个 custom-values.yaml 相当于 chart 中 values.yaml 的一个 patch
+
+# 指标告警管理器，可通过插件实现钉钉群报警：https://github.com/timonwong/prometheus-webhook-dingtalk
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+##
+alertmanager:
+  enabled: false
+
+## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
+##
+grafana:
+  enabled: true
+
+  ## Deploy default dashboards.
+  ##
+  defaultDashboardsEnabled: true
+
+  adminPassword: prom-operator
+
+  service:
+    portName: service
+
+    type: NodePort
+    nodePort: 30880
+
+## Manages Prometheus and Alertmanager components
+##
+prometheusOperator:
+  enabled: true
+
+  # Prometheus-Operator v0.39.0 and later support TLS natively.
+  tls:
+    enabled: true
+  
+  service:
+    nodePort: 30080
+    nodePortTls: 30443
+    type: NodePort
+
+  nodeSelector: {}
+
+## Deploy a Prometheus instance
+prometheus:
+  enabled: true
+  service:
+    nodePort: 30090
+    type: NodePort

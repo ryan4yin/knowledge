@@ -28,7 +28,7 @@ helm upgrade --install \
 
 ## 三、使用 Prometheus
 
-`custom-values.yaml` 中将 grafana/altermanager/prometheus 均通过 NodePort 方式暴露到了外部，可以通过如下端口号访问这三个服务：
+我在 `custom-values.yaml` 中将 grafana/altermanager/prometheus 均通过 NodePort 方式暴露到了外部，可以通过如下端口号访问这三个服务：
 
 1. grafana：30880 端口，账号 admin，密码在 `grafana.adminPassword` 中定义，请进入 `custom-values.yaml` 查看。
 1. prometheus: 30090 端口
