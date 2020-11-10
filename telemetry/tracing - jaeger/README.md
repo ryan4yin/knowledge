@@ -1,5 +1,9 @@
 # [Jaeger](https://github.com/jaegertracing/jaeger/)
 
+Jaeger 是云原生社区最流行的开源链路追踪工具。
+
+>开源链路追踪工具中，目前只有 Jaeger 和 OpenZipkin。商业化方案还有 Lightstep/Datadog/NewRelic 可选。
+
 ## 一、部署
 
 ### 1. docker-compose 部署（单机）
