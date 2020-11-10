@@ -43,6 +43,27 @@ prometheusOperator:
 ## Deploy a Prometheus instance
 prometheus:
   enabled: true
+
   service:
     nodePort: 30090
     type: NodePort
+
+  ## Settings affecting prometheusSpec
+  ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+  ##
+  prometheusSpec:
+    ## Define which Nodes the Pods are scheduled on.
+    ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+    ##
+    nodeSelector: {}
+
+    # 指标保留时长
+    # 建议集群内部的 prometheus 只做指标中转（短时间存储），长期存储放在外部的联邦集群。
+    retention: 8h
+
+    # （实验性特性）指标可用的存储空间大小，达到这个值后，会从最老的指标开始进行清理。
+    retentionSize: ""
+
+    ## Enable compression of the write-ahead log using Snappy.
+    ##
+    walCompression: false
