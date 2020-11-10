@@ -19,11 +19,13 @@
 9. DevOps 实用脚本
 10. DevOps 文章收藏，个人思考
 
-## docker-compose
+## 应用部署
 
-参考资料：
+此仓库包含的软件，主要提供了如下几种部署方法
 
-- [awesome-compose](https://github.com/docker/awesome-compose)
+- docker-compose 部署：可以参考 [awesome-compose](https://github.com/docker/awesome-compose)
+- kubernetes 部署：可以在各软件的官方文档或者官方 Github 寻找。
+  - kubernetes 主流的部署方法：首推 helm，其次是 yaml 文件直接部署或者 kustomize.
 
 
 ## 国内主流镜像站
