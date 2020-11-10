@@ -15,14 +15,14 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 # 查看 kube-prometheus-stack 版本号
 helm search repo prometheus-community/kube-prometheus-stack -l | head
 # 下载并解压 chart
-helm pull prometheus-community/kube-prometheus-stack --untar --version 9.3.1
+helm pull prometheus-community/kube-prometheus-stack --untar --version 11.1.0
 
 # 使用自定义的 cutome-values.yaml 进行部署（helm3）
 kubectl create ns monitoring
 helm upgrade --install \
   --namespace monitoring \
-  -f custome-values.yaml \
-  pkube-prometheus-stack \
+  -f custom-values.yaml \
+  kube-prometheus-stack \
   ./kube-prometheus-stack
 ```
 
