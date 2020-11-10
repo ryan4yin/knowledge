@@ -1,8 +1,14 @@
 # 接入 prometheus operator
-metricsServer: "http://prometheus-operator-prometheus.monitoring:9090"
+metricsServer: "http://kube-prometheus-stack-prometheus.monitoring:9090"
 
 # accepted values are kubernetes, istio, linkerd, appmesh, nginx, gloo or supergloo:mesh.namespace (defaults to istio)
 meshProvider: "istio"
+
+podAnnotations:
+  # 如果不希望抓取 flagger export 的灰度状态与权重相关信息，请删除如下两个 prometheus 注解
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  appmesh.k8s.aws/sidecarInjectorWebhook: disabled
 
 # single namespace restriction
 namespace: ""
