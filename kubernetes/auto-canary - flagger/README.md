@@ -13,7 +13,7 @@ helm repo add flagger https://flagger.app
 # 查看 flagger 版本号
 helm search repo flagger/flagger -l | head
 # 下载并解压 chart
-helm pull flagger/flagger --untar --version 1.1.0
+helm pull flagger/flagger --untar --version 1.2.0
 
 # 查看生成出的 kubernetes yaml 内容
 helm template ./flagger --namespace flagger -f custom-values.yaml > flagger-all.yaml
@@ -37,4 +37,27 @@ helm upgrade --install \
 1. Flagger 对多端口的支持有些问题，`spec.service.portDiscovery: true` 只能智能将识别到的 containerPort 添加到 `Service` 中。但是 `VirtualService` 的灰度端口只能是 `spec.service.port` 指定的端口号！别的端口不会被添加到 VirtualService 中，也就不会被灰度！
 2. `spec.service.portName` 默认是 `http`，如果灰度 `grpc` 端口，必须要将这个参数设为 `grpc`！！！
   - flagger 只支持灰度 http/grpc 协议！
-1. Flagger 的灰度是滚动更新，但是会滚动更新两次！v1-primary ->(灰度) v2-canary ->(改名) v2-primary
+1. Flagger 的灰度是滚动更新，而且会滚动更新两次！v1-primary ->(灰度) v2-canary ->(改名) v2-primary
+
+## Prometheus 接入
+
+### 1. metricsServer
+
+metricsServer 是 flagger 默认的 Prometheus 地址，但是目前好像只有内置指标有用到这个配置项。
+
+然而目前 flagger 只内置了两个指标(request-success-rate/request-duration)。
+自定义指标 MetricTemplate 要求必须指定 Prometheus 等指标服务器的地址。
+
+所以如果你没有用到内置指标，这个属性好像就没什么作用。
+
+### 2. 使用 Prometheus 进行灰度分析
+
+除了查询监控指标用于判断外，flagger pod 自身也导出了当前灰度状态与权重相关的 Prometheus 指标，可用于做进一步的灰度分析。
+
+flagger 默认的 `podAnnotations` 配置中，包含了 `prometheus` 的抓取注解，这样 prometheus 就会自动抓取它的灰度数据。
+
+可以按照官方提供的方法，部署 grafana 面板查看灰度信息：
+
+- flagger 自动灰度工具: https://docs.flagger.app/usage/monitoring
+  - 官方文档要求部署独立的 grafana，但是你也可以将官方的 dashboard 配置文件导入已存在的 grafana.
+  - 官方提供的 dashboard 配置文件：https://github.com/weaveworks/flagger/tree/master/charts/grafana/dashboards
