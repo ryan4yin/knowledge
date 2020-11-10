@@ -28,11 +28,12 @@ helm upgrade --install \
 
 ## 三、使用 Prometheus
 
+使用上述命令部署好 kube-prometheus-stack 后，就能访问 grafana 面板了。
 我在 `custom-values.yaml` 中将 grafana/altermanager/prometheus 均通过 NodePort 方式暴露到了外部，可以通过如下端口号访问这三个服务：
 
 1. grafana：30880 端口，账号 admin，密码在 `grafana.adminPassword` 中定义，请进入 `custom-values.yaml` 查看。
-1. prometheus: 30090 端口
-2. altermanager: 30903 端口
+1. prometheus: 30090 端口，可以使用这个 prometheus 提供的简陋面板查看 Prometheus 抓取状态，也可以直接运行 PromQL.
+2. altermanager: 30903 端口，`custom-values.yaml` 中关闭了 altermanager。如果你需要用到，请自行修改。
 
 
 ## 四、高可用 Prometheus
