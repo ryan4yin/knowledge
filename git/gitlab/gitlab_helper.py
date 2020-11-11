@@ -144,7 +144,7 @@ class GitlabHelper:
             print(f"work_dir: {parent_dir},command: {cmd}")
             subprocess.run(shlex.split(cmd), cwd=parent_dir)  # 失败不报错
 
-    def export_groject(self, project):
+    def export_project(self, project):
         """
         导出给定的 project 为 tar.gz 流对象
         """
@@ -180,7 +180,7 @@ class GitlabHelper:
             print("export project: ", p.path_with_namespace)
             p = self.gl.projects.get(p.id)
 
-            yield p, self.export_groject(p)
+            yield p, self.export_project(p)
 
     def import_project(self, stream, project_full_path, overwrite=False):
         """
@@ -205,6 +205,16 @@ class GitlabHelper:
             project_import.refresh()
 
         print(f"finish project import: {project_full_path}")
+
+    def protect_branch_under_group(self, group, branch: str, recursive=True):
+        """
+        遍历给定 Group 下的所有仓库，将它们的某个分支设为保护分支。
+        普通开发者(Developer) 不允许推送或者合并保护分支
+        """
+        for p in self.get_projects_under_group(group, recursive=recursive):
+            print(f"将 {p.path_with_namespace} 的 {branch} 分支，设为保护分支")
+            p = self.gl.projects.get(p.id)
+            p.branchs.get(branch).protect()
 
     def delete_projects_under_group(self, group, recursive=False):
         """危险操作！！！
