@@ -21,4 +21,4 @@ docker-compose -f docker-compose-cache.yml down
 
 ## 参考
 
-- [Redis](https://hub.docker.com/r/bitnami/redis/)
+- [Redis - bitnami](https://hub.docker.com/r/bitnami/redis/): 这个镜像比 docker 官方镜像使用更方便

@@ -10,14 +10,8 @@ services:
     volumes:
     # 容器启动后会自动调用下述文件夹中的 shell/sql 脚本，可用于自动化建库建表。
     - create-databases.sql:/docker-entrypoint-initdb.d/create-databases.sql
-
-    # 内存模式（tmpfs）的 mysql，速度非常快！但是重启 PC 会丢数据！可用于单元测试/集成测试等环境。
-    ## https://docs.docker.com/storage/tmpfs/
-    ## 也可以通过 volumes 将文件夹映射到 /dev/shm 中实现「内存模式」
-    tmpfs:
-      - /var/lib/mysql:size=1G
-      # 模板如下：
-      # - /tempFiles:exec,mode=777,size=1G,uid=104,gid=107
+    # 保存 mysql 数据
+    - ./mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: example
       # 也可以创建自定义的管理员账号密码
