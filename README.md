@@ -17,7 +17,7 @@
 7. 编程语言学习笔记：Python/Golang/Java
 8. Homelab: 家庭服务器相关，以及一些个人爱好。
 9. DevOps 实用脚本
-10. DevOps 文章收藏，个人思考
+10. 研发运维一体化平台：CI+CD+SRE
 
 ## 应用部署
 
