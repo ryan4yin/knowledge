@@ -1,10 +1,20 @@
 # MySQL
 
-介绍 MYSQL 的运维知识。（不介绍 SQL 基础）
+## 部署方案
 
-## 设置密码
+这里讨论三种部署方案：
 
-### 1. 开发环境（对安全性要求不高）
+1. 普通的单机部署(normal)
+2. 单机内存数据库(in-memory)：适合用于测试的高速 MySQL 数据库，数据保存在内存中因而速度快。
+3. 使用 kubernetes 部署分布式的 MySQL 集群：参见 [mysql cluster -vitess](./mysql%20cluster%20-%20vitess/README.md)
+
+### 参考
+
+- [mysql - Docker Official Images](https://hub.docker.com/_/mysql/)
+
+## 设置账号密码
+
+### 1. 给 root 账号设置密码（适合开发环境，对安全性要求不高的场景）
 
 启用 root 账户远程登录，并且设置密码：
 ```sql
@@ -12,7 +22,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<your-password>';
 FLUSH PRIVILEGES;
 ```
 
-内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（危险操作！另外很多应用都不支持使用空密码连接 MySQL！）：
+内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（**危险操作！另外很多应用都不支持使用空密码连接 MySQL！**）：
 
 ```sql
 # 使本机访问 mysql 不需要密码
@@ -22,7 +32,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'
 FLUSH PRIVILEGES;
 ```
 
-### 2. 添加受限用户（安全性高）
+### 2. 添加受限用户（安全性高）并设置密码
 
 添加用户：
 ```sql
@@ -60,7 +70,7 @@ show grants for 'test'@'localhost';
 DROP USER 'test'@'localhost';
 ```
 
-## 运行 SQL
+## 运行 SQL 脚本
 
 使用 mysqldump 备份数据为 sql 文件：
 
@@ -92,3 +102,4 @@ docker exec -i some-mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < /
 ## SQL 语句分析
 
 - [MySQL Explain 详解](https://www.cnblogs.com/xuanzhi201111/p/4175635.html)
+
