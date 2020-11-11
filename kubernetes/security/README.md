@@ -12,15 +12,16 @@
 我们比较常遇到的一些**提升权限**的安全策略：
 
 1. 特权容器：spec.containers[*].securityContext.privileged
-2. Capabilities 可选的系统级能力: spec.containers[*].securityContext.capabilities.add
+2. 添加（Capabilities）可选的系统级能力: spec.containers[*].securityContext.capabilities.add
    1. 只有 ntp 同步服务等少数容器，可以开启这项功能。请注意这非常危险。
 3. Sysctls: 系统参数: spec.securityContext.sysctls
 
 **权限限制**相关的安全策略有：
 
 1. spec.volumes: 所有的数据卷都可以设定读写权限
-2. spec.securityContext.runAsNonRoot: Pod 必须以非 root 用户运行
-3. spec.securityContext.readOnlyRootFileSystem: **将容器层设为只读，防止容器文件被篡改。**
+2. 移除（Capabilities）可选的系统级能力: spec.containers[*].securityContext.capabilities.drop
+3. spec.securityContext.runAsNonRoot: Pod 必须以非 root 用户运行
+4. spec.securityContext.readOnlyRootFileSystem: **将容器层设为只读，防止容器文件被篡改。**
 
 还有其他诸如指定容器的运行用户(user)/用户组(group)等功能未列出，请自行查阅 Kubernetes 相关文档。
 
