@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+  redis:
+    container_name: redis
+    image: bitnami/redis:5.0
+    restart: always
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    sysctls:
+      net.core.somaxconn: 20000
+    command:
+    - /run.sh
+    # 只需要一个 db
+    - --databases 1
+    # 启用 AOF （Append-only file）数据持久化（默认是启用的）
+    - --appendonly yes
+    # 内存用尽时，不允许驱逐旧数据。保证数据不丢
+    - --maxmemory-policy noeviction
+    # 最大连接数
+    - --maxclients 10000
+    # 最大内存使用量
+    - --maxmemory 1000mb
+    environment:
+      REDIS_PASSWORD: "change_me"
+      # 关闭部分危险的 Redis 命令
+      # DISABLE_COMMANDS: FLUSHDB,FLUSHALL,CONFIG
+    ports:
+    - "6379:6379"
+    volumes:
+    # 通过数据卷保存持久化数据
+    - ./redis-data:/bitnami/redis/data
