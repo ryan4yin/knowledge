@@ -6,14 +6,15 @@ services:
   mongodb-primary:
     image: 'bitnami/mongodb:4.2'
     environment:
-      - MONGODB_REPLICA_SET_NAME=rs0
-      - MONGODB_REPLICA_SET_MODE=primary
+      # 给配置内容一个别名，在后面可以复用这个内容
+      MONGODB_REPLICA_SET_NAME: &replicaset_name rs0
+      MONGODB_REPLICA_SET_MODE: primary
       # 额外的 mongo 参数
-      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
-      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
-      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
-      - MONGODB_ROOT_PASSWORD=password123
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      MONGODB_EXTRA_FLAGS: --wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，副本集所有节点的 hostname 都得设为宿主机 IP 地址/域名
+      MONGODB_ADVERTISED_HOSTNAM: &hostname 192.168.122.1
+      MONGODB_ROOT_PASSWORD: &root_password password123
+      MONGODB_REPLICA_SET_KEY: &replicaset_key replicasetkey123
     restart: always
     ports:
     - 27017:27017
@@ -29,17 +30,17 @@ services:
     depends_on:
       - mongodb-primary
     environment:
-      - MONGODB_REPLICA_SET_NAME=rs0
-      - MONGODB_REPLICA_SET_MODE=secondary
+      MONGODB_REPLICA_SET_NAME: *replicaset_name
+      MONGODB_REPLICA_SET_MODE: secondary
       # 额外的 mongo 参数
-      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
-      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
-      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
-      - MONGODB_PORT_NUMBER=27018
-      - MONGODB_INITIAL_PRIMARY_HOST=192.168.122.1
-      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
-      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      MONGODB_EXTRA_FLAGS: --wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，副本集所有节点的 hostname 都得设为宿主机 IP 地址/域名
+      MONGODB_ADVERTISED_HOSTNAME: *hostname
+      MONGODB_PORT_NUMBER: "27018"
+      MONGODB_INITIAL_PRIMARY_HOST: *hostname
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: "27017"
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: *root_password
+      MONGODB_REPLICA_SET_KEY: *replicaset_key
     restart: always
     ports:
     - 27018:27018
@@ -50,17 +51,17 @@ services:
     depends_on:
       - mongodb-primary
     environment:
-      - MONGODB_REPLICA_SET_MODE=arbiter
-      - MONGODB_REPLICA_SET_NAME=rs0
+      MONGODB_REPLICA_SET_NAME: *replicaset_name
+      MONGODB_REPLICA_SET_MODE: arbiter
       # 额外的 mongo 参数
-      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
-      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
-      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
-      - MONGODB_PORT_NUMBER=27019
-      - MONGODB_INITIAL_PRIMARY_HOST=192.168.122.1
-      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
-      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
-      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      MONGODB_EXTRA_FLAGS: --wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，副本集所有节点的 hostname 都得设为宿主机 IP 地址/域名
+      MONGODB_ADVERTISED_HOSTNAME: *hostname
+      MONGODB_PORT_NUMBER: "27019"
+      MONGODB_INITIAL_PRIMARY_HOST: *hostname
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: "27017"
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: *root_password
+      MONGODB_REPLICA_SET_KEY: *replicaset_key
     restart: always
     ports:
     - 27019:27019
