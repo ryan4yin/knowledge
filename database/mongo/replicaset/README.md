@@ -14,6 +14,9 @@
 启动命令：
 
 ```shell
+# 首先，修改 docker-compose-replicaset.yml 中的 hostname 为宿主机 IP 地址。
+
+# 启动容器
 mv docker-compose-replicaset.yml docker-compose.yml
 docker-compose up -d
 ```
@@ -21,6 +24,8 @@ docker-compose up -d
 如果 mongo 副本集只需要在容器网络内部使用，那可以删除掉所有端口映射，然后使用 [bitnami/mongodb](https://github.com/bitnami/bitnami-docker-mongodb) 官方提供的方法进行快速的副本扩缩容：
 
 ```
+# 首先，修改 docker-compose-replicaset.yml 中的 hostname 为宿主机 IP 地址。
+
 mv docker-compose-replicaset.yml docker-compose.yml
 # 一主三副本
 docker-compose up -d --scale mongodb-secondary=3
@@ -29,6 +34,8 @@ docker-compose up -d --scale mongodb-secondary=3
 ## 特殊：单节点副本集的部署
 
 ```shell
+# 首先，修改 docker-compose-signle.yml 中的 hostname 为宿主机 IP 地址。
+
 mv docker-compose-signle.yml docker-compose.yml
 docker-compose up -d
 ```
