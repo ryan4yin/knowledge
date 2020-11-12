@@ -7,11 +7,18 @@ AIOps 因为和 telemetry 关系更大，目前资料都放在 [telemetry](../te
 
 ## 参考文档
 
-因为目前参考文档价值更高，放在前面：
+目前参考文档的价值比我的碎碎念更高，所以放在最前面。
+
+- [The Twelve-Factor App](https://12factor.net/zh_cn/): 十二因素应用，云原生应用的定义。
 
 - [基于微服务成熟度模型的高可用优化实践 - 爱奇艺技术团队](https://mp.weixin.qq.com/s?__biz=MzI0MjczMjM2NA==&mid=2247488105&idx=1&sn=d988f52e734dedbe5922fd0cbbd386a4)
 - 腾讯-蓝鲸赋能应用运维：这是腾讯蓝鲸的一份演讲 PPT，我就放在当前文件夹下。它从宏观上介绍了一个 DevOps 平台的全貌。
 - [How We Build Code at Netflix - NetflixTechBlog](https://netflixtechblog.com/how-we-build-code-at-netflix-c5d9bd727f15)
+
+云原生相关：
+
+- [以业务为核心的云原生体系建设 ](https://mp.weixin.qq.com/s?__biz=MzA5OTAyNzQ2OA==&mid=2649705811&idx=1&sn=cb10919c32dfbcf3312ba571b18b9189)
+- [从1到2000个微服务，史上最落地的实践云原生25个步骤](https://mp.weixin.qq.com/s/64cJJj14Ro4z0nAzQm4GGg)
 
 
 ## 开源产品
