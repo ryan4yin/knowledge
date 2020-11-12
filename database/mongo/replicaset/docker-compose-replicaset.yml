@@ -1,0 +1,67 @@
+# https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md
+---
+version: '2'
+
+services:
+  mongodb-primary:
+    image: 'bitnami/mongodb:4.2'
+    environment:
+      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_MODE=primary
+      # 额外的 mongo 参数
+      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
+      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
+      - MONGODB_ROOT_PASSWORD=password123
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    restart: always
+    ports:
+    - 27017:27017
+
+    # 只需要保存主节点的数据
+    # 首次运行时，自动创建的映射文件夹可能有权限问题，注意自行修改。
+    volumes:
+      - './mongodb_master_data:/bitnami'
+
+  # 从节点，可自行拷贝多份，增加副本个数。
+  mongodb-secondary:
+    image: 'bitnami/mongodb:4.2'
+    depends_on:
+      - mongodb-primary
+    environment:
+      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_MODE=secondary
+      # 额外的 mongo 参数
+      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
+      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
+      - MONGODB_PORT_NUMBER=27018
+      - MONGODB_INITIAL_PRIMARY_HOST=192.168.122.1
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    restart: always
+    ports:
+    - 27018:27018
+
+  # 仲裁节点
+  mongodb-arbiter:
+    image: 'bitnami/mongodb:4.2'
+    depends_on:
+      - mongodb-primary
+    environment:
+      - MONGODB_REPLICA_SET_MODE=arbiter
+      - MONGODB_REPLICA_SET_NAME=rs0
+      # 额外的 mongo 参数
+      - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
+      # 为了让 mongo 在外部可用，必须将 hostname 设为可解析的域名，或者宿主机 IP 地址。
+      - MONGODB_ADVERTISED_HOSTNAME=192.168.122.1
+      - MONGODB_PORT_NUMBER=27019
+      - MONGODB_INITIAL_PRIMARY_HOST=192.168.122.1
+      - MONGODB_INITIAL_PRIMARY_PORT_NUMBER=27017
+      - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    restart: always
+    ports:
+    - 27019:27019
+
