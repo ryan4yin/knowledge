@@ -52,3 +52,6 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled  # 临时生效
 暂时没找到在新系统的的有效方法，使系统重启也此参数的修改也能生效。。
 
 
+## 参考
+
+- [ https://redis.io/topics/admin](https://redis.io/topics/admin)
