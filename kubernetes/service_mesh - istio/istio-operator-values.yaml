@@ -1,16 +1,17 @@
 # 配置文件对应的 istioctl 版本：1.7.x
 # 本地开发测试集群部署 istio，需要用到的自定义配置
-# 这分配置的详细文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
+# 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
-  # profile=default 是官方推荐的用于生产环境部署。它只部署 pilot/ingressgateway/prometheus
-  # 建议：prometheus/grafana/jaeger(tracing)/kiali 都使用比较流行的 operator/helm 进行安装，不要使用 istio 自带的
+  # profile=default 是官方推荐的用于生产环境部署。它只部署 istiod/ingressgateway
+  # 从 istio 1.7 开始，第三方组件如 prometheus/grafana/jaeger(tracing)/kiali 都需要自行安装，istio 不再提供默认组件。建议使用 operator/helm 进行安装
   profile: default
   hub: image-registry.svc.local/istio # 使用私有 dockerhub 镜像仓库
   # meshConfig 的所有参数：https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
   meshConfig:
     # 改为 `/dev/stdout` 可将 access log 输出到容器日志中。但是注意，access log 会非常多，可能影响性能！
+    # 另外注意不要把日志输出到根文件系统中（如 /tmp/accesslog），因为 sidecar 的根文件系统是只读的！
     accessLogFile: ""  # 不收集 access log。
     accessLogEncoding: TEXT  # 日志格式，默认为 JSON
     enableEnvoyAccessLogService: false  # 启动 Envoy 的 ALS **服务**，暂时不清楚其含义。不开启也能收集 access log
@@ -108,5 +109,3 @@ spec:
         autoscaleEnabled: true
       istio-egressgateway: # 出网流量管控
         autoscaleEnabled: true
-    prometheus: # 不使用 istio 自带的 prometheus
-      enabled: false

@@ -24,13 +24,10 @@
 使用 istioctl 部署 istio:
 ```shell
 # 示例1：只部署 istiod 和 ingressgateway
-istioctl manifest apply --set profile=default --set values.prometheus.enabled=false 
+istioctl manifest apply --set profile=default
 
-# 示例2：只部署 istiod 和 ingressgateway，并且使用内网的 docker hub 缓存
-istioctl manifest apply \
-  --set profile=default \
-  --set values.prometheus.enabled=false \
-  --set hub=registry.svc.local > istio-manifest.yaml
+# 示例2：只部署 istiod 和 ingressgateway，并且从内网的容器镜像仓库拉镜像 
+istioctl manifest apply --set profile=default --set hub=registry.svc.local
 ```
 
 这种方式适合自定义参数比较少，而且只是临时测试的情形。
@@ -74,7 +71,7 @@ istioctl upgrade -f istio-operator-values.yaml
 # 格式如下：
 istioctl manifest generate <your original installation options> | kubectl delete -f -
 # 示例一：使用 --set 指定自定义参数
-istioctl manifest generate --set profile=default --set values.prometheus.enabled=false | kubectl delete -f -
+istioctl manifest generate --set profile=default | kubectl delete -f -
 # 示例二：使用 istiooperator 配置指定自定义参数
 istioctl manifest generate -f istio-operator-values.yaml | kubectl delete -f -
 
@@ -113,7 +110,7 @@ Istio 官方推荐在集群外部使用 [Prometheus Operator](https://github.com
 Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
 
 配置步骤如下：
-1. 部署 [Prometheus Operator](https://github.com/coreos/prometheus-operator)。
+1. 部署 Prometheus Operator，步骤参见 [telemetry - kube-prometheus](/telemetry/metrics%20-%20prometheus+grafana/kube-prometheus/README.md)
 2. 修改 [istio-operator-values.yaml](./istio-operator-values.yamll)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true.
    1. 启用这项配置后，istio 将在数据层注入 prometheus 相关注解，使 prometheus-operator 开箱即用.
 3. `istioctl install -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
@@ -122,13 +119,14 @@ Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数�
 
 #### Istio 的 Grafana 面板
 
-Prometheus Operator 会自动部署 Grafana 面板，详见 [prometheus+grafana](/telemetry/prometheus+grafana/README.md)
-
-再者我们前面部署 Istio 时已经为 Prometheus Operator 创建了 `ServiceMoniter` 抓取规则，没问题的话现在 Prometheus 中已经有 Istio 的数据了。
+我们前面部署 Istio 时已经为 Prometheus Operator 创建了 `ServiceMoniter` 抓取规则，没问题的话现在 Prometheus 中已经有 Istio 的数据了。
 现在只缺少展示数据的 Grafana 面板。
 
-Istio 官方有提供 Grafana 面板：https://grafana.com/orgs/istio，在这个页面上找到面板的 ID，
-然后进入集群的 Grafana 页面中，使用 ID 就可一键导入 Istio 面板。
+Prometheus Operator 会自动部署 Grafana 面板，详见 [telemetry - kube-prometheus](/telemetry/metrics%20-%20prometheus+grafana/kube-prometheus/README.md)，但是不包含 Istio 的 Dashboard 配置。
+
+
+在这个页面中找到最新版本的 Istio Dashboard ID: https://grafana.com/orgs/istio
+然后进入 kube-prometheus 的 Grafana 页面，使用 ID 就可一键导入 Istio Dashboard。
 
 ### 4. 链路追踪（Istio + Jaeger + OpenTelemetry）
 
@@ -163,7 +161,7 @@ Istio 链路追踪说是可以减少链路追踪对应用层的侵入，应用�
 
 否则就和 Istio 没啥关系了，应用自身向 jaeger-agent(udp) 或者 jaeger-collector(http/grpc) 上报追踪数据。
 
-部署流程参见 [/telemetry/jaeger/README.md](/telemetry/jaeger/README.md)
+jaeger-operator 的详细部署流程参见 [/telemetry/tracing - jaeger/README.md](/telemetry/tracing%20-%20jaeger/README.md)
 
 
 ### 5. Kiali 网络拓扑/流量拓扑
