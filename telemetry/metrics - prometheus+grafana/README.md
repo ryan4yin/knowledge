@@ -20,8 +20,9 @@ Prometheus + Grafana + Altermanager 也是目前云原生社区最流行的开�
 
 详细的内容参见 `dockprom` 和 `kube-prometheus` 文件夹。
 
-## 参考
+## 相关文档
 
 - [prometheus-book - github](https://github.com/yunlzheng/prometheus-book)
 - [容器监控方案汇总  - github](https://github.com/yasongxu/container-monitor)
 - [这篇文章，让运维监控不再成为你的短板!](https://segmentfault.com/a/1190000020990098)
+- [Prometheus在京东开源项目ChubaoFS中的使用](https://developer.jdcloud.com/article/983)
