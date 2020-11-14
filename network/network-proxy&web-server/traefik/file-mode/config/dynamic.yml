@@ -59,6 +59,21 @@ http:
         regex: "^/foo/(.*)"
         replacement: "/bar/$1"
 
+    # 运行所有跨域请求
+    cors-allow-all:
+      headers:
+        accessControlAllowMethods:
+          - OPTIONS
+          - GET
+          - POST
+          - PUT
+        accessControlAllowOriginList:
+          - "*"  # 允许任何网站的跨域请求
+          # - https://foo.bar.org
+          # - https://example.org
+        accessControlMaxAge: 100  # cors 预检(preflight)请求结果的缓存时间
+        addVaryHeader: true  # 如果后端响应的 accessControlAllowOriginList 不一样，是否覆盖它？
+
     # 启用 gzip 压缩
     compress-gzip:
       compress:
