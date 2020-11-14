@@ -3,6 +3,7 @@
 ## 技术文章收藏
 
 - [一文带你检查Kubernetes应用是否为最佳实践](https://juejin.im/post/6844904024911642637)
+- [京东云原生之路](https://developer.jdcloud.com/article/1163)
 
 Github:
 
