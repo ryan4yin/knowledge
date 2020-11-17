@@ -41,6 +41,13 @@ for repo in repos:
     print("copy project:", new_path)
     stream = gh.export_groject(project)
     gh.import_project(stream, new_path, overwrite=False)
+
+# 或者更直接地，复制所有仓库
+old_group = gh.get_group(old_group_path)
+for project, stream in gh.export_projects_under_group(old_group):
+    relative_path = Path(project.path_with_namespace).relative_to(old_group_path)
+    new_path = new_group_path / relative_path
+    gh.import_project(stream, new_path, overwrite=False)
 ```
 
 ```python3
