@@ -78,7 +78,7 @@ echo "UseDNS no" >> /etc/ssh/sshd_config
 
 ##　自动化工具
 
-- [terraform-provider-proxmox](https://github.com/Telmate/terraform-provider-proxmox/blob/master/docs/resources/vm_qemu.md)
+- [terraform-provider-proxmox](https://github.com/Telmate/terraform-provider-proxmox): 详情参见 [terraform - infrastructure](/infrastructure/terraform/README.md)
 - [Python SDK](https://github.com/proxmoxer/proxmoxer)
 
 ## 监控告警
