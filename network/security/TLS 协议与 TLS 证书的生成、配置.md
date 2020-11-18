@@ -99,6 +99,9 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
 收费证书可以在各 TLS 提供商处购买，比如国内的阿里云腾讯云等。
 
+对于实行 DevOps 的中小企业，我推荐使用 terraform-provider/acme + alidns 实现在云上使用免费证书，并支持自动轮转。
+terraform 配置文件参见 [./tls-certs.tf](./tls-certs.tf).（terraform 是一个 DevOps 工具，详见 [/infrastructure/terraform/README.md](/infrastructure/terraform/README.md）
+
 ### 1. 生成由本地 CA 证书签名的 TLS 证书(tls_locally_signed_cert)
 
 除了公网可用的受信证书，在内网环境，我们需要也使用 TLS 证书保障通信安全，这时我们可能会选择自己生成证书，而不是向权威机构申请证书。
