@@ -21,7 +21,7 @@ terraform 也可以通过 `.tfvars` 文件传变量。
 
 ## [Proxmox-Provider](https://github.com/Telmate/terraform-provider-proxmox/)
 
-待续
+kvm 虚拟机的创建/修改/销毁：[pve-vm.tf](./pve-vm.tf)
 
 ## [阿里云 Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
 
@@ -31,7 +31,7 @@ terraform 也可以通过 `.tfvars` 文件传变量。
 2. NAT/VPC 专有网络、DNS解析
 3. K8s 集群、各类数据库
 4. OSS/CDN 数据存储与分发
-5. TLS 证书的过期检查、滚动更新:[Terraform - 阿里云 TLS 证书管理](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/cas_certificates)
+5. TLS 证书的申请/自动更新，以及上传到阿里云：[./tls-certs.tf](./tls-certs.tf)
 6. ......
 
 
