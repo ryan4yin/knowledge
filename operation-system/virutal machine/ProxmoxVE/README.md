@@ -28,7 +28,7 @@ PVE 是一个开源免费，订阅收费的服务器虚拟化系统，基于 QEM
 2. [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/): 也提供 qcow2 格式的镜像
 3. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
 
-上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init 和 [Qemu-guest-agent](https://pve.proxmox.com/wiki/Qemu-guest-agent)。
+上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init/qemu-guest-agent/cloud-utils-growpart 等 cloud 相关软件。
 
 上述三个 cloud 镜像的默认名称和系统名称完全一致，分别为 `centos`/`debian`/`ubuntu`，
 均没有默认密码，并且禁用了 SSH 密码登录，必须通过 cloud-init 设置私钥方式进行远程登录。
@@ -75,6 +75,20 @@ qm set 9000 --serial0 socket --vga serial0
 ```shell
 echo "UseDNS no" >> /etc/ssh/sshd_config
 ```
+
+## 虚拟机硬盘扩容
+
+CentOS/Ubuntu/Debian 提供的 Cloud 镜像，都自带了 cloud-utils-growpart 这个组件，可以实现在扩容物理硬盘时，自动调整 Linux 的分区大小。
+
+因此需要扩容虚拟机时，直接通过 UI 面板/命令行扩容虚拟机的硬盘即可， Linux 的分区会被 cloud-utils-growpart 自动扩容。
+
+>因为这个方便的特性，也为了减少虚拟化的开销，Cloud 镜像默认是不使用 LVM 逻辑分区的。
+LVM 逻辑分区虽然方便，但是它对物理机的作用更大些。虚拟机因为本身就能动态扩容“物理硬盘”的大小，基本不用不到 LVM。
+
+>还有一点，就是虚拟机通常只需要一个根分区就行，尤其是归 openstack/kubernetes 管的虚拟机。
+只有在使用分布式存储之类的场景下，数据需要独立存储，才需要用到额外的分区(/data 之类的)。
+一般只有物理机，才需要像网上很多文章提的那样，为 /boot / /home 去单独分区。
+而且现在大家都用 SSD 了，物理机这样做分区的都少了，比如我个人电脑，就是一个 / 分区打天下。。。
 
 ##　自动化工具
 
