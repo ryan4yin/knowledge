@@ -37,13 +37,12 @@ terraform 运行时也读取当前文件夹下所有的 `.tf` 和 `.tfvars` 文�
 
 ```shell
 provider.tf             ### provider 配置
-terraform.tfvars        ### 配置 provider 要用到的变量
 variable.tf              ### 通用变量
+terraform.tfvars / terraform.tfvars.json   ### 为所有 variables 设定具体的值 
 resource.tf             ### 资源定义
 data.tf                 ### data 定义
 output.tf               ### 输出（常用做 debug）
 ```
-
 
 ### 4. terraform 状态管理
 
