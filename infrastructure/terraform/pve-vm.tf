@@ -71,9 +71,6 @@ resource "proxmox_vm_qemu" "vm" {
   # 为 root 账号设置 ssh 公钥
   sshkeys = file("${path.module}/base-rsa.pub")
 
-  # 更复杂的配置，可能需要考虑使用 ciconfig 直接设定 cloud-init 配置文件。
-  # ciconfig = file("${path.module}/cloud-init.yaml")
-
   # 在虚拟机启动后，通过一些命令进行 VM 预配置
   connection {
     type = "ssh"
@@ -84,13 +81,10 @@ resource "proxmox_vm_qemu" "vm" {
   }
   provisioner "remote-exec" {
     inline = [
-      # 设置 hostname (实测发现 centos7 的 cloud-init 并不会自动修改 hostname...)
-      "hostnamectl set-hostname ${var.vm_name}",
-      "echo 'preserve_hostname: false' >> /etc/cloud/cloud.cfg ",
+      # 设置 hostname (不知道为啥，实测发现 centos7 的 cloud-init 并不会自动修改 hostname...)
+      "hostnamectl set-hostname ${self.name}",
       # 关闭 SSH 的反向 DNS 解析，加快连接速度
       "echo 'UseDNS no' >> /etc/ssh/sshd_config",
-      # 不让 cloud-init 自动管理 /etc/hosts
-      "echo 'manage_etc_hosts: false' >> /etc/cloud/cloud.cfg ",
     ]
   }
 }
