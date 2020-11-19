@@ -6,7 +6,18 @@ PVE 是一个开源免费，订阅收费的服务器虚拟化系统，基于 QEM
 
 安装过程没啥好说的，安装好后，需要按下面这篇文章配置国内镜像源，启用 root 账户　ssh 登录：
 
-- [虚拟服务器软件 PVE 踩坑记](https://fengtalk.com/216.html)
+```shell
+# 设置 debian 的阿里镜像源
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
+sed -i "s@\(deb\|security\).debian.org@mirrors.aliyun.com@g" /etc/apt/sources.list
+
+# 去除烦人的订阅提示
+sed -i "s/data.status !== 'Active'/false/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+
+# 设置 pve 国内镜像源
+# https://mirrors.bfsu.edu.cn/help/proxmox/
+echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription' > /etc/apt/sources.list.d/pve-no-subscription.list
+```
 
 
 ## 使用 Cloud-Init 自动配置网卡、SSH密钥、存储大小配置
