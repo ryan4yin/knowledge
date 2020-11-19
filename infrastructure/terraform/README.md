@@ -9,7 +9,19 @@
     1. 比如自动化测试环境的搭建过程。
     2. 对于繁杂的 RAM 账号权限体系、 VPC 专有网络等配置，可以预先在本地设计好结构，然后使用 terraform 编写代码一次性创建。
 
-## Secrets 的安全传递
+## 最佳实践
+
+### 1. Terraform 命令使用流程
+
+1. `terraform init -plugin-dir `
+2. `terraform plan`: 生成执行计划
+3. `terraform apply --auto-approve`: 应用计划
+4. `terraform destroy`: 释放所有资源。（快速的创建与删除，非常适合进行测试）
+
+此外，安装了 graphviz 后，还可以直接通过命令生成资源关系图：`terraform graph | dot -Tsvg > graph.svg`
+
+
+## 2. Secrets 的安全传递
 
 比较推荐通过环境变量来传递敏感信息。
 
@@ -19,11 +31,35 @@ terrafrom 也提供专用的环境变量 `TF_VAR_name` 来设置 terrafrom 变�
 
 terraform 也可以通过 `.tfvars` 文件传变量。
 
-## [Proxmox-Provider](https://github.com/Telmate/terraform-provider-proxmox/)
+### 3.  terraform 项目结构
 
-kvm 虚拟机的创建/修改/销毁：[pve-vm.tf](./pve-vm.tf)
+terraform 运行时也读取当前文件夹下所有的 `.tf` 和 `.tfvars` 文件，因此可以将内容拆分为如下结构：
 
-## [阿里云 Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
+```shell
+provider.tf             ### provider 配置
+terraform.tfvars        ### 配置 provider 要用到的变量
+variable.tf              ### 通用变量
+resource.tf             ### 资源定义
+data.tf                 ### data 定义
+output.tf               ### 输出（常用做 debug）
+```
+
+
+### 4. terraform 状态管理
+
+terraform 默认将状态保存在本地的 `.tfstate` 文件中，但也支持设定不同的远端 Backend 存储状态。
+
+推荐使用远端存储保存状态，默认使用的本地 `.tfstate` 容易导致管理混乱，安全性也很差。
+
+
+## 常见用途
+
+## 1. [Proxmox-Provider](https://github.com/Telmate/terraform-provider-proxmox/)
+
+本地开发环境，可使用 PVE 搭建。
+PVE 虚拟机的创建/修改/销毁：[pve-vm.tf](./pve-vm.tf)
+
+## 2. [阿里云 Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
 
 使用 Terraform，可以自动化阿里云的：
 
