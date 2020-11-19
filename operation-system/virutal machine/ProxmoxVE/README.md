@@ -58,7 +58,7 @@ qm set 9000 --serial0 socket --vga serial0
 2. 关闭虚拟机，然后将虚拟机设为模板（只读）。
 3. 接下来就可以从这个模板虚拟机，克隆各类新虚拟机了~
 
-### cloud-init 高级配置与问题排查
+### cloud-init 高级配置
 
 PVE 使用 CDROM 只读盘(/dev/sr0)来进行 cloud-init 的配置。
 在虚拟机启动后，/dev/sr0 将被卸载。
@@ -73,11 +73,30 @@ $ ls cloud-config
 meta-data  network-config  user-data
 ```
 
-测试发现 `user-data` 有如下问题：
+查看上述文件发现 `user-data` 有如下问题：
 
-1. 它默认设定了 `manage_etc_hosts: true`，这导致我手动在 `/etc/cloud/cloud.cfg` 里设定的 `manage_etc_hosts: false` 被覆盖，暂时还没找到解决方法。。。
+1. 它硬编码了 `manage_etc_hosts: true`，这导致我手动在 `/etc/cloud/cloud.cfg` 里设定的 `manage_etc_hosts: false` 被覆盖。
 2. 它设置了 `hostname`，但是测试发现 centos7 的 hostname 仍然是 `localhost`，没有被修改，原因未知。
 
+
+### 修改 cloud-init 相关的硬编码参数
+
+通过前面的排查，我们发现 proxmox 有很多参数都硬编码了，没有通过配置暴露出来，导致我们无法修改。
+
+为了解决这个问题，我们完全可以修改掉 PVE 代码里的硬编码参数。
+
+首先通过全文搜索，找到硬编码参数的位置：
+
+```shell
+# 在 /usr/share 中全文搜索 manage_etc_hosts 这个关键字
+grep -r manage_etc_hosts /usr/share
+```
+
+直接就搜索到了硬编码位置是 `/usr/share/perl5/PVE/QemuServer/Cloudinit.pm`
+
+手动将配置修改为 `manage_etc_hosts: localhost`，就能让 cloud-init 只更新 localhost 相关的 hosts 内容。
+
+如果希望 cloud-init 能自动设置 hostname，还可以添加参数 `preserve_hostname: true`.
 
 
 ## 解决 SSH 登录速度慢的问题
