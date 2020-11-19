@@ -44,7 +44,7 @@ qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-1
 
 
 ```shell
-# 创建一个 cloud-init 需要使用的 CDROM 盘
+# 创建一个 cloud-init 需要使用的 CDROM 盘(sr0)
 qm set 9000 --ide2 local-lvm:cloudinit
 # 设置系统引导盘
 qm set 9000 --boot c --bootdisk scsi0
@@ -57,6 +57,28 @@ qm set 9000 --serial0 socket --vga serial0
 1. 进入虚拟机后，安装所需的基础环境，如 docker/docker-compose/vim/git/python3
 2. 关闭虚拟机，然后将虚拟机设为模板（只读）。
 3. 接下来就可以从这个模板虚拟机，克隆各类新虚拟机了~
+
+### cloud-init 高级配置与问题排查
+
+PVE 使用 CDROM 只读盘(/dev/sr0)来进行 cloud-init 的配置。
+在虚拟机启动后，/dev/sr0 将被卸载。
+
+可挂载上该只读盘，查看其中的初始化配置内容：
+
+```shell
+$ mkdir cloud-config
+$ mount /dev/sr0 cloud-config
+mount: /dev/sr0 is write-protected, mounting read-only
+$ ls cloud-config
+meta-data  network-config  user-data
+```
+
+测试发现 `user-data` 有如下问题：
+
+1. 它默认设定了 `manage_etc_hosts: true`，这导致我手动在 `/etc/cloud/cloud.cfg` 里设定的 `manage_etc_hosts: false` 被覆盖，暂时还没找到解决方法。。。
+2. 它设置了 `hostname`，但是测试发现 centos7 的 hostname 仍然是 `localhost`，没有被修改，原因未知。
+
+
 
 ## 解决 SSH 登录速度慢的问题
 
