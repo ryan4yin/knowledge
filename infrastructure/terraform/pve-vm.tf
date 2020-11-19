@@ -1,3 +1,4 @@
+# =============== 版本依赖 ========================
 terraform {
   required_providers {
     proxmox = {
@@ -15,8 +16,25 @@ provider "proxmox" {
     # 通过环境变量 PAM_PASSWORD 设置密码
 }
 
+# =============== 变量定义 ========================
+
+variable "vm_name" {
+  type = string
+}
+
+variable "vm_ip" {
+  type = string
+}
+
+variable "vm_gateway" {
+  type = string
+}
+
+
+# =============== 虚拟机定义 ========================
+
 resource "proxmox_vm_qemu" "vm" {
-  name = "<vm-name>"
+  name = var.vm_name
   desc = "a new vm cloned from centos7-template"
   target_node = "xxx"
 
@@ -46,10 +64,33 @@ resource "proxmox_vm_qemu" "vm" {
   }
 
   os_type = "cloud-init"
-  nameserver = "xxx.xxx.xxx.xxx"
-  ipconfig0 = "ip=xxx.xxx.xxx.xxx/24,gw=xxx.xxx.xxx.xxx"
+  nameserver = "114.114.114.114,119.29.29.29"
+  ipconfig0 = "ip=${var.vm_ip}/24,gw=${var.vm_gateway}"
   # 通过 cloud-init 设置初始账号
   ciuser = "root"
   # 为 root 账号设置 ssh 公钥
   sshkeys = file("${path.module}/base-rsa.pub")
+
+  # 更复杂的配置，可能需要考虑使用 ciconfig 直接设定 cloud-init 配置文件。
+  # ciconfig = file("${path.module}/cloud-init.yaml")
+
+  # 在虚拟机启动后，通过一些命令进行 VM 预配置
+  connection {
+    type = "ssh"
+    user = self.ciuser
+    private_key = data.local_file.privatekey.content
+    host = var.vm_ip
+    port = "22"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      # 设置 hostname (实测发现 centos7 的 cloud-init 并不会自动修改 hostname...)
+      "hostnamectl set-hostname ${var.vm_name}",
+      "echo 'preserve_hostname: false' >> /etc/cloud/cloud.cfg ",
+      # 关闭 SSH 的反向 DNS 解析，加快连接速度
+      "echo 'UseDNS no' >> /etc/ssh/sshd_config",
+      # 不让 cloud-init 自动管理 /etc/hosts
+      "echo 'manage_etc_hosts: false' >> /etc/cloud/cloud.cfg ",
+    ]
+  }
 }
