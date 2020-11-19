@@ -81,7 +81,7 @@ resource "proxmox_vm_qemu" "vm" {
   }
   provisioner "remote-exec" {
     inline = [
-      # 设置 hostname (不知道为啥，实测发现 centos7 的 cloud-init 并不会自动修改 hostname...)
+      # 设置 hostname (不知道为啥，实测发现 centos7 的 cloud-init 并不会自动设置 hostname...)
       "hostnamectl set-hostname ${self.name}",
       # 关闭 SSH 的反向 DNS 解析，加快连接速度
       "echo 'UseDNS no' >> /etc/ssh/sshd_config",
