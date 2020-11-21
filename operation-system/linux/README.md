@@ -161,3 +161,5 @@ ubuntu 1804 开始自带 cloud-init，这个工具默认情况下会使我们修
 - [ulimit、limits.conf、sysctl和proc文件系统](https://www.jianshu.com/p/20a2dd80cbad)
 - [Rancher - 基础环境配置](https://docs.rancher.cn/rancher2x/install-prepare/basic-environment-configuration.html)
 - [最佳实践 - 主机 OS 调优](https://docs.rancher.cn/rancher2x/install-prepare/best-practices/os.html)
+
+- [一台机器最多能撑多少个TCP连接? 今天掰扯清楚！](https://zhuanlan.zhihu.com/p/290651392)
