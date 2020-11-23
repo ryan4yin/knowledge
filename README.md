@@ -19,13 +19,20 @@
 9. DevOps 实用脚本
 10. 研发运维一体化平台：CI+CD+SRE
 
+
+## 工具选型
+
+随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
+
 ## 应用部署
 
 此仓库包含的软件，主要提供了如下几种部署方法
 
 - docker-compose 部署：可以参考 [awesome-compose](https://github.com/docker/awesome-compose)
+  - 对于使用 docker-compose 部署的单机应用，我倾向于使用 bind 文件夹绑定的方式来持久化数据。详见 [Docker 数据卷](/container/docker/Docker%20数据卷.md)
 - kubernetes 部署：可以在各软件的官方文档或者官方 Github 寻找。
   - kubernetes 主流的部署方法：首推 helm，其次是 yaml 文件直接部署或者 kustomize.
+  - 工作中接触到的主要都是无状态应用，对 kubernetes 数据卷的了解目前还很欠缺。
 
 
 ## 国内主流镜像站
