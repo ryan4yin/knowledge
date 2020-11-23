@@ -1,4 +1,4 @@
-# [OAM(Open Application Model)](https://github.com/oam-dev/spec)
+# [OAM(Open Application Model)](https://github.com/oam-dev)
 
 将应用配置拆分成三个关注点（关注点分离）：
 
@@ -10,6 +10,11 @@
 
 个人感觉 OAM 的主要应用场景在各大企业内部，开源项目主要还是会用 helm。
 因为 OAM 标榜的运维特征与应用组件分离，对开源应用的意义不大，但是对企业内部成百上千的微服务部署而言，就意义重大了。
+
+
+## [Kubevela](https://github.com/oam-dev/kubevela): 基于 OAM 构建的易用的 APP 平台
+
+待续，也许是时候投入点精力为开源做做贡献了？
 
 ## Kubernetes 标准实现：[CrossPlane](https://github.com/crossplane/crossplane)
 
