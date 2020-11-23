@@ -11,7 +11,7 @@
 1. Pod 出现大量的 Failed 记录，Deployment 一直重复建立 Pod: 通过 `kubectl describe/edit pod <pod-name>` 查看 pod `Events` 和 `Status`，一般会看到失败信息，如节点异常导致 Pod 被驱逐。
 1. [Kubernetes 问题排查：Pod 状态一直 Terminating](https://zhuanlan.zhihu.com/p/70031676)
 1. 创建了 Deployment 后，却没有自动创建 Pod: 缺少某些创建 Pod 必要的东西，比如设定的 ServiceAccount 不存在。
-
+1. Pod 运行失败，状态为 MatchNodeSelector: 对主节点进行关机、迁移等操作，导致主调度器下线时，会在一段时间内导致 Pod 调度失败，调度失败会报这个错。
 
 ### Pod 无法删除
 
