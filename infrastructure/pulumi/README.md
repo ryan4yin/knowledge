@@ -12,11 +12,17 @@ terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，�
 
 这显然是一个很麻烦的过程。**其中最主要的原因，是 terraform 只做到了「基础设施即配置」，而「配置」过于简单。**
 
-这种情况下，就需要用到真正的「基础设施即代码」的工具了：
+这种情况下，就需要用到真正的「基础设施即代码」工具 - Pulumi 了。它的优势如下：
 
-1. : 目前最流行的 IaaS 工具，对各语言的支持最为成熟。
-   1. 兼容 terraform 的所有 provider，只是需要自行使用 [pulumi-tf-provider-boilerplate](https://github.com/pulumi/pulumi-tf-provider-boilerplate) 重新打包，有些麻烦。
-   2. 状态管理和 secrets 管理比 terraform 完善很多，状态和 secrets 可以存储在 postgresql/consul 等多种后端中。
+1. pulumi 是目前最流行的 真-IaaS 工具（另一个是刚出炉没多久的 terraform-cdk），对各语言的支持最为成熟。
+2. 兼容 terraform 的所有 provider，只是需要自行使用 [pulumi-tf-provider-boilerplate](https://github.com/pulumi/pulumi-tf-provider-boilerplate) 重新打包，有些麻烦。
+   1. 我翻文档发现，pulumi 的官方 provider 里面，估计 90% 以上都是 `based on the terraform xxx provider`...
+3. 状态管理和 secrets 管理有如下几种选择：
+   1. 使用 app.pulumi.com（默认）:免费版提供 stack 历史管理，可以看到所有的历史记录。另外还提供一个资源关系的可视化面板。总之很方便。
+   2. 本地文件存储：`pulumi login file:///app/data`
+   3. 云端对象存储，目前貌似只支持 aws-s3/gcp/azure 三种。
+   4. [gitlab 13 支持 Terraform HTTP State 协议](https://github.com/pulumi/pulumi/issues/4727)，等这个 pr 合并，pulumi 也能以 gitlab 为 backend 了。
+   5. 使用 pulumi 企业版（自建服务）：比 app.pulumi.com 提供更多的特性，但是显然是收费的。。
 
 上述工具支持通过 Python/TypeScript 等语言来描述配置。好处有：
 
