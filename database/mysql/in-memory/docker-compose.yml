@@ -16,8 +16,8 @@ services:
     ## 也可以通过 volumes 将文件夹映射到 /dev/shm 中实现「内存模式」
     tmpfs:
       - /var/lib/mysql:size=1G
-      # 模板如下：
-      # - /tempFiles:exec,mode=777,size=1G,uid=104,gid=107
+      # 模板如下
+      # - /tempFiles:exec,mode=755,size=1G,uid=999,gid=999
     environment:
       MYSQL_ROOT_PASSWORD: example
       # 也可以创建自定义的管理员账号密码
