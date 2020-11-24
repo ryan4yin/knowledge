@@ -1,4 +1,8 @@
-# DevOps Notes & Scripts
+# Everything I Know
+
+主要包含我总结的 DevOps 资料理论学习笔记。
+
+## DevOps Notes & Scripts
 
 我日常总结出来的一些 DevOps 笔记与脚本。
 
@@ -20,11 +24,11 @@
 10. 研发运维一体化平台：CI+CD+SRE
 
 
-## 工具选型
+### 工具选型
 
 随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
 
-## 应用部署
+### 应用部署
 
 此仓库包含的软件，主要提供了如下几种部署方法
 
@@ -35,7 +39,7 @@
   - 工作中接触到的主要都是无状态应用，对 kubernetes 数据卷的了解目前还很欠缺。
 
 
-## 国内主流镜像站
+### 国内主流镜像站
 
 由于众所周知的原因，很多时候我们需要为各种系统、应用、包管理器设置镜像源以加速下载。
 
@@ -53,7 +57,7 @@
 首推阿里云镜像源，稳定可靠速度快。
 
 
-## DevOps 资料
+### DevOps 资料
 
 系统化的文档：
 
