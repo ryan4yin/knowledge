@@ -91,12 +91,21 @@ services:
     # ...省略...
 ```
 
+## 启动运行
 
-1. 创建 ES 数据文件夹 `es_data`，权限设为 777。否则可能航报错 Access Denied。
-   1. 这应该是因为 ES 使用的账号有问题，或者是 SELinux 的问题。
-2. 构建镜像：`docker-compose build`，如果更新了镜像相关的配置，一定要提前运行这个命令！
-3. 通过 `docker-compose up -d` 启动 ELK。
+```shell
+# 如果使用了文件夹 bind 做数据持久化，提前手动创建 bind 文件夹并设定 uid/gid
+# 否则会导致容器报错：Permission Denied
+# 详见 [docker bind 默认使用 root/root 创建文件夹](https://github.com/moby/moby/issues/2259)
+mkdir es_data
+chown 1000:1000 es_data
 
+# 如果更新了镜像相关的配置，需要先手动 build
+docker-compose build
+
+# 后台启动 elk
+docker-compose up -d
+```
 
 
 ## ELK 监控
