@@ -1,6 +1,6 @@
 # My Jupyter Notebooks
 
-[View Through NBViewer](https://nbviewer.jupyter.org/github/ryan4yin/knowledge/tree/master/notebook)
+[View Through NBViewer](https://nbviewer.jupyter.org/github/ryan4yin/knowledge/tree/master/jupyter-notebook/)
 
 ## Book/Notebook Reference
 
