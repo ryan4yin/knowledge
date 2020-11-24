@@ -78,6 +78,7 @@ http.host != "xxx.baidu.com" and http.referer == "xxx.baidu.com"
 使用 ssh 协议进行流式传输的示例如下：
 
 ```shell
+# eth0 更换成你的机器 interface 名称，虚拟机可能是 ens33
 ssh root@some.host "tcpdump -i eth0 -l -w -" | wireshark -k -i -
 ```
 
