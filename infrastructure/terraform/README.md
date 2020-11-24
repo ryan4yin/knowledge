@@ -61,6 +61,11 @@ terraform 默认将状态保存在本地的 `.tfstate` 文件中，但也支持�
 
 推荐使用远端存储保存状态，默认使用的本地 `.tfstate` 容易导致管理混乱，安全性也很差。
 
+比如
+
+1. 使用阿里云 OSS 做状态存储: [alicoud oss backend - terraform docs](https://www.terraform.io/docs/backends/types/oss.html)
+1. [gitlab 13 支持 Terraform HTTP State 协议](https://github.com/pulumi/pulumi/issues/4727)，可以直接将它用做 terraform 的 Backend.
+
 
 ## 常见用途
 
