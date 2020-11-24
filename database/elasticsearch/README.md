@@ -69,7 +69,8 @@ echo "vm.max_map_count=262144" >> /etc/sysctl.conf  # 重启后生效
 ## 修改 `docker-compose.yaml`
 
 1. 添加容器日志限制。否则容器日志可能会吃光整个磁盘。。
-1. 修改 ulimit 参数限制
+1. 修改 ulimit 参数限制，这个可以参考 elastic 官方提供的 [docker/docker-compose.yml](https://github.com/elastic/elasticsearch/blob/master/distribution/docker/docker-compose.yml)
+2. 添加健康检查，简单地直接请求 elasticsearch。
 
 ```docker-compose
 # ...省略...
@@ -80,7 +81,7 @@ services:
       options:
         max-size: "10m"
         max-file: "1"
-    ulimits:  # 放开 ulimit 限制
+    ulimits:  # 放开 ulimit 限制，参考了官方提供的 docker-compose.yml
       memlock:
         soft: -1
         hard: -1
@@ -88,6 +89,12 @@ services:
       nofile:
         soft: 65535
         hard: 65535
+    healthcheck:  # 健康检查
+      start_period: 15s
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
     # ...省略...
 ```
 
