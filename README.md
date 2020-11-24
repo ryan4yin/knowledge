@@ -1,30 +1,29 @@
 # Everything I Know
 
->个人笔记，并不是教程，也不保证正确！
+>个人知识库，并不是教程，也不保证正确！
 
-主要包含我总结的 DevOps 笔记、云原生笔记，还有其他杂七杂八的东西。
-
-## DevOps Notes & Scripts
-
-主要包含：
+主要内容：
 
 1. 用于容器化部署常见应用的 docker-compose 配置（单机）。
 2. Kubernetes 生态：部署、配置、组件及使用笔记。
-3. Telemetry：监控、日志、链路追踪（学习中。。）
-4. 容器：Docker、容器镜像仓库、Podman、CRIO 等。
-5. CI/CD：Jenkins/GitLabCI 等
-6. 操作系统：Linux 系统、KVM 虚拟化等。
-7. 编程语言学习笔记：Python/Golang/Java
-8. Homelab: 家庭服务器相关，以及一些个人爱好。
+3. Telemetry：监控、日志、链路追踪（学习中...）
+4. 容器：Docker、容器镜像仓库、Podman 等。
+5. CI/CD：Jenkins/GitLabCI/ArgoWorkflow 等
+6. 网络：Kubernetes 集群网络、Linux 网络（学习中）
+7. 操作系统：Linux 系统、KVM 虚拟化等。
+8. 编程语言学习笔记：Python/Golang/Java
 9. DevOps 实用脚本
 10. 研发运维一体化平台：CI+CD+SRE
+11. Homelab: 家庭服务器相关，以及一些个人爱好。
+12. 数学笔记：线代、数学物理方法等
+13. AI 学习笔记（貌似还没开始...）
+14. 信号与系统/数字信号处理（皮毛都还没学到...）
 
-
-### 工具选型
+## 工具选型
 
 随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
 
-### 应用部署
+## 应用部署
 
 此仓库包含的软件，主要提供了如下几种部署方法
 
@@ -35,7 +34,7 @@
   - 工作中接触到的主要都是无状态应用，对 kubernetes 数据卷的了解目前还很欠缺。
 
 
-### 国内主流镜像站
+## 国内主流镜像站
 
 由于众所周知的原因，很多时候我们需要为各种系统、应用、包管理器设置镜像源以加速下载。
 
@@ -53,7 +52,7 @@
 首推阿里云镜像源，稳定可靠速度快。
 
 
-### DevOps 资料
+## DevOps 资料
 
 系统化的文档：
 
