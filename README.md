@@ -1,14 +1,10 @@
 # Everything I Know
 
-主要包含我总结的 DevOps 资料理论学习笔记。
+>个人笔记，并不是教程，也不保证正确！
+
+主要包含我总结的 DevOps 笔记、云原生笔记，还有其他杂七杂八的东西。
 
 ## DevOps Notes & Scripts
-
-我日常总结出来的一些 DevOps 笔记与脚本。
-
-个人笔记，并不是教程，也不保证正确！
-
->[点击通过 GitBook 查看](https://devops.ryan4yin.space/)，注意 GitBook 只支持查看 Markdown 文档，看不到 .yaml/.py/.go 等配置或代码。
 
 主要包含：
 
