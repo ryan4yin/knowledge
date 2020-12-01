@@ -33,6 +33,16 @@ terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，�
    2. 而使用 pulumi，Python/TypeScript 这类通用的编程语言，能满足你的一切需求，而且作为一个开发人员/DevOps，你应该对它们相当熟悉。
 
 
+## 使用建议
+
+1. 建议查看对应的 terraform provider 文档：pulumi 的 provider 基本都是封装的 terraform 版本，而且文档是自动生成的，比较难看懂，examples 也少。
+2. stack: pulumi 官方提供了两种 stack 用法：[「单体」和「微-stack」](https://www.pulumi.com/docs/intro/concepts/organizing-stacks-projects/)
+   1. 单体: one stack hold them all，通过 stack 参数来控制步骤。stack 用来区分环境 dev/pro 等。
+   2. 微-stack: 每一个 stack 是一个步骤，所有 stack 组成一个完整的项目。
+   3. 实际使用中，我发现「微-stack」模式需要使用到 pulumi 的 inter-stack dependencies，报一堆的错，而且不够灵活。因此目前更推荐「单体」模式。
+
+
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
