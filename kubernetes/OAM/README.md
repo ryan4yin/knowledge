@@ -14,8 +14,5 @@
 
 ## [Kubevela](https://github.com/oam-dev/kubevela): 基于 OAM 构建的易用的 APP 平台
 
-Kubevela 和 Knative 有点类似，但是貌似更简单。
+Kubevela 和 Knative 有点类似，但是貌似更简单，功能更强大。
 
-## Kubernetes 标准实现：[CrossPlane](https://github.com/crossplane/crossplane)
-
-待续
