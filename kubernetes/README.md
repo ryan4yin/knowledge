@@ -1,5 +1,12 @@
 # Kubernetes
 
+## Kubernetes 相关项目
+
+开发与调试：
+
+- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。
+
+
 ## 技术文章收藏
 
 - [一文带你检查Kubernetes应用是否为最佳实践](https://juejin.im/post/6844904024911642637)
