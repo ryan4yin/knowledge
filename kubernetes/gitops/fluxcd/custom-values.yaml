@@ -20,9 +20,7 @@ git:
   user: "Weave Flux"
   # Email to use as git committer
   email: "support@weave.works"
-  # 多久从 git 仓库拉取一次新提交
-  # Period at which to poll git repo for new commits
-  pollInterval: "1m"
+  # (git pull)多久从 git 仓库拉取一次新提交
   # Duration after which git operations time out
   timeout: "20s"
   # The secret name can be used to supply your own SSH key, instead of
@@ -39,10 +37,7 @@ sync:
   state: git
   # Duration after which sync operations time out (defaults to 1m)
   timeout:
-  # 多久部署一次新内容到 kubernetes
-  # Controls how often Flux will apply what’s in git, to the cluster, absent new commits.
-  # Reducing this interval below a minute or so may hinder Flux, since syncs can take tens of seconds,
-  # leaving not much time to do other operations.
+  # (kubectl apply)多久部署一次 git 新内容到 kubernetes
   interval: "2m"
 
 # SSH 主机指纹
