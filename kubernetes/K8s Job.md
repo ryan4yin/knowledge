@@ -35,7 +35,50 @@ Job 这里需要注意的一个点，是 `spec.template.spec.restartPolicy` 和 
 这样因为 Pod 常驻后台，就成了一个 Deployment 了，也就不受不可靠的 Cronjob 影响。
 任务的超时、并发等问题，都可以在自己的代码中去处理，更灵活也更复杂。
 
+
+## Kubernetes CronJob 存在的问题（摘抄）
+
+自开始将这些重复的计划任务移至Kubernetes以来，我们发现开箱即用地使用CronJob，导致开发人员和平台团队都遇到了很多个痛点，这些痛点抵消了收益和成本。为了节省开支，我们最初选择了Kubernetes CronJob。但我们很快意识到，我们的开发人员和平台团队都没有配备必要的工具来操作和理解CronJobs复杂的生命周期。
+
+Lyft的开发人员在尝试操作和调试其Kubernetes CronJobs时遇到了许多问题和投诉，例如：
+
+- “为什么我的cron不运行？”
+- “我认为我的cron停止了运行。我如何知道我的cron是否正在运行？”
+- “我不知道cron不在运行，我只是以为它在运行！”
+- “我该如何补救X失败的Cron？我不能只是自己输入和运行命令。”
+- “你能解释一下为什么这个Cron似乎错过了X和Y [时间段]之间的一些时间表吗？”
+- “我们有X（大量）corn，每个corn都有自己的警报，维护它们实在是非常乏味/痛苦。”
+- “这乱七八糟的一堆 Job、Pod、Sidecar 都是干啥的？”
+
+作为平台团队，我们没有能力回答以下问题：
+
+- 我们如何量化Kubernetes Cron平台的性能特征？
+- 在我们的Kubernetes环境中加入更多CronJobs有什么影响？
+- 与单租户Unix cron相比，运行多租户Kubernetes CronJobs的性能如何？
+- 我们如何开始定义与客户沟通的服务水平目标（SLO）？
+- 作为平台运营商，我们要监视什么并发出警报，以确保在不影响客户的情况下迅速解决平台范围的问题？
+- 
+调试CronJob故障并不是一件容易的事，并且通常需要对故障发生的位置以及寻找证据的位置进行直观了解。有时，很难找到这些证据，例如cronjobcontroller仅以高详细日志级别记录的日志。或者，这些痕迹只是在特定时间段后消失，使调试变成“打地鼠”游戏。例如CronJob，Job和Pod对象本身上的Kubernetes Events，默认情况下仅保留一小时。这些方法都不容易使用，而且考虑到平台上越来越多 CronJobs，这些方法的伸缩性也不怎么好。
+
+另外，有时当CronJob错过了太多运行时段，Kubernetes只会**退出**，需要有人手动给 CronJob「松绑」。在实际使用中，这种情况发生的频率比您想像的要高，并且每次手动修复都变得很痛苦。
+
+### 解决方法
+
+痛点在于 Cronjob：
+
+1. 没有方便可靠的监控告警方案，有些错误被会静默处理，无法主动报警。
+2. 调度失败次数太多，将需要手动处理。
+
+目前 Lyft 是自己搞了一套自定义的方案，而我公司这边，是暂时自己把我们的 Cronjobs 改造成了死循环，通过 Deployment 调度，通过日志关键字(Error/Fail)来设置告警...
+
+官方目前有个 EAP，计划重写 Cronjob Controller，添加指标支持，改善性能: [KEP-19: Graduate CronJob to stable](https://github.com/kubernetes/enhancements/blob/master/keps/sig-apps/19-Graduate-CronJob-to-Stable/README.md)
+
+该计划打算在 1.20 中推出 Alpha 版本，在 1.21 中进入 Beta 阶段.
+
+
 ## 参考
 
 - [Jobs - Run to Completion - Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/)
 - [CronJob - Kubernetes](https://kubernetes.io/zh/docs/concepts/workloads/controllers/cron-jobs/)
+- [How we learned to improve Kubernetes CronJobs at Scale (Part 1 of 2) - Lyft](https://eng.lyft.com/improving-kubernetes-cronjobs-at-scale-part-1-cf1479df98d4)
+- [我们如何学会大规模改善Kubernetes CronJobs（第2部分，共2部分） - Lyft](https://zhuanlan.zhihu.com/p/305040921)
