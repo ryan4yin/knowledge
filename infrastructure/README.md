@@ -14,7 +14,7 @@
 1. terraform（热度最高）: 基础设施即**配置**，通过专用的 HCL 语言来声明式地配置基础设施。HCL 功能比较弱，而且还有额外的学习成本。
 1. pulumi（热度其次）: 基础设施即**代码**，通过 Python/Go/TypeScript 等通用编程语言来声明基础设施，灵活性很高，个人推荐。
     - pulumi 的 provider 基本完全来自 terraform 社区，因此 API 结构也完全一致。
-2. [CrossPlane](https://github.com/crossplane/crossplane): 通过 Kubernetes 自定义资源(CR) 来声明基础设施。
+2. [Crossplane](https://github.com/crossplane/crossplane): 通过 Kubernetes 自定义资源(CR) 来声明基础设施。
     - crossplane 提倡通过 Kubernetes API 资源模型来声明基础设施，表现形式上目前主要是 Yaml.
     - crossplane 集成了 OAM 模型，带来的一个特性是：它可以在平台无关的层面去定义基础设施，在各云平台都能通用！！！
 
