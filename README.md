@@ -19,6 +19,8 @@
 13. AI 学习笔记（貌似还没开始...）
 14. 信号与系统/数字信号处理（皮毛都还没学到...）
 
+文件夹结构就是文档目录，这里就不额外列索引了—_—
+
 ## 工具选型
 
 随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
