@@ -28,6 +28,8 @@ terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，�
 
 1. 使用代码编写 Kubernetes 配置，no-yaml
    1. yaml 也存在和 HCL 一样的问题，配置太死板，导致我们现在需要通过 Python 来动态生成 yaml...
+   2. helm/kustomize 虽然好，但是部分参数灵活性太高，还是必须使用 Python 来生成。
+   3. 我们正在考虑将 pulumi 和 kustomize/helm 结合起来做 yaml 的生成，因为我们的微服务 yaml 重复度相当高，可以将 helm/kustomize 配置当成通用模板(template)，pulumi 使用这套 template 生成出最终 yaml.
 2. 批量创建资源，动态生成资源参数。
    1. 比如批量创建一批名称类似的 ECS 服务器/VPC交换机。如果使用 terraform，你需要编写 module 来实现配置的复用，然后使用 hcl 的特殊语法来动态拼接出资源名称，因为语法限制，这种 HCL 能实现的功能也很有限。
    2. 而使用 pulumi，Python/TypeScript 这类通用的编程语言，能满足你的一切需求，而且作为一个开发人员/DevOps，你应该对它们相当熟悉。
@@ -92,6 +94,8 @@ bucket = oss.Bucket(..., opts=ResourceOptions(provider=provider))
 ```
 
 ### 3. inter-stack 属性传递
+
+>这东西还没搞透，待研究。
 
 多个 stack 之间要互相传递参数，需要通过 `pulumi.export` 导出属性，通过 `stack.require_xxx` 获取属性。
 
