@@ -108,6 +108,15 @@ infra = StackReference(f"ryan4yin/{project}/{stack_name}")
 vpc_id = infra.require("resources.vpc.id")
 ```
 
+### 4. `pulumi up` 被中断，或者对资源做了手动修改，会发生什么？
+
+1. 强行中断 `pulumi up`，会导致资源进入 `pending` 状态，必须手动修复。
+   1. 修复方法：`pulumi stack export`，删除 pending 资源，再 `pulumi stack import`
+2. 手动删除了云上资源，或者修改了一些对资源管理无影响的参数，对 `pulumi` 没有影响，它能正确检测到这种情况。
+   1. 可以通过 `pulumi refresh` 手动从云上拉取最新的资源状态。
+3. 手动更改了资源之间的关系（比如绑定 EIP 之类的），很可能导致 pulumi 无法正确管理资源之间的依赖。
+
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
