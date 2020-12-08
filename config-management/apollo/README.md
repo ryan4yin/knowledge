@@ -26,6 +26,7 @@ Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
    2. `docker-compose.yml` 中只添加了 dev/fat/uat 三个环境。我们的 pro 是线上生产专用的环境。
 2. configservice 和 adminservice 都是通过 `apolloconfigdb` 数据库中 `ServerConfig` 表 `eureka.service.url` 的属性来访问注册中心(eruka) 的。
    1. 而 Apollo 官方给的默认值是 `http://localhost:8080/eureka/`，使用 docker 网络时必须要手动修改 `localhost` 为 configservice 的名称（因为 eruka 和 configservice 在同一个容器中）。
+   2. helm 版本使用 kubernetes dns 做服务发现，抛弃了 eureka，因此不需要修改这个 url。
 3. 不管有多少个环境，portal 都只需要一个。
    1. portal 支持通过环境变量配置所有的环境(ENV)及对应的 META Server 地址，不需要手动修改数据库。
 4. portal 的 `organizations`（部门列表）目前只能通过 `apolloportaldb.sql` 末尾的 INSERT 语句设置。不提供 API 进行修改。
@@ -42,6 +43,7 @@ Apollo 分布式配置中心，最简单的部署方式是使用 Kubernetes + He
 
 1. 创建数据库：Apollo服务端共需要两个数据库：ApolloPortalDB 和 ApolloConfigDB
    1. 详见：[Apollo 分布式部署指南-创建数据库](https://github.com/ctripcorp/apollo/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97#21-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93)
+   2. 数据库说明见前面的 docker-compose 部署文档。
 2. 通过 Helm 进行部署：
    1. 部署 apollo-configservice 和 apollo-adminservice，每一个配置环境都需要独立部署这两个服务。
    2. 部署 apollo-portal，这个是 Apollo 的 UI/API 面板，所有环境公用。
