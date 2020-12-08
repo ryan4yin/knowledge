@@ -21,10 +21,10 @@ Apollo 是携程开源的一个分布式配置中心，在国内非常流行。
 
 需要注意的有：
 
-1. configservice 和 adminservice 及对应的 apolloconfigdb 数据库，是每个环境一套，dev/fat/uat 三个环境就需要三套
+1. configservice 和 adminservice 及对应的 `apolloconfigdb` 数据库，是每个环境一套，dev/fat/uat 三个环境就需要三套
    1. 数据库可以通过后缀区分环境：ApolloConfigDB_DEV / ApolloConfigDB_FAT. 简单起见，测试环境可以使用同一个 mysql.
    2. `docker-compose.yml` 中只添加了 dev/fat/uat 三个环境。我们的 pro 是线上生产专用的环境。
-2. configservice 和 adminservice 都是通过 `ServerConfig` 表 `eureka.service.url` 的属性来访问注册中心(eruka) 的。
+2. configservice 和 adminservice 都是通过 `apolloconfigdb` 数据库中 `ServerConfig` 表 `eureka.service.url` 的属性来访问注册中心(eruka) 的。
    1. 而 Apollo 官方给的默认值是 `http://localhost:8080/eureka/`，使用 docker 网络时必须要手动修改 `localhost` 为 configservice 的名称（因为 eruka 和 configservice 在同一个容器中）。
 3. 不管有多少个环境，portal 都只需要一个。
    1. portal 支持通过环境变量配置所有的环境(ENV)及对应的 META Server 地址，不需要手动修改数据库。
