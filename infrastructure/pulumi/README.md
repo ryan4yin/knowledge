@@ -134,6 +134,11 @@ pulumi-kubernetes 是一条龙服务：
 
 通用的配置，还是建议使用 helm/kustomize 将它们抽离成 yaml 模板，python 代码中只处理动态配置。
 
+### 6. 阿里云资源 replace 报错？
+
+部分只能创建删除，不允许修改的资源，做变更时会报错：「Resources aleardy exists」，
+这类资源，通常都有一个「force」参数，指示是否强制修改——即先删除再重建。
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
