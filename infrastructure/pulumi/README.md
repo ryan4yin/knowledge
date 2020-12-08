@@ -121,6 +121,19 @@ vpc_id = infra.require("resources.vpc.id")
 3. 手动更改了资源之间的关系（比如绑定 EIP 之类的），很可能导致 pulumi 无法正确管理资源之间的依赖。
 
 
+### 5. pulumi-kubernetes？
+
+pulumi-kubernetes 是一条龙服务：
+
+1. 在 yaml 配置生成这一步，它能结合/替代掉 helm/kustomize，或者你高度自定义的 Python 脚本。
+2. 在 yaml 部署这一步，它能替代掉 argocd/fluxcd 这类 gitops 工具。
+3. 强大的状态管理，argocd 也有状态管理，可以对比看看。
+
+使用 pulumi-kubernetes 写配置，要警惕逻辑和数据的混合程度。
+因为 kubernetes 的配置复杂度比较高，如果动态配置比较多，很容易就会写出难以维护的 python 代码来。
+
+通用的配置，还是建议使用 helm/kustomize 将它们抽离成 yaml 模板，python 代码中只处理动态配置。
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
