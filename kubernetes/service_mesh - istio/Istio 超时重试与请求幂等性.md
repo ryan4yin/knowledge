@@ -17,7 +17,7 @@ max_retries: Note, this applies only to failed DNS lookups, socket connections a
 
 ## 幂等性
 
-requests 为何不重试失败的连接？主要是因为， requests 不知道服务端是否已经收到了数据。
+requests 为何不重试失败的连接？主要是因为，requests 不知道服务端是否已经收到了数据。
 如果服务端收到了数据，而请求又不是幂等的，requests 擅自重试这个请求，就很可能导致严重的后果，比如付一次款得到两份肯德基。
 
 说一个请求幂等，是指这个请求不论是发生一次，还是发生多次，对结果都没有任何影响。
@@ -36,7 +36,7 @@ requests 为何不重试失败的连接？主要是因为， requests 不知道�
 
 ## Istio/Envoy 重试机制
 
-Istio/Envoy 提供功能非常丰富的重试机制，可以设置各种各样的重试触发条件。
+Istio/Envoy 提供功能非常丰富的 http/grpc 重试机制，可以设置各种各样的重试触发条件。
 但是在 API 非幂等的情况下，贸然使用 Istio/Envoy 的重试功能，会导致非常严重的问题！！！
 
 所以一定要搞清楚 Istio/Envoy 的各类重试条件的具体意义，再去使用！
