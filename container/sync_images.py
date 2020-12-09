@@ -23,24 +23,9 @@ from pathlib import Path
 
 # 源镜像仓库：镜像列表
 REPO_IMAGES_DICT = {
-    "quay.io": (
-        # rook-ceph v1.4.1 的镜像
-        # "cephcsi/cephcsi:v3.1.0",
-        # "k8scsi/csi-node-driver-registrar:v1.2.0",
-        # "k8scsi/csi-provisioner:v1.6.0",
-        # "k8scsi/csi-snapshotter:v2.1.1",
-        # "k8scsi/csi-attacher:v2.1.0",
-        # "k8scsi/csi-resizer:v0.4.0",
-
-        # prometheus-operator 镜像
-        "prometheus/alertmanager:v0.21.0",
-        "prometheus/prometheus:v2.18.2",
-        "coreos/prometheus-operator:v0.38.1",
-        "coreos/prometheus-config-reloader:v0.38.1",
-
-        # istio 相关
-        "kiali/kiali-operator:v1.23.0",
-    ),
+    # quay.io 目前国内拉取速度已经很快了，不需要手动同步。
+    # "quay.io": (
+    # ),
 }
 
 # 我的阿里云容器镜像仓库
