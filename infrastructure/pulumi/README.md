@@ -139,6 +139,17 @@ pulumi-kubernetes 是一条龙服务：
 部分只能创建删除，不允许修改的资源，做变更时会报错：「Resources aleardy exists」，
 这类资源，通常都有一个「force」参数，指示是否强制修改——即先删除再重建。
 
+### 7. 有些资源属性无法使用 pulumi 配置？ 
+
+这得看各云服务提供商的支持情况。
+
+比如阿里云很多资源的属性，pulumi 都无法完全配置，因为 alicloud provider 的功能还不够全面。
+
+目前我们生产环境，大概 90%+ 的东西，都可以使用 pulumi 实现自动化配置。
+而其他 OSS 的高级参数、新出的 ASM 服务网格、kubernetes 的授权管理、ElasticSearch7 等资源，还是需要手动配置。
+
+这个没办法，只能等阿里云提供支持。
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
