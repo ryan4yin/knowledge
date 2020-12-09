@@ -18,8 +18,25 @@ Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace �
 
 ### 2. Workflow 的重用 - WorkflowTemplate
 
+将 yaml 定义中的 `Kind` 从 `Workflow` 修改为 `WorkflowTemplate`，就能得到一个 WorkflowTemplate.
 
-### 3. 其他特性
+WorkflowTemplate 可以被其他 Workflow 引用并触发，也可以正常传参。
+
+### 3. Web UI
+
+Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，但是它貌似不是面向「用户」的，功能比较底层。
+
+它不像 Jenkins 一样，有对非专业人员而言，很友好的使用界面，所有的 CR 自定义参数都是完全暴露出来的。
+另外它所有的构建都是相互独立的，没办法分类。
+
+所以如果要使用它替代我们 Jenkins 目前的职能，需要对它进行进一步封装。
+
+我目前想到的最简单的方案，是保留原有的 Jenkins 作为交互 UI，但是后台的具体实现，全部换成 Argo Workflow.
+也就是说使用 Jenkins+Python 来封装 Argo Workflow. 这样开发人员体验上的改变最小，Argo Workflow 自身的复杂性也被封装到了底层，也能顺利享受到 Argo Workflow+Kubernetes 带来的红利。
+
+当然，如果已经有更好的实现，就更好了。
+
+### 4. 其他特性
 
 1. 凭据管理：利用了 Kubernetes 原生的 Secrets 存储 Git/Docker 等工具的密钥/token
 1. 定时执行的 Workflow
