@@ -21,6 +21,7 @@ Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace �
 
 ### 3. 其他特性
 
+1. 凭据管理：利用了 Kubernetes 原生的 Secrets 存储 Git/Docker 等工具的密钥/token
 1. 定时执行的 Workflow
 2. 提供 RESTful API
 3. step 之间可以传递 parameters，并且提供 artifact/outputs/exitcode 等返回值
