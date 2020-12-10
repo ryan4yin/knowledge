@@ -66,4 +66,11 @@ Secret Engine 是保存、生成或者加密数据的组件，它非常灵活。
 而其他的 Secret Engines 则连接到其他的服务并按需生成动态凭证。
 还有些 Secret Engines 提供「加密即服务(encryption as a service)」 - transit、证书管理等。
 
+常用的 engine 举例：
+
+1. AliCloud Secrets Engine: 基于 RAM 策略动态生成 AliCloud Access Token，或基于 RAM 角色动态生成 AliCloud STS 凭据
+    - Access Token 会自动更新(Renew)，而 STS 凭据是临时使用的，过期后就失效了。
+1. kv: 键值存储，可用于存储一些静态的配置。它一定程度上能替代掉携程的 Apollo 配置中心。
+1. Transit Secrets Engine: 提供加密即服务的功能，它只负责加密和解密，不负责存储。主要应用场景是帮 app 加解密数据，但是数据仍旧存储在 MySQL 等数据库中。
+
 
