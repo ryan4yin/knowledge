@@ -9,7 +9,14 @@ Argo Workflow 是一个云原生工作流引擎，专注于编排并行任务。
 
 ## 简单的使用体验
 
-首先记住一点，WorkflowTemplate 就相当于 Jenkins 的 Jenkinsfile，而 Workflow 就相当于手动在 Jenkins UI 点击进行的一次构建。
+简单的总结
+
+1. WorkflowTemplate 就相当于 Jenkins 的 Jenkinsfile
+1. 在 Argo UI 的 WorkflowTemplate 界面 Submit 一个 WorkflowTemplate，对应 Jenkins 在 Job 界面点击一次构建。
+1. 提交 WorkflowTemplate 时，也有一个类似 Jenkins 的参数设定界面，可以修改 WorkflowTemplate 的默认参数。
+2. 提交 WorkflowTemplate 会生成一个 Workflow，Workflow 就对应 Jenkins 的一次构建(Build)。
+
+
 
 ### 1. Workflow 的分类
 
