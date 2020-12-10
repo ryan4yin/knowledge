@@ -57,3 +57,13 @@ Core 会将其注册到 expiration manager，并给它附加一个 lease ID。le
 
 Core 负责处理审核代理(audit brok)的请求及响应日志，将请求发送到所有已配置的审核设备(audit devices)。
 
+
+## 三、Secret Engine
+
+Secret Engine 是保存、生成或者加密数据的组件，它非常灵活。
+
+有的 Secret Engines 只是单纯地存储与读取数据，比如 kv 就可以看作一个加密的 Redis。
+而其他的 Secret Engines 则连接到其他的服务并按需生成动态凭证。
+还有些 Secret Engines 提供「加密即服务(encryption as a service)」 - transit、证书管理等。
+
+
