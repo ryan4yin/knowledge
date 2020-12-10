@@ -6,6 +6,8 @@ Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完
 2. 支持接入各大云厂商的账号权限体系（比如阿里云RAM子账号），实现 APIKey/APISecret 的自动轮转。
 3. 支持接入 kubernetes rbac 权限体系，通过 serviceaccount+role 为每个 Pod 单独配置权限。
 
+本文主要介绍 vault 的部署安装，vault 是一个复杂的 secret 工具，其中细节参见 [Vault 基础概念](./Vault%20基础概念.md)
+
 ## 一、部署 Vault
 
 ### 1. docker-compose 部署
@@ -65,12 +67,15 @@ $ kubectl exec -ti vault-0 -- vault operator unseal # ... Unseal Key 3
 
 ### 3. 设置自动解封
 
-每次重启都要手动解封所有 vault 实例，实在是很麻烦。
-为了简化这个流程，可以考虑配置 autounseal.
+每次重启都要手动解封所有 vault 实例，实在是很麻烦，在云上自动扩缩容的情况下，vault 实例会被自动调度，这种情况就更麻烦了。
 
-官方文档：[autounseal-transit](https://learn.hashicorp.com/tutorials/vault/autounseal-transit)
+为了简化这个流程，可以考虑配置 auto unseal 让 vault 自动解封。
 
->不过貌似这个 autounseal 配置起来也很麻烦。。。
+自动解封目前有两种方法：
+
+1. 使用阿里云/AWS/Azure 等云服务提供的密钥库来管理 encryption key，阿里云的相关配置方法：[alicloudkms Seal](https://www.vaultproject.io/docs/configuration/seal/alicloudkms)
+2. 如果你不想用云服务，那可以考虑 [autounseal-transit](https://learn.hashicorp.com/tutorials/vault/autounseal-transit)
+
 
 ## 二、在 Kubernetes 中使用 vault 注入敏感配置
 
