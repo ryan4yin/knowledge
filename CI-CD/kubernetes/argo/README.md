@@ -9,12 +9,14 @@ Argo Workflow 是一个云原生工作流引擎，专注于编排并行任务。
 
 ## 简单的使用体验
 
+首先记住一点，WorkflowTemplate 就相当于 Jenkins 的 Jenkinsfile，而 Workflow 就相当于手动在 Jenkins UI 点击进行的一次构建。
+
 ### 1. Workflow 的分类
 
-当 Workflow 越来越多的时候，如果不做分类，一堆工作流堆在一起就会显得特别混乱。（没错，我觉得 Drone 就有这个问题...）
+当 Workflow 越来越多的时候，如果不做分类，一堆 WorkflowTemplate 堆在一起就会显得特别混乱。（没错，我觉得 Drone 就有这个问题...）
 
-Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace 进行分类。
-单层的分类结构和 Jenkins 的视图-文件夹体系当然是没法比，但是应该也够用了。
+Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace/labels 进行分类。
+这样的分类结构和 Jenkins 的视图-文件夹体系当然是没法比，但是应该也够用了。
 
 ### 2. Workflow 的重用 - WorkflowTemplate
 
@@ -22,28 +24,23 @@ Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace �
 
 WorkflowTemplate 可以被其他 Workflow 引用并触发，也可以正常传参。
 
-### 3. Web UI
-
-Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，但是它貌似不是面向「用户」的，功能比较底层。
-
-它不像 Jenkins 一样，有对非专业人员而言，很友好的使用界面，所有的 CR 自定义参数都是完全暴露出来的。
-另外它所有的构建都是相互独立的，没办法分类。
-
-所以如果要使用它替代我们 Jenkins 目前的职能，需要对它进行进一步封装。
-
-我目前想到的最简单的方案，是保留原有的 Jenkins 作为交互 UI，但是后台的具体实现，全部换成 Argo Workflow.
-也就是说使用 Jenkins+Python 来封装 Argo Workflow. 这样开发人员体验上的改变最小，Argo Workflow 自身的复杂性也被封装到了底层，也能顺利享受到 Argo Workflow+Kubernetes 带来的红利。
-
-当然，如果已经有更好的实现，就更好了。
-
-### 4. 其他特性
+### 3. 其他特性
 
 1. 凭据管理：利用了 Kubernetes 原生的 Secrets 存储 Git/Docker 等工具的密钥/token
 1. 定时执行的 Workflow
 2. 提供 RESTful API
 3. step 之间可以传递 parameters，并且提供 artifact/outputs/exitcode 等返回值
 4. Workflow of Workflows: 一个父工作流，可以触发并管理多个子工作流，也可以操作子工作流的 results。（我们很需要这个特性）
-5. WorkflowTemplate 就相当于 Jenkins 的 Jenkinsfile，而 Workflow 就相当于手动在 Jenkins UI 点击一次构建。
+
+
+### 4. Web UI
+
+Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，但是它貌似不是面向「用户」的，功能比较底层。
+
+它不像 Jenkins 一样，有很友好的使用界面。
+
+另外它所有的 Workflow 都是相互独立的，没办法直观地找到一个 WorkflowTemplate 的所有构建记录，只能通过 label/namespace 进行分类，通过任务名称进行搜索。
+而 Jenkins 可以很方便地看到同一个 Job 的所有构建历史。
 
 
 ## 扩展项目
