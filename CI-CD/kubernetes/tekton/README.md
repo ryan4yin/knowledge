@@ -4,6 +4,9 @@ Tekton Pipeline 是一个云原生流水线项目，通过 Kubernetes CRDs 来�
 
 它和 Argo Workflow 其实很类似，只是目的不同，导致它的功能不如 Argo Workflow 强大。
 
+最大的区别，是 Argo 假设「任务」之间是有依赖关系的，因此它提供了多种协调编排「任务」的方法。
+而 Tekton 则假设每个任务都互相独立，互相之间没有任何关联。
+
 Jenkins-X 默认使用 Tekton Pieline 作为流水线引擎。
 
 ## 简单说明
