@@ -56,6 +56,14 @@ Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，�
 再也不用维护 Jenkinsfile 了哈哈哈哈~
 
 
+## 画外
+
+Argo 相比其他 CI 工具，最大的特点，是它假设「任务」之间是有依赖关系的，因此它提供了多种协调编排「任务」的方法。
+
+但是貌似 Argo CD 并没有继承这个理念，Argo CD 部署时，并不能在 kubernetes 资源之间，通过 DAG 等方法定义依赖关系。
+
+微服务的按序更新，我们目前是自己用 Python 代码实现的，目前没有在社区找到类似的解决方案。
+
 ## 参考
 
 - [Argo加入CNCF孵化器，一文解析Kubernetes原生工作流](https://www.infoq.cn/article/fFZPvrKtbykg53x03IaH)
