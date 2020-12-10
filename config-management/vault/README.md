@@ -116,15 +116,16 @@ vault write auth/kubernetes/config \
 接下来需要做的事：
 
 2. 通过 vault policy 定义好每个 role（微服务）能访问哪些资源。
-1. 为每个微服务生成一个 kubernetes role，这个 role 需要绑定对应的 vault policy 及 kubernetes serviceaccount
-3. 创建一个 ServiceAccount，并使用这个 使用这个 ServiceAccount 部署微服务
+3. 为每个微服务生成一个 role，这个 role 需要绑定对应的 vault policy 及 kubernetes serviceaccount
+   1. 这个 role 是 vault 的 kubernetes 插件自身的属性，它和 kubernetes role 没有半毛钱关系。
+4. 创建一个 ServiceAccount，并使用这个 使用这个 ServiceAccount 部署微服务
 
 其中第一步和第二步都可以通过 vault api 自动化完成.
 第三步可以通过 kubectl 部署时完成。
 
-方便起见，vault policy / k8s role / k8s serviceaccount 这三个配置，都建议和微服务使用相同的名称。
+方便起见，vault policy / role / k8s serviceaccount 这三个配置，都建议和微服务使用相同的名称。
 
->上述配置中，kubernetes role 起到一个承上启下的作用，它关联了 k8s serviceaccount 和 vault policy 两个配置。
+>上述配置中，role 起到一个承上启下的作用，它关联了 k8s serviceaccount 和 vault policy 两个配置。
 
 比如创建一个名为 `my-app-policy` 的 vault policy，内容为:
 
