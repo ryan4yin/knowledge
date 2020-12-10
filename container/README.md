@@ -109,7 +109,7 @@ CNI 主要是提供给 Kubernetes 这类容器集群系统的，这是一个蓬�
 
 与镜像仓库(Registry)交互：
 
-1. [skopeo](https://github.com/containers/skopeo)
+1. [skopeo](https://github.com/containers/skopeo): 使用 skopeo 可以直接将镜像从一个仓库拷贝到另一个，不需要在本地解压，做镜像名称修改/迁移时，能显著提升速度。
 
 上述这些工具的 CLI 接口，基本都和 Docker 的非常相似，并且大都兼容 Dockerfile 规范。目的就是减小切换成本。
 
