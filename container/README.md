@@ -92,9 +92,20 @@ CNI 主要是提供给 Kubernetes 这类容器集群系统的，这是一个蓬�
 
 镜像构建工具：
 
-1. [Kaniko - GoogleContainerTools](https://github.com/GoogleContainerTools/kaniko): Goole 家的，不需要运行一个后台程序。
-2. [buildah](https://github.com/containers/buildah): RedHat 贡献给社区的
-3. [buildkit](https://github.com/moby/buildkit): Docker 家的
+1. [Kaniko - GoogleContainerTools](https://github.com/GoogleContainerTools/kaniko): Goole 开源的
+    - kaniko 被设计为一个一次性运行的 Docker 容器，每次运行时将 context 通过「本地文件夹/本地tar.gz/s3对象存储」等方式提供给 kaniko 进行构建，构建完成容器就运行结束
+    - 由于启动容器必须要先有容器运行环境(比如 docker)，因此 kaniko 只在 kubernetes 环境下才有优势。
+    - kaniko 支持将构建缓存以容器镜像的形式，保存到远程镜像仓库
+    - 很适用于通过 kubernetes 实现 CI/CD 的场景
+2. [buildah](https://github.com/containers/buildah)/podman: RedHat 开源的，它不需要后台运行一个守护进程，可以实现就地构建
+    - buildah 可以就地构建，不需要像 docker 一样还得搞 DinD 或者 docker.sock映射这种操作，也很适合 CI/CD 使用
+3. [buildkit](https://github.com/moby/buildkit): Docker 官方的新构建工具
+    - 类似 Docker，它也需要运行一个 buildkitd 守护进程，进行中心化的构建
+    - 也可以像 kaniko 一样以 daemonless 模式运行
+    - 和 kaniko 类似，也支持将缓存以容器镜像的形式进行导入导出
+
+因为缓存等原因，目前看来 CI/CD 比较适合使用 buildkit/kaniko，目前计划使用其中之一改造我们的 CI/CD 流水线。
+
 
 与镜像仓库(Registry)交互：
 
