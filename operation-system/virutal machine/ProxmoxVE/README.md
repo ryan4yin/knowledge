@@ -44,13 +44,13 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
 
 ```shell
 # 创建新虚拟机
-qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0
+qm create 9000 --name ubuntu-bionic-template --memory 2048 --net0 virtio,bridge=vmbr0
 
 # 将下载好的 img/qcow2 镜像导入为新虚拟机的硬盘
 qm importdisk 9000 bionic-server-cloudimg-amd64.img local-lvm
 
 # 通过 scsi 方式，将导入的硬盘挂载到虚拟机上
-qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-1
+qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
 ```
 
 
