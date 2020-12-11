@@ -4,7 +4,7 @@
 
 开发与调试：
 
-- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。
+- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。这对开发人员而言非常有用。
 
 
 ## 技术文章收藏
