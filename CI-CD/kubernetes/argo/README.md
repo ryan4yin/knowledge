@@ -68,7 +68,7 @@ Argo 相比其他 CI 工具，最大的特点，是它假设「任务」之间�
 
 微服务的按序更新，我们目前是自己用 Python 代码实现的，目前没有在社区找到类似的解决方案。
 
-## 参考
+## 参考文档
 
 - [Argo加入CNCF孵化器，一文解析Kubernetes原生工作流](https://www.infoq.cn/article/fFZPvrKtbykg53x03IaH)
 
