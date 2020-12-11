@@ -23,7 +23,7 @@ Argo Workflow 是一个云原生工作流引擎，专注于编排并行任务。
 当 Workflow 越来越多的时候，如果不做分类，一堆 WorkflowTemplate 堆在一起就会显得特别混乱。（没错，我觉得 Drone 就有这个问题...）
 
 Argo 是完全基于 Kubernetes 的，因此目前它也只能通过 namespace/labels 进行分类。
-这样的分类结构和 Jenkins 的视图-文件夹体系当然是没法比，但是应该也够用了。
+这样的分类结构和 Jenkins 的视图-文件夹体系大相径庭，开发人员可能需要适应一段时间，目前无法确定好不好用。
 
 ### 2. Workflow 的重用 - WorkflowTemplate
 
