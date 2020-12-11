@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  vault:
+    # 文档：https://hub.docker.com/_/vault
+    image: vault:1.6.0
+    container_name: vault
+    ports:
+      # 非 root 容器，内部不能使用标准端口 443
+      - "443:8200"
+    restart: always
+    volumes:
+      # 审计日志存储目录，默认不写审计日志，启用 `file` audit backend 时必须提供一个此文件夹下的路径
+      - ./logs:/vault/logs
+      # 当使用 file data storage 插件时，数据被存储在这里。默认不往这写任何数据。
+      - ./file:/vault/file
+      # 配置目录，vault 默认 `/valut/config/` 中所有以 .hcl/.json 结尾的文件
+      # config.hcl 文件内容，参考 cutom-vaules.yaml
+      - ./config.hcl:/vault/config/config.hcl
+      # TLS 证书
+      - ./certs:/certs
+    # vault 需要锁定内存以防止敏感值信息被交换(swapped)到磁盘中
+    # 为此需要添加如下能力
+    cap_add:
+      - IPC_LOCK
+    # 必须手动设置 entrypoint，否则 vault 将以 development 模式运行
+    entrypoint: vault server -config /vault/config/config.hcl
