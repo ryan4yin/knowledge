@@ -1,6 +1,6 @@
 # [Argo Workflow](https://github.com/argoproj/argo/)
 
-Argo Workflow 是一个云原生工作流引擎，专注于编排并行任务。它的特点如下：
+Argo Workflow 是一个云原生工作流引擎，专注于**编排并行任务**。它的特点如下：
 
 1. 使用 Kubernetes 自定义资源(CR)定义工作流，其中工作流中的每个步骤都是一个容器。
 1. 将多步骤工作流建模为一系列任务，或者使用有向无环图（DAG）描述任务之间的依赖关系。
