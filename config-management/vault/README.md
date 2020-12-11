@@ -12,10 +12,11 @@ Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完
 
 ### 1. docker-compose 部署
 
->推荐用于本地开发测试环境
+>推荐用于本地开发测试环境，或者其他不需要高可用的环境。
 
-docker-compose 方式部署比较简单，暂时略过。。
-大体流程和 helm 部署差不多，都需要部署、初始化并解封
+配置参见 [docker-vault](docker-vault/docker-compose.yml)
+
+启动后的初始化流程和 helm 一致，都需要先初始化，再解封。
 
 ### 2. 通过 helm 部署 vault 
 
