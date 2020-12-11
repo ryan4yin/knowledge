@@ -39,6 +39,7 @@ HTTP 请求进入后的整个处理流程都由 vault core 管理，core 会强�
 客户端首次连接 vault 时，需要先完成身份认证，vault 的「auth methods」模块有很多身份认证方法可选：
 
 1. 用户友好的认证方法，适合管理员使用：username/password、云服务商、ldap
+   1. 在创建 user 的时候，需要为 user 绑定 policy，给予合适的权限。
 2. 应用友好的方法：public/private keys、tokens、kubernetes、jwt
 
 身份验证请求流经 Core 并进入 auth methods，auth methods 确定请求是否有效并返回「关联策略(policies)」的列表。
