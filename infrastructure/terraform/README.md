@@ -71,14 +71,10 @@ terraform 默认将状态保存在本地的 `.tfstate` 文件中，但也支持�
 
 ## 1. Proxmox-Provider
 
-本地开发环境，可使用 PVE 搭建。
+使用 terraform 管理本地开发环境的 ProxmoxVE 环境：
 
-目前社区主要有两个 provider:
+- [danitso/terraform-provider-proxmox](https://github.com/danitso/terraform-provider-proxmox): stars 比较少，但是可以管理 PVE 的大部分资源，包括节点、用户、资源池、TLS证书等等。
 
-1. [Telmate/terraform-provider-proxmox](https://github.com/Telmate/terraform-provider-proxmox/): 用户最多，但是只支持管理虚拟机资源。
-1. [danitso/terraform-provider-proxmox](https://github.com/danitso/terraform-provider-proxmox): stars 少，但是可以管理 PVE 的大部分资源，包括节点、用户、资源池、TLS证书等等。
-
-PVE 虚拟机的创建/修改/销毁：[pve-vm.tf](./pve-vm.tf)
 
 ## 2. [阿里云 Provider](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs)
 
