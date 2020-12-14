@@ -157,3 +157,9 @@ pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
 封装的层次很高，优点是方便了我们使用，可以使用很统一很简洁的声明式语法编写配置。
 而缺点，则是出了 bug，报错信息往往不够直观，导致问题不好排查。
 
+
+## 常用 Provider
+
+- [pulumi-alicloud](https://github.com/pulumi/pulumi-alicloud)
+- [pulumi-vault](https://github.com/pulumi/pulumi-vault)
+- [ryan4yin/pulumi-proxmox](https://github.com/ryan4yin/pulumi-proxmox)
