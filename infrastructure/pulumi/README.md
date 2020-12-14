@@ -150,6 +150,19 @@ pulumi-kubernetes 是一条龙服务：
 
 这个没办法，只能等阿里云提供支持。
 
+### 8. CI/CD 中如何使 pulumi 将状态保存到文件？
+
+CI/CD 中我们可能会希望 pulumi 将状态保存到本地，避免连接 pulumi 中心服务器。
+这一方面能加快速度，另一方面一些临时状态我们可能根本不想存储，可以直接丢弃。
+
+方法：
+
+```shell
+pulumi login file://<file-path>
+```
+
+登录完成后，再进行 `pulumi up` 操作，数据就会直接保存到你设定的路径下。
+
 ## 缺点
 
 pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
