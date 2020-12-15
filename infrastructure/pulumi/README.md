@@ -69,6 +69,8 @@ terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，�
    2. `domain.apply(lambda it: print(it))`: `Output[str]` 的 `apply` 方法接收一个函数。在异步获取到数据后，pulumi 会调用这个函数，把具体的数据作为参数传入。
       - 另外 `apply` 也会将传入函数的返回值包装成 `Output` 类型返回出来。
       - 可用于：在获取到数据后，将数据打印出来/发送到邮箱/调用某个 API 上传数据等等。
+   3. `Output.all(output1, output2, ...).apply(lambda it: print(it))` 可用于将多个 `output` 值，拼接成一个 `Output` 类型，其内部的 raw 值为一个 tuple 对象 `(str1, str2, ...)`.
+      1. 官方举例：`connection_string = Output.all(sql_server.name, database.name).apply(lambda args: f"Server=tcp:{args[0]}.database.windows.net;initial catalog={args[1]}...")`
 
 ### 2. 如果使用多个云账号/多个k8s集群？
 
