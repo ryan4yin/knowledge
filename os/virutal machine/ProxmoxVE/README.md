@@ -110,6 +110,7 @@ grep -r manage_etc_hosts /usr/share
 1. 手动将配置修改为 `manage_etc_hosts: localhost`，就能让 cloud-init 只更新 localhost 相关的 hosts 内容。
 
 2. 如果希望对 hostname 的手动修改能永久生效，可以添加参数 `preserve_hostname: true`.
+   1. 注意这样设置后，cloud-init 就不会自动设置 `hostname` 了！
 
 perl 和 python 一样，程序启动后代码就加载到内存中了，因此对上述文件的修改需要重启 PVE 后，才能生效。
 
