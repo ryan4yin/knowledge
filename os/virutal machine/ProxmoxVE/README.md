@@ -87,8 +87,10 @@ meta-data  network-config  user-data
 查看上述文件发现 `user-data` 有如下问题：
 
 1. 它硬编码了 `manage_etc_hosts: true`，这导致我手动在 `/etc/cloud/cloud.cfg` 里设定的 `manage_etc_hosts: false` 被覆盖。
-2. 它设置了 `hostname`，但是测试发现 centos7 的 hostname 仍然是 `localhost`，没有被修改，原因未知。
-
+2. 它设置了 `hostname: <vm-name>`
+   1. cloud-init 的默认策略是 `preserve_hostname: false`，表示不维持对 `hostname` 的修改。
+   2. 默认策略的实际行为：每次虚拟机启动时，cloud-init 都会自动将 `/etc/hostname` 还原为 `user-data` 中的 `hostname`.
+   3. 这使任何对 `/etc/hostname` 的手动修改，都是临时的，重启就会被还原为 `user-data` 中设置的 `hostname`.
 
 ### 修改 cloud-init 相关的硬编码参数
 
@@ -105,9 +107,9 @@ grep -r manage_etc_hosts /usr/share
 
 直接就搜索到了硬编码位置是 `/usr/share/perl5/PVE/QemuServer/Cloudinit.pm`
 
-手动将配置修改为 `manage_etc_hosts: localhost`，就能让 cloud-init 只更新 localhost 相关的 hosts 内容。
+1. 手动将配置修改为 `manage_etc_hosts: localhost`，就能让 cloud-init 只更新 localhost 相关的 hosts 内容。
 
-如果希望 cloud-init 能自动设置 hostname，还可以添加参数 `preserve_hostname: False`.
+2. 如果希望对 hostname 的手动修改能永久生效，可以添加参数 `preserve_hostname: true`.
 
 perl 和 python 一样，程序启动后代码就加载到内存中了，因此对上述文件的修改需要重启 PVE 后，才能生效。
 
