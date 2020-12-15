@@ -79,3 +79,9 @@
 - [awesome-sre](https://github.com/dastergon/awesome-sre)
 - [阿里云容器服务 - DevOps 收藏夹](https://github.com/AliyunContainerService/DevOps)
 
+
+## 综合博客
+
+- [阿里云智能基础软件部](https://kernel.taobao.org/)
+- [美团技术团队]](https://tech.meituan.com/)
+
