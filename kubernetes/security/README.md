@@ -47,6 +47,13 @@ spec:
     runAsNonRoot: true  # Pod 必须以非 root 用户运行
     readOnlyRootFilesystem: true  # 将容器层设为只读，防止容器文件被篡改。
     allowPrivilegeEscalation: false  # 禁止 Pod 做任何权限提升
+    capabilities:
+      drop:
+      # 禁止容器使用 raw 套接字，通过只有 hacker 才会用到 raw 套接字。
+      # raw_socket 可自定义网络层数据，避开 tcp/udp 协议栈，直接操作底层的 ip/icmp 数据包。可实现 ip 伪装、自定义协议等功能。
+      - NET_RAW
+      # 更好的选择：直接禁用所有 capabilities
+      # - ALL
 ```
 
 ## 参考
