@@ -12,3 +12,10 @@ https://github.com/weaveworks/grafanalib
 
 待续
 
+
+## 如何简单快捷地导入导出 Grafana 模板？
+
+Grafana 模板如果经常变动，我们希望能时常备份。
+而新建集群时，也希望可以有便捷的方法导入模板，最好是一键导入。
+
+- [Grafana 备份恢复教程](https://fuckcloudnative.io/posts/how-to-back-up-all-of-your-grafana-dashboards/)
