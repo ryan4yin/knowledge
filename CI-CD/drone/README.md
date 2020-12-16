@@ -1,6 +1,9 @@
 # Drone
 
-Drone 是目前 Github 上最流行的容器化 CI/CD 应用。
+Drone 是目前 Github 上 stars 最多的容器化 CI/CD 工具。
+
+它的优点和缺点应该都是一个：简单易用。
+
 
 ## 与 Gitlab 集成部署
 
