@@ -34,9 +34,6 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: <Pod name>
-  annotations:
-    # 设置 secure computing mode 为 `runtime/default`，这个我还没搞明白
-    seccomp.security.alpha.kubernetes.io/pod: "runtime/default"
 spec:
   containers:
   - name: <container name>
@@ -44,9 +41,13 @@ spec:
     imagePullPolicy: IfNotPresent 
     # ......此处省略 500 字
   securityContext:
+    # runAsUser: 1000  # 设定用户
+    # runAsGroup: 1000  # 设定用户组
     runAsNonRoot: true  # Pod 必须以非 root 用户运行
     readOnlyRootFilesystem: true  # 将容器层设为只读，防止容器文件被篡改。
     allowPrivilegeEscalation: false  # 禁止 Pod 做任何权限提升
+    seccompProfile:  # security compute mode, 还没搞明白
+      type: RuntimeDefault
     capabilities:
       drop:
       # 禁止容器使用 raw 套接字，通过只有 hacker 才会用到 raw 套接字。
