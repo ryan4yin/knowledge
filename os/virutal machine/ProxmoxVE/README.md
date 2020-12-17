@@ -171,3 +171,5 @@ qm importdisk 201 vm-201-disk-1.qcow2 local-lvm
 
 - [Proxmox Wiki](https://pve.proxmox.com/wiki/Main_Page)
 - [配置Cloud-Init工具 - 华为云](https://support.huaweicloud.com/usermanual-ims/ims_01_0407.html)
+- [canonical/cloud-init - github](https://github.com/canonical/cloud-init)
+
