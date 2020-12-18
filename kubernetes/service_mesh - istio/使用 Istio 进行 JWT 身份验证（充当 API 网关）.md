@@ -6,13 +6,26 @@ Istio 支持使用 JWT 对终端用户进行身份验证（Istio End User Authen
 
 这里以 RSA256 算法为例进行介绍，ES256 的配置方式也是一样的。
 
-### 1. JWK 说明
+### 1. 介绍 JWK 与 JWKS
 
-要在 Istio 上使用 JWT 身份验证，就得先介绍一下 JWK。
+Istio 要求提供 JWKS 格式的信息，用于 JWT 签名验证。因此这里得先介绍一下 JWK 和 JWKS. 
 
-JWK 全称是 Json Web Key，它描述了一个加密密钥（公钥或私钥）的各项属性，包括密钥的值。
+JWKS ，也就是 JWK Set，json 结构如下：
 
-Istio 使用 JWK 描述验证签名所需要的信息。在使用 RSA 签名算法时，JWK 描述的应该是用于验证的 RSA 公钥。
+```
+{
+"keys": [
+  <jwk-1>,
+  <jwk-2>,
+  ...
+]}
+```
+
+JWKS 描述一组 JWK 密钥。它能同时描述多个可用的公钥，应用场景之一是密钥的 Rotate.
+
+而 JWK，全称是 Json Web Key，它描述了一个加密密钥（公钥或私钥）的各项属性，包括密钥的值。
+
+Istio 使用 JWK 描述验证 JWT 签名所需要的信息。在使用 RSA 签名算法时，JWK 描述的应该是用于验证的 RSA 公钥。
 
 一个 RSA 公钥的 JWK 描述如下：
 
@@ -115,21 +128,6 @@ xwIDAQAB
  'n': 't1cKkQqPh8iOv5BhKh7Rx6A2-1ldpO_jczML_0GBKu4X-lHrY8YbJrt29jyAXlWM8vHC7tXsqgUG-WziRD0D8nhnh10XC14SeH-3mVuBqph-TqhXTWsh9gtAIbeUHJjEI4I79QK4_wquPHHIGZBQDQQnuMh6vAS3VaUYJdEIoKvUBnAyY35kJZgyJSbrxLsEExL2zujUD_OY-_In2bq_3rFtDGNlgHyC7Gu2zXSXvfOA4O5m9BBXOc7eEqj7PoOKNaTxLN3YcuRtgR6NIXL4KLb6oyvIzoeiprt4-9q7sc3Dnkc5EV9kwWlEW2DHzhP6VYca0WXIIXc53U1AM3ewxw'
 }
 ```
-
-### 3. JWK Set 说明
-
-JWK Set，也就是 JWK 集合，是一个 json 数据结构：
-
-```
-{
-"keys": [
-  {<jwk-1>},
-  {<jwk-2>},
-  ...
-]}
-```
-
-非常简单的结构。JWKS 主要用于密钥的 Rotate，因为它能同时描述多个可用的公钥。
 
 ### 4. 测试密钥可用性
 
