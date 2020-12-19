@@ -83,5 +83,5 @@
 ## 综合博客
 
 - [阿里云智能基础软件部](https://kernel.taobao.org/)
-- [美团技术团队]](https://tech.meituan.com/)
+- [美团技术团队](https://tech.meituan.com/)
 
