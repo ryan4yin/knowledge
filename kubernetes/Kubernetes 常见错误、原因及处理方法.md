@@ -17,11 +17,20 @@
 
 可能是某些资源无法被GC，这会导致容器已经 Exited 了，但是 Pod 一直处于 Terminating 状态。
 
-强制清理命令：
+这个问题在网上能搜到很多案例,但大都只是提供了如下的强制清理命令，未分析具体原因：
 
 ```shell
 kubectl delete pods <pod> --grace-period=0 --force
 ```
+
+最近找到几篇详细的原因分析文章，值得一看：
+
+- [腾讯云原生 -【Pod Terminating原因追踪系列】之 containerd 中被漏掉的 runc 错误信息](https://cloud.tencent.com/developer/article/1680612)
+- [腾讯云原生 -【Pod Terminating原因追踪系列之二】exec连接未关闭导致的事件阻塞](https://cloud.tencent.com/developer/article/1680613)
+- [腾讯云原生 -【Pod Terminating原因追踪系列之三】让docker事件处理罢工的cancel状态码](https://cloud.tencent.com/developer/article/1689486)
+- [Pod terminating - 问题排查 - KaKu Li](https://www.likakuli.com/posts/docker-pod-terminating/)
+
+大致总结一下，主要原因来自 docker 18.06 以及 kubernetes 的 docker-shim 运行时的底层逻辑，已经在新版本被修复了。
 
 ## 节点常见错误
 
