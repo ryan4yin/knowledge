@@ -420,7 +420,14 @@ openssl pkcs12 -export -in client.crt -inkey client.key -out client.p12
 # 按提示输入保护密码
 ```
 
-微信/支付宝等支付相关的数字证书，通常就使用 pkcs12 格式，后缀为 `.p12`
+或者 p12 转 pem:
+
+```shell
+openssl pkcs12 -in xxx.p12 -out xxx.crt -clcerts -nokeys
+openssl pkcs12 -in xxx.p12 -out xxx.key -nocerts -nodes
+```
+
+微信/支付宝等支付相关的数字证书，通常就使用 pkcs12 格式，使用商户号做加密密码，然后编码为 base64 再提供给用户。
 
 
 ## 参考
