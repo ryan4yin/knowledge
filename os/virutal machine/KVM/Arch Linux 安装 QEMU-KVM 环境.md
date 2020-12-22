@@ -180,17 +180,10 @@ sudo pacman -S cloud-utils
 password: passw0rd
 chpasswd: { expire: False }
 ssh_pwauth: True
-hostname: ubuntu-1
-```
-
-`meta-data` 是 cloud-init 要求提供的与 cloud 相关的配置，我们随便搞个 id 就行：
-
-```shell
-echo "instance-id: $(uuidgen || echo i-abcdefg)" > meta-data
 ```
 
 ```shell
-cloud-localds seed.img user-data meta-data
+cloud-localds --hostname ubuntu-1 seed.img user-data
 ```
 
 这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
