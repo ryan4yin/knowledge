@@ -6,21 +6,23 @@
 
 | 安装工具     | 安装难度 |  集群可靠程度  |  集群自定义难度 |  升级降级难度  |
 | --------     | -----:   | :----:  | :----:  | :----:  |
-| [rke(rancher)](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
-| SealOS       |    1     |   4     |    3    | - |
-| KubeSpray    |    3     |   -     |    -    | - |
-| [KubeSphere](https://github.com/kubesphere/kubesphere)    |    3     |   -     |    -    | - |
-| [kubeadm](https://kuboard.cn/install/install-k8s.html)      |    2     |   2     |    2    | 3 |
-| KubeOperator |    -     |   -     |    -    | - |
-| openshift |    -     |   -     |    -    | - |
+| [sealos](https://github.com/fanux/sealos)       |    1     |   4     |    3    | - |
+| [kubespray](https://github.com/kubernetes-sigs/kubespray)    |    2     |   -     |    -    | - |
+| [kubeadm](https://kuboard.cn/install/install-k8s.html)      |    3     |   2     |    2    | 3 |
+| [rke](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
+| [minikube]](https://github.com/kubernetes/minikube) |    1     |   2     |    1    | 2 |
 
-个人观点：sealos/rke 很适合用于部署测试环境，方便快捷，其中 sealos 对离线部署的支持非常简便。
+个人的使用体验：
 
-kubeadm 自建集群也还算简单，只是手动操作多一些。
-
-kubespray 也许适合自建生产级别的集群，但是东西太多了有些复杂。
-
-
+1. sealos: 「开发/测试环境」首选，是列表中最轻量级最简便的方案，而且是完全离线的。
+    - 缺点是只提供免费的 1.xx.0 版本的资源包，小版本的资源包收费hhh...
+2. kubespray: 适合自建生产级别的集群，是一个大而全的 kubernetes 安装方案。使用难度比 kubeadm 低一些。
+    - 其离线部署方案，要求使用一个内部「容器镜像仓库」如 harbor，对个人测试环境而言比 sealos 要麻烦一些。
+3. kubeadm: 适合自己学习 kubernetes 架构使用。其使用方法还算简单，只是网络插件、ingress-controller 等需要自行部署。
+4. rke: 部署也很简单，一个 cluster-config.yml 搞定，可以考虑使用。
+    - rke 最大的特点是「完全容器化」，kubelet 都跑在容器里面。但是相对的也更容易出问题。。反正我去年使用时感觉它出问题的可能性比 sealos 高。
+    - 其离线部署方案，和 kubespray 一样也需要一个内部「容器镜像仓库」。
+1. minikube: 单节点 k8s 集群，不过我觉得用 sealos/rke 部署单节点集群更舒服。。
 
 ### 1. Minikube: 部署一个本地测试用的单节点集群
 
