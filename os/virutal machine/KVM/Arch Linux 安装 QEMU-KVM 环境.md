@@ -176,7 +176,7 @@ sudo pacman -S cloud-utils
 首先编写 `user-data`:
 
 ```yaml
-#cloud-config
+#cloud-config，可自动配置网卡、SSH密钥、hostname
 password: passw0rd
 chpasswd: { expire: False }
 ssh_pwauth: True
