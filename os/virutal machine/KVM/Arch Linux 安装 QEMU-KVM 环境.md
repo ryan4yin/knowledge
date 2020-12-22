@@ -158,6 +158,66 @@ img 镜像文件，就是所谓的 raw 格式镜像，也被称为裸镜像，IO
 qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 ```
 
+## 六、在本地使用 cloud-init 进行虚拟机初始化
+
+>还未测试通过
+
+参考 [../ProxmoxVE/README.md](../ProxmoxVE/README.md)，在本机的 KVM 环境中，也可以使用 cloud-init 来初始化虚拟机。
+
+这需要用到一个工具：[cloud-utils](https://github.com/canonical/cloud-utils)
+
+```shell
+sudo pacman -S cloud-utils
+```
+
+`cloud-utils` 提供 cloud-init 相关的各种实用工具，
+其中有一个 `cloud-localds` 命令，可以通过 cloud 配置生成一个非 cloud 的 bootable 磁盘映像，供本地的虚拟机使用。
+
+首先编写 `user-data`:
+
+```yaml
+#cloud-config
+password: passw0rd
+chpasswd: { expire: False }
+ssh_pwauth: True
+hostname: ubuntu-1
+```
+
+`meta-data` 是 cloud-init 要求提供的与 cloud 相关的配置，我们随便搞个 id 就行：
+
+```shell
+echo "instance-id: $(uuidgen || echo i-abcdefg)" > meta-data
+```
+
+```shell
+cloud-localds seed.img user-data meta-data
+```
+
+这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
+示例命令如下：
+
+```shell
+virt-install \
+  --name ubuntu20.04 \
+  --memory 2048 \
+  --disk ubuntu-server-cloud-amd64.img,device=disk,bus=virtio \
+  --disk seed.img,device=cdrom \
+  --os-type linux \
+  --os-variant ubuntu20.04 \
+  --virt-type kvm \
+  --graphics none \
+  --network network=default,model=virtio \
+  --import
+```
+
+也可以使用 virt-viewer 的 GUI 界面进行操作。
+
+这样设置完成后，cloud 虚拟机应该就可以启动了，但是初始磁盘应该很小。可以直接手动扩容 img 的大小，cloud-init 在虚拟机启动时就会自动扩容分区：
+
+```shell
+qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
+```
+
 ## 进阶
 
 1. 通过命令行操作 qemu/kvm
@@ -168,3 +228,4 @@ qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 - [Complete Installation of KVM, QEMU and Virt Manager on Arch Linux and Manjaro](https://computingforgeeks.com/complete-installation-of-kvmqemu-and-virt-manager-on-arch-linux-and-manjaro/)
 - [virtualization-libvirt - ubuntu docs](https://ubuntu.com/server/docs/virtualization-libvirt)
 - [RedHat Docs - KVM](https://developers.redhat.com/products/rhel/hello-world#fndtn-kvm)
+- [在 QEMU 使用 Ubuntu Cloud Images](https://vrabe.tw/blog/use-ubuntu-cloud-images-with-qemu/)
