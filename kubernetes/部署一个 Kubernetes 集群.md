@@ -61,3 +61,4 @@ minikube start  start --driver=hyperv \
 
 另外主节点性能也受集群 Pods 个数的影响，上述配置应该可以支撑到每个 Worker 节点跑 100 个 Pod.
 
+主节点至少需要 2c/2g，否则很可能出现性能问题，etcd 无法正常启动。
