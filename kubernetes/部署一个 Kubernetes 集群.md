@@ -15,6 +15,8 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 | [kubeadm](https://kuboard.cn/install/install-k8s.html)      |    3     |   2     |    2    | 3 |
 | [rke](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
 | [minikube]](https://github.com/kubernetes/minikube) |    1     |   2     |    1    | 2 |
+| [k3s](https://github.com/k3s-io/k3s) |    1     |   -     |    -    | - |
+
 
 个人的使用体验：
 
@@ -29,6 +31,7 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
     - `rke up` 经常会健康检查失败，需要跑两三次才能成功。因此就感觉它对自动化加 k8s 节点很不友好...
     - 其离线部署方案，和 kubespray 一样也需要一个内部「容器镜像仓库」。
 5. minikube: 单节点 k8s 集群，不过我觉得用 sealos/rke 部署单节点集群更舒服。。
+6. k3s: 轻量级 kubernetes，部署也非常简单。
 
 除了 minikube 外，其他方案都支持部署多节点集群。
 
