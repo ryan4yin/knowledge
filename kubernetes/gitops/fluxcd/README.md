@@ -1,4 +1,6 @@
-# [Flux](https://github.com/fluxcd/flux)
+# [Flux v1](https://github.com/fluxcd/flux)
+
+>flux 目前已经推出了完全重构的 flux v2，不知道和 argo cd 比如何。
 
 >Flux 基本没有可视化，目前提供的唯一 UI 还需要用到 grafana，不是很方便。
 而且只支持单仓库单集群，可以说是很简陋。

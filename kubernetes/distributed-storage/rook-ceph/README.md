@@ -164,3 +164,10 @@ kubectl create -f wordpress.yaml
 可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一堆问题。rook-ceph 写明推荐的内核版本为 `4.17+`
 
 [将 CentOS7 内核升级到 5.8](/operation-system/linux/Centos%207%20升级内核版本.md) 后，貌似问题消失了，待观察。
+
+
+## 相关资料
+
+视频:
+
+- [Rook: Intro and Ceph Deep Dive - Blaine Gardner, Alexander Trost, & Travis Nielsen, Sébastien Han](https://www.youtube.com/watch?v=aO-n4FuOU2w&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut&index=25)

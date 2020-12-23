@@ -72,3 +72,8 @@ Argo 相比其他 CI 工具，最大的特点，是它假设「任务」之间�
 
 - [Argo加入CNCF孵化器，一文解析Kubernetes原生工作流](https://www.infoq.cn/article/fFZPvrKtbykg53x03IaH)
 
+
+视频:
+
+- [How to Multiply the Power of Argo Projects By Using Them Together - Hong Wang](https://www.youtube.com/watch?v=fKiU7txd4RI&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut&index=149)
+
