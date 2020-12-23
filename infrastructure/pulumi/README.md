@@ -136,7 +136,39 @@ pulumi-kubernetes 是一条龙服务：
 使用 pulumi-kubernetes 写配置，要警惕逻辑和数据的混合程度。
 因为 kubernetes 的配置复杂度比较高，如果动态配置比较多，很容易就会写出难以维护的 python 代码来。
 
-通用的配置，还是建议使用 helm/kustomize 将它们抽离成 yaml 模板，python 代码中只处理动态配置。
+渲染 yaml 的示例：
+
+```python
+from pulumi import get_stack, ResourceOptions, StackReference
+from pulumi_kubernetes import Provider
+from pulumi_kubernetes.apps.v1 import Deployment, DeploymentSpecArgs
+from pulumi_kubernetes.core.v1 import (
+	ContainerArgs,
+	ContainerPortArgs,
+	EnvVarArgs,
+	PodSpecArgs,
+	PodTemplateSpecArgs,
+	ResourceRequirementsArgs,
+	Service,
+	ServicePortArgs,
+	ServiceSpecArgs,
+)
+from pulumi_kubernetes.meta.v1 import LabelSelectorArgs, ObjectMetaArgs
+
+provider = Provider(
+   "render-yaml",
+   render_yaml_to_directory="rendered",
+)
+
+deployment = Deployment(
+	"redis",
+	spec=DeploymentSpecArgs(...),
+   opts=ResourceOptions(provider=provider),
+)
+```
+
+如示例所示，pulumi-kubernetes 的配置是完全结构化的，比 yaml/helm/kustomize 要灵活非常多。
+
 
 ### 6. 阿里云资源 replace 报错？
 
