@@ -89,3 +89,5 @@ podAnnotations:
     ]
 }
 ```
+
+这可以通过 Web 控制台配置，也可以使用 terraform/pulumi 自动配置，参见 [alicloud_logtail_config - terraform](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/logtail_config)
