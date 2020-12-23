@@ -22,3 +22,9 @@ kubectl apply -f https://kuboard.cn/install-script/kuboard.yaml
 # 2. 安装 metrics-server，这是 k8s 官方的 CPU/RAM 指标收集器，主要用于给 HPA 提供监控指标。同时也可用做轻量级的监控指标源。
 kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.yaml
 ```
+
+## 相关资料
+
+视频:
+
+- [A Walk Through the Kubernetes UI Landscape - Joaquim Rocha, Kinvolk & Henning Jacobs, Zalando SE](https://www.youtube.com/watch?v=lsrB21rjSok&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut&index=136)
