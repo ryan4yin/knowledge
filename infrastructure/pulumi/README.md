@@ -128,8 +128,10 @@ vpc_id = infra.require("resources.vpc.id")
 pulumi-kubernetes 是一条龙服务：
 
 1. 在 yaml 配置生成这一步，它能结合/替代掉 helm/kustomize，或者你高度自定义的 Python 脚本。
-2. 在 yaml 部署这一步，它能替代掉 argocd/fluxcd 这类 gitops 工具。
-3. 强大的状态管理，argocd 也有状态管理，可以对比看看。
+2. 在 yaml 部署这一步，它能替代掉 argo-cd 这类 gitops 工具。
+3. 强大的状态管理，argo-cd 也有状态管理，可以对比看看。
+
+也可以仅通过 kubernetes_pulumi 生成 yaml，再通过 argo-cd 部署，这样 pulumi_kubernetes 就仅用来简化 yaml 的编写，仍然通过 gitops 工具/kubectl 来部署。
 
 使用 pulumi-kubernetes 写配置，要警惕逻辑和数据的混合程度。
 因为 kubernetes 的配置复杂度比较高，如果动态配置比较多，很容易就会写出难以维护的 python 代码来。
