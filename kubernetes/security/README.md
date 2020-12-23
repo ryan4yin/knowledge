@@ -57,6 +57,7 @@ spec:
         drop:
         # 禁止容器使用 raw 套接字，通常只有 hacker 才会用到 raw 套接字。
         # raw_socket 可自定义网络层数据，避开 tcp/udp 协议栈，直接操作底层的 ip/icmp 数据包。可实现 ip 伪装、自定义协议等功能。
+        # 去掉 net_raw 会导致 tcpdump 无法使用，无法进行容器内抓包。需要抓包时可临时去除这项配置
         - NET_RAW
         # 更好的选择：直接禁用所有 capabilities
         # - ALL
