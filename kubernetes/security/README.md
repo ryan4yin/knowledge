@@ -65,9 +65,15 @@ spec:
     # runAsUser: 1000  # 设定用户
     # runAsGroup: 1000  # 设定用户组
     runAsNonRoot: true  # Pod 必须以非 root 用户运行
-    seccompProfile:  # security compute mode, 还没搞明白
+    seccompProfile:  # security compute mode
       type: RuntimeDefault
 ```
+
+## seccomp: security compute mode
+
+视频:
+
+- [Seccomp: What Can It Do For You? - Justin Cormack, Docker](https://www.youtube.com/watch?v=Ro4QRx7VPsY&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut$index=22)
 
 ## 参考
 

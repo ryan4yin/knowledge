@@ -195,3 +195,8 @@ Flagger 会监控 Deployment，一有更新就进入灰度流程，将流量逐�
 ## 相关文档
 
 - [Flagger Docs - How it works](https://docs.flagger.app/usage/how-it-works)
+
+视频:
+
+- [Progressive Delivery Techniques with Flagger - Stefan Prodan, Weaveworks](https://www.youtube.com/watch?v=ahLnVkLlQ4U&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut&index=77)
+
