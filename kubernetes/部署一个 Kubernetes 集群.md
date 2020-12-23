@@ -39,6 +39,8 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 另外 metric-server/ingress-controller/dashboard 这些组件，上述工具可能不会帮你部署，需要自行安装。
 
+容器运行时方面，目前推荐使用经过生产环境验证的、成熟稳定的 containerd，未来应该会渐渐切换到 crio.
+
 ### 1. Minikube: 部署一个本地测试用的单节点集群
 
 ```shell
