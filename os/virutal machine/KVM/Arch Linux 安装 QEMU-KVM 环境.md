@@ -176,14 +176,54 @@ sudo pacman -S cloud-utils
 首先编写 `user-data`:
 
 ```yaml
-#cloud-config，可自动配置网卡、SSH密钥、hostname
-password: passw0rd
-chpasswd: { expire: False }
-ssh_pwauth: True
+# cloud-config
+
+# 设置 hostname
+hostname: ubuntu-1
+preserve_hostname: False
+
+# 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
+manage_etc_hosts: localhost
+
+package_upgrade: true
+
+# 设置 root 的 ssh 密钥
+user: root
+disable_root: False
+ssh_authorized_keys:
+  - <ssh-key content>
+
+# 设置密码，控制台登录需要
+password: xxxxx
+chpasswd:
+  expire: False
+  
+# ssh 允许密码登录（不推荐）
+# ssh_pwauth: True
+```
+
+再编写 `network-config`:
+
+```yaml
+version: 1
+config:
+    - type: physical
+      name: eth0
+      # mac_address: '62:e7:27:cb:96:11'
+      subnets:
+      - type: static
+        address: '192.168.1.xxx'
+        netmask: '255.255.255.0'
+        gateway: '192.168.1.1'
+    - type: nameserver
+      address:
+      - '114.114.114.114'
+      # search:
+      # - 'pve.local'
 ```
 
 ```shell
-cloud-localds --hostname ubuntu-1 seed.img user-data
+cloud-localds --network-config network-config seed.img user-data
 ```
 
 这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
