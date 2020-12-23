@@ -1,5 +1,10 @@
 # Kubernetes
 
+## 视频
+
+- [KubeCon + CloudNativeCon North America 2020 - Virtual](https://www.youtube.com/playlist?list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut): 全球大厂共享出来的 200+ 个视频，全都是干货。光看目录就能知道 2020 年 kubernetes 社区的热点与新兴技术。
+
+
 ## Kubernetes 相关项目
 
 开发与调试：
