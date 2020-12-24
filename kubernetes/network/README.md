@@ -18,4 +18,8 @@ Kubernetes 社区有众多的网络插件可供选择，其中比较著名，用
 
 - [CNI 介绍 - 容器网络 - CDN Handbook](https://sdn.feisky.xyz/rong-qi-wang-luo/index/index/index)
 
-- []()
+视频:
+
+- [Tutorial: Communication Is Key - Understanding Kubernetes Networking - Jeff Poole, Vivint Smart Home](https://www.youtube.com/watch?v=InZVNuKY5GY&list=PLj6h78yzYM2O1wlsM-Ma-RYhfT5LKq0XC&index=15)
+- [eBPF and Kubernetes: Little Helper Minions for Scaling Microservices - Daniel Borkmann, Cilium](https://www.youtube.com/watch?v=99jUcLt3rSk&list=PLj6h78yzYM2O1wlsM-Ma-RYhfT5LKq0XC&index=74)
+
