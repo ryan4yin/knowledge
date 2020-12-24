@@ -36,3 +36,10 @@
 - [Collection of slides, repositories, papers about AIOps](https://github.com/chenryn/aiops-handbook)
 - [awesome-AIOps](https://github.com/linjinjin123/awesome-AIOps)
 
+
+## telemetry 相关资料
+
+视频:
+
+- [OpenTelemetry Agent and Collector: Telemetry Built-in Into All Service - Steve Flanders & Trask Stalnaker](https://www.youtube.com/watch?v=cHiFSprUqa0&list=PLj6h78yzYM2O1wlsM-Ma-RYhfT5LKq0XC&index=88)
+
