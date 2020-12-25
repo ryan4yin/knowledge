@@ -148,6 +148,8 @@ path "my-app/data/*" {
 
 #### 2.3 部署 Pod
 
+>参考文档：https://www.vaultproject.io/docs/platform/k8s/injector
+
 下一步就是将配置注入到微服务容器中，这需要使用到 Agent Sidecar Injector。
 vault 通过 sidecar 实现配置的自动注入与动态更新。
 
@@ -157,3 +159,91 @@ vault 通过 sidecar 实现配置的自动注入与动态更新。
 
 1. init 模式: 仅在 Pod 启动前初始化一次，跑完就退出（Completed）
 2. 常驻模式: 容器不退出，持续监控 vault 的配置更新，维持 Pod 配置和 vualt 配置的同步。
+
+示例：
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-app
+  name: my-app
+  namespace: default
+spec:
+  minReadySeconds: 3
+  progressDeadlineSeconds: 60
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: my-app
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-configmap: my-app-vault-config
+        vault.hashicorp.com/agent-init-first: 'true'  # 是否提前初始化
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-limits-cpu: 250m
+        vault.hashicorp.com/agent-requests-cpu: 100m
+        vault.hashicorp.com/secret-volume-path: /app/secrets
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - image: registry.svc.local/xx/my-app:latest
+        imagePullPolicy: IfNotPresent
+        # 此处省略若干配置...
+      serviceAccountName: my-app-account
+```
+
+#### vault agent 配置
+
+vault-agent 的配置，需要注意的有：
+
+1. 如果使用 configmap 提供完整的 `config.hcl` 配置，注意 `agent-init`
+
+vautl-agent 的 template 说明：
+
+目前来说最流行的配置文件格式应该是 json/yaml，以 json 为例，
+对每个微服务的 kv 数据，可以考虑将它所有的个性化配置都保存在 `<engine-name>/<service-name>/` 下面，然后使用如下 template 注入配置：
+
+```consul-template
+{
+    [[ range secrets "<engine-name>/metadata/<service-name>/" ]]
+        "[[ printf "%s" . ]]": 
+        [[ with secret (printf "<engine-name>/<service-name>/%s" .) ]]
+        [[ .Data.data | toJSONPretty ]],
+        [[ end ]]
+    [[ end ]]
+}
+```
+>template 的详细语法参见: https://github.com/hashicorp/consul-template#secret
+
+>注意：v2 版本的 kv secrets，它的 list 接口有变更，因此在遍历 v2 kv secrets 时，
+必须要写成 `range secrets "<engine-name>/metadata/<service-name>/"`，也就是中间要插入 `metadata`。
+官方文档完全没提到这一点，我通过 wireshark 抓包调试，对照官方的 [KV Secrets Engine - Version 2 (API)](https://www.vaultproject.io/api-docs/secret/kv/kv-v2) 才搞明白这个。
+
+这样生成出来的内容将是 json 格式，不过有个不兼容的地方：最后一个 secrets 的末尾有逗号 `,`
+渲染出的效果示例：
+
+```json
+{
+    "secret-a": {
+  "a": "b",
+  "c": "d"
+},
+    "secret-b": {
+  "v": "g",
+  "r": "c"
+},
+}
+```
+
+因为存在尾部逗号(trailing comma)，直接使用 json 标准库解析它会报错。
+那该如何去解析它呢？我在万能的 stackoverflow 上找到了解决方案：**yaml 完全兼容 json 语法，并且支持尾部逗号！**
+
+以 python 为例，直接 `yaml.safe_load()` 就能完美解析 vault 生成出的 json 内容。
