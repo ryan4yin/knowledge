@@ -10,7 +10,7 @@
 
 ## Jenkinsfile 与 CI/CD 代码管理
 
-企业级的 Jenkinsfile 往往同质化严重，每个环节中的几十个仓库，它们用到的 Jenkinsfile 和构建逻辑都是一模一样的。
+企业级的 Jenkinsfile 往往是同质化的，每个环节中的几十个仓库，它们用到的 Jenkinsfile 和构建逻辑都一模一样。
 因此完全不需要在每个仓库中放一个 Jenkinfile——这加大了运维成本。
 
 比较优越的解决方案是将 Jenkinsfile 和它用到的 CI/CD 代码放在一起，达成 Jenkinsfile 和 CI/CD 代码的复用。
