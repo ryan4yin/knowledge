@@ -48,7 +48,8 @@ def run_cmd(cmd: str,
     =============
     :param cmd: 命令字符串
     :param shell: 是否使用 shell 运行命令，可以直接运行 shell 脚本！
-        尽量不要使用 shell 模式！中间多了一层 shell，python 对进程的实际控制能力会变弱，可能导致很多问题！
+        尽量不要使用 shell 模式！可能会存在 shell 注入！
+        另外中间多了一层 shell，python 对进程的实际控制能力会变弱，可能导致很多问题！
     :param input: 标准输出
     :param timeout: 命令超时时间
     :param check: 如果命令失败，是否抛出异常？
