@@ -72,7 +72,5 @@ GitOps 很适合扁平化的项目，每个 Git 仓库就是一个应用，相�
 但问题是目前 Argo Workflow 没有像 Jenkins 这么简单直观的 UI 可供开发人员使用。
 开发人员只是想跑个 Workflow 分层更新一下内部依赖的版本号，如果用 Jenkins 他在几个输入框里填一下参数就行。
 但是用 Workflow 他得在整个 Workflow 定义中找到参数的位置，然后手动修改一下，再 submit...
-使用体验不太好。
 
-而且 Argo Workflow 依托于 k8s namespace 的工作流分类功能，只能做单层的分类；而 Jenkins 支持任意层文件夹。
-因此它分类管理上不太方便。（这一点上和 Github/Gitlab 很类似，Github 也只支持单层目录，而 Github 支持嵌套路径）
+目前想到的方案，是底层使用 argo 来运行实际的任务，但是仍然通过 Jenkins 提供一个给用户使用的 UI 界面来构建任务。
