@@ -38,6 +38,7 @@ def run_airtest(test_case_path: Path):
     logcat = subprocess.Popen(
         ["adb", 'logcat', 'flutter', '-s', '--file', "/mnt/sdcard/log.txt"],  # 抓取 flutter app 日志
     )
+    # logcat.stdout 是一个阻塞的 stream，试了各种方法都无法以非阻塞模式 read 数据
 
     # 2. 进行UI测试
     result = _run_airtest()
