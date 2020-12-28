@@ -41,6 +41,10 @@ skopeo copy docker://quay.io/buildah/stable docker-archive:buildah-stable.tgz
 
 # 列出 registry 中某镜像的所有 tags（输出为 json 格式）
 skopeo list-tags --tls-verify=false docker://registry.svc.local/test/buildah
+
+# 同步 source 中的所有镜像到 destination 中
+# copy 一次只支持同步一个镜像，而 sync 一次同步路径下所有的镜像！
+skopeo sync --src docker --dest dir --scoped registry.svc.local/test registry.svc.local/staging
 ```
 
 ## 参考文档
