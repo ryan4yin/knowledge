@@ -30,3 +30,15 @@ helm template <chart-dir-path> --output-dir <output-dir>
 答：为了保证所见即所得，我们选择在 git 仓库中保存 chart 渲染结果。
 helm chart 的可读性不佳，而且也要考虑到并不是所有开发/运维人员，都看得懂 helm chart 的语法。
 
+
+## 其他
+
+常用命令：
+
+```shell
+# 列出所有名字空间中安装的 helm charts
+helm list --all-namespaces
+# 缩写形式
+helm list -A
+```
+
