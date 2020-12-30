@@ -5,6 +5,8 @@
     2. 导出为 tgz 文件保存到本地
 
 要求先安装好 skopeo 工具，它比 docker pull/tag/push 更好用。
+
+另外腾讯开源了一个更企业级的镜像迁移工具，也可以考虑：https://github.com/tkestack/image-transfer
 =====================
 导入所有 tgz 镜像文件的 shell 命令：
 for img in images/*; do docker load -i $img; done
