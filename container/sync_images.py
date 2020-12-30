@@ -4,8 +4,7 @@
     1. 推送到个人的阿里云容器镜像仓库中
     2. 导出为 tgz 文件保存到本地
 
-使用此脚本的前提是：本机的 docker 会通过代理拉取镜像，设置方法参见本仓库的 docker 文档。
-
+要求先安装好 skopeo 工具，它比 docker pull/tag/push 更好用。
 =====================
 导入所有 tgz 镜像文件的 shell 命令：
 for img in images/*; do docker load -i $img; done
@@ -16,6 +15,7 @@ tar c images | ssh root@<host> "tar x; for img in images/*; do docker load -i \$
 更复杂的操作，请使用 python 脚本或者 ansible 处理。
 """
 
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -35,6 +35,15 @@ TGZ_DIR = Path(__file__).parent / "images"
 TGZ_DIR.mkdir(exist_ok=True)
 
 
+# 设置代理（环境变量）
+os.environ.update({
+    "HTTP_PROXY": "http://<proxy-host>:8889",
+    "HTTPS_PROXY":"http://<proxy-host>:8889",
+    # 本地及阿里云镜像仓库，不走代理
+    "NO_PROXY":"localhost,127.0.0.1,registry.cn-shanghai.aliyuncs.com",
+})
+
+
 def sync_images(src_repo, dest_repo, image_tags):
     for tag in image_tags:
         # 阿里云镜像仓库不支持嵌套路径
@@ -42,19 +51,14 @@ def sync_images(src_repo, dest_repo, image_tags):
 
         src_tag = f"{src_repo}/{tag}"
         dest_tag = f"{dest_repo}/{tag}"
+        image_archive_name = re.sub(r"[/:-]", "_", tag) + ".tgz"
+        image_archive_path = TGZ_DIR / image_archive_name
 
-        print(f">>> pull image: {src_tag}")
-        subprocess.run(["docker", "pull", src_tag])
+        print(f">>> save image: '{src_tag}' to '{image_archive_path}'")
+        subprocess.run(["skopeo", "copy", f"docker://{src_tag}", f"docker-archive:{image_archive_path}"])
 
-        # print(f">>> rename image: {src_tag} => {dest_tag}")
-        # subprocess.run(["docker", "tag", src_tag, dest_tag])
-
-        # print(f">>> push image: {dest_tag}")
-        # subprocess.run(["docker", "push", dest_tag])
-
-        tgz_name = re.sub(r"[/:-]", "_", tag) + ".tgz"
-        print(f">>> save image: {src_tag}")
-        subprocess.run(f"docker save {src_tag} | gzip > {TGZ_DIR / tgz_name}", shell=True)
+        print(f">>> upload '{image_archive_path}' to '{dest_tag}'")
+        subprocess.run(["skopeo", "copy", f"docker-archive:{image_archive_path}", f"docker://{dest_tag}"])
 
 
 def main():
