@@ -9,7 +9,3 @@
 
 - [app-ideas](https://github.com/florinpop17/app-ideas)
 - [project-based-learning](https://github.com/tuvtran/project-based-learning)
-
-## 其他资料
-
-- [shell_scripts](https://github.com/mritd/shell_scripts): 实用 shell 小脚本
