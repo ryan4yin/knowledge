@@ -47,3 +47,7 @@ fi
 ## 3. Shell脚本中的set指令，比如set -x 和 set -e
 
 参见：[Shell脚本中的set指令，比如set -x 和 set -e](https://www.cnblogs.com/robinunix/p/11635560.html)
+
+## 其他资料
+
+- [shell_scripts](https://github.com/mritd/shell_scripts): 实用 shell 小脚本
