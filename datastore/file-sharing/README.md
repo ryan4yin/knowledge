@@ -4,7 +4,7 @@
 
 1. http: 毫无疑问，http 是应用最广泛的网络协议。
 2. smb/nfs: windows/linux 上应用最广泛的文件共享协议，使用体验和本地文件夹基本没有区别。
-3. WebDAV 协议：
+3. WebDAV: 
 
 ## 方案一
 
@@ -31,3 +31,13 @@ caddy 只能支持简单的文件浏览与下载，而 nexcloud 是真正的私�
 
 可以使用 minio 做分布式存储，用 nextcloud 做文件共享。
 
+
+
+## Web 客户端
+
+我们日常能接触到各种各样的文件共享协议，其中很多如 FTP/WebDAV/Git/S3，可能我们本地都没有一个方便的 GUI 客户端支持它。
+
+这里有一个解决方案：[filestash](https://github.com/mickael-kerjean/filestash)，它是一个 Web 版的文件管理器，
+几乎支持常见的所有文件共享协议/云盘。
+
+把它部署在内网，你的所有设备就都能访问这些协议了！
