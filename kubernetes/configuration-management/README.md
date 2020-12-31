@@ -1,5 +1,11 @@
 # Kubernetes 配置（YAML）管理
 
+目前 kubernetes 配置有如下几种流行的编写方法：
+
+1. helm: 基于 go-templates 的模板化、参数化配置。
+2. jsonnet: 基于专有 DSL jsonnet 的配置。
+3. pulumi/cdk8s: 基于通用编程语言 python/go/typescript/c# 的配置。
+4. kustomize: overlay 模式的配置，把变化的配置抽出来做成补丁 patch，剩下的配置就可以复用了。
 
 
 ## 画外：不断增长的配置复杂性
@@ -24,10 +30,15 @@ helm 多了些包管理器的特性，但是也可以单纯使用 `helm template
 
 1. 通用模板：如 jinja2/mustache/go-templates，这类模板语言很「通用」，可用于各类文本渲染场景，因此应用非常广泛。
    - 「通用模板」和 DSL 语法通常都难以兼容，未渲染的模板不能直接被解析使用。
-2. DSL 专有模板：如 kustomize(yaml)/thymeleaf(xml)，特点是模板本身就是一份完备的 DSL 文本，可以被正确解析，甚至可以直接使用。
+2. DSL 专有模板：如 thymeleaf(xml)，特点是模板本身就是一份完备的 DSL 文本，可以被正确解析，甚至可以直接使用。
 3. DSL 语法增强：如 jsonnet/yaml，这两个 DSL 都是 json 的超集，针对 json 冗长、不支持注释等缺点做了优化。
 
 两类模板各有千秋，不过总的来说，「通用模板」是最流行的，毕竟它可以「learn once, use anywhere.」而「DSL 专有模板」也有自己的应用场景。
 
 目前我个人更喜欢使用「通用模板」- helm/jinja2。
 DSL 专有模板需要慎重考虑，毕竟会引入额外的复杂度，会增加维护成本。
+
+
+## 相关文档
+
+- [Eating Your Vegetables: How to Manage 2.5 Million Lines of YAML - Daniel Thomson & Jesse Suen](https://www.youtube.com/watch?v=BGiCRyUDIPg)
