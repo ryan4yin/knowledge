@@ -12,7 +12,7 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
     - 这个是容器级别的 Serverless，比 Serverless  K8s 更进一步地分离了关注点。
     - 比较适合基于微服务架构的应用。
     - Knative 是目前最活跃的 Serverless 项目之一，有众多大厂参与。但是它仍然具有一定的运维复杂度，可能更适合被用作 Serverless 的底层实现。
-2. 函数计算（Function as a Server, FaaS）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
+2. 函数计算（Function as a Service, FaaS）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
     - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。
     - 开源的完全基于 kubernetes 的 faas 平台，比较有名的有：
       - [fission](https://github.com/fission/fission): 大量的 Fucntions 都是使用一样的运行环境，完全没必要为每个 Function 创建一个 Pod。fission 的最大优势在于它解耦了 Pod 和 Function：通过「environment pool-manager」来管理 Pods，Functions 被动态地上传到 Pod 中执行。这提升了 Function 启动速度以及集群资源利用率。
