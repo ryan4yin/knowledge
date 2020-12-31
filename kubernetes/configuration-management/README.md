@@ -7,6 +7,7 @@
 3. pulumi/cdk8s: 基于通用编程语言 python/go/typescript/c# 的配置。
 4. kustomize: overlay 模式的配置，把变化的配置抽出来做成补丁 patch，剩下的配置就可以复用了。
 
+目前感觉 helm 体验是最好的。helm 多了些包管理器的特性，但是也可以单纯使用 `helm template` 渲染 yaml，体验很好。
 
 ## 画外：不断增长的配置复杂性
 
@@ -20,9 +21,6 @@ hashicorp 在自家的全家桶(terraform/vault/consul)中选用自研的 hcl �
 
 对于「基础设施即代码」，我使用过 terraform 和 pulumi，个人的感觉是，复杂场景下必须要使用 pulumi+python 才能 hold 住配置的复杂性。
 terraform 的 hcl 灵活度太差了，即使算上 module，体验和 pulumi+python 也要差一个档次。
-
-而对于 kubernetes 的 yaml 配置管理，目前感觉 helm 体验是最好的。
-helm 多了些包管理器的特性，但是也可以单纯使用 `helm template` 渲染 yaml，体验很好。
 
 ## 画外：文本渲染的几种思路 - 通用模板 vs DSL 专有模板
 
