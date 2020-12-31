@@ -30,6 +30,8 @@ Knative 应该是比较适合比微服务更轻量的 FaaS 架构，结合 serve
 另外对数量庞大的 Fucntions 而言，将大量「非热点 Functions」缩容到 0 也许能节约大量资源。
 「缩容到 0」对 FaaS 意义很大。
 
+Serverless 在微服务领域的应用场景：BFF - Backend for Frontend
+
 ## 参考
 
 
