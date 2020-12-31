@@ -82,6 +82,11 @@
 
 ## 综合博客
 
+企业/团队博客：
+
 - [阿里云智能基础软件部](https://kernel.taobao.org/)
 - [美团技术团队](https://tech.meituan.com/)
 
+个人博客：
+
+- [不周山作品集](https://wdxtub.com/work/): 学习知识就像不周山，永远不会有『周全』的一天，是为活到老，学到老。
