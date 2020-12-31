@@ -18,6 +18,11 @@ java -Dfile.encoding=UTF-8 -jar xxx.jar
 export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 ```
 
+## Java 编程相关资料
+
+- [Java 异常处理的误区和经验总结](https://www.ibm.com/developerworks/cn/java/j-lo-exception-misdirection/)
+- [从jar包中读取资源文件](https://hxraid.iteye.com/blog/483115)
+- [深入解析 Java 反射](https://www.sczyh30.com/posts/Java/java-reflection-1/)
 
 
 ## 参考
