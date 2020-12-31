@@ -9,6 +9,14 @@
     - 和系统的 $PATH 变量一样，$GOPATH 也支持使用同样的语法设置多个目录，靠前的目录将被优先检索。
 1. $GOROOT: Go SDK 的安装位置
 
+## Go 语言代理
+
+设置国内代理，否则无法拉取依赖：
+
+```shell
+go env -w GOPROXY=https://goproxy.cn,direct
+go env -w GOPRIVATE=*.svc.local
+```
 
 ## Go 常用命令
 
