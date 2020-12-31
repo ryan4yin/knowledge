@@ -18,3 +18,6 @@
     - 这类测试比较少见。
 
 
+## 相关文档
+
+- [测试的道理](http://www.yinwang.org/blog-cn/2016/09/14/tests)
