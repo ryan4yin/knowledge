@@ -4,7 +4,9 @@
 
 1. http: 毫无疑问，http 是应用最广泛的网络协议。
 2. smb/nfs: windows/linux 上应用最广泛的文件共享协议，使用体验和本地文件夹基本没有区别。
-3. WebDAV: 
+3. WebDAV: 其全称为 Web-based Distributed Authoring and Versionin, 它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，使应用程序可对Web Server直接读写，并支持写文件锁定(Locking)及解锁(Unlock)，还可以支持文件的版本控制。
+    - WebDav 就是 Web 云盘协议/NAS协议。
+
 
 ## 方案一
 
@@ -16,9 +18,9 @@
 
 ## 方案二
 
-NAS + [nextcloud](https://github.com/nextcloud/server).
+使用 [nextcloud](https://github.com/nextcloud/server) 或者 [cloudreve](https://github.com/cloudreve/Cloudreve)
 
-caddy 只能支持简单的文件浏览与下载，而 nexcloud 是真正的私有云盘，支持：
+caddy 只能支持简单的文件浏览与下载，而 nexcloud/cloudreve 是真正的私有云盘，支持：
 
 1. 文件上传、同步
 2. 权限策略
@@ -29,7 +31,7 @@ caddy 只能支持简单的文件浏览与下载，而 nexcloud 是真正的私�
 
 [minio](https://github.com/minio/minio) 作为一个兼容 s3 协议的分布式对象存储系统，也提供一个简单的 Web UI 浏览其中的数据，支持 HTTP 协议。
 
-可以使用 minio 做分布式存储，用 nextcloud 做文件共享。
+可以使用 minio 做分布式存储，用 nextcloud/cloudreve 做文件共享。
 
 
 
