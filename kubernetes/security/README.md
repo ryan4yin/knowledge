@@ -1,5 +1,13 @@
 # Kubernetes 安全
 
+CNCF Landscape 中的 Security&Compliance 中的项目真的一大把。
+
+这里主要介绍 Kubernetes 自身的安全策略， 像 open policy agent、falco、还有 notray(貌似主要用做镜像签名校验) 等项目的介绍，请参考此文件夹下的其他文章。
+
+
+## Key Management
+
+密钥管理方面，目前最流行的显然是 hashicorp vault，另外还有个专门管 tls 证书的 cert-manager.
 
 ## 一、[Pod 安全策略](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
@@ -78,8 +86,3 @@ spec:
 ### 参考
 
 - [Kubernetes Security](https://kubernetes.io/docs/concepts/security/)
-
-
-## 二、Open Policy Agent
-
-- [Handling Container Vulnerabilities with Open Policy Agent - Teppei Fukuda, Aqua Security](https://www.youtube.com/watch?v=WKE2XNZ2zr4&list=PLj6h78yzYM2O1wlsM-Ma-RYhfT5LKq0XC&index=17)
