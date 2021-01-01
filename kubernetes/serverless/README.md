@@ -16,16 +16,9 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
     - 通过 [serverless-knative](https://github.com/serverless/serverless-knative) 可支持 serverless-framework.
 1. Container as a Service - Kubevela: 从 serverless 角度看，它和 Knative 很类似。用户也只需要提供代码、Dockerfile，kubevela 通过 trait 插件帮你自动处理容器构建、调度、灰度升级回滚、弹性扩缩容...
 3. 函数计算（FaaS, Function as a Service）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
-    - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。
-    - 开源的完全基于 kubernetes 的 faas 平台，比较有名的有：
-      - [fission - 2016-08](https://github.com/fission/fission): 大量的 Fucntions 都是使用一样的运行环境，完全没必要为每个 Function 创建一个 Pod。fission 的最大优势在于它解耦了 Pod 和 Function：通过「environment pool-manager」来管理 Pods，Functions 被动态地上传到 Pod 中执行。这提升了 Function 启动速度以及集群资源利用率。
-        - fission 貌似不支持 serverless-framework，得用它专有的 SDK 写 Function.
-      - Knative - 2018-01: 前面已经介绍过了，Knative 更新，也更通用。既能支持 CaaS，也能支持 FaaS，而且有众多大厂的支持。
-      - 其他还有 openfaas/kubeless/openwrisk 等一票 serverless 平台，没精力研究了。。。
+    - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。通过插件可支持 knative.
 
-另外，上述所有的容器、函数，都必须是无状态的（Stateless），因为显然只有无状态的容器/函数，才可以随意的扩缩容。
-
-开源领域，目前最被看好的 Serverless 平台，是 Google/RedHat(IBM) 开源的 Knative. 
+2020 年 CNCF 调查显示，Knative 市场占比 27%，而第二名 openfaas 只有 10%，第三名 kubeless 是 5%.
 
 ## Serverless 的应用场景
 
