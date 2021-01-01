@@ -29,4 +29,5 @@ curl localhost:15000/config_dump?resource=static_listeners
 ## 参考
 
 - [Istio数据面性能测试与优化](https://penglei.github.io/post/latency-optimization-for-istio-proxy-based-on-envoy/)
-
+- [深入了解服务网格数据平面性能和调优 - 文章](https://cloud.tencent.com/developer/article/1685873)
+- [深入了解服务网格数据平面性能和调优 - 视频](https://v.qq.com/x/page/v3137ax6zss.html)

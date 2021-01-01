@@ -210,3 +210,6 @@ kubectl apply -f my-kiali-cr.yaml -n istio-system
 ## 参考
 
 - [servicemesher/istio-handbook](https://github.com/servicemesher/istio-handbook)
+- [Why API Management and Service Mesh are Complementary Patterns for Different Use Cases](https://www.cncf.io/blog/2020/03/06/the-difference-between-api-gateways-and-service-mesh/)
+- [Mecha：将Mesh进行到底(Dapr)](https://www.servicemesher.com/blog/mecha/)
+

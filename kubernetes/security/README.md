@@ -86,3 +86,4 @@ spec:
 ### 参考
 
 - [Kubernetes Security](https://kubernetes.io/docs/concepts/security/)
+- [9 Kubernetes security best practices everyone must follow](https://www.cncf.io/blog/2019/01/14/9-kubernetes-security-best-practices-everyone-must-follow/)
