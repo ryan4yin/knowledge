@@ -25,6 +25,8 @@
 
 随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
 
+以及 2020 年度 CNCF 调研报告：[Cloud Native Survey 2020](https://www.cncf.io/wp-content/uploads/2020/11/CNCF_Survey_Report_2020.pdf)
+
 ## 应用部署
 
 此仓库包含的软件，主要提供了如下几种部署方法
