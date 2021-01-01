@@ -1,5 +1,7 @@
 # Serverless 介绍
 
+>[开源 Serverless 平台 - CNCF landscape](https://landscape.cncf.io/category=installable-platform&format=card-mode&grouping=category)
+
 Serverless 指对平台的用户屏蔽掉了服务器层面的配置和管理， Serverless 平台自己把这些“脏活累活”都默默干好了，上层用户（后端开发）只需要关注自己的业务逻辑，而运维就可以下岗了...
 
 Serverless 的好处是它**分离了关注点**，底层的服务器配置与管理被直接封装好了。用户需要关注的东西少了，效率也就更高了。
