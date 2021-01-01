@@ -20,9 +20,8 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
     - 开源的完全基于 kubernetes 的 faas 平台，比较有名的有：
       - [fission - 2016-08](https://github.com/fission/fission): 大量的 Fucntions 都是使用一样的运行环境，完全没必要为每个 Function 创建一个 Pod。fission 的最大优势在于它解耦了 Pod 和 Function：通过「environment pool-manager」来管理 Pods，Functions 被动态地上传到 Pod 中执行。这提升了 Function 启动速度以及集群资源利用率。
         - fission 貌似不支持 serverless-framework，得用它专有的 SDK 写 Function.
-      - [kubeless - 2016-11](https://github.com/kubeless/kubeless): 据说是最易用的开源 kubeless 平台，但是它为每个 Function 创建一个 Pod，资源利用率不够高，而且启动速度也没 fission 快。
-        - 通过　[serverless-kubeless](https://github.com/serverless/serverless-kubeless) 支持　serverless-framework.
       - Knative - 2018-01: 前面已经介绍过了，Knative 更新，也更通用。既能支持 CaaS，也能支持 FaaS，而且有众多大厂的支持。
+      - 其他还有 openfaas/kubeless/openwrisk 等一票 serverless 平台，没精力研究了。。。
 
 另外，上述所有的容器、函数，都必须是无状态的（Stateless），因为显然只有无状态的容器/函数，才可以随意的扩缩容。
 
