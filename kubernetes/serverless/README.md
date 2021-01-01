@@ -46,3 +46,4 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 - [Serverless应用场景](https://help.aliyun.com/document_detail/65565.html)
 - [你学BFF和Serverless了吗](https://juejin.cn/post/6844904185427673095)
 - [Why Have Alibaba Started to Embrace OAM When Serverless Is So Popular?](https://www.alibabacloud.com/blog/why-have-alibaba-started-to-embrace-oam-when-serverless-is-so-popular_596593)
+- [serverless到底是个什么鬼 - 滴滴云](https://zhuanlan.zhihu.com/p/140419955)
