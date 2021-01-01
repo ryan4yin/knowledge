@@ -24,6 +24,7 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 
 另外，上述所有的容器、函数，都必须是无状态的（Stateless），因为显然只有无状态的容器/函数，才可以随意的扩缩容。
 
+开源领域，目前最被看好的 Serverless 平台，是 Google/RedHat(IBM) 开源的 Knative. 
 
 ## Serverless 的应用场景
 
