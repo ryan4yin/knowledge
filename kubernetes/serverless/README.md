@@ -32,11 +32,17 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 最新奇的是 Faas，目前它的最佳应用场景有：
 
 1. 做微服务与前端之间的胶水层：Backend for Frontend
+   - 比如 API 聚合，数据裁剪、格式化、聚合等。
 2. 事件请求场景：定时任务、低频请求等
 3. 流量突发场景（直播、双十一等活动）：微服务的扩容速度慢，不足以应对过高的突发流量。这就需要 FaaS 基于请求的，毫秒级的扩容。
-1. 等等
+
+总的来说，FaaS 适合做一些轻量的业务逻辑，或者胶水层。
+
+比如物联网数据处理、定时任务、音视频转码等，都是一次性的，轻量的任务。
+
 
 ## 相关文档
 
 - [Serverless应用场景](https://help.aliyun.com/document_detail/65565.html)
+- [你学BFF和Serverless了吗](https://juejin.cn/post/6844904185427673095)
 - [Why Have Alibaba Started to Embrace OAM When Serverless Is So Popular?](https://www.alibabacloud.com/blog/why-have-alibaba-started-to-embrace-oam-when-serverless-is-so-popular_596593)
