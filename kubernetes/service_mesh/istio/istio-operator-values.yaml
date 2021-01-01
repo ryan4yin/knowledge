@@ -1,4 +1,4 @@
-# 配置文件对应的 istioctl 版本：1.7.x
+# 配置文件对应的 istioctl 版本：1.8.x
 # 本地开发测试集群部署 istio，需要用到的自定义配置
 # 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
 apiVersion: install.istio.io/v1alpha1
@@ -109,3 +109,14 @@ spec:
         autoscaleEnabled: true
       istio-egressgateway: # 出网流量管控
         autoscaleEnabled: true
+    telemetry:
+      enabled: true
+      v2:
+        enabled: true
+        metadataExchange:
+          wasmEnabled: false
+        prometheus:
+          # 启用 prometheus 集成
+          enabled: true
+          wasmEnabled: false
+

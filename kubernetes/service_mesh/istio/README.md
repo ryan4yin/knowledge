@@ -17,17 +17,17 @@
 
 > 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
 
->当前针对的 Istio 版本：1.7.x
+>当前针对的 Istio 版本：1.8.x
 
 ### 1. 简单部署
 
 使用 istioctl 部署 istio:
 ```shell
 # 示例1：只部署 istiod 和 ingressgateway
-istioctl manifest apply --set profile=default
+istioctl install --set profile=default
 
 # 示例2：只部署 istiod 和 ingressgateway，并且从内网的容器镜像仓库拉镜像 
-istioctl manifest apply --set profile=default --set hub=registry.svc.local
+istioctl install --set profile=default --set hub=registry.svc.local
 ```
 
 这种方式适合自定义参数比较少，而且只是临时测试的情形。
@@ -42,10 +42,6 @@ istioctl manifest apply --set profile=default --set hub=registry.svc.local
 可以通过 [istio-operator-values.yaml](./istio-operator-values.yaml) 配置文件进行自定义部署：
 
 ```shell
-# istioctl 1.5+
-istioctl manifest apply -f istio-operator-values.yaml
-
-# istioctl 1.7+
 istioctl install -f istio-operator-values.yaml
 ```
 
