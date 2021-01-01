@@ -11,7 +11,7 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 2. Container as a Service - [Knative](https://github.com/knative/serving)：用户只需要提供代码、Dockerfile 及流水线配置，Knative 自己帮你把容器构建、调度、灰度升级回滚、弹性扩缩容等都干了。
     - 这个是容器级别的 Serverless，比 Serverless K8s 更进一步地分离了关注点。
     - 它的主要目标是成为一个通用的 Serverless 底层平台, 因此它暴露出了很多底层细节。
-    - 通过 [serverless-knative](https://github.com/serverless/serverless-knative) 可支持　serverless-framework.
+    - 通过 [serverless-knative](https://github.com/serverless/serverless-knative) 可支持 serverless-framework.
 1. Container as a Service - Kubevela: 从 serverless 角度看，它和 Knative 很类似。用户也只需要提供代码、Dockerfile，kubevela 通过 trait 插件帮你自动处理容器构建、调度、灰度升级回滚、弹性扩缩容...
 3. 函数计算（FaaS, Function as a Service）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
     - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。
