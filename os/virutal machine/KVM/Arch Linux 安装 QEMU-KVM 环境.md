@@ -163,6 +163,7 @@ qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 >还未测试通过
 
 参考 [../ProxmoxVE/README.md](../ProxmoxVE/README.md)，在本机的 KVM 环境中，也可以使用 cloud-init 来初始化虚拟机。
+好处是创建虚拟机的时候，就能设置好虚拟机的 hostname/network/user-pass/disk-size 等一系列参数。
 
 这需要用到一个工具：[cloud-utils](https://github.com/canonical/cloud-utils)
 
@@ -223,7 +224,7 @@ config:
 ```
 
 ```shell
-cloud-localds --network-config network-config seed.img user-data
+cloud-localds seed.img user-data --network-config network-config
 ```
 
 这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
