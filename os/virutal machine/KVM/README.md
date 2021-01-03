@@ -176,11 +176,33 @@ qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 
 GUI 很傻瓜式，就不介绍了，这里主要介绍命令行工具 `virsh`/`virt-install`
 
+先介绍下 libvirt 中的几个概念：
+
+1. Domain: 指代运行在虚拟机器上的操作系统的实例 - 一个虚拟机，或者用于启动虚拟机的配置。
+1. Guest OS: 运行在 domain 中的虚拟操作系统。
+
+大部分情况下，你都可以把下面命令中涉及到的 `domain` 理解成虚拟机。
+
+### 0. 设置默认 URI
+
+`virsh`/`virt-install`/`virt-viewer` 等一系列 libvirt 命令，
+默认情况下会使用 `qemu:///session` 作为 URI 去连接 QEMU/KVM，
+而 `virt-manager` 这个 GUI 工具，默认会使用 `qemu:///system` 去连接 QEMU/KVM.
+
+`qemu:///system` 是系统全局的 qemu 环境，而 `qemu:///session` 的环境是按用户隔离的。
+另外 `qemu:///session` 没有默认的 `network`，创建虚拟机时会出毛病。。。
+
+总之，你需要将默认的 URI 改为 `qemu:///system`，否则绝对会被坑: 
+
+```shell
+echo 'export LIBVIRT_DEFAULT_URI="qemu:///system"' >> ~/.bashrc
+```
+
 ### 1. 创建虚拟机 - virt-intall
 
 ```shell
 # 创建全新的虚拟机，自动创建一个 20G 的磁盘。同时将 opensuse 的 iso 挂进去安装系统。
-virt-install --connect qemu:///system --virt-type kvm \
+virt-install --virt-type kvm \
 --name opensuse15 \
 --vcpus 2 --memory 2048 \
 --disk size=20 --graphics vnc \
@@ -188,14 +210,13 @@ virt-install --connect qemu:///system --virt-type kvm \
 --os-variant opensuse15.2
 
 # 使用已存在的磁盘创建虚拟机
-virt-install \
+virt-install --virt-type kvm \
   --name ubuntu20.04 \
   --memory 2048 \
   --disk ubuntu-server-cloud-amd64.img,device=disk,bus=virtio \
   --disk seed.img,device=cdrom \
   --os-type linux \
   --os-variant ubuntu20.04 \
-  --virt-type kvm \
   --graphics none \
   --network network=default,model=virtio \
   --import
@@ -245,7 +266,14 @@ virsh autostart --disable opensuse15
 虚拟机快照管理：
 
 ```shell
-virsh snapshot-list --domain opensuse
+# 列出一个虚拟机的所有快照
+virsh snapshot-list --domain opensuse15
+# 给某个虚拟机生成一个新快照
+virsh snapshot-create <domain>
+# 使用快照将虚拟机还原
+virsh snapshot-restore <domain> <snapshotname>
+# 删除快照
+virsh snapshot-delete <domain> <snapshotname>
 ```
 
 删除虚拟机：
@@ -260,6 +288,15 @@ virsh undefine opensuse15
 # 使用默认参数进行离线迁移，将已关机的服务器迁移到另一个 qemu 实例
 virsh migrate 37 qemu+ssh://tux@jupiter.example.com/system
 # 还支持在线实时迁移，待续
+```
+
+cpu/内存修改：
+
+```shell
+# 改成 4 核
+virsh setvcpus opensuse15 4
+# 改成 4G
+virsh setmem opensuse15 4096
 ```
 
 虚拟机监控：
@@ -278,6 +315,15 @@ virsh attach-interface
 virsh detach-disk
 virsh detach-device
 virsh detach-interface
+```
+
+
+虚拟机网络管理：
+
+```shell
+# 列出所有虚拟机网络
+virsh net-list
+# 待续
 ```
 
 ## 参考
