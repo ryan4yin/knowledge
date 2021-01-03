@@ -69,9 +69,11 @@ sudo gpasswd --add $USER wireshark  #  将你添加到 wireshark 用户组中
 
 # container: https://documentation.suse.com/sles/15-SP2/html/SLES-all/cha-podman-overview.html
 sudo zypper in podman skopeo kompose
-# 本地测试目前还是 docker-compose 最方便，docker 仍有必要安装。不过也可以考虑换成 kompose+podman
+# 本地测试目前还是 docker-compose 最方便，docker 仍有必要安装。不过也可以考虑换成 kompose+podman 或者 podman-compose
 sudo zypper in docker
 sudo gpasswd --add $USER docker
+sudo systemctl enable docker
+sudo systemctl start docker
 sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-compose
 ```
 
