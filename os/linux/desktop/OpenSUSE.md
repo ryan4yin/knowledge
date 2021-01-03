@@ -146,6 +146,8 @@ sudo yast2 virtualization
 # enter to terminal ui, select kvm + kvm tools, and then install it.
 ```
 
+KVM 的详细文档参见 [KVM/README.md](../../virutal%20machine/KVM/README.md)
+
 ## KDE Connect
 
 KDE Connect 是一个 PC 手机协同工具，可以在电脑和手机之间共享剪切版、远程输入、发送文件、共享文件夹、通知同步等等。

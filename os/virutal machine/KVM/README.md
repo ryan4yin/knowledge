@@ -163,7 +163,16 @@ qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 这需要用到一个工具：[cloud-utils](https://github.com/canonical/cloud-utils)
 
 ```shell
+# manjaro
 sudo pacman -S cloud-utils
+
+# ubuntu
+sudo apt install cloud-utils
+
+# opensuse，包仓库里找不到 cloud-utils，只能源码安装
+git clone https://github.com/canonical/cloud-utils
+git checkout 0.32
+cd cloud-utils && sudo make install
 ```
 
 `cloud-utils` 提供 cloud-init 相关的各种实用工具，
