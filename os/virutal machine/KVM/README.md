@@ -49,21 +49,25 @@ sudo yast2 virtualization
 了解 docker 的应该知道，docker 就是使用 iptables 实现的容器虚拟网络。
 
 
-此外还有一些可选组件：
 
-1. [libguestfs](https://libguestfs.org/): 虚拟机磁盘映像工具，可用于直接修改/查看/虚拟机映像、转换映像格式等。
-   1. `virt-df centos.img`: 查看硬盘使用情况
-   2. `virt-ls centos.img /`: 列出目录文件
-   3. `virt-copy-out -d domain /etc/passwd /tmp`：在虚拟映像中执行文件复制
-   4. `virt-list-filesystems /file/xx.img`：查看文件系统信息
-   5. `virt-list-partitions /file/xx.img`：查看分区信息
-   6. `guestmount -a /file/xx.qcow2(raw/qcow2都支持) -m /dev/VolGroup/lv_root --rw /mnt`：直接将分区挂载到宿主机
-   7. `guestfish`: 交互式 shell，可运行上述所有命令。 
-   8. `virt-v2v`: 将其他格式的虚拟机(比如 ova) 转换成 kvm 虚拟机。
-   9. `virt-p2v`: 将一台物理机转换成虚拟机。
+### 1. libguestfs - 虚拟机磁盘映像处理工具
+
+[libguestfs](https://libguestfs.org/) 是一个虚拟机磁盘映像处理工具，可用于直接修改/查看/虚拟机映像、转换映像格式等。
 
 
-## 二、启动 QEMU/KVM
+它提供的命令列表如下：
+
+1. `virt-df centos.img`: 查看硬盘使用情况
+2. `virt-ls centos.img /`: 列出目录文件
+3. `virt-copy-out -d domain /etc/passwd /tmp`：在虚拟映像中执行文件复制
+4. `virt-list-filesystems /file/xx.img`：查看文件系统信息
+5. `virt-list-partitions /file/xx.img`：查看分区信息
+6. `guestmount -a /file/xx.qcow2(raw/qcow2都支持) -m /dev/VolGroup/lv_root --rw /mnt`：直接将分区挂载到宿主机
+7. `guestfish`: 交互式 shell，可运行上述所有命令。 
+8. `virt-v2v`: 将其他格式的虚拟机(比如 ova) 转换成 kvm 虚拟机。
+9. `virt-p2v`: 将一台物理机转换成虚拟机。
+
+### 2. 启动 QEMU/KVM
 
 通过 systemd 启动 libvirtd 后台服务：
 
@@ -72,7 +76,7 @@ sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
 ```
 
-## 三、让非 root 用户能正常使用 kvm
+### 3. 让非 root 用户能正常使用 kvm
 
 qumu/kvm 装好后，默认情况下需要 root 权限才能正常使用它。
 为了方便使用，首先编辑文件 `/etc/libvirt/libvirtd.conf`:
@@ -93,7 +97,7 @@ sudo usermod -aG libvirt $USER
 sudo systemctl restart libvirtd.service
 ```
 
-## 四、启用嵌套虚拟化
+### 3. 启用嵌套虚拟化
 
 如果你需要在虚拟机中运行虚拟机，那就需要启用内核模块 kvm_intel 实现嵌套虚拟化。
 
@@ -113,14 +117,27 @@ Y
 ```
 
 
-## 五、创建/导入/导出/克隆虚拟机
+## 二、虚拟机磁盘映像管理
 
-qemu/kvm 目前使用的映像格式是 qcow2（QEMU copy-on-write format 2），而 vmware 使用的是 vmdk.
-另外 vmware 还支持将虚拟机导出为 ova 文件。
+这需要用到两个工具：
 
->虽然 virtualbox 也支持 ova，但是测试发现它和 vmware 的 ova 并不通用。
+1. libguestfs: 虚拟机磁盘映像管理工具，前面介绍过了
+2. qemu-img: qemu 的磁盘映像管理工具，用于创建磁盘、扩缩容磁盘、生成磁盘快照、查看磁盘信息、转换磁盘格式等等。
 
-普通虚拟机的创建流程没啥好说的，使用 virt-manager 的 GUI 界面很简单地就能创建好。
+```shell
+# 创建磁盘
+qemu-img create -f qcow2 -o cluster_size=128K virt_disk.qcow2 20G
+
+# 扩容磁盘
+qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
+
+# 查看磁盘信息
+qemu-img info ubuntu-server-cloudimg-amd64.img
+
+# 转换磁盘格式
+qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2  # raw => qcow2
+qemu-img convert -f qcow2 -O raw vm01.qcow2 vm01.img  # qcow2 => raw
+```
 
 ### 1. 导入 vmware 镜像
 
@@ -130,7 +147,7 @@ qemu/kvm 目前使用的映像格式是 qcow2（QEMU copy-on-write format 2）�
 virt-v2v -i ova centos7-test01.ova -o local -os /vmhost/centos7-01  -of qcow2
 ```
 
-将 vmware 的  vmdk 文件转换成 qcow2 格式，然后再导入 kvm（网卡需要重新配置）：
+也可以先从 ova 中解压出 vmdk 磁盘映像，将 vmware 的  vmdk 文件转换成 qcow2 格式，然后再导入 kvm（网卡需要重新配置）：
 
 ```shell
 # 转换映像格式
@@ -143,7 +160,6 @@ qemu-img info centos7-test01.qcow2
 根据 [Importing Virtual Machines and disk images - ProxmoxVE Docs](https://pve.proxmox.com/pve-docs/chapter-qm.html#_importing_virtual_machines_and_disk_images) 文档所言，需要在网上下载安装 MergeIDE.zip 组件，
 另外启动虚拟机前，需要将硬盘类型改为 IDE，才能解决这个问题。
 
-
 ### 2. 导入 img 镜像
 
 img 镜像文件，就是所谓的 raw 格式镜像，也被称为裸镜像，IO 速度比 qcow2 快，但是体积大，而且不支持快照等高级特性。
@@ -153,88 +169,25 @@ img 镜像文件，就是所谓的 raw 格式镜像，也被称为裸镜像，IO
 qemu-img convert -f raw -O qcow2 vm01.img vm01.qcow2
 ```
 
-## 六、在本地使用 cloud-init 进行虚拟机初始化
 
->还未测试通过
+## 三、虚拟机管理
 
-参考 [../ProxmoxVE/README.md](../ProxmoxVE/README.md)，在本机的 KVM 环境中，也可以使用 cloud-init 来初始化虚拟机。
-好处是创建虚拟机的时候，就能设置好虚拟机的 hostname/network/user-pass/disk-size 等一系列参数。
+虚拟机管理可以使用命令行工具 `virsh`/`virt-install`，也可以使用 GUI 工具 `virt-manager`.
 
-这需要用到一个工具：[cloud-utils](https://github.com/canonical/cloud-utils)
+GUI 很傻瓜式，就不介绍了，这里主要介绍命令行工具 `virsh`/`virt-install`
 
-```shell
-# manjaro
-sudo pacman -S cloud-utils
-
-# ubuntu
-sudo apt install cloud-utils
-
-# opensuse，包仓库里找不到 cloud-utils，只能源码安装
-git clone https://github.com/canonical/cloud-utils
-git checkout 0.32
-cd cloud-utils && sudo make install
-```
-
-`cloud-utils` 提供 cloud-init 相关的各种实用工具，
-其中有一个 `cloud-localds` 命令，可以通过 cloud 配置生成一个非 cloud 的 bootable 磁盘映像，供本地的虚拟机使用。
-
-首先编写 `user-data`:
-
-```yaml
-# cloud-config
-
-# 设置 hostname
-hostname: ubuntu-1
-preserve_hostname: False
-
-# 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
-manage_etc_hosts: localhost
-
-package_upgrade: true
-
-# 设置 root 的 ssh 密钥
-user: root
-disable_root: False
-ssh_authorized_keys:
-  - <ssh-key content>
-
-# 设置密码，控制台登录需要
-password: xxxxx
-chpasswd:
-  expire: False
-  
-# ssh 允许密码登录（不推荐）
-# ssh_pwauth: True
-```
-
-再编写 `network-config`:
-
-```yaml
-version: 1
-config:
-    - type: physical
-      name: eth0
-      # mac_address: '62:e7:27:cb:96:11'
-      subnets:
-      - type: static
-        address: '192.168.1.xxx'
-        netmask: '255.255.255.0'
-        gateway: '192.168.1.1'
-    - type: nameserver
-      address:
-      - '114.114.114.114'
-      # search:
-      # - 'pve.local'
-```
+### 1. 创建虚拟机 - virt-intall
 
 ```shell
-cloud-localds seed.img user-data --network-config network-config
-```
+# 创建全新的虚拟机，自动创建一个 20G 的磁盘。同时将 opensuse 的 iso 挂进去安装系统。
+virt-install --connect qemu:///system --virt-type kvm \
+--name opensuse15 \
+--vcpus 2 --memory 2048 \
+--disk size=20 --graphics vnc \
+--disk /path/to/opensuse15.2.iso,device=cdrom \
+--os-variant opensuse15.2
 
-这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
-示例命令如下：
-
-```shell
+# 使用已存在的磁盘创建虚拟机
 virt-install \
   --name ubuntu20.04 \
   --memory 2048 \
@@ -248,24 +201,89 @@ virt-install \
   --import
 ```
 
-也可以使用 virt-viewer 的 GUI 界面进行操作。
+### 3. 虚拟机管理 - virsh
 
-这样设置完成后，cloud 虚拟机应该就可以启动了，但是初始磁盘应该很小。可以直接手动扩容 img 的大小，cloud-init 在虚拟机启动时就会自动扩容分区：
+虚拟机创建好后，可使用 virsh 管理虚拟机：
 
-```shell
-qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
+查看虚拟机列表：
+
+```
+# 查看正在运行的虚拟机
+virsh list
+
+# 查看所有虚拟机，包括 inactive 的虚拟机
+virsh list --all
 ```
 
-## 进阶
+使用 `virt-viewer` 以 vnc 协议登入虚拟机终端：
 
-1. 通过命令行操作 qemu/kvm
-2. 使用 ceph/iscsi 等分布式文件系统做虚拟机的存储。
+```shell
+# 使用虚拟机 ID 连接
+virt-viewer 8
+# 使用虚拟机名称连接，并且等待虚拟机启动
+virt-viewer --wait opensuse15
+```
+
+启动、关闭、暂停(休眠)、重启虚拟机：
+
+```shell
+virsh start opensuse15
+virsh suuspend opensuse15
+virsh resume opensuse15
+virsh reboot opensuse15
+# 优雅关机
+virsh shutdown opensuse15
+# 强制关机
+virsh destroy opensuse15
+
+# 启用自动开机
+virsh autostart opensuse15
+# 禁用自动开机
+virsh autostart --disable opensuse15
+```
+
+虚拟机快照管理：
+
+```shell
+virsh snapshot-list --domain opensuse
+```
+
+删除虚拟机：
+
+```shell
+virsh undefine opensuse15
+```
+
+迁移虚拟机：
+
+```shell
+# 使用默认参数进行离线迁移，将已关机的服务器迁移到另一个 qemu 实例
+virsh migrate 37 qemu+ssh://tux@jupiter.example.com/system
+# 还支持在线实时迁移，待续
+```
+
+虚拟机监控：
+```shell
+# 待续
+```
+
+修改磁盘、网络及其他设备：
+
+```shell
+# 添加新设备
+virsh attach-device
+virsh attach-disk
+virsh attach-interface
+# 删除设备
+virsh detach-disk
+virsh detach-device
+virsh detach-interface
+```
 
 ## 参考
 
-- [Virtualization Guide - OpenSUSE](https://doc.opensuse.org/documentation/leap/virtualization/single-html/book-virt/index.html)
+- [Virtualization Guide - OpenSUSE](https://doc.opensuse.org/documentation/leap/virtualization/html/book-virt/index.html)
 - [Complete Installation of KVM, QEMU and Virt Manager on Arch Linux and Manjaro](https://computingforgeeks.com/complete-installation-of-kvmqemu-and-virt-manager-on-arch-linux-and-manjaro/)
 - [virtualization-libvirt - ubuntu docs](https://ubuntu.com/server/docs/virtualization-libvirt)
 - [RedHat Docs - KVM](https://developers.redhat.com/products/rhel/hello-world#fndtn-kvm)
-- [在 QEMU 使用 Ubuntu Cloud Images](https://vrabe.tw/blog/use-ubuntu-cloud-images-with-qemu/)
 

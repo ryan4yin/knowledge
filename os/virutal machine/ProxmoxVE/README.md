@@ -29,6 +29,7 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
 1. [CentOS Cloud 版本](https://cloud.centos.org/centos/): 提供 qcow2 格式的镜像
 2. [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/): 也提供 qcow2 格式的镜像
 3. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
+4. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
 
 上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init/qemu-guest-agent/cloud-utils-growpart 等 cloud 相关软件。
 
