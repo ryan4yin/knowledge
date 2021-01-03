@@ -4,6 +4,13 @@ Manjaro
 Manjaro 是一个基于 Arch Linux 的 Linux 滚动发行版，用着挺舒服的。
 最大的特点，是包仓库很丰富，而且都很新。代价是偶尔会出些小毛病。
 
+我一年多的使用中，遇到过 qv2-ray 动态链接库炸掉的问题，没专门去找修复方法，好像是等了一两个月，升级了两个大版本才恢复。
+另一个就是 [VSCode - Incorrect locale 'en-US' used everywhere](https://github.com/microsoft/vscode/issues/110322)
+
+还遇到过 `libguestfs` 的一个问题：`vrit-v2v`/`virt-p2v` 两个工具被拆分出去，导致 manjaro 只能通过源码安装这俩货。这貌似目前仍旧没有解决。
+
+总的来说体验很不错，能很及时地用上各种新版本的软件。
+
 ## 一、pacman/yay 的基础命令
 
 Manjaro 装好后，需要运行的第一条命令：
@@ -132,7 +139,9 @@ mv rime ~/.local/share/fcitx5/
 
 ## 彻底删除 Manjaro 及其引导项
 
-最近切换到了 OpenSUSE 体验很好，决定删除掉 Manjaro，一番操作，总结出的删除流程如下（以下命令均需要 root 权限）：
+最近(2021-01)切换到了 OpenSUSE，体验很好，于是决定删除掉 Manjaro。
+
+一番操作，总结出的删除流程如下（以下命令均需要 root 权限）：
 
 ```shell
 # 1. 删除 EFI 引导项
