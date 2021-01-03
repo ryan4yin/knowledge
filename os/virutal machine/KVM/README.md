@@ -204,13 +204,14 @@ GUI 很傻瓜式，就不介绍了，这里主要介绍命令行工具 `virsh`/`
 ### 0. 设置默认 URI
 
 `virsh`/`virt-install`/`virt-viewer` 等一系列 libvirt 命令，
-默认情况下会使用 `qemu:///session` 作为 URI 去连接 QEMU/KVM，
-而 `virt-manager` 这个 GUI 工具，默认会使用 `qemu:///system` 去连接 QEMU/KVM.
+默认情况下会使用 `qemu:///session` 作为 URI 去连接 QEMU/KVM，只有 root 账号才会默认使用 `qemu:///system`.
+
+另一方面 `virt-manager` 这个 GUI 工具，默认也会使用 `qemu:///system` 去连接 QEMU/KVM（和 root 账号一致）
 
 `qemu:///system` 是系统全局的 qemu 环境，而 `qemu:///session` 的环境是按用户隔离的。
 另外 `qemu:///session` 没有默认的 `network`，创建虚拟机时会出毛病。。。
 
-总之，你需要将默认的 URI 改为 `qemu:///system`，否则绝对会被坑: 
+因此，你需要将默认的 URI 改为 `qemu:///system`，否则绝对会被坑: 
 
 ```shell
 echo 'export LIBVIRT_DEFAULT_URI="qemu:///system"' >> ~/.bashrc
