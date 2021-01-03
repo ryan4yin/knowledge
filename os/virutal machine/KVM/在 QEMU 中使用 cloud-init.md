@@ -1,8 +1,6 @@
 在 QEMU 中使用 cloud-init 进行虚拟机初始化
 ---
 
->还未测试通过
-
 参考 [../ProxmoxVE/README.md](../ProxmoxVE/README.md)，在本机的 KVM 环境中，也可以使用 cloud-init 来初始化虚拟机。
 好处是创建虚拟机的时候，就能设置好虚拟机的 hostname/network/user-pass/disk-size 等一系列参数。
 
@@ -19,6 +17,7 @@ sudo apt install cloud-utils
 git clone https://github.com/canonical/cloud-utils
 git checkout 0.32
 cd cloud-utils && sudo make install
+# 生成 iso 文件还需要 genisoimage，请使用一键安装：https://software.opensuse.org/package/genisoimage
 ```
 
 `cloud-utils` 提供 cloud-init 相关的各种实用工具，
@@ -63,9 +62,9 @@ config:
       # mac_address: '62:e7:27:cb:96:11'
       subnets:
       - type: static
-        address: '192.168.1.xxx'
+        address: '192.168.122.xxx'
         netmask: '255.255.255.0'
-        gateway: '192.168.1.1'
+        gateway: '192.168.122.1'
     - type: nameserver
       address:
       - '114.114.114.114'
@@ -74,22 +73,22 @@ config:
 ```
 
 ```shell
-cloud-localds seed.img user-data --network-config network-config
+cloud-localds seed.iso user-data --network-config network-config
 ```
 
-这样就生成出了一个 seed.img，创建虚拟机时同时需要载入 seed.img 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
+这样就生成出了一个 seed.iso，创建虚拟机时同时需要载入 seed.iso 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
 示例命令如下：
 
 ```shell
 virt-install \
-  --name ubuntu20.04 \
+  --name opensuse15-2 \
   --memory 2048 \
-  --disk ubuntu-server-cloud-amd64.img,device=disk,bus=virtio \
-  --disk seed.img,device=cdrom \
+  --disk opensuse15.2-openstack.qcow2,device=disk,bus=virtio \
+  --disk seed.iso,device=cdrom \
   --os-type linux \
-  --os-variant ubuntu20.04 \
+  --os-variant opensuse15.2 \
   --virt-type kvm \
-  --graphics none \
+  --graphics vnc \
   --network network=default,model=virtio \
   --import
 ```
