@@ -29,7 +29,8 @@ cd cloud-utils && sudo make install
 # cloud-config
 
 # 设置 hostname
-hostname: ubuntu-1
+fqdn: opensuse15
+hostname: opensuse15
 preserve_hostname: False
 
 # 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
@@ -46,7 +47,8 @@ ssh_authorized_keys:
 # 设置密码，控制台登录需要
 password: xxxxx
 chpasswd:
-  expire: False
+  # 强制使旧密码失效，这样上面设定的密码才能立即生效。
+  expire: True
   
 # ssh 允许密码登录（不推荐）
 # ssh_pwauth: True
@@ -100,6 +102,11 @@ virt-install \
 ```shell
 qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
 ```
+
+
+## Bug
+
+目前测试发现，账号密码、私钥、hostname 都设置不成功，但是网络能正常设置完成，待继续研究。
 
 ## 相关文档
 

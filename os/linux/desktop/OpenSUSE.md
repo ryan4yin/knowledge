@@ -57,8 +57,10 @@ sudo zypper addrepo https://packages.microsoft.com/yumrepos/vscode vscode
 sudo zypper refresh
 sudo zypper install code
 
-# install go julia
-sudo zypper install go julia
+# 安装新版本的 go
+sudo zypper addrepo https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Leap_15.2 devel-go
+sudo zypper refresh
+sudo zypper install go
 
 # install rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
