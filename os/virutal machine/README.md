@@ -16,6 +16,8 @@
 
 1. [VMware Workstation](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html): 闭源收费软件，但是网上许可证一大堆。
 2. [VirtualBox](https://www.virtualbox.org/): 免费开源，但是 UI 没 VMware 好看。
+3. QEMU/KVM: 用 kvm 做桌面虚拟化，性能是最好的，但是有一定门槛，适合专业人员。
+    - 它没有做到像 vmware/virtualbox 那样简单易懂，有一定学习门槛。
 
 
 ## 服务器虚拟化 - Hypervisor
@@ -34,7 +36,7 @@
    4. 文档齐全，而且很接地气，还包含许多 QEMU/KVM/CEPH 等开源技术的内容。 反观 VMware 的文档，真的是写得烂得一批。
    5. 缺点在于，PVE 的 WebUI 功能不全，有些功能必须通过命令行才能实现。（这和路由器类似，高级功能只有 CLI 支持）
 
-3. KVM: 直接搞 KVM，有一定难度。适合进阶用户，或者大厂自己 DIY。
+3. KVM+OpenStack: 难度较高。适合进阶用户，或者大厂自己 DIY。
 
 
 ## 虚拟机集群管理 - OpenStack
