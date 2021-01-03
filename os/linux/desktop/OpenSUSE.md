@@ -109,6 +109,9 @@ sudo yast2 virtualization
 
 ## KDE Connect
 
+KDE Connect 是一个 PC 手机协同工具，可以在电脑和手机之间共享剪切版、远程输入、发送文件、共享文件夹、通知同步等等。
+总而言之非常好用，只要手机和 PC 处于同一个局域网就行，不需要什么数据线。
+
 如果安装系统时选择了打开防火墙，KDE Connect 是连不上的，需要手动开放端口号：
 
 ```shell
@@ -118,7 +121,11 @@ sudo firewall-cmd --zone=public --permanent --add-port=1714-1764/udp
 sudo systemctl restart firewalld.service
 ```
 
+然后手机（Android）安装好 KDE Connect，就能开始享受了。
+
 ## Qv2ray 代理
+
+Qv2ray 是我用过的比较好用的 GUI 代理工具，通过插件可支持常见的所有代理协议。
 
 ```shell
 # see: https://build.opensuse.org/repositories/home:zzndb
@@ -126,4 +133,9 @@ sudo zypper addrepo https://download.opensuse.org/repositories/home:/zzndb/openS
 sudo zypper refresh
 sudo zypper install Qv2ray QvPlugin-Trojan QvPlugin-SS
 ```
+
+## 其他设置
+
+从 Windows 带过来的习惯是单击选中文件，双击才打开，这个可以在「系统设置」-「工作空间行为」-「常规行为」-「点击行为」中修改。
+
 
