@@ -160,6 +160,12 @@ sudo systemctl restart firewalld.service
 
 然后手机（Android）安装好 KDE Connect，就能开始享受了。
 
+目前存在的 Bug:
+
+- [ ] Android 10 禁止了后台应用读取剪切版，这导致 KDE Connect 只能从 PC 同步到手机，而无法反向同步。
+    - 如果你有 ROOT 权限，可以参考 [Fix clipboard permission on Android 10](https://szclsya.me/posts/android/fix-clipboard-android-10/) 的方法，安装 ClipboardWhitelist 来打开权限。
+    - 否则，貌似就只能使用手机端的「远程输入」模块来手动传输文本了。
+
 ## Qv2ray 代理
 
 Qv2ray 是我用过的比较好用的 GUI 代理工具，通过插件可支持常见的所有代理协议。
