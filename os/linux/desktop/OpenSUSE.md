@@ -75,6 +75,30 @@ sudo gpasswd --add $USER docker
 sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-compose
 ```
 
+安装 VSCode 插件：
+
+1. 语言：
+    1. python/go/rust/c#/julia/flutter
+    2. xml/yaml/toml
+    3. vscode proto3
+    4. 
+2. ansible/terraform
+3. markdown all in one + Markdown Preview Enhanced
+4. 美化：
+   1. community material theme
+   2. vscode icons
+   3. glasslt-vsc
+5. docker/kubernetes
+6. gitlens
+7. prettier
+8. utils
+    1.  comment translate
+    2.  path intellisense
+    3.  svg
+    4. visual studio intellicode
+9.  antlr4
+10. remote ssh + remote containers
+11. rest client
 
 ## 安装输入法
 
