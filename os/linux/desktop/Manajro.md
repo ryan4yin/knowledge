@@ -130,6 +130,33 @@ mv rime ~/.local/share/fcitx5/
       - 而且就算你回退了版本，一升级它就又更新了。。
 
 
+## 彻底删除 Manjaro 及其引导项
+
+最近切换到了 OpenSUSE 体验很好，决定删除掉 Manjaro，一番操作，总结出的删除流程如下（以下命令均需要 root 权限）：
+
+```shell
+# 1. 删除 EFI 引导项
+## 查看 efi 的所有启动项，找到 Manjaro 的编号
+efibootmgr
+## 删除掉 Manjaro 启动项
+sudo efibootmgr --delete-bootnum -b 2
+
+# 2. 删除 manjaro 的 bootloader
+## 我使用了 manjaro 默认的安装策略，bootloader 被安装在了和 windows 相同的 EFI 分区下
+## 首先通过 opnsuse 的分区工具，找到 EFI 分区的设备号，然后挂载它
+mkdir efi
+mount /dev/nvme0n1p1 efi
+# 删除 Manjaro bootloader
+rm -r EFI/Manjaro
+
+# 3. 重建 grub2 引导项
+grub2-mkconfig >  /boot/grub2/grub.cfg
+
+# 4. 最后，通过分区工具删除 Manjaro 的所有分区，我是 SSD，只有一个分区
+
+# 5. 重启系统，所有东西就全删除干净了。
+```
+
 ## 参考
 
 - [Arch Linux Wiki - 中文](https://wiki.archlinux.org/index.php/Main_page_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87))
