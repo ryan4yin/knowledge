@@ -67,6 +67,24 @@ sudo yast2 virtualization
 8. `virt-v2v`: 将其他格式的虚拟机(比如 ova) 转换成 kvm 虚拟机。
 9. `virt-p2v`: 将一台物理机转换成虚拟机。
 
+
+安装命令：
+
+
+```shell
+# archlinux/manjaro
+sudo pacman -S libguestfs
+
+# opensuse
+sudo zypper install libguestfs
+
+# ubuntu
+sudo apt install libguestfs-tools
+
+# centos
+sudo yum install libguestfs-tools
+```
+
 ### 2. 启动 QEMU/KVM
 
 通过 systemd 启动 libvirtd 后台服务：
