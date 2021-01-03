@@ -57,6 +57,12 @@ sudo zypper addrepo https://packages.microsoft.com/yumrepos/vscode vscode
 sudo zypper refresh
 sudo zypper install code
 
+# 安装 dotnet 5: https://docs.microsoft.com/en-us/dotnet/core/install/linux-opensuse#opensuse-15-
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo zypper addrepo https://packages.microsoft.com/opensuse/15/prod/ microsoft-prod
+sudo zypper refresh
+sudo zypper install dotnet-sdk-5.0
+
 # 安装新版本的 go
 sudo zypper addrepo https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Leap_15.2 devel-go
 sudo zypper refresh
