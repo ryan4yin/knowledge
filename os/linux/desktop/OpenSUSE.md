@@ -81,7 +81,6 @@ sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-co
     1. python/go/rust/c#/julia/flutter
     2. xml/yaml/toml
     3. vscode proto3
-    4. 
 2. ansible/terraform
 3. markdown all in one + Markdown Preview Enhanced
 4. 美化：
@@ -89,16 +88,18 @@ sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-co
    2. vscode icons
    3. glasslt-vsc
 5. docker/kubernetes
-6. gitlens
-7. prettier
-8. utils
-    1.  comment translate
-    2.  path intellisense
-    3.  svg
+6. IntelliJ IDEA Keybindings
+7. gitlens
+8. prettier
+9. utils
+    1. comment translate
+    2. path intellisense
+    3. svg
     4. visual studio intellicode
-9.  antlr4
-10. remote ssh + remote containers
-11. rest client
+10. antlr4
+11. remote ssh + remote containers
+12. rest client
+13. vscode databases
 
 ## 办公、音乐、聊天
 
@@ -109,7 +110,6 @@ sudo zypper install wps-office netease-cloud-music
 
 # linux qq: https://im.qq.com/linuxqq/download.html
 # 虽然简陋但也够用，发送文件比 KDE Connect 要方便一些。
-curl -o linux_qq.rpm http://down.qq.com/qqweb/LinuxQQ/linuxqq_2.0.0-b2-1084_x86_64.rpm
 sudo rpm -ivh linux_qq.rpm
 ```
 
