@@ -100,6 +100,19 @@ sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-co
 10. remote ssh + remote containers
 11. rest client
 
+## 办公、音乐、聊天
+
+```shell
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_Leap_15.2 opensuse_zh
+sudo zypper refresh
+sudo zypper install wps-office netease-cloud-music 
+
+# linux qq: https://im.qq.com/linuxqq/download.html
+# 虽然简陋但也够用，发送文件比 KDE Connect 要方便一些。
+curl -o linux_qq.rpm http://down.qq.com/qqweb/LinuxQQ/linuxqq_2.0.0-b2-1084_x86_64.rpm
+sudo rpm -ivh linux_qq.rpm
+```
+
 ## 安装输入法
 
 我用的输入法是小鹤音形，首先安装 fcitx-rime:
