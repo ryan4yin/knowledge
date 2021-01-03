@@ -227,15 +227,16 @@ virt-install --virt-type kvm \
 --disk /path/to/opensuse15.2.iso,device=cdrom \
 --os-variant opensuse15.2
 
-# 使用已存在的磁盘创建虚拟机
-virt-install --virt-type kvm \
-  --name ubuntu20.04 \
+# 使用已存在的 cloud 磁盘创建虚拟机
+virt-install \
+  --name opensuse15-2 \
   --memory 2048 \
-  --disk ubuntu-server-cloud-amd64.img,device=disk,bus=virtio \
-  --disk seed.img,device=cdrom \
+  --disk opensuse15.2-openstack.qcow2,device=disk,bus=virtio \
+  --disk seed.iso,device=cdrom \
   --os-type linux \
-  --os-variant ubuntu20.04 \
-  --graphics none \
+  --os-variant opensuse15.2 \
+  --virt-type kvm \
+  --graphics vnc \
   --network network=default,model=virtio \
   --import
 ```
