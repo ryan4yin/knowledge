@@ -78,6 +78,11 @@ sudo gpasswd --add $USER wireshark  #  将你添加到 wireshark 用户组中
 
 # container: https://documentation.suse.com/sles/15-SP2/html/SLES-all/cha-podman-overview.html
 sudo zypper in podman skopeo kompose
+# 安装 kubernetes 相关工具，使用 kubic 源，它里面的软件更新一些
+sudo zypper addrepo https://download.opensuse.org/repositories/devel:/kubic/openSUSE_Leap_15.2 kubic
+sudo zypper refresh
+sudo zypper in k9s helm kubernetes1.18-client
+
 # 本地测试目前还是 docker-compose 最方便，docker 仍有必要安装。不过也可以考虑换成 kompose+podman 或者 podman-compose
 sudo zypper in docker
 sudo gpasswd --add $USER docker
