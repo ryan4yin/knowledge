@@ -34,10 +34,11 @@ WorkflowTemplate 可以被其他 Workflow 引用并触发，也可以正常传�
 ### 3. 其他特性
 
 1. 凭据管理：利用了 Kubernetes 原生的 Secrets 存储 Git/Docker 等工具的密钥/token
-1. 定时执行的 Workflow
-2. 提供 RESTful API
-3. step 之间可以传递 parameters，并且提供 artifact/outputs/exitcode 等返回值
-4. Workflow of Workflows: 一个父工作流，可以触发并管理多个子工作流，也可以操作子工作流的 results。（我们很需要这个特性）
+   1. 也可以使用 vault 存储 secrets，再用 vault agent 注入。
+2. 定时执行的 Workflow
+3. 提供 RESTful API
+4. step 之间可以传递 parameters，并且提供 artifact/outputs/exitcode 等返回值
+5. Workflow of Workflows: 一个父工作流，可以触发并管理多个子工作流，也可以操作子工作流的 results。（我们很需要这个特性）
 
 
 ### 4. Web UI
