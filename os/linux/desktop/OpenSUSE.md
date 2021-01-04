@@ -72,9 +72,6 @@ sudo zypper addrepo https://download.opensuse.org/repositories/devel:/languages:
 sudo zypper refresh
 sudo zypper install go
 
-# install rustup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
 # install wireshark
 sudo zypper install wireshark
 sudo gpasswd --add $USER wireshark  #  将你添加到 wireshark 用户组中
@@ -89,7 +86,17 @@ sudo systemctl start docker
 sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-compose
 ```
 
-安装 VSCode 插件：
+通过 tarball/script 安装：
+
+```shell
+# rustup，rust 环境管理器
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# jetbrains toolbox app，用于安装和管理 pycharm/idea/goland/android studio 等 IDE
+# https://www.jetbrains.com/toolbox-app/
+```
+
+接下来安装 VSCode 插件，下列是我的插件列表：
 
 1. 语言：
     1. python/go/rust/c#/julia/flutter
