@@ -74,11 +74,11 @@ sudo yast2 virtualization
 
 
 ```shell
-# archlinux/manjaro
-sudo pacman -S libguestfs
-
 # opensuse
 sudo zypper install libguestfs
+
+# archlinux/manjaro，目前缺少 virt-v2v/virt-p2v 组件
+sudo pacman -S libguestfs
 
 # ubuntu
 sudo apt install libguestfs-tools
