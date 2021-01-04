@@ -19,10 +19,10 @@ OpenSUSE 是一个基于 RPM 的发行版，这和 RHEL/CentOS 一致。
 # 禁用原有软件源
 sudo zypper mr -da
 # 添加北外镜像源
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/42.3/repo/oss USTC:42.3:OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/42.3/repo/non-oss USTC:42.3:NON-OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/42.3/oss USTC:42.3:UPDATE-OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/42.3/non-oss USTC:42.3:UPDATE-NON-OSS
+sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/15.2/repo/oss BFSU:OSS
+sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/15.2/repo/non-oss BFSU:Non-OSS
+sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/15.2/oss BFSU:Update-OSS
+sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/15.2/non-oss BFSU:Update-Non-OSS
 ```
 
 镜像源配置好后，首先更新下系统软件：
