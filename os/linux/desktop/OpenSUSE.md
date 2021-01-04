@@ -4,6 +4,9 @@ OpenSUSE
 OpenSUSE 是一个基于 RPM 的发行版，这和 RHEL/CentOS 一致。
 但是它的官方包管理器是专有的 zypper，挺好用的，软件也很新。
 
+本文以 OpenSUSE Leap 15.2 为基础编写，因此部分软件需要手动添加 OBS 源，才能获得到更新的版本。
+
+你也可以考虑使用 Tumbleweed，它是滚动更新的，软件要比 Leap 新很多。
 
 ## 一、zypper 的基础命令
 
