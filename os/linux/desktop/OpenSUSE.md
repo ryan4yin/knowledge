@@ -93,7 +93,17 @@ sudo pip install docker-compose  # 简单起见，直接用 pip 安装 docker-co
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # jetbrains toolbox app，用于安装和管理 pycharm/idea/goland/android studio 等 IDE
-# https://www.jetbrains.com/toolbox-app/
+# 参见：https://www.jetbrains.com/toolbox-app/
+
+# 系统自带的 python3 太老，用 miniconda 装 python3.8
+# 参考：https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+sudo /bin/bash /tmp/miniconda.sh -b -p /opt/conda
+rm /tmp/miniconda.sh
+sudo /opt/conda/bin/conda clean -tipsy
+sudo ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+echo "conda activate base" >> ~/.bashrc
 ```
 
 接下来安装 VSCode 插件，下列是我的插件列表：
