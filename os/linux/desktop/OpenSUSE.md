@@ -17,7 +17,7 @@ OpenSUSE 是一个基于 RPM 的发行版，这和 RHEL/CentOS 一致。
 
 ```shell
 # 禁用原有软件源
-sudo zypper mr -da
+sudo zypper mr --disable --all  # 相对的，`--enable --all` 可以启用所有源
 # 添加北外镜像源
 sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/15.2/repo/oss BFSU:OSS
 sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/15.2/repo/non-oss BFSU:Non-OSS
