@@ -38,7 +38,7 @@
    4. 提供一套方便的 CLI 工具，以及 RESTful API。不论是 CLI 还是 HTTP API/Python SDK 都比 vmware 先进很多。VMware 的 python sdk 真的是超级难用，印象深刻。
    6. 缺点在于，PVE 的 WebUI 功能不全，有些功能必须通过命令行才能实现。（这和路由器类似，高级功能只有 CLI 支持）
 
-3. KVM+OpenStack: 难度较高。适合进阶用户，或者大厂自己 DIY。
+3. KVM+OpenStack: 难度较高(openstack 我还没用过)。适合进阶用户，或者大厂自己 DIY。
 
 
 ## 虚拟机集群管理 - OpenStack
