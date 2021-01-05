@@ -33,15 +33,16 @@ fqdn: opensuse15-2.local
 # 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
 manage_etc_hosts: localhost
 
-package_upgrade: true
+package_upgrade: True
+
+disable_root: False
 
 # 设置 root 的 ssh 密钥
 user: root
-disable_root: False
-ssh_authorized_keys:
-  - <ssh-key content>
 # 设置密码，控制台登录需要
 password: xxxxx
+ssh_authorized_keys:
+  - <ssh-key content>
 chpasswd:
   # expire 使密码用完即失效，用户每次登录都需要设置并使用密码！
   expire: False
