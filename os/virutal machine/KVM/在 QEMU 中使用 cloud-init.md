@@ -48,7 +48,7 @@ chpasswd:
   expire: false
   
 # ssh 允许密码登录（不推荐）
-# ssh_pwauth: True
+# ssh_pwauth: true
 ```
 
 >注意 `user-data` 的第一行的 `#cloud-config` 绝对不能省略！它标识配置格式为 `text/cloud-config`！
