@@ -93,16 +93,14 @@ virt-install --virt-type kvm \
 
 也可以使用 virt-viewer 的 GUI 界面进行操作。
 
-这样设置完成后，cloud 虚拟机应该就可以启动了，但是初始磁盘应该很小。可以直接手动扩容 img 的大小，cloud-init 在虚拟机启动时就会自动扩容分区：
+这样设置完成后，cloud 虚拟机应该就可以启动了，可以检查下 hostname、网络、root 的密码和私钥、ssh 配置是否均正常。
+
+一切正常后，还有个问题需要解决——初始磁盘应该很小。可以直接手动扩容 img 的大小，cloud-init 在虚拟机启动时就会自动扩容分区：
 
 ```shell
 qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
 ```
 
-
-## Bug
-
-目前测试发现，账号密码、私钥、都设置不成功，但是网络、hostname 能正常设置完成，待继续研究。
 
 ## 相关文档
 
