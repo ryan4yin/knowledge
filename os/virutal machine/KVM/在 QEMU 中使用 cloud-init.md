@@ -56,24 +56,22 @@ instance-id: iid-local01
 local-hostname: opensuse15-2
 ```
 
-再编写 `network-config`:
+再编写 `network-config`(其格式和 ubuntu 的 netplan 基本完全一致):
 
 ```yaml
-version: 1
-config:
-    - type: physical
-      name: eth0
-      # mac_address: '62:e7:27:cb:96:11'
-      subnets:
-      - type: static
-        address: '192.168.122.xxx'
-        netmask: '255.255.255.0'
-        gateway: '192.168.122.1'
-    - type: nameserver
-      address:
-      - '114.114.114.114'
-      # search:
-      # - 'pve.local'
+version: 2
+ethernets:
+  eth0:
+     dhcp4: false
+     addresses: 
+     - 192.168.122.160/24
+     gateway4: 192.168.122.1
+     nameservers:
+       addresses:
+       - 192.168.122.1
+       - 8.8.8.8
+      search:
+      - 'pve.local'
 ```
 
 ```shell
