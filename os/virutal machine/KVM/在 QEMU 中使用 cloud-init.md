@@ -49,7 +49,7 @@ chpasswd:
   # expire 使密码用完即失效，用户每次登录都需要设置并使用密码！
   expire: false
   
-# ssh 允许密码登录（不推荐）
+# ssh 允许密码登录（不建议开启）
 ssh_pwauth: false
 ```
 
