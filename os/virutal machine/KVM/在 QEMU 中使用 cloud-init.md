@@ -41,6 +41,8 @@ disable_root: false
 user: root
 # 设置密码，控制台登录需要
 password: xxxxx
+
+# TODO authorized_keys 还没设置成功过
 ssh_authorized_keys:
   - <ssh-key content>
 chpasswd:
