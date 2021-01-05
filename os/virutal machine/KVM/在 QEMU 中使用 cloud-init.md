@@ -26,13 +26,6 @@ cd cloud-utils && sudo make install
 首先编写 `user-data`:
 
 ```yaml
-# cloud-config
-
-# 设置 hostname
-fqdn: opensuse15
-hostname: opensuse15
-preserve_hostname: False
-
 # 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
 manage_etc_hosts: localhost
 
@@ -52,6 +45,15 @@ chpasswd:
   
 # ssh 允许密码登录（不推荐）
 # ssh_pwauth: True
+```
+
+以及 `meta-data`:
+
+```yaml
+# 虚拟机的唯一 ID
+instance-id: iid-local01
+# 虚拟机的 hostname
+local-hostname: opensuse15-2
 ```
 
 再编写 `network-config`:
@@ -75,7 +77,7 @@ config:
 ```
 
 ```shell
-cloud-localds seed.iso user-data --network-config network-config
+cloud-localds seed.iso user-data meta-data --network-config network-config
 ```
 
 这样就生成出了一个 seed.iso，创建虚拟机时同时需要载入 seed.iso 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
@@ -106,7 +108,7 @@ qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
 
 ## Bug
 
-目前测试发现，账号密码、私钥、hostname 都设置不成功，但是网络能正常设置完成，待继续研究。
+目前测试发现，账号密码、私钥、都设置不成功，但是网络、hostname 能正常设置完成，待继续研究。
 
 ## 相关文档
 
