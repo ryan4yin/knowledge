@@ -16,8 +16,9 @@
 
 1. [VMware Workstation](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html): 闭源收费软件，但是网上许可证一大堆。
 2. [VirtualBox](https://www.virtualbox.org/): 免费开源，但是 UI 没 VMware 好看。
-3. QEMU/KVM: 用 kvm 做桌面虚拟化，性能是最好的，但是有一定门槛，适合专业人员。
+3. QEMU/KVM: 用 qemu/kvm+virt-manager 做桌面虚拟化，性能是最好的，但是有一定门槛，适合专业人员。
     - 它没有做到像 vmware/virtualbox 那样简单易懂，有一定学习门槛。
+    - 深入使用，需要熟悉 libvirtd 的命令行和 xml.
 
 
 ## 服务器虚拟化 - Hypervisor
@@ -31,10 +32,11 @@
    3. ESXi 搭配 vCenter 可以中心化地管理 ESXi 集群，搭配 terraform/python sdk 可以实现虚拟机的自动化创建等功能。
 2. [ProxmoxVE](https://pve.proxmox.com/wiki/Main_Page): 一个开源免费的服务器虚拟化系统，基于 Debian + QEMU/KVM + LXC.
    1. PVE 开源免费，而 VMware 的全套技术都是闭源收费的
-   2. PVE 底层是 QEMU/KVM，存储方案也是 Ceph/iSCSI/NFS/LVM 这些都是使用很广泛的开源技术，学会了还可以应用在别的地方。
-   3. 提供一套方便的 CLI 工具，以及 RESTful API。不论是 CLI、HTTP API 还是 [Python SDK](https://github.com/proxmoxer/proxmoxer)，又或者 terraform 支持，PVE 都比 ESXi 要好用很多！
-   4. 文档齐全，而且很接地气，还包含许多 QEMU/KVM/CEPH 等开源技术的内容。 反观 VMware 的文档，真的是写得烂得一批。
-   5. 缺点在于，PVE 的 WebUI 功能不全，有些功能必须通过命令行才能实现。（这和路由器类似，高级功能只有 CLI 支持）
+   2. PVE 底层是 QEMU/KVM，存储方案也是 Ceph/iSCSI/NFS/LVM 这些都是使用很广泛的开源技术，对提升个人及公司的技术能力有很大帮助。
+   3. PVE 支持 cloudinit，这是一个虚拟机的预配置工具，可以用于预配置网络、磁盘扩容、设置 hostname 等，非常方便！
+   5. 文档齐全，而且很接地气，还包含许多 QEMU/KVM/CEPH/Cloudinit 等开源技术的内容。 反观 VMware 的文档，真的是写得烂得一批，不知所云，随便找篇博客都要比官方文档好理解得多。
+   4. 提供一套方便的 CLI 工具，以及 RESTful API。不论是 CLI 还是 HTTP API/Python SDK 都比 vmware 先进很多。VMware 的 python sdk 真的是超级难用，印象深刻。
+   6. 缺点在于，PVE 的 WebUI 功能不全，有些功能必须通过命令行才能实现。（这和路由器类似，高级功能只有 CLI 支持）
 
 3. KVM+OpenStack: 难度较高。适合进阶用户，或者大厂自己 DIY。
 
