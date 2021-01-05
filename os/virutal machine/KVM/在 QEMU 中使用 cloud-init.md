@@ -25,7 +25,11 @@ cd cloud-utils && sudo make install
 
 首先编写 `user-data`:
 
+
 ```yaml
+#cloud-config
+hostname: opensuse15-2
+fqdn: opensuse15-2.local
 # 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
 manage_etc_hosts: localhost
 
@@ -36,25 +40,17 @@ user: root
 disable_root: False
 ssh_authorized_keys:
   - <ssh-key content>
-
 # 设置密码，控制台登录需要
 password: xxxxx
 chpasswd:
-  # 强制使旧密码失效，这样上面设定的密码才能立即生效。
-  expire: True
+  # 是否强制使旧密码失效
+  expire: False
   
 # ssh 允许密码登录（不推荐）
 # ssh_pwauth: True
 ```
 
-以及 `meta-data`:
-
-```yaml
-# 虚拟机的唯一 ID
-instance-id: iid-local01
-# 虚拟机的 hostname
-local-hostname: opensuse15-2
-```
+>注意 `user-data` 的第一行的 `#cloud-config` 绝对不能省略！它标识配置格式为 `text/cloud-config`！
 
 再编写 `network-config`(其格式和 ubuntu 的 netplan 基本完全一致):
 
@@ -62,36 +58,35 @@ local-hostname: opensuse15-2
 version: 2
 ethernets:
   eth0:
-     dhcp4: false
-     addresses: 
-     - 192.168.122.160/24
-     gateway4: 192.168.122.1
-     nameservers:
-       addresses:
-       - 192.168.122.1
-       - 8.8.8.8
-      search:
-      - 'pve.local'
+    dhcp4: false
+    addresses: 
+    - 192.168.122.160/24
+    gateway4: 192.168.122.1
+    nameservers:
+      addresses:
+      - 192.168.122.1
+      - 8.8.8.8
+    search:
+    - 'pve.local'
 ```
 
 ```shell
-cloud-localds seed.iso user-data meta-data --network-config network-config
+cloud-localds seed.iso user-data --network-config network-config
 ```
 
 这样就生成出了一个 seed.iso，创建虚拟机时同时需要载入 seed.iso 和 cloud image，cloud-image 自身为启动盘，这样就大功告成了。
 示例命令如下：
 
 ```shell
-virt-install \
+virt-install --virt-type kvm \
   --name opensuse15-2 \
-  --memory 2048 \
+  --vcpus 2 --memory 2048 \
   --disk opensuse15.2-openstack.qcow2,device=disk,bus=virtio \
   --disk seed.iso,device=cdrom \
   --os-type linux \
   --os-variant opensuse15.2 \
-  --virt-type kvm \
-  --graphics vnc \
   --network network=default,model=virtio \
+  --graphics vnc \
   --import
 ```
 
