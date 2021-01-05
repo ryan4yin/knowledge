@@ -29,13 +29,13 @@ cd cloud-utils && sudo make install
 ```yaml
 #cloud-config
 hostname: opensuse15-2
-fqdn: opensuse15-2.local
+fqdn: opensuse15-2.local  
 # 让 cloud-init 自动更新 /etc/hosts 中 localhost 相关的内容
 manage_etc_hosts: localhost
 
-package_upgrade: True
+package_upgrade: true
 
-disable_root: False
+disable_root: false
 
 # 设置 root 的 ssh 密钥
 user: root
@@ -45,7 +45,7 @@ ssh_authorized_keys:
   - <ssh-key content>
 chpasswd:
   # expire 使密码用完即失效，用户每次登录都需要设置并使用密码！
-  expire: False
+  expire: false
   
 # ssh 允许密码登录（不推荐）
 # ssh_pwauth: True
