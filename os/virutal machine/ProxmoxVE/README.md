@@ -29,7 +29,9 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
 1. [CentOS Cloud 版本](https://cloud.centos.org/centos/): 提供 qcow2 格式的镜像
 2. [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/): 也提供 qcow2 格式的镜像
 3. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
+   - 注意：需要下载带有 kvm 字样的镜像！
 4. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
+   - 注意：请下载带有 openstack 和 x86_64 字样的镜像 
 
 上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init/qemu-guest-agent/cloud-utils-growpart 等 cloud 相关软件。
 
@@ -65,10 +67,11 @@ qm set 9000 --serial0 socket --vga serial0
 ```
 
 后续配置：
-1. 手动设置 cloud-init 配置，启动虚拟机。
-1. 进入虚拟机后，安装所需的基础环境，如 docker/docker-compose/vim/git/python3
-2. 关闭虚拟机，然后将虚拟机设为模板（只读）。
-3. 接下来就可以从这个模板虚拟机，克隆各类新虚拟机了~
+1. 手动设置 cloud-init 配置，启动虚拟机，并通过 ssh 登入远程终端。
+2. 检查 qemu-guest-agent，如果未自带，一定要手动安装它！
+3. 安装所需的基础环境，如 docker/docker-compose/vim/git/python3
+4. 关闭虚拟机，然后将虚拟机设为模板（只读）。
+5. 接下来就可以从这个模板虚拟机，克隆各类新虚拟机了~
 
 ### cloud-init 高级配置
 
