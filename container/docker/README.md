@@ -70,7 +70,7 @@ Docker 的最新的容器集群编排工具（前身是 Classic-Swarm 和 SwarmK
 [Service]
 Environment="HTTP_PROXY=http://<proxy-host>:8889"
 Environment="HTTPS_PROXY=http://<proxy-host>:8889"
-Environment="NO_PROXY=localhost,127.0.0.1"
+Environment="NO_PROXY=localhost,127.0.0.1,aliyuncs.com"
 ```
 
 修改好上述的 systemd 配置文件后，重启 docker 服务就能正常使用了：
