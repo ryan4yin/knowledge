@@ -43,7 +43,7 @@ ssh_authorized_keys:
 # 设置密码，控制台登录需要
 password: xxxxx
 chpasswd:
-  # 是否强制使旧密码失效
+  # expire 使密码用完即失效，用户每次登录都需要设置并使用密码！
   expire: False
   
 # ssh 允许密码登录（不推荐）
