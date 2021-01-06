@@ -103,6 +103,15 @@ virt-install --virt-type kvm \
 qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
 ```
 
+## 画外：cloudinit 主机名称
+
+cloudinit 有三个参数与 hostname 相关。其中有两个，就是上面提到的 `user-data` 中的：
+1. hostname: 主机名称
+2. fqdn: 主机的完全限定域名，优先级比 `hostname` 更高
+
+这两个参数的行为均受 `preserve_hostname: true/false` 这个参数的影响。
+
+另一个是 `meta-data` 中，可以设置一个 `local-hostname`，待续。。
 
 ## 相关文档
 
