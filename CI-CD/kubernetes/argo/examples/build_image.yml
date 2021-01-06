@@ -1,0 +1,78 @@
+# 使用 Kaniko 构建容器镜像
+#
+# USAGE:
+#
+# push 镜像需要一个 config.json, 这个 json 需要被挂载到 `kaniko/.docker/config.json`.
+# 为此，你首先需要构建 config.json 文件，并使用它创建一个 kubernetes secret:
+#
+#    export DOCKER_REGISTRY="registry.svc.local"
+#    export DOCKER_USERNAME=<username>
+#    export DOCKER_TOKEN='<password>'   # 对于 harbor 仓库而言，token 就是账号的 password.
+#    kubectl create secret generic docker-config --from-literal="config.json={\"auths\": {\"$DOCKER_REGISTRY\": {\"auth\": \"$(echo -n $DOCKER_USERNAME:$DOCKER_TOKEN|base64)\"}}}"
+#
+# clone git 仓库也需要 git credentails，这可以通过如下命令创建：
+# 
+#    kubectl create secret generic private-git-creds --from-literal=username=<username> --from-file=ssh-private-key=<filename>
+# 
+# REFERENCES:
+#
+# * https://github.com/argoproj/argo/blob/master/examples/buildkit-template.yaml
+#
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  generateName: build-image-
+spec:
+  arguments:
+    parameters:
+      - name: repo  # 源码仓库
+        value: git@gitlab.svc.local:ryan4yin/my-app.git
+      - name: branch
+        value: main
+      - name: path
+        value: <镜像构建的 context 路径>
+      - name: image  # 构建出的镜像名称
+        value: registry.svc.local/ryan4yin/my-app:latest
+  entrypoint: build-image
+  templates:
+    - name: build-image
+      inputs:
+        artifacts:
+          # 拉取镜像仓库
+          - name: git-repo
+            path: /work/
+            git:
+              repo: "{{workflow.parameters.repo}}"
+              revision: "{{workflow.parameters.branch}}"
+              # 不检查 hostkey
+              insecureIgnoreHostKey: true
+              usernameSecret:
+                name: private-git-creds
+                key: username
+              sshPrivateKeySecret:
+                name: private-git-creds
+                key: ssh-private-key
+        parameters:
+          - name: path
+            value: "{{workflow.parameters.path}}"
+          - name: image
+            value: "{{workflow.parameters.image}}"
+      volumes:
+        - name: docker-config
+          secret:
+            secretName: docker-config
+      container:
+        image: gcr.io/kaniko-project/executor:v1.3.0
+        # 挂载 docker credential
+        volumeMounts:
+          - name: docker-config
+            mountPath: /kaniko/.docker/
+        # 以 context 为工作目录
+        workingDir: /work/{{inputs.parameters.path}}
+        args:
+          - --context=.
+          - --dockerfile=Dockerfile
+          - --destination={{inputs.parameters.image}}
+          # 私有镜像仓库，可以考虑不验证 tls 证书（有安全风险）
+          - --skip-tls-verify
+          - --skip-tls-verify-pull
