@@ -24,7 +24,7 @@
 │   ├───cleaning「文件夹」  # 日志、镜像、缓存等历史数据清理的 Jenkinsfiles
 │   └───schedulers「文件夹」  # 统一管理定时执行的 Jenkinsfiles，其中大部分都只负责定时调用其他子任务。
 ├───operation  # 上述 Jenkinsfiles 需要用到的 Python 代码
-│   ├─── vmware  # 与 vmware 相关的脚本（虚拟机的 CURD）
+│   ├─── vm  # 与 virtual machine 相关的脚本（虚拟机的 CURD）
 │   ├─── ftp  # 与 ftp 服务器相关的脚本（数据清理）
 ├─── tests   # python 代码的单元测试
 ├─── run.py   # 所有脚本的启动入口。
