@@ -46,3 +46,18 @@ registries = ["docker.io"]
 [registries.insecure]
 registries = ["registry.svc.local"]
 ```
+
+## 设置代理
+
+Podman 是无后台服务的，因此直接在 shell 环境下通过环境变量，就可以设置代理：
+
+```shell
+export HTTPS_PROXY=http://localhost:8889
+export NO_PROXY=*.aliyuncs.com,localhost
+```
+
+现在直接拉镜像，就会走代理了：
+
+```shell
+podman pull golang:1.15-buster
+```
