@@ -29,34 +29,48 @@ spec:
         value: git@gitlab.svc.local:ryan4yin/my-app.git
       - name: branch
         value: main
-      - name: path
-        value: <镜像构建的 context 路径>
+      - name: context-path
+        value: .
+      - name: dockerfile
+        value: Dockerfile
       - name: image  # 构建出的镜像名称
         value: registry.svc.local/ryan4yin/my-app:latest
-  entrypoint: build-image
+  entrypoint: main
   templates:
+    - name: main
+      steps:
+      - - name: build-image
+          template: build-image
+          arguments:
+            artifacts:
+              - name: git-repo
+                git:
+                  repo: "{{workflow.parameters.repo}}"
+                  revision: "{{workflow.parameters.branch}}"
+                  insecureIgnoreHostKey: true
+                  usernameSecret:
+                    name: private-git-creds
+                    key: username
+                  sshPrivateKeySecret:
+                    name: private-git-creds
+                    key: ssh-private-key
+            parameters:
+              - name: context-path
+                value: "{{workflow.parameters.context-path}}"
+              - name: dockerfile
+                value: "{{workflow.parameters.dockerfile}}"
+              - name: image
+                value: "{{workflow.parameters.image}}"
+    # build-image 作为一个通用的 template，不应该直接去引用 workflow.xxx 中的 parameters/artifacts
+    # 这样做的好处是复用性强，这个 template 可以被其他 workflow 引用。
     - name: build-image
       inputs:
         artifacts:
-          # 拉取镜像仓库
           - name: git-repo
-            path: /work/
-            git:
-              repo: "{{workflow.parameters.repo}}"
-              revision: "{{workflow.parameters.branch}}"
-              # 不检查 hostkey
-              insecureIgnoreHostKey: true
-              usernameSecret:
-                name: private-git-creds
-                key: username
-              sshPrivateKeySecret:
-                name: private-git-creds
-                key: ssh-private-key
         parameters:
-          - name: path
-            value: "{{workflow.parameters.path}}"
+          - name: context-path
+          - name: dockerfile
           - name: image
-            value: "{{workflow.parameters.image}}"
       volumes:
         - name: docker-config
           secret:
@@ -68,10 +82,11 @@ spec:
           - name: docker-config
             mountPath: /kaniko/.docker/
         # 以 context 为工作目录
-        workingDir: /work/{{inputs.parameters.path}}
+        workingDir: /work/{{inputs.parameters.context-path}}
         args:
           - --context=.
-          - --dockerfile=Dockerfile
+          - --dockerfile={{inputs.parameters.dockerfile}}
+          # destination 可以重复多次，表示推送多次
           - --destination={{inputs.parameters.image}}
           # 私有镜像仓库，可以考虑不验证 tls 证书（有安全风险）
           - --skip-tls-verify
