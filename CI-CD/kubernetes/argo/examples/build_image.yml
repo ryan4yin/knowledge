@@ -75,4 +75,6 @@ spec:
           - --destination={{inputs.parameters.image}}
           # 私有镜像仓库，可以考虑不验证 tls 证书（有安全风险）
           - --skip-tls-verify
-          - --skip-tls-verify-pull
+          # - --skip-tls-verify-pull
+          # - --registry-mirror=<xxx>.mirror.aliyuncs.com
+          - --reproducible #  Strip timestamps out of the image to make it reproducible

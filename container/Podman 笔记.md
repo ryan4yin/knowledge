@@ -27,4 +27,22 @@ podman play kube xxx.yaml
 
 不得不说，真香!
 
+## 设置镜像源
 
+podman 的专用镜像仓库配置位置为用户级别的 `$HOME/.config/containers/registries.conf` 和系统级别的 `/etc/containers/registries.conf`.
+
+配置示例如下：
+
+```toml
+# For more information on this configuration file, see containers-registries.conf(5).
+#
+# Registries to search for images that are not fully-qualified.
+# i.e. foobar.com/my_image:latest vs my_image:latest
+[registries.search]
+registries = ["docker.io"]
+
+# Registries that do not use TLS when pulling images or uses self-signed
+# certificates.
+[registries.insecure]
+registries = ["registry.svc.local"]
+```
