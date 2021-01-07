@@ -16,8 +16,8 @@ OpenSUSE 是一个基于 RPM 的发行版，这和 RHEL/CentOS 一致。
 zypper 的源在国内都比较慢，可以考虑配一下国内镜像源：
 
 ```shell
-# 禁用原有软件源
-sudo zypper mr --disable --all  # 相对的，`--enable --all` 可以启用所有源
+# 禁用原有的四个官方软件源
+sudo zypper mr --disable repo-oss repo-non-oss repo-update repo-update-non-oss
 # 添加北外镜像源，注意单引号不能省略！
 sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/oss' BFSU:OSS
 sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/non-oss' BFSU:Non-OSS
@@ -32,7 +32,7 @@ sudo zypper refresh  # refresh all repos
 sudo zypper update   # update all softwares
 ```
 
-实测不设置镜像源时，平均速度大概 300kb/s.
+实测不设置镜像源时，平均速度大概 300kb/s，使用软件源速度能达到 3MB/s（网络极限）
 
 
 ## Install Softwares
