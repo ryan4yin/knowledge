@@ -32,13 +32,12 @@ sudo zypper refresh  # refresh all repos
 sudo zypper update   # update all softwares
 ```
 
-实测不设置镜像源时，平均速度大概 300kb/s，使用软件源速度能达到 3MB/s（网络极限）
-
+实测不设置镜像源时，平均速度大概 300kb/s，使用软件源速度能达到 10MB/s，我的带宽也就这么大。
 
 ## Install Softwares
 
->这里需要用到 [OBS(Open Build Service, 类似 arch 的 AUR，但是是预编译的包)](https://mirrors.opensuse.org/list/bs.html)，因为 OBS 东西太多了，因此不存在完整的国内镜像。
->建议有条件就用路由器上智能代理，否则速度堪忧。。
+>这里需要用到 [OBS(Open Build Service, 类似 arch 的 AUR，但是是预编译的包)](https://mirrors.opensuse.org/list/bs.html)，因为 OBS 东西太多了，因此不存在完整的国内镜像，平均速度大概 300kb/s。
+>建议有条件可以在路由器上加智能代理提速。
 
 安装需要用到的各类软件: 
 
