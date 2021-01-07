@@ -13,16 +13,16 @@ OpenSUSE 是一个基于 RPM 的发行版，这和 RHEL/CentOS 一致。
 
 ## 一、zypper 的基础命令
 
-zypper 的源在国内都很慢，可以考虑配一下国内镜像源：
+zypper 的源在国内都比较慢，可以考虑配一下国内镜像源：
 
 ```shell
 # 禁用原有软件源
 sudo zypper mr --disable --all  # 相对的，`--enable --all` 可以启用所有源
-# 添加北外镜像源
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/oss BFSU:OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/non-oss BFSU:Non-OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/$releasever/oss BFSU:Update-OSS
-sudo zypper ar -fcg https://mirrors.bfsu.edu.cn/opensuse/update/leap/$releasever/non-oss BFSU:Update-Non-OSS
+# 添加北外镜像源，注意单引号不能省略！
+sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/oss' BFSU:OSS
+sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/distribution/leap/$releasever/repo/non-oss' BFSU:Non-OSS
+sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/update/leap/$releasever/oss' BFSU:Update-OSS
+sudo zypper ar -fcg 'https://mirrors.bfsu.edu.cn/opensuse/update/leap/$releasever/non-oss' BFSU:Update-Non-OSS
 ```
 
 镜像源配置好后，首先更新下系统软件：
@@ -32,6 +32,9 @@ sudo zypper refresh  # refresh all repos
 sudo zypper update   # update all softwares
 ```
 
+实测不设置镜像源时，平均速度大概 300kb/s.
+
+
 ## Install Softwares
 
 >这里需要用到 [OBS(Open Build Service, 类似 arch 的 AUR，但是是预编译的包)](https://mirrors.opensuse.org/list/bs.html)，因为 OBS 东西太多了，因此不存在完整的国内镜像。
@@ -40,7 +43,7 @@ sudo zypper update   # update all softwares
 安装需要用到的各类软件: 
 
 ```shell
-# 启用 Packman 仓库，使用北交镜像源
+# 启用 Packman 仓库，使用北交镜像源（注意单引号不能省略！）
 sudo zypper ar -cfp 90 'https://mirror.bjtu.edu.cn/packman/suse/openSUSE_Leap_$releasever/' packman-bjtu
 
 # install video player and web browser
@@ -73,8 +76,8 @@ sudo zypper addrepo https://packages.microsoft.com/opensuse/15/prod/ microsoft-p
 sudo zypper refresh
 sudo zypper install dotnet-sdk-5.0
 
-# 安装新版本的 go
-sudo zypper addrepo https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Leap_$releasever devel-go
+# 安装新版本的 go（注意单引号不能省略！）
+sudo zypper addrepo 'https://download.opensuse.org/repositories/devel:/languages:/go/openSUSE_Leap_$releasever' devel-go
 sudo zypper refresh
 sudo zypper install go
 ```
@@ -133,8 +136,8 @@ echo "export PATH=\$PATH:\$HOME/.local/bin" >> ~/.bashrc
 ```shell
 # 时髦的新容器套装: https://documentation.suse.com/sles/15-SP2/html/SLES-all/cha-podman-overview.html
 sudo zypper in podman skopeo buildah katacontainers
-# 安装 kubernetes 相关工具，使用 kubic 源，它里面的软件更新一些
-sudo zypper addrepo https://download.opensuse.org/repositories/devel:/kubic/openSUSE_Leap_$releasever kubic
+# 安装 kubernetes 相关工具，使用 kubic 源，它里面的软件更新一些（注意单引号不能省略！）
+sudo zypper addrepo 'https://download.opensuse.org/repositories/devel:/kubic/openSUSE_Leap_$releasever' kubic
 sudo zypper refresh
 sudo zypper in kubernetes1.18-client k9s helm kompose
 
@@ -152,7 +155,8 @@ sudo pip install docker-compose podman-compose
 ### 办公、音乐、聊天
 
 ```shell
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_Leap_$releasever opensuse_zh
+# 添加 opensuse_zh 源（注意单引号不能省略！）
+sudo zypper addrepo 'https://download.opensuse.org/repositories/home:/opensuse_zh/openSUSE_Leap_$releasever' opensuse_zh
 sudo zypper refresh
 sudo zypper install wps-office netease-cloud-music 
 
@@ -167,8 +171,8 @@ sudo rpm -ivh linux_qq.rpm
 
 ```shell
 # 添加 m17n obs 源：https://build.opensuse.org/repositories/M17N
-# 源的 url，在「Repositories」页面找到自己的系统版本如「openSUSE_Leap_$releasever」，下方「下载按钮」的链接，就是如下命令需要使用的链接
-sudo zypper addrepo https://download.opensuse.org/repositories/M17N/openSUSE_Leap_$releasever m17n
+# 源的 url，在「Repositories」页面找到自己的系统版本如「openSUSE_Leap_15.2」，下方「下载按钮」的链接，就是如下命令需要使用的链接
+sudo zypper addrepo 'https://download.opensuse.org/repositories/M17N/openSUSE_Leap_$releasever' m17n
 sudo zypper refresh
 sudo zypper install fcitx5 fcitx5-configtool fcitx5-qt5 fcitx5-rime
 ```
@@ -222,7 +226,8 @@ Qv2ray 是我用过的比较好用的 GUI 代理工具，通过插件可支持�
 
 ```shell
 # see: https://build.opensuse.org/repositories/home:zzndb
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/zzndb/openSUSE_Leap_$releasever qv2ray
+# 注意单引号不能省略！
+sudo zypper addrepo 'https://download.opensuse.org/repositories/home:/zzndb/openSUSE_Leap_$releasever' qv2ray
 sudo zypper refresh
 sudo zypper install Qv2ray QvPlugin-Trojan QvPlugin-SS
 ```
