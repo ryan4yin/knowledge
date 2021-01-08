@@ -18,7 +18,7 @@ terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，�
 2. 兼容 terraform 的所有 provider，只是需要自行使用 [pulumi-tf-provider-boilerplate](https://github.com/pulumi/pulumi-tf-provider-boilerplate) 重新打包，有些麻烦。
    1. 我翻文档发现，pulumi 的官方 provider 里面，估计 90% 以上都是 `based on the terraform xxx provider`...
 3. 状态管理和 secrets 管理有如下几种选择：
-   1. 使用 app.pulumi.com（默认）:免费版提供 stack 历史管理，可以看到所有的历史记录。另外还提供一个资源关系的可视化面板。总之很方便。
+   1. 使用 app.pulumi.com（默认）:免费版提供 stack 历史管理，可以看到所有的历史记录。另外还提供一个资源关系的可视化面板。总之很方便，但是多人合作就需要收费。
    2. 本地文件存储：`pulumi login file:///app/data`
    3. 云端对象存储，目前貌似只支持 aws-s3/gcp/azure 三种。
    4. [gitlab 13 支持 Terraform HTTP State 协议](https://github.com/pulumi/pulumi/issues/4727)，等这个 pr 合并，pulumi 也能以 gitlab 为 backend 了。
@@ -194,7 +194,13 @@ CI/CD 中我们可能会希望 pulumi 将状态保存到本地，避免连接 pu
 方法：
 
 ```shell
+# 指定状态文件路径
 pulumi login file://<file-path>
+# 保存到默认位置: ~/.pulumi/credentials.json
+pulumi login --local
+
+# 保存到远程 S3 存储（minio/ceph 或者各类云对象存储服务，都兼容 aws 的 s3 协议）
+pulumi login s3://<bucket-path>
 ```
 
 登录完成后，再进行 `pulumi up` 操作，数据就会直接保存到你设定的路径下。
