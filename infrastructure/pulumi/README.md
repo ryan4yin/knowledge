@@ -169,6 +169,10 @@ deployment = Deployment(
 
 如示例所示，pulumi-kubernetes 的配置是完全结构化的，比 yaml/helm/kustomize 要灵活非常多。
 
+总之它非常灵活，既可以和 helm/kustomize 结合使用，替代掉 argocd/kubectl。
+也可以和 argocd/kubectl 使用，替代掉 helm/kustomize。
+
+具体怎么使用好？我也还在研究。
 
 ### 6. 阿里云资源 replace 报错？
 
