@@ -229,14 +229,17 @@ pulumi 和 terraform 都有一个缺点，就是封装层次太高了。
 
 ## 常用 Provider
 
-- [pulumi-alicloud](https://github.com/pulumi/pulumi-alicloud)
-- [pulumi-vault](https://github.com/pulumi/pulumi-vault)
+- [pulumi-alicloud](https://github.com/pulumi/pulumi-alicloud): 管理阿里云资源
+- [pulumi-vault](https://github.com/pulumi/pulumi-vault): 我这边用它来快速初始化 vault，创建与管理 vault 的所有配置。
 
 我创建的 provider：
 
-- [ryan4yin/pulumi-proxmox](https://github.com/ryan4yin/pulumi-proxmox)
+- [ryan4yin/pulumi-proxmox](https://github.com/ryan4yin/pulumi-proxmox): 目前只用来自动创建 PVE 虚拟机
+   - 可以考虑结合 kubespray/kubeadm 快速创建 k8s 集群
 
 我正打算创建的 provider：
 
-- [ryan4yin/pulumi-libvirt](https://github.com/ryan4yin/pulumi-libvirt)
+- [ryan4yin/pulumi-libvirt](https://github.com/ryan4yin/pulumi-libvirt): 快速创建 kvm 虚拟机
+   - 可以考虑结合 kubespray/kubeadm 快速创建 k8s 集群
 - [ryan4yin/pulumi-acme](https://github.com/ryan4yin/pulumi-acme)
+   - 快速创建与 renew acme 证书，然后结合 pulumi-vault 之类的工具实现 k8s 集群的 tls 自动轮转。
