@@ -39,7 +39,7 @@ disable_root: false
 
 # 设置 root 的 ssh 密钥
 user: root
-# 设置密码，控制台登录需要
+# 设置密码，仅用于控制台登录
 password: xxxxx
 # 使用密钥登录
 ssh_authorized_keys:
