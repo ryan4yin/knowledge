@@ -111,7 +111,8 @@ cloudinit 有三个参数与 hostname 相关。其中有两个，就是上面提
 
 这两个参数的行为均受 `preserve_hostname: true/false` 这个参数的影响。
 
-另一个是 `meta-data` 中，可以设置一个 `local-hostname`，待续。。
+另一个是 `meta-data` 中，可以设置一个 `local-hostname`，此参数的地位好像和 `user-data` 中的 `hostname` 相同，不过可能优先级会高一些吧。
+没有找到相关文档。
 
 ## 相关文档
 
