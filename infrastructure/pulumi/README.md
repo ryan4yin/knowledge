@@ -1,7 +1,7 @@
 
 ## [pulumi](https://github.com/pulumi/pulumi) - 基础设施代码化
 
-pulumi 和 terraform 一样，都是自动化管理基础设施的工具，但是它解决了 terraform 配置的一个痛点：配置语法太过简单，导致配置繁琐。
+pulumi 和 terraform 一样，都是自动化管理基础设施的工具，但是它解决了 terraform 配置的一个痛点：配置语法太过简单，导致配置繁琐，而且还要额外学习一门 DSL - hcl。
 
 terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，表现力不够强。
 这导致在更复杂的场景下，我们无法更自动化地进行基础设施配置，而需要更复杂的步骤：
