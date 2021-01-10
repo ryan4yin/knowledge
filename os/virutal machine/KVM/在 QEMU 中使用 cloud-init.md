@@ -68,8 +68,8 @@ ethernets:
       addresses:
       - 192.168.122.1
       - 8.8.8.8
-    search:
-    - 'pve.local'
+      search:
+      - 'pve.local'
 ```
 
 ```shell
