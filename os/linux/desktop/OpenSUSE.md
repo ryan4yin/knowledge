@@ -231,6 +231,27 @@ sudo zypper refresh
 sudo zypper install Qv2ray QvPlugin-Trojan QvPlugin-SS
 ```
 
+### VPN 连接与防火墙
+
+防火墙默认会禁用 pptp 等 vpn 协议的端口，需要手动打开.
+
+允许使用 PPTP 协议：
+
+```shell
+# 允许 gre 数据包流入网络
+sudo firewall-cmd --permanent --zone=public --direct --add-rule ipv4 filter INPUT 0 -p gre -j ACCEPT
+sudo firewall-cmd --permanent --zone=public --direct --add-rule ipv6 filter INPUT 0 -p gre -j ACCEPT
+
+# masquerade: 自动使用 interface 地址伪装所有流量（将主机当作路由器使用，vpn 是虚拟网络，需要这个功能）
+sudo firewall-cmd --permanent --zone=public --add-masquerade
+# pptp 客户端使用固定端口 1723/tcp 通信
+firewall-cmd --add-port=1723/tcp --permanent
+
+sudo firewall-cmd --reload
+```
+
+允许使用 wireguard 协议，此协议只使用 tcp 协议，而且可以端口号可以自定义。不过 wireguard 自身的配置文件 `/etc/wireguard/xxx.conf` 就能配置 iptables 参数放行相关端口，这里就不赘述了。
+
 ## 其他设置
 
 从 Windows 带过来的习惯是单击选中文件，双击才打开，这个可以在「系统设置」-「工作空间行为」-「常规行为」-「点击行为」中修改。
