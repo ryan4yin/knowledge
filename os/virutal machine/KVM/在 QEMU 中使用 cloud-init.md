@@ -63,6 +63,8 @@ ethernets:
     dhcp4: false
     addresses: 
     - 192.168.122.160/24
+
+    # TODO: 目前发现如下两个配置无法生效：默认网关，以及 dns servers
     gateway4: 192.168.122.1
     nameservers:
       addresses:
