@@ -21,7 +21,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  generateName: build-image-
+  name: build-image
 spec:
   arguments:
     parameters:
