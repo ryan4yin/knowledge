@@ -97,3 +97,19 @@ kubectl create rolebinding default-argo-workflow --clusterrole=argo-workflow-rol
 这样就能给 default 账号提供最小的 workflow 运行权限。
 
 或者如果你希望使用别的 ServiceAccount 来运行 workflow，也可以自行创建 ServiceAccount，然后再走上面方法二的流程，但是最后，要记得在 workflow 的 `spec.serviceAccountName` 中设定好 ServiceAccount 名称。
+
+
+## [Workflow Executors](https://argoproj.github.io/argo/workflow-executors/)
+
+Workflow Executor 是符合特定接口的一个进程(Process)，Argo 可以通过它执行一些动作，如监控 Pod 日志、收集 Artifacts、管理容器生命周期等等...
+
+Workflow Executor 有多种实现，可以通过前面提到的 configmap `workflow-controller-configmap` 的 `containerRuntimeExecutor` 这个参数来选择。
+
+可选项如下：
+
+1. docker(默认): 目前使用范围最广，但是安全性最差。它要求一定要挂载访问 `docker.sock`，因此一定要 root 权限！
+2. kubelet: 应用非常少，目前功能也有些欠缺，目前也必须提供 root 权限
+3. Kubernetes API (k8sapi): 直接通过调用 k8sapi 实现日志监控、Artifacts 手机等功能，非常安全，但是性能欠佳。
+4. Process Namespace Sharing (pns): 安全性比 k8sapi 差一点，因为 Process 对其他所有容器都可见了。但是相对的性能好很多。
+
+在 docker 被 kubernetes 抛弃的当下，我们建议将 workflow executore 改为 `pns`，兼顾安全性与性能。
