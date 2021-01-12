@@ -35,6 +35,9 @@ spec:
         value: Dockerfile
       - name: image  # 构建出的镜像名称
         value: registry.svc.local/ryan4yin/my-app:latest
+      - name: cache-image
+        # 注意，cache-image 不能带 tag! cache 是直接通过 hash 值来索引的！
+        value: registry.svc.local/build-cache/my-app
   entrypoint: main
   templates:
     - name: main
@@ -61,6 +64,8 @@ spec:
                 value: "{{workflow.parameters.dockerfile}}"
               - name: image
                 value: "{{workflow.parameters.image}}"
+              - name: cache-image
+                value: "{{workflow.parameters.cache-image}}"
     # build-image 作为一个通用的 template，不应该直接去引用 workflow.xxx 中的 parameters/artifacts
     # 这样做的好处是复用性强，这个 template 可以被其他 workflow 引用。
     - name: build-image
@@ -71,6 +76,7 @@ spec:
           - name: context-path
           - name: dockerfile
           - name: image
+          - name: cache-image
       volumes:
         - name: docker-config
           secret:
@@ -93,3 +99,6 @@ spec:
           # - --skip-tls-verify-pull
           # - --registry-mirror=<xxx>.mirror.aliyuncs.com
           - --reproducible #  Strip timestamps out of the image to make it reproducible
+          # 使用镜像仓库做远程缓存仓库
+          - --cache=true
+          - --cache-repo={{inputs.parameters.cache-image}}
