@@ -9,8 +9,8 @@
 
 开发与调试：
 
-- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。这对开发人员而言非常有用。
-
+- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。这对开发人员而言非常有用
+- [nocalhost](https://github.com/nocalhost/nocalhost): 也是一个专注于优化 k8s 本地开发体验的工具
 
 ## 技术文章收藏
 
