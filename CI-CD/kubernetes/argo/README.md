@@ -50,7 +50,6 @@ Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，�
 另外它所有的 Workflow 都是相互独立的，没办法直观地找到一个 WorkflowTemplate 的所有构建记录，只能通过 label/namespace 进行分类，通过任务名称进行搜索。
 而 Jenkins 可以很方便地看到同一个 Job 的所有构建历史。
 
-
 ## 扩展项目
 
 - [couler](https://github.com/couler-proj/couler): 为  Argo/Tekton/Airflow 提供统一的构建与管理接口
@@ -60,6 +59,16 @@ Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，�
 看着感觉挺不错，可以考虑直接用 couler，用 Python 写 WorkflowTemplate，这样就一步到位，所有 CI/CD 代码全部是 Python 了，
 再也不用维护 Jenkinsfile 了哈哈哈哈~
 
+
+## 总结
+
+一番调研与讨论，我们最终还是选择了 Argo Workflow 做 CI/CD。
+
+我们目前的解决方案：
+
+1. 使用 Jenkins 作为面向开发人员的 UI，底层所有的任务编排与运行则换成 Argo Workflow.
+   - 因为 argo 的 ui 有点简陋，对开发人员不友好。
+1. 复杂的 Argo Workflow 配置，使用 helm 来生成，这样我们只需要维护 values.yaml 就行。
 
 ## 画外
 
