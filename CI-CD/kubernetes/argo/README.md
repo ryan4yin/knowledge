@@ -62,13 +62,14 @@ Argo Workflow 的 Web UI 感觉还很原始。确实该支持的功能都有，�
 
 ## 总结
 
-一番调研与讨论，我们最终还是选择了 Argo Workflow 做 CI/CD。
+一番调研与讨论，我们最终还是选择了 Argo Workflow 做 CI/CD。它的功能很契合我们的需求，但是也存在一些前面提到的瑕疵。
 
 我们目前的解决方案：
 
 1. 使用 Jenkins 作为面向开发人员的 UI，底层所有的任务编排与运行则换成 Argo Workflow. 
    - 因为 argo 的 ui 有点简陋，对开发人员不友好。正在考虑自行研发一个 UI，或者让开发人员慢慢熟悉 Argo.
 1. 复杂的 Argo Workflow 配置，使用 helm 来生成，这样我们只需要维护 values.yaml 就行。
+2. secrets 管理：尽量使用 hashicorp vault，k8s secrets 里仅保存 vault_token/git-crendential.
 
 ## 画外
 
