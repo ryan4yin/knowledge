@@ -1,6 +1,6 @@
 # 只在 Ubuntu 上测试过
 PRIVATE_GIT_HOST=gitlab.svc.local
-GOLANG_VERSION=1.14.2
+GOLANG_VERSION=1.15.6
 
 
 # apt 镜像源的 host（三选一）
