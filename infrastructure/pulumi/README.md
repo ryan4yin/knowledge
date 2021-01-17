@@ -1,5 +1,5 @@
 
-[Plumi](https://github.com/pulumi/pulumi) 是一个基础设施的自动管理工具，使用 Python/TypeScript/Go/Dotnet 编写好声明式的资源配置，就能实现一键创建/修改/销毁各类资源，这里的资源可以是：
+[Pulumi](https://github.com/pulumi/pulumi) 是一个基础设施的自动管理工具，使用 Python/TypeScript/Go/Dotnet 编写好声明式的资源配置，就能实现一键创建/修改/销毁各类资源，这里的资源可以是：
 
 - AWS/阿里云等云上的负载均衡、云服务器、TLS 证书、DNS、CDN、OSS、数据库...几乎所有的云上资源
 - 本地自建的 vSphere/Kubernetes/ProxmoxVE/libvirt 环境中的虚拟机、容器等资源
