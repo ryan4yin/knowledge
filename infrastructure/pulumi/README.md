@@ -1,10 +1,10 @@
 
 [Pulumi](https://github.com/pulumi/pulumi) 是一个基础设施的自动管理工具，使用 Python/TypeScript/Go/Dotnet 编写好声明式的资源配置，就能实现一键创建/修改/销毁各类资源，这里的资源可以是：
 
+<!--more-->
+
 - AWS/阿里云等云上的负载均衡、云服务器、TLS 证书、DNS、CDN、OSS、数据库...几乎所有的云上资源
 - 本地自建的 vSphere/Kubernetes/ProxmoxVE/libvirt 环境中的虚拟机、容器等资源
-
-<!--more-->
 
 相比直接调用 AWS/阿里云/Kubernetes 的 API，使用 pulumi 的好处有：
 
@@ -35,41 +35,53 @@
 主要原因是，Pulumi 解决了 Terraform 配置的一个痛点：配置语法太过简单，导致配置繁琐。而且还要额外学习一门 DSL - HCL
 
 Terraform 虽然应用广泛，但是它默认使用的 HCL 语言太简单，表现力不够强。
-这导致在更复杂的场景下，我们无法更自动化地进行基础设施配置，而需要更复杂的步骤：
+这就导致在一些场景下使用 Terraform，会出现大量的重复配置。
+
+一个典型的场景是「批量创建资源，动态生成资源参数」。比如批量创建一批名称类似的 ECS 服务器/VPC交换机。如果使用 terraform，就会出现大量的重复配置。
+
+改用 terraform 提供的 module 能在一定程度上实现配置的复用，但是它还是解决不了问题。
+要使用 module，你需要付出时间去学习 module 的概念，为了拼接参数，你还需要学习 HCL 的一些高级用法。
+
+但是付出了这么多，最后写出的 module 还是不够灵活——它被 HCL 局限住了。
+
+为了实现如此的参数化动态化，我们不得不引入 Python 等其他编程语言。于是构建流程就变成了：
 
 1. 借助 Python 等其他语言先生成出 HCL 配置
 2. 通过 `terraform` 命令行进行 plan 与 apply
 3. 通过 Python 代码解析 `terraform.tfstat`，获取 apply 结果，再进行进一步操作。
 
-这显然是一个很麻烦的过程。**其中最主要的原因，是 terraform 只做到了「基础设施即配置」，而「配置」过于简单。**
+这显然非常繁琐，主要困难就在于 Python 和 Terraform 之间的交互。
 
-这种情况下，就需要用到真正的「基础设施即代码」工具 - Pulumi 了。它的优势如下：
+进一步思考，**既然其他编程语言如 Python/Go 的引入不可避免，那是不是能使用它们彻底替代掉 HCL 呢？能不能直接使用 Python/Go 编写配置？**如果 Terraform 原生就支持 Python/Go 来编写配置，那就不存在交互问题了。
 
-1. pulumi 是目前最流行的 真-IaaS 工具（另一个是刚出炉没多久的 terraform-cdk），对各语言的支持最为成熟。
-2. 兼容 terraform 的所有 provider，只是需要自行使用 [pulumi-tf-provider-boilerplate](https://github.com/pulumi/pulumi-tf-provider-boilerplate) 重新打包，有些麻烦。
+相比于使用领域特定语言 HCL，使用通用编程语言编写配置，好处有： 
+
+1. Python/Go/TypeScript 等通用的编程语言，能满足你的一切需求。
+2. 作为一个开发人员/DevOps，你应该对 Python/Go 等语言相当熟悉，可以直接利用上已有的经验。
+3. 更方便测试：可以使用各编程语言中流行的测试框架来测试 pulumi 配置！
+
+于是 Pulumi 横空出世。
+
+## Pulumi 特点介绍
+
+4. 原生支持通过 Python/Go/TypeScript/Dotnet 等语言编写配置，也就完全解决了上述的 terraform 和 python 的交互问题。
+5. pulumi 是目前最流行的 真-IaaS 工具（另一个是刚出炉没多久的 terraform-cdk），对各语言的支持都很成熟。
+6. 兼容 terraform 的所有 provider，只是需要自行使用 [pulumi-tf-provider-boilerplate](https://github.com/pulumi/pulumi-tf-provider-boilerplate) 重新打包，有些麻烦。
    1. pulumi 官方的 provider 几乎全都是封装的 terraform provider，包括 aws/azure/alicloud，目前只发现 kubernetes 是原生的（独苗啊）。
-3. 状态管理和 secrets 管理有如下几种选择：
+7. 状态管理和 secrets 管理有如下几种选择：
    1. 使用 app.pulumi.com（默认）:免费版提供 stack 历史管理，可以看到所有的历史记录。另外还提供一个资源关系的可视化面板。总之很方便，但是多人合作就需要收费。
    2. 本地文件存储：`pulumi login file:///app/data`
    3. 云端对象存储，目前貌似只支持 aws-s3/gcp/azure 三种。
    4. [gitlab 13 支持 Terraform HTTP State 协议](https://github.com/pulumi/pulumi/issues/4727)，等这个 pr 合并，pulumi 也能以 gitlab 为 backend 了。
    5. 使用 pulumi 企业版（自建服务）：比 app.pulumi.com 提供更多的特性，但是显然是收费的。。
 
-上述工具支持通过 Python/TypeScript 等语言来描述配置。好处有：
-
-1. 批量创建资源，动态生成资源参数。
-   1. 比如批量创建一批名称类似的 ECS 服务器/VPC交换机。如果使用 terraform，你需要编写 module 来实现配置的复用，然后使用 hcl 的特殊语法来动态拼接出资源名称，因为语法限制，这种 HCL 能实现的功能也很有限。
-   2. 而使用 pulumi，Python/TypeScript 这类通用的编程语言，能满足你的一切需求，而且作为一个开发人员/DevOps，你应该对它们相当熟悉。
-1. 更方便测试：可以使用各编程语言中流行的测试框架来测试 pulumi 配置！
-1. 使用代码编写 Kubernetes 配置，no-yaml
-   1. yaml 也存在和 HCL 一样的问题，配置太死板，导致我们现在需要通过 helm/kustomize + python 来生成 yaml ...
-
+总之，非常香，强烈推荐各位 DevOps 试用。
 
 ------------------------------------
 
 >以下内容是我对 pulumi 的一些思考，以及使用 pulumi 遇到的各种问题+解决方法，适合对 pulumi 有一定了解的同学阅读。
 
->如果你刚接触 Pulumi 而且有兴趣学习，请先移步 [pulumi get started](https://www.pulumi.com/docs/get-started/install/) 入个门，再接着看下面的内容。
+>如果你刚接触 Pulumi 而且有兴趣学习，建议先移步 [pulumi get started](https://www.pulumi.com/docs/get-started/install/) 入个门，再接着看下面的内容。
 
 ## 使用建议
 
