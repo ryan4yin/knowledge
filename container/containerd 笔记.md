@@ -36,7 +36,7 @@ version = 2
     key_file  = "key.pem"
 ```
 
-如果要跳过私钥的验证，要添加的配置内容如下：
+如果要跳过 TLS 验证，要添加的配置内容如下：
 
 ```toml
 # explicitly use v2 config format
