@@ -112,4 +112,6 @@ Workflow Executor 有多种实现，可以通过前面提到的 configmap `workf
 3. Kubernetes API (k8sapi): 直接通过调用 k8sapi 实现日志监控、Artifacts 手机等功能，非常安全，但是性能欠佳。
 4. Process Namespace Sharing (pns): 安全性比 k8sapi 差一点，因为 Process 对其他所有容器都可见了。但是相对的性能好很多。
 
-在 docker 被 kubernetes 抛弃的当下，我们建议将 workflow executore 改为 `pns`，兼顾安全性与性能。
+在 docker 被 kubernetes 抛弃的当下，如果你已经改用 containerd 做为 kubernetes 运行时，那 argo 将会无法工作，因为它默认使用 docker 作为运行时！
+
+我们建议将 workflow executore 改为 `pns`，兼顾安全性与性能。
