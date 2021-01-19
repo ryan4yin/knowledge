@@ -4,10 +4,21 @@ Podman 兼容所有的 `docker` 命令，并且提供了更丰富的功能，完
 
 总而言之，Podman 是面向用户的下一代容器工具，而 CRI-O 则是 kubernetes 的下一代容器运行时，Podman 和 CRI-O 未来将共用同一套底层代码。
 
+
+## Podman vs crictl
+
 目前 cri-o 和 podman 还未共用同一套底层代码 libpod，这导致 cri-o 和 podman 的容器是不互通的。
 表现出的现象就是，使用 crictl 查询不到 podman 创建的容器，反之亦然。
 
-cri-o 和 podman 的层次架构图：
+但是 cri-o 和 podman 共用了 [containers/image](https://github.com/containers/image) 和 [containers/storage](https://github.com/containers/storage) 负责镜像的拉取和本地存储，因此 podman 和 cri-o/crictl 是可以共享本地镜像的。
+
+
+cri-o 和 podman 的最大区别是： 
+
+- Crictl 只是个客户端工具，它实际上是通过 `var/run/crio/crio.sock` 与 cri-o 沟通，真正干活的是 cri-o/containerd
+- podman 是 daemonless/rootless 的，它直接通过 `containers/storage` `containers/storage` `containers/libpod` 来创建容器，在创建容器时动态创建后台进程 `containers/conmon` 来监控与管理容器。
+  - podman 更轻量级，对于非 kubernetes 场景，使用 podman 更合适。
+  - 即使在 kubernetes 场景下，因为 podman 和 cri-o 的可交互性，有些时候 podman 仍然是有用的——比如你想手动 pull 一个镜像。
 
 ![](_imgs/Contianer-Standards-Work-Podman-vs_-CRICTL.png)
 
