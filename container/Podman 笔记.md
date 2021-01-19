@@ -4,6 +4,13 @@ Podman 兼容所有的 `docker` 命令，并且提供了更丰富的功能，完
 
 总而言之，Podman 是面向用户的下一代容器工具，而 CRI-O 则是 kubernetes 的下一代容器运行时，Podman 和 CRI-O 未来将共用同一套底层代码。
 
+目前 cri-o 和 podman 还未共用同一套底层代码 libpod，这导致 cri-o 和 podman 的容器是不互通的。
+表现出的现象就是，使用 crictl 查询不到 podman 创建的容器，反之亦然。
+
+cri-o 和 podman 的层次架构图：
+
+![](_imgs/Contianer-Standards-Work-Podman-vs_-CRICTL.png)
+
 ## Podman 和 Buildah 的关系
 
 podman 和 buildah 都是命令行工具，而且 buildah 被集成进了 podman 中。
@@ -61,3 +68,8 @@ export NO_PROXY=*.aliyuncs.com,localhost
 ```shell
 podman pull golang:1.15-buster
 ```
+
+
+## 参考文档
+
+- [Crictl Vs Podman - RedHat](https://www.openshift.com/blog/crictl-vs-podman)
