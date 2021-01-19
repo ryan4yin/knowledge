@@ -11,7 +11,40 @@
 
 ## 安装与配置
 
+>注意 contaienrd 不会读取 docker 的配置！原来给 docker 配的 `/etc/docker/daemon.json` 已经没用了！
 
+containerd 的默认配置文件位置为 `/etc/containerd/config.toml`，详见
+
+- [containerd for Ops and Admins](https://github.com/containerd/containerd/blob/master/docs/ops.md)
+
+我们从私有镜像仓库拉取镜像，通常会遇到 tls 证书不可信的问题，镜像仓库的私钥/insecure 配置的文档为：
+
+- [registry - cri-containerd](https://github.com/containerd/cri/blob/master/docs/registry.md)
+
+文档中写到，若要使用私钥连接私有仓库，可向 `/etc/containerd/config.toml` 中添加如下内容：
+
+```toml
+# explicitly use v2 config format
+version = 2
+
+# The registry host has to be a domain name or IP. Port number is also
+# needed if the default HTTPS or HTTP port is not used.
+[plugin."io.containerd.grpc.v1.cri".registry.configs."my.custom.registry".tls]
+    ca_file   = "ca.pem"
+    # 如下密钥对用于双向 TLS 认证，如果不支持 mTLS，请去掉它们
+    cert_file = "cert.pem"
+    key_file  = "key.pem"
+```
+
+如果要跳过私钥的验证，要添加的配置内容如下：
+
+```toml
+# explicitly use v2 config format
+version = 2
+
+[plugin."io.containerd.grpc.v1.cri".registry.configs."my.custom.registry".tls]
+  insecure_skip_verify = true
+```
 
 ## 常用命令
 
