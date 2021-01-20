@@ -1,3 +1,4 @@
+
 ## 一、TLS 协议
 
 我们需要加密网络数据以实现安全通信，但是有一个现实的问题：
@@ -5,8 +6,16 @@
 1. 非对称加密算法（RSA/ECC 等）可以方便地对数据进行签名/验证，但是计算速度慢。
 2. 对称加密算法（ChaCha20/AES 等）计算速度快，强度高，但是无法安全地生成与保管密钥。
 
-于是 TLS 协议在握手阶段使用非对称算法验证服务端，并安全地生成一个对称密钥，然后使用对称算法进行加密通信。
-这里讲「安全地生成一个对称密钥」（Elliptic Curve Diffie-Hellman (ECDHE) key exchange），提供了「完美前向保密（Perfect Forward Secrecy）」特性，前向保密能够保护过去进行的通讯不受密码或密钥在未来暴露的威胁。（tls1.1/tls1.2 也可以使用非前向安全的算法！要注意！）
+于是 TLS 协议在握手阶段使用非对称算法验证服务端，并使用 ECDHE 密钥交换算法（Elliptic Curve Diffie-Hellman key exchange）安全地生成一个临时的对称密钥，然后使用对称算法进行加密通信。
+
+然后在后续的每次数据交换过程中，都使用 ECDHE 算法生成新的对称密钥，然后使用新密钥加密解密数据。
+
+![perfect-forward-secrecy-diagram](/images/about-tls-cert/perfect-forward-secrecy-diagram.webp)
+
+上述的 TLS 协议流程，提供了「完美前向保密（Perfect Forward Secrecy）」特性，前向保密能够保护过去进行的通讯不受密码或密钥在未来暴露的威胁。
+即使攻击者破解出了一个「对称密钥」，也只能获取到一次事务中的数据，黑客必须破解出整个 TLS 连接中所有事务的对称密钥，才能得到完整的数据。
+
+>tls1.1/tls1.2 也可以使用非前向安全的算法！要注意！
 
 >本文的主要介绍 TLS 协议在使用方面的内容，ECDHE 等算法及 TLS 握手流程的详细内容，请查阅其他文档。
 
@@ -25,9 +34,14 @@ CA 证书和 TLS 证书，都只在 TLS 握手阶段有用到，之后的通信�
 
 比如 CA 证书，就是 CA 公钥+CA机构相关信息构成的一个文件。
 
-而 TLS 证书，则包含公钥+申请者信息(你)，颁发者(CA)的信息+签名(使用 CA 私钥加密)
+而 TLS 证书，则包含公钥+申请者信息(你)，颁发者(CA)的信息+签名(使用 CA 私钥加密)，以及一些其他信息。
 
 CA 证书中的公钥，能用于验证 TLS 证书中签名的正确性，也就能用于判断证书是否可信。
+
+你可以尝试使用浏览器查看 Google 的证书详情，我使用 Firefox 查看到的内容如下：
+
+![](/images/about-tls-cert/cert-content.png)
+
 
 ### 2. TLS 证书支持保护的域名类型
 
@@ -100,6 +114,11 @@ TLS 证书支持配置多个域名，并且支持所谓的通配符（泛）域�
 
 收费证书可以在各 TLS 提供商处购买，比如国内的阿里云腾讯云等。
 
+完整的证书申请流程如下：
+
+![](/images/about-tls-cert/ca-sign-sechdule.png)
+
+为了方便用户，图中的申请人(Applicant)自行处理的部分，目前很多证书申请网站也可以自动处理，用户只需要提供相关信息即可。
 
 ### 3. 生成「本地签名证书」或者「自签名证书」
 
@@ -232,11 +251,11 @@ openssl req -x509 -sha256 -days 3650 -key key.pem -in csr.csr -out certificate.p
 ### 6. 拓展2：使用 OpenSSL 生成 SSH/JWT 密钥对
 
 RSA/ECC 这两类非对称加密算法被广泛的应用在各类加密通讯中。
-SSH/JWT 都支持 RSA-SHA256 及 ECDSA-SHA256 等基于 RSA/ECDSA 的签名算法，因此使用 OpenSSL 生成的密钥对，也应该能用于 SSH 协议加密、JWT 签名等场景。
+SSH/JWT 都支持 RSA-SHA256 及 ECDSA-SHA256 等基于 RSA/ECDSA 的签名/加密算法，因此使用 OpenSSL 生成的密钥对，也应该能用于 SSH 协议加密、JWT 签名等场景。
 
 >ECDSA 是一种基于 ECC 和 DSA 的加密算法
 
-既然 SSH/TLS/JWT 使用的是相同的算法，那理所当然地，SSH/JWT 密钥对应该也可以通过 OpenSSL 生成出来。
+既然 SSH/TLS/JWT 使用的是相同的密钥对，那理所当然地，SSH/JWT 密钥对应该也可以通过 OpenSSL 生成出来。
 
 生成 RSA 密钥对的命令如下：
 
@@ -268,6 +287,13 @@ JWT 签名及验证只需要使用标准的私钥-公钥对，即 `ecc-private-k
 而 SSH 需要使用专用的公钥格式，因此它的使用的密钥对应该是 `ecc-private-key.pem`/`ecc-public.pub`
 
 注：SSH 目前推荐使用 ed25519 算法，而 JWT 目前推荐使用 ECDSA 算法。
+
+#### 6.1 加密与签名
+
+加密与解密：公钥用于对数据进行加密，私钥用于对数据进行解密
+签名与验证：私钥用于对数据进行签名，公钥用于对签名进行验证
+
+- [加密与签名的公私钥，用途刚好相反！](https://www.zhihu.com/question/25912483/answer/31653639)
 
 ## 四、服务端与客户端的证书配置
 
