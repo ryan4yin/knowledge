@@ -209,7 +209,7 @@ vault-agent 的配置，需要注意的有：
 vautl-agent 的 template 说明：
 
 目前来说最流行的配置文件格式应该是 json/yaml，以 json 为例，
-对每个微服务的 kv 数据，可以考虑将它所有的个性化配置都保存在 `<engine-name>/<service-name>/` 下面，然后使用如下 template 注入配置：
+对每个微服务的 kv 数据，可以考虑将它所有的个性化配置都保存在 `<engine-name>/<service-name>/` 下面，然后使用如下 template 注入配置(注意这里使用了自定义的左右分隔符 `[[` 和 `]]`)：
 
 ```consul-template
 {
