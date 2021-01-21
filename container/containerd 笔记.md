@@ -48,6 +48,7 @@ version = 2
   insecure_skip_verify = true
 ```
 
+>注：我们发现 v2 版的 config.toml 设置 `insecure_skip_verify` 时，如果 registry 名称带端口，比如 `resigtry.svc.local:8443`，就无法生效。。退回使用 v1 版的配置，就没问题。
 
 ### 2. 配置仓库镜像
 
@@ -72,7 +73,6 @@ version = 2
   [plugin."io.containerd.grpc.v1.cri".registry.mirrors."*"]
     endpoint = ["https://HostIP3:Port3"]
 ```
-
 
 
 ## 常用命令

@@ -5,17 +5,13 @@ CNCF Landscape 中的 Security&Compliance 中的项目真的一大把。
 这里主要介绍 Kubernetes 自身的安全策略， 像 open policy agent、falco、还有 notray(貌似主要用做镜像签名校验) 等项目的介绍，请参考此文件夹下的其他文章。
 
 
-## Key Management
+## 一、Key Management
 
 密钥管理方面，目前最流行的显然是 hashicorp vault，另外还有个专门管 tls 证书的 cert-manager.
 
-## 一、[Pod 安全策略](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+## 二、[Pod SecurityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
 
 通过设置 Pod 的 SecurityContext，可以为每个 Pod 设置特定的安全策略。
-
-此外，在集群层面，Kubernetes 还提供了 [Pod Security Policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) 控制集群中 Pod 安全相关的限制。
-
-### 1. SecurityContext
 
 SecurityContext 有两种类型：
 
@@ -77,11 +73,27 @@ spec:
       type: RuntimeDefault
 ```
 
-## seccomp: security compute mode
+### 2. seccomp: security compute mode
 
 视频:
 
 - [Seccomp: What Can It Do For You? - Justin Cormack, Docker](https://www.youtube.com/watch?v=Ro4QRx7VPsY&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut$index=22)
+
+
+## 三、集群全局的 Pod 安全策略
+
+Pod SecurityContext 只能为每个 Pod 单独配置安全策略。为了保证安全性，我们显然还希望为整个集群定制一个最小安全策略，禁止所有不符合此策略的 Pod 被提交运行。
+
+Kubernetes 还提供了 [Pod Security Policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) 控制集群中 Pod 安全相关的限制。但是[ PSP 已在 kubernetes 1.21 被标记为废弃，并将在 1.25 中被彻底删除](https://github.com/kubernetes/kubernetes/pull/97171)。
+
+目前 PSP 的替代品有 [open-policy-agent/gatekeeper](https://github.com/open-policy-agent/gatekeeper)
+以及 [kyverno](https://github.com/kyverno/kyverno)
+
+其中基于 OpenPolicyAgent 的 gatekeeper，需要使用 OPA 的 DSL rego 来编写配置，
+而 kyverno 提供了更易用的 CRD，[kyverno smaples](https://github.com/kyverno/kyverno/tree/main/samples) 中提供的 yaml 配置很方便理解。
+
+fluxcd/flux2 使用了 kyverno 做策略控制，它的配置非常直观，个人挺喜欢的。
+
 
 ### 参考
 
