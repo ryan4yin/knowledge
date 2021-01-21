@@ -99,3 +99,4 @@ fluxcd/flux2 使用了 kyverno 做策略控制，它的配置非常直观，个�
 
 - [Kubernetes Security](https://kubernetes.io/docs/concepts/security/)
 - [9 Kubernetes security best practices everyone must follow](https://www.cncf.io/blog/2019/01/14/9-kubernetes-security-best-practices-everyone-must-follow/)
+- [Kyverno: The Swiss Army Knife of Kubernetes](https://neonmirrors.net/post/2021-01/kyverno-the-swiss-army-knife-of-kubernetes/)
