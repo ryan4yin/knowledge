@@ -21,3 +21,4 @@
 ## 相关文档
 
 - [测试的道理](http://www.yinwang.org/blog-cn/2016/09/14/tests)
+- [How They Test](https://github.com/abhivaikar/howtheytest): A curated collection of publicly available resources on how software companies around the world test their software systems and build their quality culture.
