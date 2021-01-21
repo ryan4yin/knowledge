@@ -125,3 +125,4 @@ kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 
 - [Kubernetes管理经验](https://yq.aliyun.com/articles/703971?type=2)
 - [504 Gateway Timeout when accessing workload via ingress](https://www.reddit.com/r/kubernetes/comments/ced0py/504_gateway_timeout_when_accessing_workload_via/)
+- [Kubernetes Failure Stories](https://k8s.af/)

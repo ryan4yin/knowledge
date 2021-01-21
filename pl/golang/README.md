@@ -42,4 +42,4 @@ go env -w GOPRIVATE=*.svc.local
 ## 参考
 
 - [Go语言核心36讲 - 目录](https://time.geekbang.org/column/intro/112)
-
+- [7 days golang programs from scratch](https://github.com/geektutu/7days-golang)
