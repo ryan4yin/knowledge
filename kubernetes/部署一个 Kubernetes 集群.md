@@ -46,7 +46,7 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 - sealos 是最好用的离线部署工具，完整的离线资源包，一行命令部署，而且集群可靠性也不错。
   - 但是注意，节点重启时 calico/k8s.gcr.io 的镜像可能被 kubernetes gc 清除掉，内网环境/无科学上网环境下，这可能导致节点下线。
-  - 解决方法：这类镜像还是需要推送到内网的 harbor 仓库，然后在部署时通过 `--repo` 设定 harbor 仓库地址，或者手动修改 containerd 的配置，为 `docker.io`/`k8s.gcr.io` 设置 mirrors。
+  - 解决方法：部署集群时通过 `--repo` 设定 `k8s.gcr.io` 的阿里云 mirrors: `registry.cn-hangzhou.aliyuncs.com/google_containers/`
   - sealos 默认使用 ipvs 做负载均衡，源码值得学习。
 - rke: rke 只需要额外提供一个内网镜像仓库，官方也提供了镜像列表用于将镜像备份到内网。
 - kubespray: 离线安装需要一个 web 服务器托管 kubectl/crictl 等 artifacts，以及一个内网镜像仓库托管所有镜像。
