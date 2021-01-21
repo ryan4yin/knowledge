@@ -17,6 +17,8 @@ containerd 的默认配置文件位置为 `/etc/containerd/config.toml`，详见
 
 - [containerd for Ops and Admins](https://github.com/containerd/containerd/blob/master/docs/ops.md)
 
+### 1. 配置私有仓库
+
 我们从私有镜像仓库拉取镜像，通常会遇到 tls 证书不可信的问题，镜像仓库的私钥/insecure 配置的文档为：
 
 - [registry - cri-containerd](https://github.com/containerd/cri/blob/master/docs/registry.md)
@@ -45,6 +47,32 @@ version = 2
 [plugin."io.containerd.grpc.v1.cri".registry.configs."my.custom.registry".tls]
   insecure_skip_verify = true
 ```
+
+
+### 2. 配置仓库镜像
+
+在国内的特殊环境下，我们经常需要为 `k8s.gcr.io` 等仓库配置国内镜像，配置如下：
+
+```toml
+version = 2
+
+# The 'plugins."io.containerd.grpc.v1.cri"' table contains all of the server options.
+[plugins."io.containerd.grpc.v1.cri"]
+
+  # sandbox_image is the image used by sandbox container.
+  sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.2"
+
+[plugin."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugin."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+    endpoint = ["https://hub-mirror.c.163.com"]
+  [plugin."io.containerd.grpc.v1.cri".registry.mirrors."test.https-registry.io"]
+    endpoint = ["https://HostIP1:Port1"]
+  # wildcard matching is supported but not required.
+  [plugin."io.containerd.grpc.v1.cri".registry.mirrors."*"]
+    endpoint = ["https://HostIP3:Port3"]
+```
+
+
 
 ## 常用命令
 
