@@ -60,6 +60,7 @@ version = 2
 [plugins."io.containerd.grpc.v1.cri"]
 
   # sandbox_image is the image used by sandbox container.
+  # 注：此镜像不会走 mirrors！
   sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.2"
 
 [plugin."io.containerd.grpc.v1.cri".registry.mirrors]
