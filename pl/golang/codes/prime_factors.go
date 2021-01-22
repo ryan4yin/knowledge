@@ -1,3 +1,8 @@
+/*
+素数分解
+
+此程序的目的是学习 goroutine 及 channel，性能不高。
+*/
 package main
 
 import (
@@ -5,8 +10,6 @@ import (
 	"math"
 	"strings"
 )
-
-// 此程序的目的是学习 goroutine 及 channel，性能不高。
 
 func primeFilter(prime int, remains chan int) chan int {
 	result := make(chan int)
