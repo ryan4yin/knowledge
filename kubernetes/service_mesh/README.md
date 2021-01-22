@@ -8,3 +8,7 @@
 
 然后最近 nginx/kong/traefik 等又推出了一票服务网格实现，慢慢观望吧。。。
 
+
+## 我的相关博客
+
+- [使用 Istio 进行 JWT 身份验证（充当 API 网关）](https://ryan4yin.space/posts/use-istio-for-jwt-auth/)
