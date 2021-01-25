@@ -31,8 +31,16 @@ docker login registry.svc.local --tls-verify=false
 skopeo copy --dest-tls-verify=false \
   docker://quay.io/buildah/stable docker://registry.svc.local/test/buildah
   
+# 从 containers-storage 中拷贝镜像到私有镜像仓库
+# podman/crio/buildah 等基于 containers/storage 的工具中的镜像，都可以通过 containers-storage 访问到
+skopeo copy --dest-tls-verify=false \
+  containers-storage:docker.io/library/vault:1.6.1 docker://registry.svc.local/library/vault:1.6.1 
 
-# 将 registry 中的镜像改个名称(或者换个 project)，不验证内网仓库的 tls 证书
+# 从 docker-daemon 中拷贝镜像到私有镜像仓库
+skopeo copy --dest-tls-verify=false \
+  docker-daemon::docker.io/library/vault:1.6.1 docker://registry.svc.local/library/vault:1.6.1 
+
+# 将 registry 中的镜像改个名称(或者换个 project)
 skopeo copy --src-tls-verify=false --dest-tls-verify=false \
   docker://registry.svc.local/test/buildah docker://registry.svc.local/test/buildah-stable
 
@@ -46,6 +54,24 @@ skopeo list-tags --tls-verify=false docker://registry.svc.local/test/buildah
 # copy 一次只支持同步一个镜像，而 sync 一次同步路径下所有的镜像！
 skopeo sync --src docker --dest dir --scoped registry.svc.local/test registry.svc.local/staging
 ```
+
+skopeo 支持的所有镜像格式/协议有:
+
+>详见 [Containers Transports Man Page](https://github.com/containers/image/blob/master/docs/containers-transports.5.md)
+
+- `docker://`: 目前唯一的一个远程镜像仓库协议 - "Docker Registry HTTP API V2"
+- containers-storage: 所有基于 containers/storage 的工具，的本地镜像存储
+- docker-archive: docker 导出的 tar 格式
+- docker-daemon: docker 的本地镜像存储，需要通过 docker-daemon 访问
+- oci-archive: oci 格式的 tar 包
+- oci: oci 格式的镜像文件夹
+
+还有几个不是很懂，好像也没啥用的格式：
+
+- dir: 顾名思义，文件夹。非标准格式，仅用于 Debug.
+- ostree: 保存在本地 ostree 仓库的镜像，ostree 是个没听说过的啥仓库。。。
+- tarball: dir 的压缩包？不是很清楚。
+
 
 ## 参考文档
 
