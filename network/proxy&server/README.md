@@ -32,6 +32,16 @@
 4. [OpenResty](https://github.com/openresty/openresty): 基于 Nginx+Lua Web 平台，很多网关/代理的底层都是它。
 5. Kong/HAProxy: Kong 是基于 Openresty 开发的 API 网关，HAProxy 不了解。
 
+高性能的 4 层代理，只关注第四层，因此能获得更高的性能：
+
+- ipvs: 有二十多年历史的 4 层负载均衡技术，linux 内核模块。
+- [katran](https://github.com/facebookincubator/katran): Facebook 开源的，基于 eBPF 的新一代 4 层负载均衡。
+
+在四层负载均衡方面，也有一些将 ipvs/eBPF 及其他技术结合起来的尝试，比如：
+
+- [性能提升40%: 腾讯 TKE 用 ipvs+eBPF 绕过 conntrack 优化 K8s Service](https://juejin.cn/post/6844904198752960520)
+- [网易数帆基于 DPDK 的高性能四层负载均衡实践](https://www.infoq.cn/article/hlhteohg8elx6eyveifl)
+
 ## 参考
 
 - [What is a reverse proxy? - cloudflare](https://www.cloudflare.com/learning/cdn/glossary/reverse-proxy/)
