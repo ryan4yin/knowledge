@@ -190,7 +190,18 @@ CI/CD 流水线主要是提供给前后端人员使用的，因此需要一个�
 能够将多个 Pipelines/Workflows/Jobs 通过一些手段编排起来，实现按依赖顺序分批地运行流水线等高级功能。
 
 
-
 ## 总结
 
 翻遍 Github 上的 CI/CD/Pipeline 项目，发现目前最符合我期望的是：Argo Workflow，正在深入调研。
+
+
+## 画外
+
+我发现 CI/CD 工具、机器学习的 Workflow 工具、运维领域的 task 调度工具，它们都存在一个共性：一次性任务、支持定时触发、手动触发，还有失败重试等功能。
+
+- 任务调度系统：就如 xxl-job 之类的工具，提供友好的 UI 界面，支持 shell/python 等多种语言。运行的任务 Job/Task 通常都比较简单。
+- CI/CD 工具：如 Jenkins/Gitlab-CI/Tekton 这类工具，它的调度单位是流水线 Pipeline，通常由多个 Task 组成。也就是说要比 Task 复杂一些。
+- 机器学习工作流 Workflow: 如 Argo/Airflow，这东西支持通过 DAG 定义 Task 之间的依赖关系来完成编排，功能比 CI/CD 工具要更复杂/强大一些。
+
+这三种工具，貌似主要的区别，只在于调度的粒度不同而已。
+Workflow 最复杂也最强大，CI 工具居中，Job 调度系统最简单。
