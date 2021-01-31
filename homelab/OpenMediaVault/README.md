@@ -1,10 +1,18 @@
 # OpenMediaVault
 
 OMV 是目前比较流行的 NAS 系统，基于 Debian 系统，集成了 SMB/NFS/FTP 等常用的文件夹软件，并提供方便的 Web UI。
-支持硬盘自动挂载、RAID、简单的系统监控等等。
+支持硬盘自动挂载、RAID、硬盘休眠、简单的系统监控等等。
 
 其实这些功能也可以自己在 Debian 系统安装一大堆的程序来实现，但是程序太多，配置麻烦。
 而且 SMB 之类的协议本来就很复杂，自己搭建绝对是非常折磨人的。
+
+
+## 如果我只需要 SMB+HTTP 文件共享，该怎么做？
+
+如果只需要这两个功能，而硬盘自动挂载、RAID、硬盘休眠、Web UI 都不需要的话，那我想你只需要跑两个容器：
+
+1. [deftwork/samba](https://github.com/deftwork/samba): 提供 smb 文件共享协议，支持作为硬盘挂载。
+2. [caddy](/network/proxy&server/caddy/README.md): http 静态文件服务器，可以通过浏览器查看与下载。
 
 ## 如何选择 NAS 系统？
 
@@ -16,6 +24,7 @@ OMV 是目前比较流行的 NAS 系统，基于 Debian 系统，集成了 SMB/N
 NAS 功能比较多，可能不适合容器化，或者容器化维护难度比较大。因此目前没看到有还在维护的容器版 OMV。
 
 目前 NAS 系统推荐使用虚拟机方式部署。
+
 
 ## 参考文档
 
