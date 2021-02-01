@@ -121,6 +121,16 @@ kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 --eviction-minimum-reclaim=memory.available=0Mi,nodefs.available=1Gi,imagefs.available=2Gi
 ```
 
+## 其他问题
+
+### 如何重新运行一个 Job？
+
+我们有一个 Job 因为外部原因运行失败了，修复好后就需要重新运行它。
+
+方法是：删除旧的 Job，再使用同一份配置重建 Job.
+
+如果你使用的是 fluxcd 这类 GitOps 工具，就只需要手工删除旧 Pod，fluxcd 会定时自动 apply 所有配置，这就完成了 Job 的重建。
+
 ## 参考
 
 - [Kubernetes管理经验](https://yq.aliyun.com/articles/703971?type=2)
