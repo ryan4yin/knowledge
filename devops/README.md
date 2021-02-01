@@ -1,4 +1,10 @@
-# DevOps Platform / AIOps Platform
+# DevOps
+
+- [什么是 DevOps](什么是%20DevOps.md)
+- [Everything as Code](Everything%20as%20Code.md)
+
+
+## DevOps Platform / AIOps Platform
 
 DevOps 平台，以及它的进化版：AIOps 平台。
 
