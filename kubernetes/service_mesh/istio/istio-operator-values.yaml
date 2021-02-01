@@ -97,6 +97,8 @@ spec:
       proxy:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
+        # 1.7.0+ 让主容器在 istio-proxy 就绪后，再启动。避免主容器因为网络未就绪而 Crash.
+        holdApplicationUntilProxyStarts: true
       tracer:
         # 不使用 istio 自带的 jaeger，改用 Jaeger Operator 部署（或者测试环境可以使用集群外部的 jaeger）
         zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
