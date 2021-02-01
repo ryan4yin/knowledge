@@ -1,4 +1,12 @@
-# 数据库相关
+# Datastore - 数据存储
+
+Datastore 意即数据存储，这里用来指代所有数据存储相关的软件，目前有如下三类：
+
+- Database: 关系数据库、文档数据库、等等
+- Artifactory: 制品库，即 apt/yum/pypi/nuget/maven 等仓库
+- 文件存储与分享: 云盘、NAS
+
+## 数据库相关
 
 1. ElasticSearch
 2. Redis
