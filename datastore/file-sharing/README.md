@@ -12,7 +12,9 @@
 
 使用 NAS 做文件共享服务器，如 [OpenMediaVault](https://github.com/openmediavault/openmediavault)，原生就支持 SMB/NFS/FTP 协议。
 
-然后再使用 caddy 做静态文件服务器，提供 HTTP 协议支持，通过 HTTP 提供文件夹形式的索引页。
+>OpenMediaVault 这类 NAS 系统的特色功能：硬盘自动挂载、RAID、硬盘休眠(S.M.A.R.T.)、Web UI、链路聚合、网络唤醒、插件系统等等。 
+
+然后再使用 [caddy](/network/proxy&server/caddy/README.md) 做静态文件服务器，提供 HTTP 协议支持，通过 HTTP 提供文件夹形式的索引页。
 
 但是 caddy 作为一个通用服务器，本身不支持太多的文件共享特性：权限策略、文件上传等，它原生都不支持，需要自行实现。
 
@@ -26,6 +28,12 @@ caddy 只能支持简单的文件浏览与下载，而 nexcloud/cloudreve 是真
 2. 权限策略
 3. 接入 s3/smb/ftp 远程存储
 
+
+而 SMB 协议的支持，则可以考虑使用：
+
+- [deftwork/samba](https://github.com/deftwork/samba)
+
+这个方案只需要使用容器，不需要安装操作系统，特点是轻便，但是也少了很多 NAS 的特有功能。
 
 ## 方案三
 
