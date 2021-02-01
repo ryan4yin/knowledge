@@ -7,13 +7,6 @@ OMV 是目前比较流行的 NAS 系统，基于 Debian 系统，集成了 SMB/N
 而且 SMB 之类的协议本来就很复杂，自己搭建绝对是非常折磨人的。
 
 
-## 如果我只需要 SMB+HTTP 文件共享，该怎么做？
-
-如果只需要这两个功能，而硬盘自动挂载、RAID、硬盘休眠、Web UI 都不需要的话，那我想你只需要跑两个容器：
-
-1. [deftwork/samba](https://github.com/deftwork/samba): 提供 smb 文件共享协议，支持作为硬盘挂载。
-2. [caddy](/network/proxy&server/caddy/README.md): http 静态文件服务器，可以通过浏览器查看与下载。
-
 ## 如何选择 NAS 系统？
 
 物理机安装首选 OMV，因为它起码是个正经的 Linux 系统，各种拓展功能都可以直接跑 docker 实现。
