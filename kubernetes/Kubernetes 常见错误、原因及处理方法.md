@@ -12,6 +12,7 @@
 1. [Kubernetes 问题排查：Pod 状态一直 Terminating](https://zhuanlan.zhihu.com/p/70031676)
 1. 创建了 Deployment 后，却没有自动创建 Pod: 缺少某些创建 Pod 必要的东西，比如设定的 ServiceAccount 不存在。
 1. Pod 运行失败，状态为 MatchNodeSelector: 对主节点进行关机、迁移等操作，导致主调度器下线时，会在一段时间内导致 Pod 调度失败，调度失败会报这个错。
+2. Pod 仍然存在，但是 `Service` 的 Endpoints 却为空，找不到对应的 Pod IPs: 遇到过一次，是因为时间跳变（从未来的时间改回了当前时间）导致的问题。
 
 ### Pod 无法删除
 
