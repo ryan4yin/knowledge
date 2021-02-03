@@ -129,3 +129,9 @@ ELK 自带监控功能，但是不建议使用，因为比较吃存储。
 监控日志默认保留七天，可通过 API 修改 `xpack.monitoring.history.duration` 来调整保存时间，默认为 `7d`（七天），最小可调整为 `1d`（一天）。
 
 监控的详细设置见 [ES 监控设置](https://www.elastic.co/guide/en/elasticsearch/reference/current/monitoring-settings.html#monitoring-collection-settings)
+
+
+## 遇到过的问题
+
+- 在公共的 ova 虚拟机镜像中加了 `vm.max_map_count=262144`，导致 Redis 越跑越慢
+- ELK 未设置日志大小上限，导致存储空间被日志挤爆。
