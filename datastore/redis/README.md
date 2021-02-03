@@ -52,6 +52,11 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled  # 临时生效
 暂时没找到在新系统的的有效方法，使系统重启也此参数的修改也能生效。。
 
 
+## 疑问
+
+自建的 Redis 在连接数达到 1000+ 时，就经常出现连接拒绝。
+明明部署流程完全参考的官方配置，可就是有个 1000+ 的瓶颈，这个到底是什么问题？
+
 ## 参考
 
 - [ https://redis.io/topics/admin](https://redis.io/topics/admin)

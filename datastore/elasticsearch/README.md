@@ -56,6 +56,9 @@ COPY --from=0 /ik /usr/share/elasticsearch/plugins/ik
 
 ## 修改宿主机的内核参数
 
+>要注意不同的软件对内核参数的要求也不一样，如果机器里不是跑 ES，就不要随便改下面给出的参数！否则可能会出现性能问题。
+>比如 Redis/Mongo 越跑越慢啥的
+
 elasticsearch 6.8 及以上的版本，需要设置 max_map_count 为 262144，否则不能启动。
 docker 的这项内核参数会继承宿主机，因此可以直接修改宿主机的内核参数：
 ```shell
