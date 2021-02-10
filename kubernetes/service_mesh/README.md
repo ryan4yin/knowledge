@@ -5,6 +5,8 @@
 2. istio: 目前全球最流行的服务网格
 3. linkerd2: 最初的服务网格的 rust 重构版，比 istio 简单，性能更高。
 1. consul: 这个不了解。。
+2. dapr:
+3. 其他 traefik/kong 等也都推出了功能类似 istio 的服务网格，但是用户少，暂时不做考虑。
 
 然后最近 nginx/kong/traefik 等又推出了一票服务网格实现，慢慢观望吧。。。
 
