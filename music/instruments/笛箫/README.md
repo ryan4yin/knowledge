@@ -36,5 +36,11 @@
 
 ### 竹笛教程
 
+教材：
+
+- [习笛知乐 - 竹笛基础教程 - 马潇潇](https://book.douban.com/subject/34098843/): 这是我找到的最适合自学的笛子教材，从笛膜的贴法一直介绍到各类竹笛技巧及练习。后面还包含很现代化的指法表和半音练习章节！比传统的笛子教材现代化多了！
+
+视频教程：
+
 - [陈涛笛子教学-Teaching Flute by Chen Tao](https://www.bilibili.com/video/BV1qx41187wi)
 - [张维良 笛子教学](https://www.bilibili.com/video/BV1Ts411R7nC)
