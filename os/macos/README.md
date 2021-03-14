@@ -1,4 +1,4 @@
-# MacOS X 配置基础开发测试环境
+# MacOS X 开发环境配置
 
 ## 一、[Homebrew](https://github.com/Homebrew/install)
 
@@ -56,6 +56,9 @@ brew search xxx
 brew install xxx
 # 从 homebrew-cask 仓库中查找 fomula 进行安装，所有 GUI 或其他非常大的软件，都会被放在这个 cask 仓库中
 brew install --cask xxx
+
+brew update # 更新 Homebrew 在服务器端上的包目录
+brew list --versions # 查看安装过的包版本
 ```
 
 ## 二、安装常用软件
@@ -146,3 +149,22 @@ brew install --cask openinterminal-lite
 ```shell
 brew install --cask iglance
 ```
+
+## 其他软件
+
+mindnote - 思维导图
+
+## 其他
+
+触摸板相关配置：
+- 在「辅助功能」中启用「三指拖移」
+- 在「触摸板」中启用：
+   - 「辅助点按」 - 「轻点或双指点按」
+   - 「轻点来点按」
+
+在桌面与屏保中设置触发角
+
+学会用 spotlight 全局搜索，熟悉后可以考虑装个 alfred
+
+finder 相关：
+- 把 home 和 codes 文件夹添加到左侧栏
