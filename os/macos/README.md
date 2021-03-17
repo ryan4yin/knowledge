@@ -168,3 +168,10 @@ mindnote - 思维导图
 
 finder 相关：
 - 把 home 和 codes 文件夹添加到左侧栏
+
+
+## 2K 显示器的分辨率问题
+
+由于苹果系统原因，外接 2K 显示器会导致字体特别小，非常难受。
+
+建议使用 [one-key-hidpi](https://github.com/xzhih/one-key-hidpi)，跑完脚本重启，就能将外接 2K 显示器变成 retina 屏，就能获得类似 windows 的分辨率缩放体验了。
