@@ -14,6 +14,33 @@ git config --global url."git@gitlab.svc.local:".insteadOf "https://gitlab.svc.lo
 
 也可以用同样的手法转换 http/git 协议，但是不能同时转换多种协议。。
 
+### 为不同的 Git URL 使用不同的 email/username
+
+如果我们用同一台电脑为开源项目（或个人项目）和公司项目提交代码，就可能会遇到的一个问题：
+公司的 Git 仓库应该使用企业邮箱提交代码，而个人开源项目我们希望使用个人邮箱，如何自动切换呢？
+
+这个问题，目前比较好的解法是使用 `conditional includes`，添加或修改如下两个文件：
+
+```conf
+# ~/.gitconfig
+[user]
+    name = ryan4yin
+    email = ryan4yin@ryan4yin.space
+
+[includeIf "gitdir:~/work/"]
+    path = ~/work/.gitconfig
+```
+
+```conf
+# ~/work/.gitconfig
+[user]
+    email = ryan4yin@company.tld
+```
+
+这样设置好后，所有 `~/work` 中的 git 仓库，都将默认使用企业邮箱。
+
+而其他的 git 仓库，仍然使用个人邮箱。
+
 ### Git 使用指定的私钥
 
 1. 设置环境变量 `GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa_example"`
