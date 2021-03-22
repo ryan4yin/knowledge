@@ -57,7 +57,8 @@ brew install xxx
 # 从 homebrew-cask 仓库中查找 fomula 进行安装，所有 GUI 或其他非常大的软件，都会被放在这个 cask 仓库中
 brew install --cask xxx
 
-brew update # 更新 Homebrew 在服务器端上的包目录
+brew update # 更新 Homebrew packages 索引
+brew upgrade # 升级所有已安装的 packages 到最新版本
 brew list --versions # 查看安装过的包版本
 ```
 
