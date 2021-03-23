@@ -72,14 +72,14 @@ Drone 是目前 Github 上最火的 CICD 项目，它以容器为核心，每个
    1. 也就是说，用它来实现自动化测试平台、运维平台，可能是「歪门邪道」hhh
 
 
-### 5. 云原生流水线 - Tekton/Argo Workflow
+### 5. 云原生流水线 - Tekton/Argo Workflows
 
 Tekton 和 Argo 都是用 Kubernetes 自定义资源来声明流水线的项目，值得研究。
 
 各大厂（京东、字节跳动）目前好像都是选择了 tekton 来搭建自己的 CI/CD 平台，替换掉陈旧的 jenkins，
 因为 tekton 对 CI/CD 来说功能刚好够用，也能很方便地以它为基础做一些自定义。
 
-另外我也很看好功能比 tekton 更强大的 argo workflow，阿里云目前有深度使用这个工具。
+另外我也很看好功能比 tekton 更强大的 Argo Workflows，阿里云目前有深度使用这个工具。
 
 argo 和 tekton 的 UI 面板，目前来说功能都比较弱，而且和 Kubernetes 结合比较紧密，对不了解 kuberentes 的人员而言就不太友好。
 
@@ -192,7 +192,7 @@ CI/CD 流水线主要是提供给前后端人员使用的，因此需要一个�
 
 ## 总结
 
-翻遍 Github 上的 CI/CD/Pipeline 项目，发现目前最符合我期望的是：Argo Workflow，正在深入调研。
+翻遍 Github 上的 CI/CD/Pipeline 项目，发现目前最符合我期望的是：Argo Workflows，正在深入调研。
 
 
 ## 画外

@@ -2,7 +2,7 @@
 
 Tekton Pipeline 是一个云原生流水线项目，通过 Kubernetes CRDs 来定义和运行流水线。
 
-它和 Argo Workflow 其实很类似，只是目的不同，导致它的功能不如 Argo Workflow 强大。
+它和 Argo Workflows 其实很类似，只是目的不同，导致它的功能不如 Argo Workflows 强大。
 
 Tekton 和 Drone 更类似，它是一个基于源代码的 CI/CD 工具。
 而 Argo 是一个通用的**并行任务编排**工具，只是它的功能恰好也很契合 CI/CD 场景。
