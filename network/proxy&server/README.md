@@ -17,20 +17,25 @@
 
 全能选手，既可用做代理，又可用做 Web 服务器：
 
-1. Nginx: 使用最广泛，最年长，但是配置稍显复杂。
+1. Nginx: 使用最广泛，最年长，性能也几乎是最高的，但是配置稍显复杂，学习起来有些门槛。
 2. Caddy: 新兴的 Web Server & Network-Proxy。配置比 Nginx 简单，支持自动配置 SSL 证书，默认启用 HTTP2/HTTPS。
+   - 是 go 语言写的，性能相比 Nginx 要弱一些，同时内存消耗比 Nginx 大很多。
 
 专用代理软件：
 
 1. Traefik: 一个纯粹的代理软件，支持自动配置 SSL 证书，配置很简单，功能相当丰富，还有好看的 Web UI。
-1. Envoy: Istio 钦定代理，在服务网格中专门负责流量转发
-2. Linkerd: 用 rust 写的轻量高效的代理，值得一看。
-3. `IPVS(LVS)`: Linux 内核自带的负载均衡器，未来将是 Kubernetes Service 层的默认负载均衡方案。（替换掉当前的 iptables 方案）
+   - Traefik 相对的，性能也要比 Nginx 差。
+2. Envoy: Istio 钦定代理，在服务网格中专门负责流量转发
+3. Linkerd: 用 rust 写的轻量高效的代理，值得一看。
+4. `IPVS(LVS)`: Linux 内核自带的负载均衡器，未来将是 Kubernetes Service 层的默认负载均衡方案。（替换掉当前的 iptables 方案）
 
 其他经常听说的代理：
 
 4. [OpenResty](https://github.com/openresty/openresty): 基于 Nginx+Lua Web 平台，很多网关/代理的底层都是它。
-5. Kong/HAProxy: Kong 是基于 Openresty 开发的 API 网关，HAProxy 不了解。
+5. Kong/APISIX: 这俩都是基于 Openresty 开发的 API 网关。
+6. HAProxy: 一个 C 专用负载均衡器，单纯做负载均衡，它的性能比 Nginx 还要好些。
+   - 但是纯四层负载均衡 LVS 性能比它更高，另外它的代码结构也不如 nginx，导致二次开发难度大，社区也就小很多。
+   - 所以好像不推荐使用。
 
 高性能的 4 层代理，只关注第四层，因此能获得更高的性能：
 
