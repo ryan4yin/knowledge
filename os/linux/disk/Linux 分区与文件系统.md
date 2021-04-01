@@ -46,7 +46,8 @@ CHANGED: partition=1 start=4096 old: size=62910431 end=62914527 new: size=125824
 
 # 注: 如果 Amazon Linux 2 跑这命令报奇怪的错误，很大可能是编码问题！
 # 先修改系统编码 LANG，再跑 growpart 估计就正常了
-[ec2-user@ip-xxx ~]# LANG=en_US.UTF-8 
+[ec2-user@ip-xxx ~]# LANG=en_US.UTF-8
+# 问题原因：growpart 存在编码问题，而 ssh 在建立连接时，默认会使用本地的 LANG 属性！
 ```
 
 现在再看，根分区就和磁盘差不多大了:
