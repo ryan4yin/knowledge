@@ -124,6 +124,10 @@ kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 
 ## 其他问题
 
+## 隔天 Istio 等工具的 sidecar 自动注入莫名其妙失效了
+
+如果服务器晚上会关机，可能导致第二天网络插件出问题，导致 sidecar 注入器无法观察到 pod 的创建，也就无法完成 sidecar 注入。
+
 ### 如何重新运行一个 Job？
 
 我们有一个 Job 因为外部原因运行失败了，修复好后就需要重新运行它。
