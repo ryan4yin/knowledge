@@ -27,7 +27,6 @@
    - Traefik 相对的，性能也要比 Nginx 差。
 2. Envoy: Istio 钦定代理，在服务网格中专门负责流量转发
 3. Linkerd: 用 rust 写的轻量高效的代理，值得一看。
-4. `IPVS(LVS)`: Linux 内核自带的负载均衡器，未来将是 Kubernetes Service 层的默认负载均衡方案。（替换掉当前的 iptables 方案）
 
 其他经常听说的代理：
 
@@ -46,6 +45,11 @@
 
 - [性能提升40%: 腾讯 TKE 用 ipvs+eBPF 绕过 conntrack 优化 K8s Service](https://juejin.cn/post/6844904198752960520)
 - [网易数帆基于 DPDK 的高性能四层负载均衡实践](https://www.infoq.cn/article/hlhteohg8elx6eyveifl)
+
+
+## 该选择哪个产品作为我们的代理工具？
+
+这是一个见仁见智的问题，不同的技术栈、不同的业务现状，都可能会让人们作出不同的选择。
 
 ## 参考
 
