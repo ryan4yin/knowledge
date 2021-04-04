@@ -103,13 +103,15 @@ systemctl stop firewalld  # 禁用
 firewall-cmd --get-services
 
 # 允许SSH服务通过
-firewall-cmd --enable service=ssh
+sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
 
 # 禁止SSH服务通过
-firewall-cmd --disable service=ssh
+firewall-cmd --zone=public --remove-port=22/tcp --permanent
 
 sudo firewall-cmd --zone=public --add-port=6379/tcp --permanent
-sudo firewall-cmd --reload  # 重载配置
+
+# 修改防火墙规则后需要重载配置
+sudo firewall-cmd --reload
 ```
 
 ## 注意事项
