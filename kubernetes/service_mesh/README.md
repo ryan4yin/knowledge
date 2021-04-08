@@ -19,6 +19,7 @@
 - 原理: Service Mesh 的工作原理是**原协议转发**，原则上不改变协议内容（通常只是 header 有些小改动）。为了达到零侵入的目标，还引入了 iptables 等流量劫持技术。
 - 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如 **Node 模式部署**。
     - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试。
+    - linkerd2 走的路则是做轻量的 sidecar，并且使用 rust 这类高效语言来实现。
 
 不过我们现在已经看到了 dapr 这样更通用的 multi-runtime 产品来搅局。
 
@@ -26,7 +27,8 @@
 
 - [使用 Istio 进行 JWT 身份验证（充当 API 网关）](https://ryan4yin.space/posts/use-istio-for-jwt-auth/)
 
-
 ## 其他资料
 
 - [Slime：让Istio服务网格变得更加高效与智能](https://cloudnative.to/blog/netease-slime/)
+- [基于 Apache APISIX 的下一代微服务架构](https://www.upyun.com/tech/article/512/%E5%9F%BA%E4%BA%8E%20Apache%20APISIX%20%E7%9A%84%E4%B8%8B%E4%B8%80%E4%BB%A3%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.html)
+- [API Gateway vs Service Mesh](https://www.cnblogs.com/kirito-c/p/12394038.html)
