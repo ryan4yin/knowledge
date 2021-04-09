@@ -18,3 +18,8 @@ kubernetes 集群的日志收集与分析方案，目前主要有两个：
 ## AIOps - logging
 
 基于日志的 AIOps，暂时不是很了解，待补充。
+
+
+## 相关文档
+
+- [9个技巧，解决K8s中的日志输出问题](https://zhuanlan.zhihu.com/p/114510384)
