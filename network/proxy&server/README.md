@@ -31,10 +31,12 @@
 其他经常听说的代理：
 
 4. [OpenResty](https://github.com/openresty/openresty): 基于 Nginx+Lua Web 平台，很多网关/代理的底层都是它。
-5. Kong/APISIX: 这俩都是基于 Openresty 开发的 API 网关。
-6. HAProxy: 一个 C 专用负载均衡器，单纯做负载均衡，它的性能比 Nginx 还要好些。
+5. APISIX: 基于 Openresty 开发的 API 网关，国产项目。
+   - 其核心贡献者同时也是 Openresty 社区的核心贡献者，相当活跃，性能也很高，值得考虑。
+6. Kong: 和 APISIX 一样都是基于 Openresty，虽然 Stars 多，但是性能也差 APISIX 很多。
+7. HAProxy: 一个 C 专用负载均衡器，单纯做负载均衡，它的性能比 Nginx 还要好些。
    - 但是纯四层负载均衡 LVS 性能比它更高，另外它的代码结构也不如 nginx，导致二次开发难度大，社区也就小很多。
-   - 所以好像不推荐使用。
+   - 所以不推荐使用。
 
 高性能的 4 层代理，只关注第四层，因此能获得更高的性能：
 
