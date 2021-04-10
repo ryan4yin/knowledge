@@ -1,12 +1,22 @@
 # 服务网格
 
-目前这个领域，最流行的服务代理是 envoy，最流行的服务网格是：
+目前这个领域，最流行的服务代理是 envoy，最流行或者最有前景的服务网格是：
 
-1. istio: 目前全球最流行的服务网格
-2. linkerd2: 最初的服务网格的 rust 重构版，比 istio 简单，性能更高。
+1. istio: 目前全球最流行的服务网格，功能强大，但是相对的也更复杂。
+2. linkerd2: 最初的服务网格的 rust 重构版，比 istio 简单，流控功能没那么强，但是性能更高。
+   - 但是它的数据平面可拓展性比较差，没有良好的插件机制，没有 envoy 灵活。
 3. dapr: 它给自己的定位是 Multi-Runtime - 一个比服务网格更通用、能力更强的运行时，一个运行时就能提供原本需要多个 Sidecar 实现的能力（如 网络代理，缓存代理，绑定代理）
-4. traefik mesh: 一个轻量级的，Node 模式部署的服务网格
-5. consul: 一个服务注册中心，但是好像它和服务网格也能有点关系？不是很了解。
+
+其他还有一些名气小一点的服务网格可供参考，但是目前都不推荐选用：
+
+1. consul: 一个服务注册中心，好像也能用 envoy 搭建服务网格，不过功能不强。
+2. [traefik mesh](https://github.com/traefik/mesh): 一个轻量级的，Node 模式部署的服务网格，好像目前不支持 TLS 加密
+3. [kuma](https://github.com/kumahq/kuma): 由 Kong 基于 Envoy 开发的一个服务网格，
+4. [osm](https://github.com/openservicemesh/osm): 微软开源的一个基于 Envoy 的服务网格，好像主要面向 Azure 用户，而且项目还在一个非常早期的阶段。
+
+
+在选用服务网格产品时，要以自己的痛点为核心，再结合性能、易用性、复杂度来综合考量。
+不是说功能最强大的 Istio 就是银弹，功能相对弱一些的 Linkerd2 或许就会是更好的选择，或者说直接自研。
 
 ## 服务网格的正确形态？
 
@@ -29,4 +39,4 @@
 
 - [Slime：让Istio服务网格变得更加高效与智能](https://cloudnative.to/blog/netease-slime/)
 - [基于 Apache APISIX 的下一代微服务架构](https://www.upyun.com/tech/article/512/%E5%9F%BA%E4%BA%8E%20Apache%20APISIX%20%E7%9A%84%E4%B8%8B%E4%B8%80%E4%BB%A3%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.html)
-
+- [Service Mesh Comparison](https://servicemesh.es/)
