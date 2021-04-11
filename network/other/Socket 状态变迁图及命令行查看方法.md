@@ -2,7 +2,7 @@
 
 ![](https://img2018.cnblogs.com/blog/968138/202002/968138-20200202132332451-1115949935.png)
 
-## 命令行查看方法
+## 一、Linux 命令行查看方法
 
 查看 socket 信息可以帮我们回答下列问题：
 
@@ -11,7 +11,11 @@
 1. 进程们分别在使用哪些端口？
 1. 我的连接数是否达到了上限？
 
-我们使用 ss （socket statistics）命令来查看 socket 信息（CentOS/Ubuntu 已经使用 `ss` 替换了 `netstat`，推荐使用 ss）：
+>现在较新版本的 Ubuntu 和 CentOS 都已经使用 `iproute2` 替换掉了 `net-tools`，
+如果你还需要使用陈旧的 `route` `netstat` 等命令，需要手动安装 `net-tools`。
+
+
+我们可以使用 ss(socket statistics) 或者 netstat 命令来查看 socket 信息:
 
 ```
 # 查看 socket 连接的统计信息
@@ -71,7 +75,7 @@ lsof | wc -l
 ulimit -n 
 ```
 
-## 查看 Docker 容器的 socket 信息
+## 二、查看 Docker 容器的 socket 信息
 
 Docker 容器有自己的 namespace，直接通过宿主机的 ss 命令是查看不到容器的 socket 信息的。
 
@@ -97,17 +101,16 @@ nsenter --target $PID --net ss -s
 
 这种方式一般用于容器集群的诊断，K8s 社区提供了一个工具 [kubectl-debug](https://github.com/aylei/kubectl-debug/)，以这种 SideCar 的方式进行容器诊断。详情参见它的文档。
 
+## 三、Windows 系统查看 socket 信息
 
-## Windows 系统查看 socket 信息
-
-Windows 系统没有 `ss`，但是自带 `netstat`，该命令和 Linux 下的 `netstat` 有一定差别，具体使用方法如下：
+Windows 系统和 macOS 一样，也没有 `ss`，但是自带 `netstat`，该命令和 Linux 下的 `netstat` 有一定差别，具体使用方法如下：
 
 ```shell
 netstat -?  # 查看使用帮助，很清晰易懂
 
 # 查看那个进程在监听 80 端口，最后一列是进程的 Pid
 netstat -ano | findstr 80        # windows 命令
-netstat -ano | select-string 80  # powershell 命令
+netstat -ano | select-string 80  # powershell 命令，就是把 findstr 替换成 select-string
 
 # 不仅列出 Pid，还给出 Pid 对应的可执行文件名称（需要管理员权限）
 netstat -ano -b | select-string 80  # powershell 命令
@@ -130,7 +133,25 @@ route print -4  # 仅 ipv4
 
 比如我们遇到端口占用问题时，就可以通过上述命令查找到端口对应的 Pid，然后使用 `kill <Pid>` 命令（powershell `stop-process` 的别名）杀死对应的进程。
 
+## 四、macOS 系统查看 socket 信息
+
+macOS 系统目前没有 `ss`，但是自带 `netstat`，该命令和 Linux 下的 `netstat` 有一定差别，而且还很慢，还不能显示 pid. 
+所以 stackoverflow 上更推荐使用 `lsof`，几条常用命令记录如下
+
+```shell
+# -n 表示不显示主机名
+# -P 表示不显示端口俗称
+# 不加 sudo 只能查看以当前用户运行的程序
+# 通用格式：
+sudo lsof -nP -iTCP:端口号 -sTCP:LISTEN
+
+# 查看所有监听端口相关的信息（command/pid）
+lsof -nP -iTCP -sTCP:LISTEN
+```
+
 ## 参考
 
 - [如何在 Linux 中查看进程占用的端口号](https://zhuanlan.zhihu.com/p/45920111)
 - [github - nsenter](https://github.com/jpetazzo/nsenter#how-do-i-use-nsenter)
+- [使用 lsof 代替 Mac OS X 中的 netstat 查看占用端口的程序](https://tonydeng.github.io/2016/07/07/use-lsof-to-replace-netstat/)
+
