@@ -46,7 +46,9 @@ helm upgrade --install \
 还有另外两个 Prometheus 集群方案也可以考虑：
 
 - [m3db](https://github.com/m3db/m3): Distributed TSDB, Aggregator and Query Engine, Prometheus Sidecar, Graphite Compatible, Metrics Platform，由 Uber 开源
-- [cortex](https://github.com/cortexproject/cortex): A horizontally scalable, highly available, multi-tenant, long term Prometheus. 和 Thanos 类似，但是 Thanos 据说更简单，因此更受欢迎些。
+- [cortex](https://github.com/cortexproject/cortex): A horizontally scalable, highly available, multi-tenant, long term Prometheus.
+  - 和 Thanos 类似，但是 Thanos 更简单，因此更受欢迎些。
+  - thanos 的作者好像之前就用过 cortex，觉得不好用，才搞的 thanos
 
 
 
