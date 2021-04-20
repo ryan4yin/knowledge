@@ -31,7 +31,7 @@ services:
       - --initial-cluster-state
       - new
       - --initial-cluster-token
-      - docker-etcd
+      - change_me_with_a_random_token
 
   node2:
     image: quay.io/coreos/etcd:v3.4.0
@@ -63,7 +63,7 @@ services:
       - --initial-cluster-state
       - new
       - --initial-cluster-token
-      - docker-etcd
+      - change_me_with_a_random_token
 
   node3:
     image: quay.io/coreos/etcd:v3.4.0
@@ -95,7 +95,7 @@ services:
       - --initial-cluster-state
       - new
       - --initial-cluster-token
-      - docker-etcd
+      - change_me_with_a_random_token
 
 volumes:
   node1-data:
