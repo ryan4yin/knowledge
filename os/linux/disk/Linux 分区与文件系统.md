@@ -7,6 +7,65 @@
 lsblk
 fdisk
 
+
+### 创建新分区
+
+在新硬盘上创建新分区只需要使用一个命令: `fdisk`，具体流程如下：
+
+```
+# 简要介绍：依次输入n、回车、p、然后一直回车、最后输入 w 就完成了
+[root@tsbweb1 data]# fdisk /dev/sdb
+欢迎使用 fdisk (util-linux 2.23.2)。
+
+更改将停留在内存中，直到您决定将更改写入磁盘。
+使用写入命令前请三思。
+
+
+命令(输入 m 获取帮助)：p
+
+磁盘 /dev/sdb：17.2 GB, 17179869184 字节，33554432 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+磁盘标签类型：dos
+磁盘标识符：0xbb986126
+
+   设备 Boot      Start         End      Blocks   Id  System
+
+命令(输入 m 获取帮助)：n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+分区号 (1-4，默认 1)：
+起始 扇区 (2048-33554431，默认为 2048)：
+将使用默认值 2048
+Last 扇区, +扇区 or +size{K,M,G} (2048-33554431，默认为 33554431)：
+将使用默认值 33554431
+分区 1 已设置为 Linux 类型，大小设为 16 GiB
+
+命令(输入 m 获取帮助)：w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+正在同步磁盘。
+```
+
+完成后再使用 `lsblk` 查看：
+
+```
+# 变成 20G 了别在意...因为运行的机器不一样...
+[ec2-user@xxx ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sdb       259:0    0  20G  0 disk
+└─sdb1   259:4    0  20G  0 part
+nvme0n1       259:1    0   8G  0 disk
+├─nvme0n1p1   259:2    0   8G  0 part /
+└─nvme0n1p128 259:3    0   1M  0 part
+```
+
+这就已经创建了一个新分区 `/dev/sdb1`，接下来还需要将它格式化为 ext4 等格式，再挂载到系统中使用。
+
 ### 磁盘分区扩容
 
 如果你的磁盘没有做分区，就是整个磁盘作为一个分区挂载的话，磁盘和分区的大小就永远一致。
@@ -107,6 +166,47 @@ xfs 文件系统的扩容命令：
 ```shell
 # sudo yum install xfsprogs
 sudo xfs_growfs -d /
+```
+
+### 挂载分区
+
+临时挂载，可以直接使用 mount/umount 命令：
+
+```shell
+mkdir /data
+# 将 /dev/sdb1 挂载为 /data 目录
+mount /dev/sdb1 /data
+
+# 卸载 /data 目录
+umount /data
+```
+
+要开机启动就挂载，则需要修改 /etc/fstab 文件，注意此文件比较核心，如果它写错了将导致无法挂载根分区，系统无法启动！
+
+对于 LVM 逻辑卷，可以直接使用如下方式挂载：
+```shell
+# 1. 查看 lv 逻辑卷的映射路径，记录下来
+df -h
+
+# 2. 设置开机自动挂载，每一列的含义：要挂载的分区设备号 	挂载点 	文件系统类型 	挂载选项 	是否备份 	是否检测
+echo "/dev/mapper/<vg-name>-<lv-name> /data ext4 defaults 1 2" >> /etc/fstab
+
+# 3. 测试设置的配置，没有任何输出就说明挂载成功，没有错误
+mount -a
+```
+
+对于**物理硬盘，「分区设备号」需要填写设备的 UUID 号**，配置方法如下：
+
+```shell
+# 查询出设备的 uuid
+$ blkid /dev/sdb1
+/dev/sdb1: UUID="0e515b28-cf80-11e9-acd6-000c29299178" TYPE="ext4" PARTUUID="c6932ee3-1ed9-4047-b5e6-ac490af39b88"
+
+# 使用上一步查询出的 uuid 进行挂载
+$ echo "UUID=0e515b28-cf80-11e9-acd6-000c29299178 /data ext4 defaults 1 2" >> /etc/fstab
+
+# 3. 测试设置的配置，没有任何输出就说明挂载成功，没有错误
+mount -a
 ```
 
 
