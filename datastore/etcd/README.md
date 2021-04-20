@@ -2,9 +2,14 @@
 
 ## 搭建 etcd 集群
 
-可以使用本文件夹中的 `docker-compose.yml` 启动一个多节点的 etcd 测试集群用于学习与测试。
-参考了 [docker_practice - Etcd 集群](https://github.com/yeasy/docker_practice/blob/master/etcd/cluster.md)
+可以使用本文件夹中的 `docker-compose.yml` 启动一个多节点的 etcd 集群，或者也可以跟随 [使用 systemd 部署三节点的 Etcd 集群](./etcd_with_systemd.md) 这篇文档使用二进制文件部署 Etcd 集群。
 
+
+```shell
+# 连上所有节点，就一定可以找到 leader
+export ENDPOINTS=http://node1:2379,http://node2:2379,http://node3:2379
+etcdctl --endpoints $ENDPOINTS endpoint status --write-out=table
+```
 
 ## 使用 etcdctl 直接修改/查看 kubernetes 数据
 
@@ -56,4 +61,26 @@ $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespace
 
 >官方文档：[etcd 3.4 - disaster recovery](https://etcd.io/docs/v3.4.0/op-guide/recovery/)
 
-待续
+如果 ETCD 集群有超过 (N-1)/2 的节点出现临时性故障，那集群将暂时不可用，直到节点个数恢复到超过 (N-1)/2.
+
+而如果有超过 (N-1)/2 的节点出现永久性故障，数据永远丢失，那集群就炸掉了，无法使用，也不可能恢复正常了。
+
+要避免出现这么悲催的事情，唯一的方法就是多备份，定期跑 snapshot 命令备份数据。
+
+这样如果集群永久性损坏，还可以通过 snapshot 将数据恢复到一个新集群上。
+
+快照的命令如下:
+
+```shell
+export ETCDCTL_API=3
+export ENDPOINT=http://127.0.0.1:2379
+
+# 在只选中一个节点时，才可以执行 snapshot 命令
+etcdctl --endpoints $ENDPOINT snapshot save snapshot.db
+# 查看备份文件的信息
+etcdctl --write-out=table snapshot status snapshot.db
+```
+
+
+
+
