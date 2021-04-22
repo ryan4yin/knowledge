@@ -182,3 +182,4 @@ systemctl list-units --type=service  # 查看所有服务
 
 - [Systemd 入门教程：命令篇 - 阮一峰](http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html)
 - [systemd.exec 中文手册](http://www.jinbuguo.com/systemd/systemd.exec.html)
+- [第十七章、認識系統服務 (daemons) - 鸟哥的 Linux 私房菜](https://linux.vbird.org/linux_basic/centos7/0560daemons.php)
