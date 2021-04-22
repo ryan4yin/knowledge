@@ -1,5 +1,11 @@
 # Linux 服务器配置
 
+待补充学习：
+
+- Linux 系统日志：https://linux.vbird.org/linux_basic/centos7/0570syslog.php
+- 
+
+
 ## 镜像源
 
 请选择对应 OS 的镜像源设置命令：
