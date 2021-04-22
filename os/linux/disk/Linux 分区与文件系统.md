@@ -228,5 +228,5 @@ mount -a
 
 ## 相关文档
 
-- [第七章、Linux 磁碟與檔案系統管理](http://linux.vbird.org/linux_basic/0230filesystem.php#disk)
+- [第七章、Linux 磁碟與檔案系統管理 - 鸟哥的 Linux 私房菜](https://linux.vbird.org/linux_basic/centos7/0230filesystem.php)
 - [Extend a Linux file system after resizing a volume - AWS EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html?icmpid=docs_ec2_console)
