@@ -221,6 +221,6 @@ $ echo "UUID=0e515b28-cf80-11e9-acd6-000c29299178 /data ext4 defaults 1 2" >> /e
 ## 相关文档
 
 - [逻辑卷管理器管理 - RedHat Docs](https://access.redhat.com/documentation/zh-cn/red_hat_enterprise_linux/7/html/logical_volume_manager_administration/lvm_overview)
-- [鸟哥的 Linux 私房菜 - 邏輯捲軸管理員 (Logical Volume Manager)](http://linux.vbird.org/linux_basic_train/unit14.php#14.2)
+- [鸟哥的 Linux 私房菜 - 邏輯捲軸管理員 (Logical Volume Manager)](https://linux.vbird.org/linux_basic/centos7/0420quota.php#lvm)
 - [添加新硬盘，LVM在线扩容](https://www.jianshu.com/p/5fd48d6d87a9)
 - [Linux添加新硬盘并挂载(mount)到目录下](https://blog.csdn.net/qq6759/article/details/85319274)
