@@ -1,15 +1,20 @@
+>个人笔记，不保证正确。
+
 ## 一、Linux 分区
 
-要对 Linux 系统进行分区，首先有两种分区方式可选：
+### 分区表（Partition tables）与分区工具
 
-- MBR，或者称做 DOS 分区表，最高只支持到 2TB 存储。
+要对 Linux 系统进行分区，首先有两种分区表可选：
+
+- MBR（Master boot record），或者称做 DOS 分区表，最高只支持到 2TB 存储，它对应 legacy BIOS 这种引导方式
   - 分区工具: fdisk
-- GPT，新型的分区表，支持超大存储空间。
-  - 分区工具: gdisk/parted
+- GPT，新型的分区表，支持超大存储空间（理论上能达到 8ZiB），它对应 UEFI 这种新型引导方式
+  - 分区工具: fdisk/parted/gdisk，fdisk 是最知名的 linux 分区工具，而 parted 是 Linux 上最早支持 GPT 分区的工具之一
+  - 因为本人对 fdisk 最熟悉，建议用 fdisk，gentoo 的安装文档也是推荐用 fdisk
 
-对于服务器而言，尤其是云服务器/虚拟机，我们很少会使用到超过 2TB 的单机存储，所以目前貌似 fdisk 仍然是系统管理员使用最多的分区工具，虚拟机最常用的分区表也仍然是 DOS 类型的分区表，而且使用的最广泛的引导方式也仍然是 bios，只有少数 KVM GPU 直通玩家才会搞 UEFI。
+对于服务器而言，尤其是云服务器/虚拟机，我们很少会使用到超过 2TB 的单机存储，所以对于云服务器的系统管理员而言，目前 fdisk 仍然是使用最多的分区工具，虚拟机最常用的分区表也仍然是 DOS 类型的分区表，使用的最广泛的引导方式也仍然是 legacy bios，只有少数 KVM GPU 直通玩家才会搞 UEFI。
 
-由于本人工作主要涉及的是云服务器，这里着重介绍的大概是 fdisk，而且也不会过多讨论如何对同一磁盘进行分区——虚拟机的磁盘本身就是虚拟的，这么做没啥意义。
+由于本人工作主要涉及的是云服务器，这里着重介绍的仍然是 fdisk，而且也不会过多讨论如何对同一磁盘进行分区——虚拟机的磁盘本身就是虚拟的，这么做没啥意义。而且另一个特点是，现在大家都是用的 SSD 了，SSD 的特性决定了，最好是不要对它进行分区。
 
 GPT 分区表，以及对同一磁盘进行分区，目前来看更适合物理机和机械硬盘，不论是个人电脑还是物理服务器，插几块 1TB-12TB 的磁盘都是很常见的。
 
@@ -230,3 +235,4 @@ mount -a
 
 - [第七章、Linux 磁碟與檔案系統管理 - 鸟哥的 Linux 私房菜](https://linux.vbird.org/linux_basic/centos7/0230filesystem.php)
 - [Extend a Linux file system after resizing a volume - AWS EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html?icmpid=docs_ec2_console)
+- [Linux Disks - Gentoo](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks)
