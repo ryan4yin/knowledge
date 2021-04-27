@@ -12,7 +12,7 @@ services:
       # 额外的 mongo 参数
       MONGODB_EXTRA_FLAGS: --wiredTigerCacheSizeGB=2
       # 为了让 mongo 在外部可用，副本集所有节点的 hostname 都得设为宿主机 IP 地址/域名
-      MONGODB_ADVERTISED_HOSTNAM: &hostname 192.168.122.1
+      MONGODB_ADVERTISED_HOSTNAME: &hostname 10.64.13.142
       MONGODB_ROOT_PASSWORD: &root_password password123
       MONGODB_REPLICA_SET_KEY: &replicaset_key replicasetkey123
     restart: always
