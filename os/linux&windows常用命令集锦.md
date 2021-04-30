@@ -5,15 +5,7 @@
 ```shell
 # 1. 后台运行命令
 nohup python xxx.py &
-# 也可以使用 tmux，tmux 提供的 session 功能比 nohup 更好用。
-# 1. 输入 `tmux` 启动一个 tmux 会话。（或者用 `tmux new -s <session-name>` 启动一个命名会话）
-# 2. 输入 `python xxx.py`，python 进程开始运行。
-# 3. 按快捷键 `ctrl+b`，然后再按一下 `d` 脱离(detatch)当前会话。此时 python 进程进入后台运行，关闭当前终端对 python 进程没有影响。
-# 4. 输入 `tmux ls` 可以查看当前正在后台运行的会话。（命名会话会显示名称，否则只显示 id）
-# 5.1 通过 `tmux attach -t <session-name/id>` 重新接入后台会话。
-# 5.2 或者通过 `tmux kill-session -t <session-name/id>` 杀死一个后台会话。
-# 详见 https://www.ruanyifeng.com/blog/2019/10/tmux.html
-# 官方文档：https://github.com/tmux/tmux/wiki/Getting-Started
+# 也可以使用 tmux，tmux 提供的 session 功能比 nohup 更好用，后面会介绍 tmux
 
 # 查找替换
 
@@ -56,6 +48,51 @@ scp -P 22 <filename> <user>@<host>:<folder-name or filename>  # 通过 scp 传�
 ## 2) 从服务器下载到本地
 ssh <user>@<host> -p 22 "tar cz <filename or foldername or glob>" | pv | tar xz  # 压缩传输
 scp -P 22 <user>@<host>:<folder-name or filename> <filename>  # 通过 scp 传输，传文件夹时记得添加 -r 参数（recursive）
+```
+
+### Tmux
+
+>参考文档：https://github.com/tmux/tmux/wiki/Getting-Started
+>参考文档：https://www.ruanyifeng.com/blog/2019/10/tmux.html
+
+1. 输入 `tmux` 启动一个 tmux 会话。（或者用 `tmux new -s <session-name>` 启动一个命名会话）
+2. 输入 `python xxx.py`，python 进程开始运行。
+3. 按快捷键 `ctrl+b`，然后再按一下 `d` 脱离(detatch)当前会话。此时 python 进程进入后台运行，关闭当前终端对 python 进程没有影响。
+4. 输入 `tmux ls` 可以查看当前正在后台运行的会话。（命名会话会显示名称，否则只显示 id）
+5. 通过 `tmux attach -t <session-name/id>` 重新接入后台会话。
+   1. 缩写 `tmux a -t <session>`
+6. 或者通过 `tmux kill-session -t <session-name/id>` 杀死一个后台会话。
+
+
+常用快捷键：
+
+```
+# prefix 表示 `ctrl`+`b`
+
+# pane 的切分与选择
+prefix "  # 在下方新建一个 pane
+prefix %  # 在右侧新建一个 pane
+prefix `方向键`  # 光标移动到指定方向的 pane 中
+
+# 在 pane 中翻页查看更前面的日志
+prefix [  # 进入翻页模式，可使用 page up/down，或者方向键来浏览 pane 的内容
+
+# （调整 pane 大小）将当前的 pane 向给定的方向扩容 5 行或者 5 列
+# 按住 ALT 时快速重复敲击「方向键」，能快速调整，否则就得从 prefix 开始重新输入
+prefix `Alt` + `方向键`
+# 将当前窗格全屏显示，第二次使用此命令，会将窗格还原
+prefix z
+
+# 交换 pane 的位置
+prefix {  # 当前窗格与上一个窗格交换位置
+prefix }  # 当前窗格与下一个窗格交换位置
+
+# session 相关操作
+prefix s  # 查看 session 列表，并通过方向键选择 session
+prefix `number`  # 通过数字标签选择 session
+
+# window 相关操作（关系：每个 session 可以包含多个 window，每个 window 里面又可以有多个 pane）
+prefix w # 通过数字标签选择 window
 ```
 
 ### 文件拷贝/同步命令 rsync
