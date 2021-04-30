@@ -74,8 +74,10 @@ prefix "  # 在下方新建一个 pane
 prefix %  # 在右侧新建一个 pane
 prefix `方向键`  # 光标移动到指定方向的 pane 中
 
-# 在 pane 中翻页查看更前面的日志
+# 使用方向键滚动窗口内容
 prefix [  # 进入翻页模式，可使用 page up/down，或者方向键来浏览 pane 的内容
+# 使用鼠标滚轮来滚动窗口内容（也可以把此命令添加到 `~/.tmux.conf` 中使它永久生效）
+prefix `:` 然后输入 `set-window-option -g mode-mouse on`
 
 # （调整 pane 大小）将当前的 pane 向给定的方向扩容 5 行或者 5 列
 # 按住 ALT 时快速重复敲击「方向键」，能快速调整，否则就得从 prefix 开始重新输入
