@@ -94,6 +94,7 @@ prefix s  # 查看 session 列表，并通过方向键选择 session
 prefix `number`  # 通过数字标签选择 session
 
 # window 相关操作（关系：每个 session 可以包含多个 window，每个 window 里面又可以有多个 pane）
+prefix c # 新建 window
 prefix w # 通过数字标签选择 window
 ```
 
