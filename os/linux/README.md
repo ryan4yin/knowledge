@@ -3,8 +3,6 @@
 待补充学习：
 
 - Linux 系统日志：https://linux.vbird.org/linux_basic/centos7/0570syslog.php
-- 
-
 
 ## 镜像源
 
