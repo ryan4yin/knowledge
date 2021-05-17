@@ -1,3 +1,19 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: home-cache-pvc
+  labels:
+    app: build-image
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    # 所有的构建任务共用此 PVC
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+---
 # 使用 Kaniko 构建容器镜像
 #
 # USAGE:
@@ -23,6 +39,13 @@ kind: WorkflowTemplate
 metadata:
   name: build-image
 spec:
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: docker-config
+    - name: home-cache
+      persistentVolumeClaim:
+        claimName: home-cache-pvc
   arguments:
     parameters:
       - name: repo  # 源码仓库
@@ -35,9 +58,6 @@ spec:
         value: Dockerfile
       - name: image  # 构建出的镜像名称
         value: registry.svc.local/ryan4yin/my-app:latest
-      - name: cache-image
-        # 注意，cache-image 不能带 tag! cache 是直接通过 hash 值来索引的！
-        value: registry.svc.local/build-cache/my-app
   entrypoint: main
   templates:
     - name: main
@@ -64,8 +84,6 @@ spec:
                 value: "{{workflow.parameters.dockerfile}}"
               - name: image
                 value: "{{workflow.parameters.image}}"
-              - name: cache-image
-                value: "{{workflow.parameters.cache-image}}"
     # build-image 作为一个通用的 template，不应该直接去引用 workflow.xxx 中的 parameters/artifacts
     # 这样做的好处是复用性强，这个 template 可以被其他 workflow 引用。
     - name: build-image
@@ -76,17 +94,14 @@ spec:
           - name: context-path
           - name: dockerfile
           - name: image
-          - name: cache-image
-      volumes:
-        - name: docker-config
-          secret:
-            secretName: docker-config
       container:
         image: gcr.io/kaniko-project/executor:v1.3.0
         # 挂载 docker credential
         volumeMounts:
           - name: docker-config
             mountPath: /kaniko/.docker/
+          - name: home-cache
+            mountPath: /home
         # 以 context 为工作目录
         workingDir: /work/{{inputs.parameters.context-path}}
         args:
@@ -99,6 +114,3 @@ spec:
           # - --skip-tls-verify-pull
           # - --registry-mirror=<xxx>.mirror.aliyuncs.com
           - --reproducible #  Strip timestamps out of the image to make it reproducible
-          # 使用镜像仓库做远程缓存仓库
-          - --cache=true
-          - --cache-repo={{inputs.parameters.cache-image}}
