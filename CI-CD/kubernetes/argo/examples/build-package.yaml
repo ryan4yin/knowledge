@@ -1,0 +1,92 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: build-package
+spec:
+  entrypoint: main
+  securityContext:
+    runAsUser: 0
+  volumes:
+    - name: ssh-id-rsa
+      secret:
+        secretName: private-git-creds
+        defaultMode: 0600
+        items:
+          - key: "ssh-private-key"
+            path: "id_rsa"
+  arguments:
+    parameters:
+      - name: src-git-url
+        value: "git@gitlab.svc.local:xxx/xxx.git"
+      - name: src-branch
+        value: "main"
+  templates:
+    # ============ 构建入口 ============
+    - name: main
+      inputs:
+        parameters:
+          - name: src-git-url
+            value: "{{workflow.parameters.src-git-url}}"
+          - name: src-branch
+            value: "{{workflow.parameters.src-branch}}"
+      dag:
+        tasks:
+          - name: build-package
+            template: build-package
+            arguments:
+              parameters:
+                - name: src-git-url
+                  value: "{{inputs.parameters.src-git-url}}"
+                - name: src-branch
+                  value: "{{inputs.parameters.src-branch}}"
+    # ==============================================================
+    - name: build-package
+      inputs:
+        parameters:
+            - name: src-git-url
+            - name: src-branch
+        artifacts:
+          # git clone => Python CI 代码
+          - name: ci-scripts
+            path: /work/ci
+            git:
+              repo: git@gitlab.svc.local:sre-team/ci-workflows.git
+              revision: 
+              usernameSecret:
+                name: private-git-creds
+                key: username
+              sshPrivateKeySecret:
+                name: private-git-creds
+                key: ssh-private-key
+              insecureIgnoreHostKey: true
+          # git clone => 项目源码
+          - name: src
+            path: /work/src
+            git:
+              repo: "{{inputs.parameters.src-git-url}}"
+              revision: "{{inputs.parameters.src-branch}}"
+              usernameSecret:
+                name: private-git-creds
+                key: username
+              sshPrivateKeySecret:
+                name: private-git-creds
+                key: ssh-private-key
+              insecureIgnoreHostKey: true
+      script:
+        image: "registry.svc.local/ci/golang:alpine"
+        volumeMounts:
+          - name: ssh-id-rsa
+            mountPath: "/tmp/ssh"
+            readOnly: true
+        command:
+          - sh
+        workingDir: /work/ci/
+        env:
+          # 使 git 默认使用注入的 ssh 私钥
+          - name: GIT_SSH_COMMAND
+            value: "ssh -i /tmp/ssh/id_rsa"
+          - name: TARGET_PROJECT_DIR
+            value: /work/src/
+        source: |
+          # test -> compile/build -> push
+          python3 xxx.py
