@@ -34,14 +34,14 @@ In order to configure the Ceph storage cluster, at least one of these local stor
 
 ```shell
 $ lsblk
-NAME                                                                                                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sr0                                                                                                   11:0    1 1024M  0 rom  
-vda                                                                                                  252:0    0   20G  0 disk 
-├─vda1                                                                                               252:1    0    1G  0 part /boot
-└─vda2                                                                                               252:2    0   19G  0 part 
-  ├─centos-root                                                                                      253:0    0   17G  0 lvm  /
-  └─centos-swap                                                                                      253:1    0    2G  0 lvm  
-vdb                                                                                                  252:16   0   20G  0 disk 
+NAME                                                MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sr0                                                 11:0  1 1024M 0 rom 
+vda                                                 252:0  0  20G 0 disk 
+├─vda1                                             252:1  0  1G 0 part /boot
+└─vda2                                             252:2  0  19G 0 part 
+ ├─centos-root                                     253:0  0  17G 0 lvm /
+ └─centos-swap                                     253:1  0  2G 0 lvm 
+vdb                                                 252:16  0  20G 0 disk 
 ```
 
 上面的 vdb 就是我新加的裸硬盘。
@@ -94,16 +94,16 @@ DashBoard 应该显示 HEALTH_OK。
 现在再查看各 worker 节点上的硬盘状态，会发现原来的裸磁盘已经被 ceph 使用了：
 
 ```shell
-$  lsblk
-NAME                                                                                                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sr0                                                                                                   11:0    1 1024M  0 rom  
-vda                                                                                                  252:0    0   20G  0 disk 
-├─vda1                                                                                               252:1    0    1G  0 part /boot
-└─vda2                                                                                               252:2    0   19G  0 part 
-  ├─centos-root                                                                                      253:0    0   17G  0 lvm  /
-  └─centos-swap                                                                                      253:1    0    2G  0 lvm  
-vdb                                                                                                  252:16   0   20G  0 disk 
-└─ceph--70212ffb--ab90--40d6--b574--3c8a3c698ea1-osd--data--7b6eafa3--a0c2--474f--a865--eb0767390c91 253:2    0   20G  0 lvm  
+$ lsblk
+NAME                                                 MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sr0                                                  11:0  1 1024M 0 rom 
+vda                                                 252:0  0  20G 0 disk 
+├─vda1                                                252:1  0  1G 0 part /boot
+└─vda2                                                252:2  0  19G 0 part 
+ ├─centos-root                                           253:0  0  17G 0 lvm /
+ └─centos-swap                                           253:1  0  2G 0 lvm 
+vdb                                                 252:16  0  20G 0 disk 
+└─ceph--70212ffb--ab90--40d6--b574--3c8a3c698ea1-osd--data--7b6eafa3--a0c2--474f--a865--eb0767390c91 253:2  0  20G 0 lvm 
 ```
 
 这是因为上面的 `cluster.yaml` 有这样一个配置项：`useAllDevices: true`，于是 rook 会自动发现并使用挂载在 node 的 `/dev` 路径下的裸硬盘（`raw disks`）.
@@ -139,7 +139,7 @@ kubectl create -f csi/rbd/storageclass.yaml
 OK，现在就可以定义 PVC+Pod 来使用这个 storageclass 了。
 
 ```shell
-cd ..  # cd 到仓库的 cluster/examples/kubernetes 文件夹中
+cd .. # cd 到仓库的 cluster/examples/kubernetes 文件夹中
 
 # 创建 mysql 的 pvc+pod
 # 需要注意的主要有 pvc 的 Capacity（容量），这里设了 20Gi
@@ -159,7 +159,7 @@ kubectl create -f wordpress.yaml
 我测试 rook-ceph 遇到的问题有：
 
 1. [node-hangs-after-reboot](https://rook.io/docs/rook/v1.4/ceph-common-issues.html#node-hangs-after-reboot): 先 drain 掉异常节点，重启节点，最后 uncordon 节点。
-   1. 文档说这个 bug 早就解决了，可能还是我内核版本太低导致的问题。
+  1. 文档说这个 bug 早就解决了，可能还是我内核版本太低导致的问题。
 
 可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一堆问题。rook-ceph 写明推荐的内核版本为 `4.17+`
 
