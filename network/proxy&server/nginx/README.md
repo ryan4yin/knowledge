@@ -23,3 +23,12 @@
 - [与上游服务器之间，保持长连接](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)：在该页面搜索 `keepalive connections` 即可找到相关信息
     1. nginx 默认使用 http1.0 与上游服务器通信，而 `keep-alive` 是 http1.1 的特性，因此要修改配置。详见上面给出的文档页。
     1. [关于 Nginx upstream keepalive 的说明](https://www.cnblogs.com/kabi/p/7123354.html)
+
+
+## 错误配置集锦
+
+### 1. `proxy_set_header Host $host` 没有放在最前面，导致无法正确路由。
+
+http 规范要求 `Host` 必须是第一个 Header，Nginx 会按顺序添加 header，所以要把 `Host` 的设置放在第一行。
+
+像 curl/requests 等工具都会自动处理这个顺序，但是 nginx 不会。
