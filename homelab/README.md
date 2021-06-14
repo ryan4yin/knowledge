@@ -3,13 +3,14 @@
 
 ## 一、树莓派4b
 
-树莓派本身安装 Raspberry Pi OS，即  raspbian 系统，然后通过社区提供的脚本安装 [OpenMediaVault](OpenMediaVault/README.md) 系统。
+树莓派本身安装 Raspberry Pi OS，即  raspbian 系统，然后通过社区提供的脚本安装 [NAS](NAS/README.md) 系统。
 
 树莓派目前所有的工作负载如下，全部使用 docker-compose 运行：
 
 1. ali-ddns: [sanjusss/aliyun-ddns](https://github.com/sanjusss/aliyun-ddns)
 2. aria2: [p3terx/aria2-pro](https://github.com/p3terx/aria2-pro) + [](https://github.com/p3terx/ariang)
 3. 监控：[netdata](https://github.com/netdata/netdata)
+    - 这玩意比较吃性能，介意的话不要装。
 4. BT 下载：[linuxserver/docker-transmission](https://github.com/linuxserver/docker-transmission)
 
 所有硬件的功耗测量结果如下：
