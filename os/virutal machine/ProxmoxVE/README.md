@@ -32,6 +32,8 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
    - 注意：需要下载带有 kvm 字样的镜像！
 4. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
    - 注意：请下载带有 openstack 和 x86_64 字样的镜像 
+5. [Amazon Linux 2 - VM Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-linux-2-virtual-machine.html#amazon-linux-2-virtual-machine-download)
+
 
 上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init/qemu-guest-agent/cloud-utils-growpart 等 cloud 相关软件。
 
@@ -176,4 +178,4 @@ qm importdisk 201 vm-201-disk-1.qcow2 local-lvm
 - [Proxmox Wiki](https://pve.proxmox.com/wiki/Main_Page)
 - [配置Cloud-Init工具 - 华为云](https://support.huaweicloud.com/usermanual-ims/ims_01_0407.html)
 - [canonical/cloud-init - github](https://github.com/canonical/cloud-init)
-
+- [Run Amazon Linux 2 as a virtual machine on premises](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-linux-2-virtual-machine.html)
