@@ -16,5 +16,59 @@ metric_relabel_config: 在指标被采集完成，还没有入库前，对指标
 
 ## PromQL
 
-待续
+
+
+### 个人常用 PromQL 集锦
+
+#### 1. Nginx(by [nginx-lua-prometheus](https://github.com/knyar/nginx-lua-prometheus))
+
+请求速率，按 host/uri/status 分类:
+
+```promql
+# full match uri
+sum by(host,uri,status)  (rate(nginx_http_requests_total{host="xxx.xxx", uri="/xxx"}[3m]))
+
+# uri prefix
+sum by(host,uri,status)  (rate(nginx_http_requests_total{host="xxx.xxx", uri=~"/prefix.+"}[3m]))
+```
+
+请求用时：
+
+```promql
+# 延时低于 0.2s 的请求数
+nginx_http_request_duration_seconds_bucket{host="xxx.xxx",le="00.200"}
+# 总的请求数
+nginx_http_request_duration_seconds_count{host="xxx.xxx"}
+
+# 延时超过 0.2s 的请求数占比
+
+```
+
+#### 2. APISIX
+
+请求速率，按 host/uri/k8s_namespace/apisix_service 分类:
+
+```promql
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix_http_status{matched_host="xxx.xxx", matched_uri=~"/prefix.+"}[3m]))
+```
+
+请求延迟(apisix 2.6+):
+```promql
+# apisix 自身的处理延迟，低于 200ms 的请求数
+apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="prod", le="200"}
+# 总数
+apisix_http_latency_count{type="request",service="<service_id>", kubernetes_namespace="prod"}
+
+# upstream 的延迟，低于 200ms 的请求数
+apisix_http_latency_bucket{type="upstream",service="<service_id>", le="200"}
+# 总数
+apisix_http_latency_count{type="upstream",service="<service_id>", kubernetes_namespace="prod"}
+```
+
+#### 3. Kubernetes
+
+```promql
+# CPU 使用率
+sum(irate(container_cpu_usage_seconds_total{namespace="istio-system", pod=~"<deployment_name>.+"}[3m])) by (namespace, pod) / (sum(container_spec_cpu_shares{namespace="istio-system", pod=~"<deployment_name>.+"}) by(namespace, pod) / 1024)
+```
 
