@@ -65,10 +65,23 @@ apisix_http_latency_bucket{type="upstream",service="<service_id>", le="200"}
 apisix_http_latency_count{type="upstream",service="<service_id>", kubernetes_namespace="prod"}
 ```
 
-#### 3. Kubernetes
+
+#### 3. Istio
+
+
+```promql
+# istio http 状态指标查询
+sum by (destination_version, destination_service_name, namespace, response_code) (rate(istio_requests_total{destination_service_name="xxx", namespace="default"}[1m]))
+```
+
+
+#### 4. Kubernetes
 
 ```promql
 # CPU 使用率
 sum(irate(container_cpu_usage_seconds_total{namespace="istio-system", pod=~"<deployment_name>.+"}[3m])) by (namespace, pod) / (sum(container_spec_cpu_shares{namespace="istio-system", pod=~"<deployment_name>.+"}) by(namespace, pod) / 1024)
 ```
+
+
+
 
