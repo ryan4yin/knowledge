@@ -14,6 +14,8 @@ Pod 的 IP 可能会随着 Pod 的重建而变动，但 Service 的 IP 是稳定
 1. ipvs 模式（最新、性能与负载均衡兼得）：可通过 `--ipvs-scheduler` 指定负载均衡算法，有多种算法可选，详见 [ipvs-based-in-cluster-load-balancing](https://kubernetes.io/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/)
     - 最推荐的方案，性能最高，而且支持更复杂的负载均衡策略。
     - ipvs 模式下，默认的负载均衡算法是：round robin（rr, 轮询调度）
+    - ipvs 模式底层用的是 IPVS NAT 模式进行 service 端口映射
+      - 这种模式下，被访问的服务看到的 srcAddr 仍然是客户端 ip，而不是 service 的 vip. 详见 [ipvs 的几种模式](https://www.cnblogs.com/skyflask/p/7500899.html)
 
 
 ## Service 的分类
