@@ -1,7 +1,6 @@
 # Docker
 
 - [docker_practice](https://github.com/yeasy/docker_practice): 最好的中文 docker 教程
-- [Rancher 文档 - 主机调优、修改 apt 镜像源、安装 docker](https://docs.rancher.cn/)
 
 ## docker-compose
 
