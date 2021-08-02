@@ -1,3 +1,159 @@
+# Linux 参数调优及说明
+
+为了让应用程序能发挥出最高的效率，我们经常需要调整一部分 Linux 系统参数。
+或者是通过提高内存使用率来提升性能，或者是提升 TCP 连接数以提升网络性能，等等。
+
+Linux 系统参数的修改主要包含两个部分：
+
+1. `ulimit`：linux shell 的内建命令，它具有一套参数集，用于对 shell进程 及其 子进程 进行 资源限制。（退出 shell 后失效）
+    - 例如用户同时运行了两个shell终端进程，只在其中一个环境中执行了ulimit – s 100，则该 shell 进程里创建文件的大小会有相应的限制，而另一个 shell 终端包括其上运行的子程序都不会受其影响。
+      因此 docker-compose.yml 中可以直接设定 ulimit 参数。因为这个参数是 per-process 的。
+    - `docker-compose.yaml` 中有一套完整的参数用于控制 ulimit 限制。
+2. `sysctl`：临时修改整个系统的内核参数（重启后失效）
+    - 另外 linux 还有一个 /proc 文件系统，也是 Linux 内核提供的，用于临时查看/修改内核参数的机制，可通过修改文件内容临时修改内核参数。它和 sysctl 功能基本一致。
+    - docker 和宿主机共用内核，因此直接修改宿主机的 sysctl 参数，在容器内也会生效。
+    - docker-compose 只支持设置一部分 sysctl 参数。所有支持的参数见 [Docker - Configure namespaced kernel parameters (sysctls) at runtime](https://docs.docker.com/engine/reference/commandline/run/#configure-namespaced-kernel-parameters-sysctls-at-runtime) 和 [docker-compose - sysctls](https://docs.docker.com/compose/compose-file/#sysctls)
+
+上述两个命令都是临时修改，系统重启后又需要重新设置。要想做到永久修改，需要修改它们对应的默认配置文件：
+
+1. `/etc/security/limits.conf`: ulimit 的默认配置
+2. `/etc/sysctl.conf`: sysctl 的默认配置
+
+关于这两个配置的详细说明，参见 [ulimit、limits.conf、sysctl和proc文件系统](https://www.jianshu.com/p/20a2dd80cbad)
+
+对系统参数最敏感的，应该是 数据库/缓存/搜索引擎 这些应用。
+具体而言，不同的服务器/应用对系统参数的要求也不尽相同，需要具体环境具体分析。
+
+
+### 一、增加 TCP 连接数
+
+虽说具体的参数配置需要具体情况具体分析，但是有一项配置是肯定要设的，那就是 TCP 连接数。
+
+几乎所有的服务器都是依赖网络提供服务的，绝大多数程序又是使用 TCP 协议。而 Linux 目前默认的配置（打开的文件描述符上限才 1024），完全不够用。
+
+因此我们修改下基础镜像的这个参数，修改 `/etc/security/limits.conf` 文件末尾的这几个参数：
+
+```conf
+# 打开文件描述符的最大数目（linux 中一切皆文件，连接也是一个被打开的文件）
+# 对应 ulimit -n 655350
+root  soft  nofile  655350
+root  hard  nofile  655350  
+```
+
+以及 `/etc/sysctl.conf` 中的如下参数（或者直接在末尾添加也行）：
+
+```
+# 每一个端口最大的监听队列的长度,默认值为 128，增大它通常对服务器网络性能能有明显提升
+net.core.somaxconn=32768
+# 只要内存还没用尽，就不使用 swap 交换空间
+vm.swappiness = 0
+```
+
+
+
+##  二、其他内核参数调优（sysctl）
+
+
+针对 Kubernetes 节点的通用参数调优：
+```shell
+echo "
+net.bridge.bridge-nf-call-ip6tables=1
+net.bridge.bridge-nf-call-iptables=1
+# 每一个端口最大的监听队列的长度,默认值为128
+net.core.somaxconn=32768
+net.ipv4.ip_forward=1
+net.ipv4.conf.all.forwarding=1
+net.ipv4.neigh.default.gc_thresh1=4096
+net.ipv4.neigh.default.gc_thresh2=6144
+net.ipv4.neigh.default.gc_thresh3=8192
+net.ipv4.neigh.default.gc_interval=60
+net.ipv4.neigh.default.gc_stale_time=120
+
+# 参考 https://github.com/prometheus/node_exporter#disabled-by-default
+kernel.perf_event_paranoid=-1
+
+#sysctls for k8s node config
+net.ipv4.tcp_slow_start_after_idle=0
+net.core.rmem_max=16777216
+fs.inotify.max_user_watches=524288
+kernel.softlockup_all_cpu_backtrace=1
+
+kernel.softlockup_panic=0
+
+kernel.watchdog_thresh=30
+fs.file-max=2097152
+fs.inotify.max_user_instances=8192
+fs.inotify.max_queued_events=16384
+vm.max_map_count=262144
+fs.may_detach_mounts=1
+# linux 内核从网卡中读取报文(packets，OSI 第几层的 packets? 还不清楚)的最大队列长度，超过这个数会丢弃前面读取的 packets.
+net.core.netdev_max_backlog=16384
+# TCP三次握手建立阶段接收 SYN 请求队列的最大长度,默认为 1024
+net.ipv4.tcp_max_syn_backlog=8096
+
+# TCP 读取缓存(用于TCP接收滑动窗口)的最小值、默认值、最大值
+# 缓存设得高，能显著提升性能，但是相对的 GC 会造成延迟升高。这个参数设置的是否合理，就看延迟和性能是否达成平衡。
+# cloudflare uses this for balancing latency and throughput https://blog.cloudflare.com/the-story-of-one-latency-spike/
+net.ipv4.tcp_rmem=4096 12582912 16777216
+# TCP 写入缓存的最小值、默认值、最大值
+net.ipv4.tcp_wmem=4096 12582912 16777216
+net.core.wmem_max=16777216
+
+net.ipv6.conf.all.disable_ipv6=1
+net.ipv6.conf.default.disable_ipv6=1
+net.ipv6.conf.lo.disable_ipv6=1
+
+kernel.yama.ptrace_scope=0
+# 只要内存还没用尽，就不使用 swap 交换空间
+vm.swappiness=0
+
+# 可以控制core文件的文件名中是否添加pid作为扩展。
+kernel.core_uses_pid=1
+
+# Do not accept source routing
+net.ipv4.conf.default.accept_source_route=0
+net.ipv4.conf.all.accept_source_route=0
+
+# Promote secondary addresses when the primary address is removed
+net.ipv4.conf.default.promote_secondaries=1
+net.ipv4.conf.all.promote_secondaries=1
+
+# Enable hard and soft link protection
+fs.protected_hardlinks=1
+fs.protected_symlinks=1
+
+# 源路由验证
+# see details in https://help.aliyun.com/knowledge_detail/39428.html
+net.ipv4.conf.all.rp_filter=0
+net.ipv4.conf.default.rp_filter=0
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_announce=2
+net.ipv4.conf.all.arp_announce=2
+
+# see details in https://help.aliyun.com/knowledge_detail/41334.html
+# 操作系统允许 TIME-WAIT 套接字数量的最大值,默认为 180000
+net.ipv4.tcp_max_tw_buckets=5000
+net.ipv4.tcp_syncookies=1
+# 当服务器主动关闭连接时，socket保持在FIN-WAIT-2状态的最大时间
+net.ipv4.tcp_fin_timeout=30
+net.ipv4.tcp_synack_retries=2
+kernel.sysrq=1
+" >> /etc/sysctl.conf
+```
+
+
+
+## 参考
+
+- [Linux 系统参数调整：ulimit 与 sysctl](https://www.cnblogs.com/kirito-c/p/12254664.html)
+- [ulimit、limits.conf、sysctl和proc文件系统](https://www.jianshu.com/p/20a2dd80cbad)
+- [一台机器最多能撑多少个TCP连接? 今天掰扯清楚！](https://zhuanlan.zhihu.com/p/290651392)
+
+- [如何对Linux内核参数进行优化？](https://www.jianshu.com/p/8f836aff4e71)
+- [最佳实践 - 主机 OS 调优](https://docs.rancher.cn/docs/rancher2/best-practices/optimize/os/_index)
+- [How Netflix tunes Ubuntu on EC2](https://ubuntu.com/blog/how-netflix-tunes-ubuntu-on-ec2)
+- [SLES 11/12: Network, CPU Tuning and Optimization – Part 2](https://www.suse.com/c/sles-1112-network-cpu-tuning-optimization-part-2/)
+- <https://sysctl-explorer.net/>
 
 
 - [极客时间《Linux 性能优化实战》案例 - Github](https://github.com/feiskyer/linux-perf-examples)
