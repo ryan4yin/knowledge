@@ -33,6 +33,51 @@ kubectl delete pods <pod> --grace-period=0 --force
 
 大致总结一下，主要原因来自 docker 18.06 以及 kubernetes 的 docker-shim 运行时的底层逻辑，已经在新版本被修复了。
 
+### initContainers 不断 restart，但是 Containers 却都显示已 ready
+
+Kubernetes 应该确保所有 initContainers 都 Completed，然后才能启动 Containers.
+
+但是我们发现有一个节点上，所有包含 initContainers 的 Pod，状态全都是 `Init:CrashLoopBackOff` 或者 `Init:Error`.
+
+而且进一步 `kubectl describe po` 查看细节，发现 initContainer 的状态为:
+
+```
+...
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    2
+      Started:      Tue, 03 Aug 2021 06:02:42 +0000
+      Finished:     Tue, 03 Aug 2021 06:02:42 +0000
+    Ready:          False
+    Restart Count:  67
+...
+```
+
+而 Containers 的状态居然是 ready:
+
+```
+...
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 03 Aug 2021 00:35:30 +0000
+    Ready:          True
+    Restart Count:  0
+...
+```
+
+initContainers 还未运行成功，而 Containers 却 Ready 了，非常疑惑。
+
+仔细想了下，早上因为磁盘余量告警，有手动运行过 `docker system prune` 命令，那么问题可能就是这条命令清理掉了已经 exited 的 initContainers 容器，导致 k8s 故障，不断尝试重启该容器。
+
+网上一搜确实有相关的信息：
+
+- https://stackoverflow.com/questions/62333064/cant-delete-exited-init-container
+- https://github.com/kubernetes/kubernetes/issues/62362
+
+结论：使用外部的垃圾清理命令可能导致 k8s 行为异常。
+
 ## 节点常见错误
 
 1.  [DiskPressure](https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/#node-conditions)：节点的可用空间不足。（通过`df -h` 查看，保证可用空间不小于 15%）
