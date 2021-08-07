@@ -31,7 +31,7 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
 3. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
    - 注意：需要下载带有 kvm 字样的镜像！
 4. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
-   - 注意：请下载带有 openstack 和 x86_64 字样的镜像 
+   - 注意：请下载带有 x86_64 和 NoCloud/OpenStack 字样的镜像 
 5. [Amazon Linux 2 - VM Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-linux-2-virtual-machine.html#amazon-linux-2-virtual-machine-download)
 
 
