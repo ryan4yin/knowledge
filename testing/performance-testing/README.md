@@ -107,10 +107,18 @@
 4. 可能是应用本身的性能问题，查看应用日志与源码。
 5. 如果还是没找到瓶颈，考虑是否是服务器/网络/容器集群配置不当。
 
-## 工具
+## 性能测试工具
 
-- [JMeter](https://github.com/apache/jmeter)
-- [Locust](https://github.com/locustio/locust)
+- 可编程的性能测试工具
+  - [Locust](https://github.com/locustio/locust): 使用 python 编写测试脚本，非常适合编写复杂的链路压测。
+  - [grafana/k6](https://github.com/grafana/k6): grafana 开源的性能测试工具，很受欢迎，生态也很好。仅支持使用 js 编写测试脚本。而且官方有提供工具把 har/jmeter/postman 文件翻译成 k6 脚本。
+  - [wrk](https://github.com/wg/wrk): 压力测试的不二之选，能够使用单机生成非常大的压力，而且还支持使用 lua 编写压测脚本。
+- 其他工具：
+  - [JMeter](https://github.com/apache/jmeter): 貌似是 java 界最流行的性能测试工具
+  - [ab](https://httpd.apache.org/docs/2.4/programs/ab.html): apache server 附带的性能测试工具，历史悠久。但是它是单线程的，没有 wrk 那么强悍，也就不适合用于压力测试。
+  - [siege](https://github.com/JoeDog/siege): 又一款 c 语言实现的压测工具，暂时不清楚和 wrk 有多大区别
+  - [vegeta](https://github.com/tsenart/vegeta): 这玩意在 github 上 star 非常高，go 写的，但是用起来感觉数据不太对劲
+  - [hey](https://github.com/rakyll/hey): 又一款 go 语言实现的压测工具，自称是 ab 的替代品，使用也和 ab 一样简单。k9s 就集成了它。但是它的准确性也有待考证。
 
 ## 参考
 
