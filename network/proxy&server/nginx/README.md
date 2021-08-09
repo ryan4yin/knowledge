@@ -27,8 +27,34 @@
 
 ## 错误配置集锦
 
-### 1. `proxy_set_header Host $host` 没有放在最前面，导致无法正确路由。
+### `proxy_set_header` 不生效的问题
 
-http 规范要求 `Host` 必须是第一个 Header，Nginx 会按顺序添加 header，所以要把 `Host` 的设置放在第一行。
+最近在写 nginx 配置时遇到个问题：如下配置中，`server` 块中定义的所有 `proxy_set_header` 属性都不会生效：
 
-像 curl/requests 等工具都会自动处理这个顺序，但是 nginx 不会。
+```
+server{
+    server_name 192.168.31.123:80;
+    proxy_set_header   Host             $host;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    location / {
+            proxy_pass http://xxx;
+    }
+
+    # ^~ 开头对 URL 路径进行前缀匹配，并优先于正则匹配。
+    location ^~ /ws
+    {
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Upgrade $http_upgrade;
+
+        proxy_pass http://xxx;
+    }
+}
+```
+
+查看官方文档 [proxy_set_header - nginx docs](http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header)，发现它明确提到，只有在当前 block 中不存在 `proxy_set_header` 的情况下，才会继承上层的 `proxy_set_header` 配置。
+
+上面的 `location ^~ /ws` 块包含了 `proxy_set_header`，导致 `server` 块中的 `proxy_set_header` 失效！
+
+因此正确的写法是，应该把外部的 `proxy_set_header` 配置拷贝到 `location ^~ /ws` 块中
