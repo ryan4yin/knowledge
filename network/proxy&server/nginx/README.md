@@ -19,6 +19,7 @@
 
 >HTTP/2 没有 keep-alive 的概念，它通过多路复用等手段复用 TCP 连接，TCP 连接的长短不在 HTTP 层控制了（个人理解，不一定正确）。
 
+- [keepalive in upstream layer - nginx admin's handbook](https://github.com/trimstray/nginx-admins-handbook/blob/master/doc/NGINX_BASICS.md#upstream-layer)
 - [ nginx反向代理时保持长连接](https://www.cnblogs.com/liuxia912/p/11075630.html)
 - [与上游服务器之间，保持长连接](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)：在该页面搜索 `keepalive connections` 即可找到相关信息
     1. nginx 默认使用 http1.0 与上游服务器通信，而 `keep-alive` 是 http1.1 的特性，因此要修改配置。详见上面给出的文档页。
@@ -27,7 +28,7 @@
 
 ## 错误配置集锦
 
-### `proxy_set_header` 不生效的问题
+### `proxy_set_header` 和 `add_header` 不生效的问题
 
 最近在写 nginx 配置时遇到个问题：如下配置中，`server` 块中定义的所有 `proxy_set_header` 属性都不会生效：
 
@@ -58,3 +59,5 @@ server{
 上面的 `location ^~ /ws` 块包含了 `proxy_set_header`，导致 `server` 块中的 `proxy_set_header` 失效！
 
 因此正确的写法是，应该把外部的 `proxy_set_header` 配置拷贝到 `location ^~ /ws` 块中
+
+这里还有更详细的论述：[Set the HTTP headers with `add_header` and `proxy_*_header` directives properly](https://github.com/trimstray/nginx-admins-handbook/blob/master/doc/RULES.md#beginner-set-the-http-headers-with-add_header-and-proxy__header-directives-properly)
