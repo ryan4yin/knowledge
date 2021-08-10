@@ -37,11 +37,11 @@ tcp流水线技术中，分组重传只有两种可能：
 
 断开连接中比较特殊的一个状态是 TIME_WAIT。
 
-客户端在断开连接后会进入 TIME_WAIT 阶段，等待 2msl 后才进入 CLOSED 状态。
+TCP 连接中主动断开连接的一方（即最先发送 FIN 的一方），会进入 TIME_WAIT 阶段，等待 2msl 后才进入 CLOSED 状态。
 
 MSL 即最大报文段的寿命，在 Linux 中硬编码了它的值为 60HZ（差不多为 60s，极端情况下用时可能会不精确，在 52.5s - 112.5s 之间波动）：
 ```
-# 允许重用 TIME_WAIT 状态的连接
+# 允许重用 TIME_WAIT 状态的连接，具体原理还不是很清楚，但是肯定还是得重建 tcp 连接吧？
 net.ipv4.tcp_tw_reuse = 1
 define TCP_TIMEWAIT_LEN (60HZ) / how long to wait to destroy TIME-WAIT
 ```
