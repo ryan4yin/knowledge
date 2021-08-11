@@ -83,12 +83,12 @@ cloud-localds seed.iso user-data --network-config network-config
 
 ```shell
 virt-install --virt-type kvm \
-  --name opensuse15-2 \
-  --vcpus 2 --memory 2048 \
-  --disk opensuse15.2-openstack.qcow2,device=disk,bus=virtio \
-  --disk seed.iso,device=cdrom \
+  --name k8s-master-0 \
+  --vcpus 2 --memory 3072 \
+  --disk k8s-master-0.qcow2,device=disk,bus=virtio \
+  --disk ../vm-seeds/160-seed-k8s-master-0.iso,device=cdrom \
   --os-type linux \
-  --os-variant opensuse15.2 \
+  --os-variant opensuse15.3 \
   --network network=default,model=virtio \
   --graphics vnc \
   --import
