@@ -1,5 +1,5 @@
 
-需要提前安装好 JDK8，可参考 [java 环境安装说明](/programming-language/java/README.md)。
+需要提前安装好 JDK8，可参考 [java 环境安装说明](/pl/java/README.md)。
 **注意一定要使用 JDK8，不要用其他版本的 JDK!!!**
 
 ## 概念介绍
@@ -22,7 +22,7 @@ keytool -genkeypair -v -keyalg RSA -keysize 2048 -validity 3650 -alias my-app-ke
 # 然后在交互式地输入名称、城市省份等信息，以及密钥库密码、密钥本身的密码，就生成成功了。
 ```
 
-查看密钥对信息，获得证书指纹（应用市场和某些第三方 API 需要验证这个 APP 的证书签名）。
+查看密钥对信息，获得证书指纹（应用市场和某些第三方 API 需要验证这个 APP 的证书签名，指的就是这个指纹）。
 
 ```shell
 keytool -list -v -keystore my-keystore.jks  
