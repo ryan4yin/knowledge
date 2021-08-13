@@ -80,16 +80,15 @@ description:    Universal TUN/TAP device driver
 一个简单的 C 程序示例如下，它每次收到数据后，都只单纯地打印一下收到的字节数：
 
 ```c
-#include <net/if.h>
+#include <linux/if.h>
 #include <linux/if_tun.h>
 
 #include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #include <fcntl.h>
 #include <string.h>
 
+#include <unistd.h>
 #include<stdlib.h>
 #include<stdio.h>
 
@@ -248,6 +247,12 @@ Read 84 bytes from tun/tap device
     172.21.22.23 > 172.21.22.26: ICMP echo request, id 11, seq 4, length 64
 ```
 
+更复杂的 tun 程序，可以参考
+
+- [simpletun](https://github.com/gregnietsky/simpletun)
+- [marywangran/simpletun](https://github.com/marywangran/simpletun)
+- [tun go 语言版](https://github.com/marywangran/gotun-tunnel/blob/main/tun/tun.go)
+
 #### TUN 与 TAP 的区别
 
 TUN 和 TAP 的区别在于工作的网络层次不同，用户程序通过 TUN 设备只能读写网络层的 IP 数据包，而 TAP 设备则支持读写链路层的数据包（通常是以太网数据包，带有 Ethernet headers）。
@@ -286,38 +291,44 @@ Linux Bridge 是工作在链路层的网络交换机，由 Linux 内核模块 `b
 
 #### 虚拟机场景（桥接模式）
 
-虚拟机通过tun/tap或者其它类似的虚拟网络设备，将虚拟机内的网卡同 br0 连接起来，这样就达到和真实交换机一样的效果。
+以 qemu-kvm 为例，在虚拟机的桥接模式下，qemu-kvm 会为每个虚拟机创建一个 tun/tap 虚拟网卡并连接到 br0 网桥。
+虚拟机内部的网络接口 `eth0` 是 qemu-kvm 软件模拟的，实际上虚拟机内网络数据的收发都会被 qemu-kvm 转换成对 `/dev/net/tun` 的读写。
 
-虚拟机发出去的数据包先到达 br0，然后由 br0 交给 eth0 发送出去，数据包都不需要经过宿主机的协议栈，效率高。
+以发送数据为例，整个流程如下：
+
+- 虚拟机发出去的数据包先到达 qemu-kvm 程序
+- 数据被用户层程序 qemu-kvm 写入到 `/dev/net/tun`，到达 tap 设备
+- tap 设备把数据传送到 br0 网桥
+- br0 把数据交给 eth0 发送出去
+
+整个流程跑完，数据包都不需要经过宿主机的协议栈，效率高。
 
 ```
-+----------------------------------------------------------------+-----------------------------------------+-----------------------------------------+
-|                          Host                                  |              VirtualMachine1            |              VirtualMachine2            |
-|                                                                |                                         |                                         |
-|       +------------------------------------------------+       |       +-------------------------+       |       +-------------------------+       |
-|       |             Network Protocol Stack             |       |       |  Network Protocol Stack |       |       |  Network Protocol Stack |       |
-|       +------------------------------------------------+       |       +-------------------------+       |       +-------------------------+       |
-|                          ↑                                     |                   ↑                     |                    ↑                    |
-|..........................|.....................................|...................|.....................|....................|....................|
-|                          ↓                                     |                   ↓                     |                    ↓                    |
-|                     +--------+                                 |               +-------+                 |                +-------+                |
-|                     | .3.101 |                                 |               | .3.102|                 |                | .3.103|                |
-|        +------+     +--------+     +-------+                   |               +-------+                 |                +-------+                |
-|        | eth0 |<--->|   br0  |<--->|tun/tap|                   |               | eth0  |                 |                | eth0  |                |
-|        +------+     +--------+     +-------+                   |               +-------+                 |                +-------+                |
-|            ↑             ↑             ↑                       |                   ↑                     |                    ↑                    |
-|            |             |             +-------------------------------------------+                     |                    |                    |
-|            |             ↓                                     |                                         |                    |                    |
-|            |         +-------+                                 |                                         |                    |                    |
-|            |         |tun/tap|                                 |                                         |                    |                    |
-|            |         +-------+                                 |                                         |                    |                    |
-|            |             ↑                                     |                                         |                    |                    |
-|            |             +-------------------------------------------------------------------------------|--------------------+                    |
-|            |                                                   |                                         |                                         |
-|            |                                                   |                                         |                                         |
-|            |                                                   |                                         |                                         |
-+------------|---------------------------------------------------+-----------------------------------------+-----------------------------------------+
-             ↓
++------------------------------------------------+-----------------------------------+-----------------------------------+
+|                       Host                     |           VirtualMachine1         |           VirtualMachine2         |
+|                                                |                                   |                                   |
+|    +--------------------------------------+    |    +-------------------------+    |    +-------------------------+    |
+|    |         Network Protocol Stack       |    |    |  Network Protocol Stack |    |    |  Network Protocol Stack |    |
+|    +--------------------------------------+    |    +-------------------------+    |    +-------------------------+    |
+|                       ↑                        |                ↑                  |                 ↑                 |
+|.......................|........................|................|..................|.................|.................|
+|                       ↓                        |                ↓                  |                 ↓                 |
+|                  +--------+                    |            +-------+              |             +-------+             |
+|                  | .3.101 |                    |            | .3.102|              |             | .3.103|             |
+|     +------+     +--------+     +-------+      |            +-------+              |             +-------+             |
+|     | eth0 |<--->|   br0  |<--->|tun/tap|      |            | eth0  |              |             | eth0  |             |
+|     +------+     +--------+     +-------+      |            +-------+              |             +-------+             |
+|         ↑             ↑             ↑      +--------+           ↑                  |                 ↑                 |
+|         |             |             +------|qemu-kvm|-----------+                  |                 |                 |
+|         |             ↓                    +--------+                              |                 |                 |
+|         |         +-------+                    |                                   |                 |                 |
+|         |         |tun/tap|                    |                                   |                 |                 |
+|         |         +-------+                    |                                   |                 |                 |
+|         |             ↑                        |            +--------+             |                 |                 |
+|         |             +-------------------------------------|qemu-kvm|-------------|-----------------+                 |
+|         |                                      |            +--------+             |                                   |
+|         |                                      |                                   |                                   |
++---------|--------------------------------------+-----------------------------------+----------------------------------
      Physical Network  (192.168.3.0/24)
 ```
 
@@ -332,32 +343,31 @@ Linux Bridge 是工作在链路层的网络交换机，由 Linux 内核模块 `b
 示意图如下：
 
 ```
-+----------------------------------------------------------------+-----------------------------------------+-----------------------------------------+
-|                          Host                                  |              Container 1                |              Container 2                |
-|                                                                |                                         |                                         |
-|       +------------------------------------------------+       |       +-------------------------+       |       +-------------------------+       |
-|       |             Network Protocol Stack             |       |       |  Network Protocol Stack |       |       |  Network Protocol Stack |       |
-|       +------------------------------------------------+       |       +-------------------------+       |       +-------------------------+       |
-|            ↑             ↑                                     |                   ↑                     |                    ↑                    |
-|............|.............|.....................................|...................|.....................|....................|....................|
-|            ↓             ↓                                     |                   ↓                     |                    ↓                    |
-|        +------+     +--------+                                 |               +-------+                 |                +-------+                |
-|        |.3.101|     |  .9.1  |                                 |               |  .9.2 |                 |                |  .9.3 |                |
-|        +------+     +--------+     +-------+                   |               +-------+                 |                +-------+                |
-|        | eth0 |     |   br0  |<--->|  veth |                   |               | eth0  |                 |                | eth0  |                |
-|        +------+     +--------+     +-------+                   |               +-------+                 |                +-------+                |
-|            ↑             ↑             ↑                       |                   ↑                     |                    ↑                    |
-|            |             |             +-------------------------------------------+                     |                    |                    |
-|            |             ↓                                     |                                         |                    |                    |
-|            |         +-------+                                 |                                         |                    |                    |
-|            |         |  veth |                                 |                                         |                    |                    |
-|            |         +-------+                                 |                                         |                    |                    |
-|            |             ↑                                     |                                         |                    |                    |
-|            |             +-------------------------------------------------------------------------------|--------------------+                    |
-|            |                                                   |                                         |                                         |
-|            |                                                   |                                         |                                         |
-|            |                                                   |                                         |                                         |
-+------------|---------------------------------------------------+-----------------------------------------+-----------------------------------------+
++-----------------------------------------------+-----------------------------------+-----------------------------------+
+|                      Host                     |           Container 1             |           Container 2             |
+|                                               |                                   |                                   |
+|   +---------------------------------------+   |    +-------------------------+    |    +-------------------------+    |
+|   |       Network Protocol Stack          |   |    |  Network Protocol Stack |    |    |  Network Protocol Stack |    |
+|   +---------------------------------------+   |    +-------------------------+    |    +-------------------------+    |
+|        ↑             ↑                        |                ↑                  |                 ↑                 |
+|........|.............|........................|................|..................|.................|.................|
+|        ↓             ↓                        |                ↓                  |                 ↓                 |
+|    +------+     +--------+                    |          +-------------+          |           +-------------+         |
+|    |.3.101|     |  .9.1  |                    |          |    .9.2     |          |           |    .9.3     |         |
+|    +------+     +--------+     +-------+      |          +-------------+          |           +-------------+         |
+|    | eth0 |     |   br0  |<--->|  veth |      |          | eth0(veth)  |          |           | eth0(veth)  |         |
+|    +------+     +--------+     +-------+      |          +-------------+          |           +-------------+         |
+|        ↑             ↑             ↑          |                ↑                  |                 ↑                 |
+|        |             |             +---------------------------+                  |                 |                 |
+|        |             ↓                        |                                   |                 |                 |
+|        |         +-------+                    |                                   |                 |                 |
+|        |         |  veth |                    |                                   |                 |                 |
+|        |         +-------+                    |                                   |                 |                 |
+|        |             ↑                        |                                   |                 |                 |
+|        |             +------------------------------------------------------------|-----------------+                 |
+|        |                                      |                                   |                                   |
+|        |                                      |                                   |                                   |
++--------|--------------------------------------+-----------------------------------+-----------------------------------+
              ↓
      Physical Network  (192.168.3.0/24)
 ```
@@ -388,6 +398,233 @@ bridge name     bridge id               STP enabled     interfaces
 docker0         8000.0242fce99ef5       no              vethea4171a
 ```
 
+
+## 其他虚拟网络接口的类型
+
+除了上面介绍的这些，Linux 还支持 VLAN、VXLAN 等类型的虚拟网络接口，可通过 `ip link help` 查看，因为用的不多，这里就不介绍了。
+
+
+## 虚拟网络接口的速率
+
+Loopback 和本章讲到的其他虚拟网络接口一样，都是一种软件模拟的网络设备。
+他们的速率是不是也像物理链路一样，存在链路层（比如以太网）的带宽限制呢？
+
+比如目前很多老旧的网络设备，都是只支持到百兆以太网，这就决定了它的带宽上限。
+即使是较新的设备，目前基本也都只支持到千兆，也就是 1GbE，那本文提到的虚拟网络接口单纯在本机内部通信，是否也存在这样的制约呢？是否也只能跑到 1GbE?
+
+使用 ethtool 检查：
+
+```
+# docker 容器的 veth 接口速率
+> ethtool vethe899841 | grep Speed
+        Speed: 10000Mb/s
+
+# 网桥看起来没有固定的速率
+> ethtool docker0 | grep Speed
+        Speed: Unknown!
+
+# tun0 设备的默认速率貌似是 10MB/s ?
+> ethtool tun0 | grep Speed
+        Speed: 10Mb/s
+
+# 此外 ethtool 无法检查 lo 以及 wifi 的速率
+```
+
+### 网络性能实测
+
+接下来实际测试一下，先给出机器参数：
+
+```
+❯ cat /etc/os-release 
+NAME="openSUSE Tumbleweed"
+# VERSION="20210810"
+...
+
+❯ uname -a
+Linux legion-book 5.13.8-1-default #1 SMP Thu Aug 5 08:56:22 UTC 2021 (967c6a8) x86_64 x86_64 x86_64 GNU/Linux
+
+
+❯ lscpu
+Architecture:                    x86_64
+CPU(s):                          16
+Model name:                      AMD Ryzen 7 5800H with Radeon Graphics
+...
+
+❯ lsmem
+RANGE                                  SIZE  STATE REMOVABLE  BLOCK
+0x0000000000000000-0x00000000cfffffff  3.3G online       yes   0-25
+0x0000000100000000-0x000000072fffffff 24.8G online       yes 32-229
+
+Memory block size:       128M
+Total online memory:      28G
+Total offline memory:      0B
+```
+
+使用 iperf3 测试：
+
+```shell
+# 服务端
+iperf3 -s
+
+-------------
+# 客户端通过 loopback 接口访问 iperf3-server，大概 49Gbits/s
+❯ iperf3 -c 127.0.0.1
+Connecting to host 127.0.0.1, port 5201
+[  5] local 127.0.0.1 port 48656 connected to 127.0.0.1 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  4.46 GBytes  38.3 Gbits/sec    0   1.62 MBytes       
+[  5]   1.00-2.00   sec  4.61 GBytes  39.6 Gbits/sec    0   1.62 MBytes       
+[  5]   2.00-3.00   sec  5.69 GBytes  48.9 Gbits/sec    0   1.62 MBytes       
+[  5]   3.00-4.00   sec  6.11 GBytes  52.5 Gbits/sec    0   1.62 MBytes       
+[  5]   4.00-5.00   sec  6.04 GBytes  51.9 Gbits/sec    0   1.62 MBytes       
+[  5]   5.00-6.00   sec  6.05 GBytes  52.0 Gbits/sec    0   1.62 MBytes       
+[  5]   6.00-7.00   sec  6.01 GBytes  51.6 Gbits/sec    0   1.62 MBytes       
+[  5]   7.00-8.00   sec  6.05 GBytes  52.0 Gbits/sec    0   1.62 MBytes       
+[  5]   8.00-9.00   sec  6.34 GBytes  54.5 Gbits/sec    0   1.62 MBytes       
+[  5]   9.00-10.00  sec  5.91 GBytes  50.8 Gbits/sec    0   1.62 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  57.3 GBytes  49.2 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  57.3 GBytes  49.2 Gbits/sec                  receiver
+
+# 客户端通过 wlp4s0 wifi 网卡(192.168.31.228)访问 iperf3-server，实际还是走的本机，但是速度要比 loopback 快一点，可能是默认设置的问题
+❯ iperf3 -c 192.168.31.228
+Connecting to host 192.168.31.228, port 5201
+[  5] local 192.168.31.228 port 43430 connected to 192.168.31.228 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  5.12 GBytes  43.9 Gbits/sec    0   1.25 MBytes       
+[  5]   1.00-2.00   sec  5.29 GBytes  45.5 Gbits/sec    0   1.25 MBytes       
+[  5]   2.00-3.00   sec  5.92 GBytes  50.9 Gbits/sec    0   1.25 MBytes       
+[  5]   3.00-4.00   sec  6.00 GBytes  51.5 Gbits/sec    0   1.25 MBytes       
+[  5]   4.00-5.00   sec  5.98 GBytes  51.4 Gbits/sec    0   1.25 MBytes       
+[  5]   5.00-6.00   sec  6.05 GBytes  52.0 Gbits/sec    0   1.25 MBytes       
+[  5]   6.00-7.00   sec  6.16 GBytes  52.9 Gbits/sec    0   1.25 MBytes       
+[  5]   7.00-8.00   sec  6.08 GBytes  52.2 Gbits/sec    0   1.25 MBytes       
+[  5]   8.00-9.00   sec  6.00 GBytes  51.6 Gbits/sec    0   1.25 MBytes       
+[  5]   9.00-10.00  sec  6.01 GBytes  51.6 Gbits/sec    0   1.25 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  58.6 GBytes  50.3 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  58.6 GBytes  50.3 Gbits/sec                  receiver
+
+# 从容器中访问宿主机的 iperf3-server，速度几乎没区别
+❯ docker run  -it --rm --name=iperf3-server networkstatic/iperf3 -c 192.168.31.228
+Connecting to host 192.168.31.228, port 5201
+[  5] local 172.17.0.2 port 43436 connected to 192.168.31.228 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  4.49 GBytes  38.5 Gbits/sec    0    403 KBytes       
+[  5]   1.00-2.00   sec  5.31 GBytes  45.6 Gbits/sec    0    544 KBytes       
+[  5]   2.00-3.00   sec  6.14 GBytes  52.8 Gbits/sec    0    544 KBytes       
+[  5]   3.00-4.00   sec  5.85 GBytes  50.3 Gbits/sec    0    544 KBytes       
+[  5]   4.00-5.00   sec  6.14 GBytes  52.7 Gbits/sec    0    544 KBytes       
+[  5]   5.00-6.00   sec  5.99 GBytes  51.5 Gbits/sec    0    544 KBytes       
+[  5]   6.00-7.00   sec  5.86 GBytes  50.4 Gbits/sec    0    544 KBytes       
+[  5]   7.00-8.00   sec  6.05 GBytes  52.0 Gbits/sec    0    544 KBytes       
+[  5]   8.00-9.00   sec  5.99 GBytes  51.5 Gbits/sec    0    544 KBytes       
+[  5]   9.00-10.00  sec  6.12 GBytes  52.5 Gbits/sec    0    544 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  58.0 GBytes  49.8 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  58.0 GBytes  49.8 Gbits/sec                  receiver
+```
+
+把 iperf3-server 跑在容器里再测一遍：
+
+```shell
+# 在容器中启动 iperf3-server，并映射到宿主机端口 6201
+> docker run  -it --rm --name=iperf3-server -p 6201:5201 networkstatic/iperf3 -s
+
+-----------------------------
+# 测试容器之间互访的速度，ip 为 iperf3-server 的容器 ip，速度要慢一些。
+# 毕竟过了 veth -> veth -> docker0 -> veth -> veth 五层虚拟网络接口
+❯ docker run  -it --rm networkstatic/iperf3 -c 172.17.0.2
+Connecting to host 172.17.0.2, port 5201
+[  5] local 172.17.0.3 port 40776 connected to 172.17.0.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  4.74 GBytes  40.7 Gbits/sec    0    600 KBytes       
+[  5]   1.00-2.00   sec  4.48 GBytes  38.5 Gbits/sec    0    600 KBytes       
+[  5]   2.00-3.00   sec  5.38 GBytes  46.2 Gbits/sec    0    600 KBytes       
+[  5]   3.00-4.00   sec  5.39 GBytes  46.3 Gbits/sec    0    600 KBytes       
+[  5]   4.00-5.00   sec  5.42 GBytes  46.6 Gbits/sec    0    600 KBytes       
+[  5]   5.00-6.00   sec  5.39 GBytes  46.3 Gbits/sec    0    600 KBytes       
+[  5]   6.00-7.00   sec  5.38 GBytes  46.2 Gbits/sec    0    635 KBytes       
+[  5]   7.00-8.00   sec  5.37 GBytes  46.1 Gbits/sec    0    667 KBytes       
+[  5]   8.00-9.00   sec  6.01 GBytes  51.7 Gbits/sec    0    735 KBytes       
+[  5]   9.00-10.00  sec  5.74 GBytes  49.3 Gbits/sec    0    735 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  53.3 GBytes  45.8 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  53.3 GBytes  45.8 Gbits/sec                  receiver
+
+# 本机直接访问容器 ip，走的是 docker0 网桥，居然还挺快
+❯ iperf3 -c 172.17.0.2
+Connecting to host 172.17.0.2, port 5201
+[  5] local 172.17.0.1 port 56486 connected to 172.17.0.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  5.01 GBytes  43.0 Gbits/sec    0    632 KBytes       
+[  5]   1.00-2.00   sec  5.19 GBytes  44.6 Gbits/sec    0    703 KBytes       
+[  5]   2.00-3.00   sec  6.46 GBytes  55.5 Gbits/sec    0    789 KBytes       
+[  5]   3.00-4.00   sec  6.80 GBytes  58.4 Gbits/sec    0    789 KBytes       
+[  5]   4.00-5.00   sec  6.82 GBytes  58.6 Gbits/sec    0    913 KBytes       
+[  5]   5.00-6.00   sec  6.79 GBytes  58.3 Gbits/sec    0   1007 KBytes       
+[  5]   6.00-7.00   sec  6.63 GBytes  56.9 Gbits/sec    0   1.04 MBytes       
+[  5]   7.00-8.00   sec  6.75 GBytes  58.0 Gbits/sec    0   1.04 MBytes       
+[  5]   8.00-9.00   sec  6.19 GBytes  53.2 Gbits/sec    0   1.04 MBytes       
+[  5]   9.00-10.00  sec  6.55 GBytes  56.3 Gbits/sec    0   1.04 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  63.2 GBytes  54.3 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  63.2 GBytes  54.3 Gbits/sec                  receiver
+
+# 如果走本机 loopback 地址 + 容器端口映射，速度就慢了好多
+# 或许是因为用 iptables 做端口映射导致的？
+❯ iperf3 -c 127.0.0.1 -p 6201
+Connecting to host 127.0.0.1, port 6201
+[  5] local 127.0.0.1 port 48862 connected to 127.0.0.1 port 6201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  2.71 GBytes  23.3 Gbits/sec    0   1.37 MBytes       
+[  5]   1.00-2.00   sec  3.64 GBytes  31.3 Gbits/sec    0   1.37 MBytes       
+[  5]   2.00-3.00   sec  4.08 GBytes  35.0 Gbits/sec    0   1.37 MBytes       
+[  5]   3.00-4.00   sec  3.49 GBytes  30.0 Gbits/sec    0   1.37 MBytes       
+[  5]   4.00-5.00   sec  5.50 GBytes  47.2 Gbits/sec    2   1.37 MBytes       
+[  5]   5.00-6.00   sec  4.06 GBytes  34.9 Gbits/sec    0   1.37 MBytes       
+[  5]   6.00-7.00   sec  4.12 GBytes  35.4 Gbits/sec    0   1.37 MBytes       
+[  5]   7.00-8.00   sec  3.99 GBytes  34.3 Gbits/sec    0   1.37 MBytes       
+[  5]   8.00-9.00   sec  3.49 GBytes  30.0 Gbits/sec    0   1.37 MBytes       
+[  5]   9.00-10.00  sec  5.51 GBytes  47.3 Gbits/sec    0   1.37 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  40.6 GBytes  34.9 Gbits/sec    2             sender
+[  5]   0.00-10.00  sec  40.6 GBytes  34.9 Gbits/sec                  receiver
+
+# 可走 wlp4s0 + 容器端口映射，速度也不慢啊
+❯ iperf3 -c 192.168.31.228 -p 6201
+Connecting to host 192.168.31.228, port 6201
+[  5] local 192.168.31.228 port 54582 connected to 192.168.31.228 port 6201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  4.34 GBytes  37.3 Gbits/sec    0    795 KBytes       
+[  5]   1.00-2.00   sec  4.78 GBytes  41.0 Gbits/sec    0    834 KBytes       
+[  5]   2.00-3.00   sec  6.26 GBytes  53.7 Gbits/sec    0    834 KBytes       
+[  5]   3.00-4.00   sec  6.30 GBytes  54.1 Gbits/sec    0    875 KBytes       
+[  5]   4.00-5.00   sec  6.26 GBytes  53.8 Gbits/sec    0    875 KBytes       
+[  5]   5.00-6.00   sec  5.75 GBytes  49.4 Gbits/sec    0    875 KBytes       
+[  5]   6.00-7.00   sec  5.49 GBytes  47.2 Gbits/sec    0    966 KBytes       
+[  5]   7.00-8.00   sec  5.72 GBytes  49.1 Gbits/sec    2    966 KBytes       
+[  5]   8.00-9.00   sec  4.81 GBytes  41.3 Gbits/sec    2    966 KBytes       
+[  5]   9.00-10.00  sec  5.98 GBytes  51.4 Gbits/sec    0    966 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  55.7 GBytes  47.8 Gbits/sec    4             sender
+[  5]   0.00-10.00  sec  55.7 GBytes  47.8 Gbits/sec                  receiver
+```
+
+总的来看，loopback、bridge、veth 这几个接口基本上是没被限速的，veth 有查到上限为 10000Mb/s（10Gb/s） 感觉也是个假数字，
+实际上测出来的数据基本在 35Gb/s 到 55Gb/s 之间，视情况浮动。
+
+性能的变化和虚拟网络设备的链路和类型有关，或许和默认配置的区别也有关系。
+
+另外 TUN 设备这里没有测，`ethtool tun0` 查到的值是比较离谱的 10Mb/s，但是感觉不太可能这么慢，有时间可以再测一波看看。
+
 ## 参考
 
 - [Linux虚拟网络设备之tun/tap](https://segmentfault.com/a/1190000009249039)
@@ -396,3 +633,5 @@ docker0         8000.0242fce99ef5       no              vethea4171a
 - [云计算底层技术-虚拟网络设备(tun/tap,veth)](https://opengers.github.io/openstack/openstack-base-virtual-network-devices-tuntap-veth/)
 - [Universal TUN/TAP device driver - Kernel Docs](https://www.kernel.org/doc/Documentation/networking/tuntap.txt)
 - [Tun/Tap interface tutorial](https://backreference.org/2010/03/26/tuntap-interface-tutorial/)
+- [Linux Loopback performance with TCP_NODELAY enabled](https://stackoverflow.com/questions/5832308/linux-loopback-performance-with-tcp-nodelay-enabled)
+
