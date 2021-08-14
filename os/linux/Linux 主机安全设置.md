@@ -68,7 +68,7 @@ PubkeyAuthentication yes  # 允许使用公钥认证登录
 
 ### 4. 打开防火墙，只开启需要使用的端口
 
-旧版的 linux 基本都使用 iptables 做防火墙，但是它配置特别麻烦。而新版的 linux 发行版底层都换成了 eftables，并且提供了更高层的封装，简化上手难度：
+旧版的 linux 基本都使用 iptables 做防火墙，但是它配置特别麻烦。而新版的 linux 发行版都提供了对 `iptables` 更高层的封装，简化上手难度：
 
 1. ubuntu 使用 ufw
 2. centos 使用 firewall
