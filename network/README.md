@@ -3,7 +3,6 @@
 
 ## 我的网络笔记
 
-- [Linux 网络笔记（一）：基础知识集锦](https://www.cnblogs.com/kirito-c/p/12116371.html)
 - [HTTP 知新](https://www.cnblogs.com/kirito-c/p/10357364.html)
 
 ## 网络层次中的哪些是操作系统控制，哪些是我们自己能控制的？
