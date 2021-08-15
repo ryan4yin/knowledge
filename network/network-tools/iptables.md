@@ -1,8 +1,8 @@
-# [Iptables](https://www.netfilter.org/projects/iptables/index.html)
+# [iptables](https://www.netfilter.org/projects/iptables/index.html) 及 docker 容器网络分析
 
 >本文描述的 iptables 仅作用于 ipv4 网络，对 ipv6 请查看 ip6tables 相关文档
 
-iptables 提供了包过滤、NAT 以及其他的包处理能力，iptables 应用最多的两个场景是 firewall 和 NAT
+[iptables](https://www.netfilter.org/projects/iptables/index.html) 提供了包过滤、NAT 以及其他的包处理能力，iptables 应用最多的两个场景是 firewall 和 NAT
 
 iptables 及新的 nftables 都是基于 netfilter 开发的，是 netfilter 的子项目。
 
@@ -99,6 +99,149 @@ iptables -P INPUT DROP
 iptables -F INPUT
 ```
 
+---
+
+>本文后续分析时，假设用户已经清楚 linux bridge、veth 等虚拟网络接口相关知识。
+如果你还缺少这些前置知识，请先阅读文章 [Linux 中的虚拟网络接口](https://ryan4yin.space/posts/linux-virtual-network-interfaces/)。
+
+## conntrack 连接跟踪与 NAT
+
+netfilter 的 conntrack 连接跟踪功能是 iptables 实现 SNAT/DNAT/MASQUERADE 的前提条件。
+
+下面以 docker 默认的 bridge 网络为例进行介绍。
+
+首先，这是我在「Linux 的虚拟网络接口」文中给出过的 docker0 网络架构图:
+
+```
++-----------------------------------------------+-----------------------------------+-----------------------------------+
+|                      Host                     |           Container A             |           Container B             |
+|                                               |                                   |                                   |
+|   +---------------------------------------+   |    +-------------------------+    |    +-------------------------+    |
+|   |       Network Protocol Stack          |   |    |  Network Protocol Stack |    |    |  Network Protocol Stack |    |
+|   +----+-------------+--------------------+   |    +-----------+-------------+    |    +------------+------------+    |
+|        ^             ^                        |                ^                  |                 ^                 |
+|........|.............|........................|................|..................|.................|.................|
+|        v             v  ↓                     |                v                  |                 v                 |
+|   +----+----+  +-----+------+                 |          +-----+-------+          |           +-----+-------+         |
+|   | .31.101 |  | 172.17.0.1 |      +------+   |          | 172.17.0.2  |          |           |  172.17.0.3 |         |
+|   +---------+  +-------------<---->+ veth |   |          +-------------+          |           +-------------+         |
+|   |  eth0   |  |   docker0  |      +--+---+   |          | eth0(veth)  |          |           | eth0(veth)  |         |
+|   +----+----+  +-----+------+         ^       |          +-----+-------+          |           +-----+-------+         |
+|        ^             ^                |       |                ^                  |                 ^                 |
+|        |             |                +------------------------+                  |                 |                 |
+|        |             v                        |                                   |                 |                 |
+|        |          +--+---+                    |                                   |                 |                 |
+|        |          | veth |                    |                                   |                 |                 |
+|        |          +--+---+                    |                                   |                 |                 |
+|        |             ^                        |                                   |                 |                 |
+|        |             +------------------------------------------------------------------------------+                 |
+|        |                                      |                                   |                                   |
+|        |                                      |                                   |                                   |
++-----------------------------------------------+-----------------------------------+-----------------------------------+
+         v
+    Physical Network  (192.168.31.0/24)
+```
+
+docker 会在 iptables 中为 docker0 网桥添加如下规则：
+
+```shell
+-t nat -A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
+
+-t filter -P DROP
+-t filter -A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+```
+
+这几行规则使 docker 容器能正常访问外部网络。`MASQUERADE` 在请求出网时，会自动做 `SNAT`，将 src ip 替换成出口网卡的 ip.
+这样数据包能正常出网，而且对端返回的数据包现在也能正常回到出口网卡。
+
+现在问题就来了：**出口网卡收到返回的数据包后，还能否将数据包转发到数据的初始来源端——某个 docker 容器**？难道 docker 还额外添加了与 MASQUERADE 对应的 dst ip 反向转换规则？
+
+实际上这一步依赖的是本节的主角——iptables 提供的 conntrack 连接跟踪功能（在「参考」中有一篇文章详细介绍了此功能）。
+
+连接跟踪对 NAT 的贡献是：在做 NAT 转换时，无需手动添加额外的规则来执行**反向转换**以实现数据的双向传输。netfilter/conntrack 系统会记录 NAT 的连接状态，NAT 地址的反向转换是根据这个状态自动完成的。
+
+比如上图中的 `Container A` 通过 bridge 网络向 baidu.com 发起了 N 个连接，这时数据的处理流程如下：
+
+- 首先 `Container A` 发出的数据包被 MASQUERADE 规则处理，将 src ip 替换成 eth0 的 ip，然后发送到物理网络 `192..168.31.0/24`。
+  - conntrack 系统记录此连接被 NAT 处理前后的状态信息，并将其状态设置为 NEW，表示这是新发起的一个连接
+- 对端 baidu.com 返回数据包后，会首先到达 eth0 网卡
+- conntrack 查表，发现返回数据包的连接已经记录在表中并且状态为 NEW，于是它将连接的状态修改为 ESTABLISHED，并且将 dst_ip 改为 `172.17.0.2` 然后发送出去
+  - 注意，这个和 tcp 的 ESTABLISHED 没任何关系
+- 经过路由匹配，数据包会进入到 docker0，然后匹配上 iptables 规则：`-t filter -A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT`，数据直接被放行
+- 数据经过 veth 后，最终进入到 `Container A` 中，交由容器的内核协议栈处理。
+- 数据被 `Container A` 的内核协议栈发送到「发起连接的应用程序」。
+
+### 实际测试 conntrack
+
+现在我们来实际测试一下，看看是不是这么回事：
+
+```shell
+# 使用 tcpdump 分别在出口网卡 wlp4s0 （相当于 eth0）和 dcoker0 网桥上抓包，后面会用来分析
+❯ sudo tcpdump -i wlp4s0 -n > wlp4s0.dump   # 窗口一，抓 wlp4s0 的包
+❯ sudo tcpdump -i docker0 -n > docker0.dump  # 窗口二，抓 docker0 的包
+```
+
+现在新建窗口三，启动一个容器，通过 curl 命令低速下载一个视频文件：
+
+```
+❯ docker run --rm --name curl -it curlimages/curl "https://media.w3.org/2010/05/sintel/trailer.mp4" -o /tmp/video.mp4 --limit-rate 100k
+```
+
+然后新建窗口四，在宿主机查看 conntrack 状态
+
+```shell
+❯ sudo zypper in conntrack-tools  # 这个记得先提前安装好
+❯ sudo conntrack -L | grep 172.17
+# curl 通过 NAT 网络发起了一个 dns 查询请求，DNS 服务器是网关上的 192.168.31.1
+udp      17 22 src=172.17.0.4 dst=192.168.31.1 sport=59423 dport=53 src=192.168.31.1 dst=192.168.31.228 sport=53 dport=59423 [ASSURED] mark=0 use=1
+# curl 通过 NAT 网络向 media.w3.org 发起了 tcp 连接
+tcp      6 298 ESTABLISHED src=172.17.0.4 dst=198.18.5.130 sport=54636 dport=443 src=198.18.5.130 dst=192.168.31.228 sport=443 dport=54636 [ASSURED] mark=0 use=1
+```
+
+等 curl 命令跑个十来秒，然后关闭所有窗口及应用程序，接下来进行数据分析：
+
+```shell
+# 前面查到的，本地发起请求的端口是 54636，下面以此为过滤条件查询数据
+
+# 首先查询 wlp4s0/eth0 进来的数据，可以看到本机的 dst_ip 为 192.168.31.228.54636
+❯ cat wlp4s0.dump | grep 54636 | head -n 15
+18:28:28.349321 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [S], seq 750859357, win 64240, options [mss 1460,sackOK,TS val 3365688110 ecr 0,nop,wscale 7], length 0
+18:28:28.350757 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [S.], seq 2381759932, ack 750859358, win 28960, options [mss 1460,sackOK,TS val 22099541 ecr 3365688110,nop,wscale 5], length 0
+18:28:28.350814 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [.], ack 1, win 502, options [nop,nop,TS val 3365688111 ecr 22099541], length 0
+18:28:28.357345 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 1:518, ack 1, win 502, options [nop,nop,TS val 3365688118 ecr 22099541], length 517
+18:28:28.359253 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [.], ack 518, win 939, options [nop,nop,TS val 22099542 ecr 3365688118], length 0
+18:28:28.726544 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [P.], seq 1:2622, ack 518, win 939, options [nop,nop,TS val 22099579 ecr 3365688118], length 2621
+18:28:28.726616 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [.], ack 2622, win 482, options [nop,nop,TS val 3365688487 ecr 22099579], length 0
+18:28:28.727652 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 518:598, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 80
+18:28:28.727803 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 598:644, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 46
+18:28:28.727828 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 644:693, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 49
+18:28:28.727850 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 693:728, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 35
+18:28:28.727875 IP 192.168.31.228.54636 > 198.18.5.130.443: Flags [P.], seq 728:812, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 84
+18:28:28.729241 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [.], ack 598, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+18:28:28.729245 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [.], ack 644, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+18:28:28.729247 IP 198.18.5.130.443 > 192.168.31.228.54636: Flags [.], ack 693, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+
+
+# 然后再查询 docker0 上的数据，能发现本地的地址为 172.17.0.4.54636
+❯ cat docker0.dump | grep 54636 | head -n 20
+18:28:28.349299 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [S], seq 750859357, win 64240, options [mss 1460,sackOK,TS val 3365688110 ecr 0,nop,wscale 7], length 0
+18:28:28.350780 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [S.], seq 2381759932, ack 750859358, win 28960, options [mss 1460,sackOK,TS val 22099541 ecr 3365688110,nop,wscale 5], length 0
+18:28:28.350812 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [.], ack 1, win 502, options [nop,nop,TS val 3365688111 ecr 22099541], length 0
+18:28:28.357328 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 1:518, ack 1, win 502, options [nop,nop,TS val 3365688118 ecr 22099541], length 517
+18:28:28.359281 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [.], ack 518, win 939, options [nop,nop,TS val 22099542 ecr 3365688118], length 0
+18:28:28.726578 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [P.], seq 1:2622, ack 518, win 939, options [nop,nop,TS val 22099579 ecr 3365688118], length 2621
+18:28:28.726610 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [.], ack 2622, win 482, options [nop,nop,TS val 3365688487 ecr 22099579], length 0
+18:28:28.727633 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 518:598, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 80
+18:28:28.727798 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 598:644, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 46
+18:28:28.727825 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 644:693, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 49
+18:28:28.727847 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 693:728, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 35
+18:28:28.727871 IP 172.17.0.4.54636 > 198.18.5.130.443: Flags [P.], seq 728:812, ack 2622, win 501, options [nop,nop,TS val 3365688488 ecr 22099579], length 84
+18:28:28.729308 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [.], ack 598, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+18:28:28.729324 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [.], ack 644, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+18:28:28.729328 IP 198.18.5.130.443 > 172.17.0.4.54636: Flags [.], ack 693, win 939, options [nop,nop,TS val 22099579 ecr 3365688488], length 0
+```
+
+能看到数据确实在进入 docker0 网桥前，dst_ip 确实被从 `192.168.31.228`（wlp4s0 的 ip）被修改为了 `172.17.0.4`（`Container A` 的 ip）.
 
 ## 如何持久化 iptables 配置
 
@@ -115,14 +258,14 @@ iptables -F INPUT
 
 ### 通过 docker run 运行容器
 
-首先，使用 `docker run` 运行一个容器，检查下网络状况：
+首先，使用 `docker run` 运行几个容器，检查下网络状况：
 
 ```shell
 # 运行一个 debian 容器和一个 nginx
 ❯ docker run -dit --name debian --rm debian:buster sleep 1000000
 ❯ docker run -dit --name nginx --rm nginx:1.19-alpine 
 
-#　查看网络接口
+#　查看网络接口，有两个 veth 接口（而且都没设 ip 地址），分别连接到两个容器的 eth0（dcoker0 网络架构图前面给过了，可以往前面翻翻对照下）
 ❯ ip addr ls
 ...
 5: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
@@ -131,14 +274,20 @@ iptables -F INPUT
        valid_lft forever preferred_lft forever
     inet6 fe80::42:42ff:fec7:12ba/64 scope link 
        valid_lft forever preferred_lft forever
-56: veth4d4c1c2@if55: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
-    link/ether 3e:3d:5c:6f:c3:d9 brd ff:ff:ff:ff:ff:ff link-netnsid 0
-    inet6 fe80::3c3d:5cff:fe6f:c3d9/64 scope link 
+100: veth16b37ea@if99: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 42:af:34:ae:74:ae brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::40af:34ff:feae:74ae/64 scope link 
        valid_lft forever preferred_lft forever
-58: vethc0863a0@if57: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
-    link/ether 3a:58:1b:8f:45:70 brd ff:ff:ff:ff:ff:ff link-netnsid 1
-    inet6 fe80::3858:1bff:fe8f:4570/64 scope link 
+102: veth4b4dada@if101: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 9e:f1:58:1a:cf:ae brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::9cf1:58ff:fe1a:cfae/64 scope link 
        valid_lft forever preferred_lft forever
+
+# 两个 veth 接口都连接到了 docker0 上面，说明两个容器都使用了 docker 默认的 bridge 网络
+❯ sudo brctl show
+bridge name     bridge id               STP enabled     interfaces
+docker0         8000.024242c712ba       no              veth16b37ea
+                                                        veth4b4dada
 
 # 查看路由规则
 ❯ ip route ls
@@ -174,7 +323,7 @@ default via 192.168.31.1 dev wlp4s0 proto dhcp metric 600
 # 所有流量都必须先经过如下两个表处理，没问题才能继续往下走
 -A FORWARD -j DOCKER-ISOLATION-STAGE-1
 -A FORWARD -j DOCKER-USER
-# （容器访问外部网络）出去的流量走了 MASQUERADE，回来的流量会被 conntrack 做 DNAT
+# （容器访问外部网络）出去的流量走了 MASQUERADE，回来的流量会被 conntrack 识别并转发回来，这里允许返回的数据包通过。
 # 这里直接 ACCEPT 被 conntrack 识别到的流量
 -A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 # 将所有访问 docker0 的流量都转给自定义链 DOCKER 处理
@@ -212,6 +361,108 @@ networks:
   caddy-1:
 ```
 
+现在先用上面的配置启动 caddy 容器，然后再查看网络状况：
+
+```shell
+# 启动 caddy
+❯ docker-compose up -d
+# 查下 caddy 容器的 ip
+> docker inspect caddy | grep IPAddress
+...
+    "IPAddress": "172.18.0.2",
+
+# 查看网络接口，可以看到多了一个网桥，它就是上一行命令创建的 caddy-1 网络
+# 还多了一个 veth，它连接到了 caddy 容器的 eth0(veth) 接口
+❯ ip addr ls
+...
+5: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:42:c7:12:ba brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:42ff:fec7:12ba/64 scope link 
+       valid_lft forever preferred_lft forever
+100: veth16b37ea@if99: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 42:af:34:ae:74:ae brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::40af:34ff:feae:74ae/64 scope link 
+       valid_lft forever preferred_lft forever
+102: veth4b4dada@if101: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 9e:f1:58:1a:cf:ae brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::9cf1:58ff:fe1a:cfae/64 scope link 
+       valid_lft forever preferred_lft forever
+103: br-ac3e0514d837: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:7d:95:ba:7e brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-ac3e0514d837
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:7dff:fe95:ba7e/64 scope link 
+       valid_lft forever preferred_lft forever
+105: veth0c25c6f@if104: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-ac3e0514d837 state UP group default 
+    link/ether 9a:03:e1:f0:26:ea brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::9803:e1ff:fef0:26ea/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+# 查看网桥，能看到 caddy 容器的 veth 接口连在了 caddy-1 这个网桥上，没有加入到 docker0 网络
+❯ sudo brctl show
+bridge name     bridge id               STP enabled     interfaces
+br-ac3e0514d837         8000.02427d95ba7e       no              veth0c25c6f
+docker0         8000.024242c712ba       no              veth16b37ea
+                                                        veth4b4dada
+
+# 查看路由，能看到新网桥使用的地址段是 172.18.0.0/16，是 docker0 递增上来的 
+❯ ip route ls
+default via 192.168.31.1 dev wlp4s0 proto dhcp metric 600 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 
+# 多了一个网桥的
+172.18.0.0/16 dev br-ac3e0514d837 proto kernel scope link src 172.18.0.1 
+192.168.31.0/24 dev wlp4s0 proto kernel scope link src 192.168.31.228 metric 600 
+
+# iptables 中也多了 caddy-1 网桥的 MASQUERADE 规则，以及端口映射的规则
+❯ sudo iptables -t nat -S
+-P PREROUTING ACCEPT
+-P INPUT ACCEPT
+-P OUTPUT ACCEPT
+-P POSTROUTING ACCEPT
+-N DOCKER
+-A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+-A OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER
+-A POSTROUTING -s 172.18.0.0/16 ! -o br-ac3e0514d837 -j MASQUERADE
+-A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
+# 端口映射过来的入网流量，都做下 SNAT，把 src ip 换成出口 docker0 的 ip 地址
+-A POSTROUTING -s 172.18.0.2/32 -d 172.18.0.2/32 -p tcp -m tcp --dport 80 -j MASQUERADE
+-A DOCKER -i br-ac3e0514d837 -j RETURN
+-A DOCKER -i docker0 -j RETURN
+# 主机上所有其他接口进来的 tcp 流量，只要目标端口是 8081，就转发到 caddy 容器去（端口映射）
+-A DOCKER ! -i br-ac3e0514d837 -p tcp -m tcp --dport 8081 -j DNAT --to-destination 172.18.0.2:80
+
+❯ sudo iptables -t filter -S
+-P INPUT ACCEPT
+-P FORWARD DROP
+-P OUTPUT ACCEPT
+-N DOCKER
+-N DOCKER-ISOLATION-STAGE-1
+-N DOCKER-ISOLATION-STAGE-2
+-N DOCKER-USER
+-A FORWARD -j DOCKER-USER
+-A FORWARD -j DOCKER-ISOLATION-STAGE-1
+# 给 caddy-1 bridge 网络添加的转发规则，与 docker0 的规则完全一一对应，就不多介绍了。
+-A FORWARD -o br-ac3e0514d837 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -o br-ac3e0514d837 -j DOCKER
+-A FORWARD -i br-ac3e0514d837 ! -o br-ac3e0514d837 -j ACCEPT
+-A FORWARD -i br-ac3e0514d837 -o br-ac3e0514d837 -j ACCEPT
+-A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -o docker0 -j DOCKER
+-A FORWARD -i docker0 ! -o docker0 -j ACCEPT
+-A FORWARD -i docker0 -o docker0 -j ACCEPT
+# 待续，有空再分析...
+-A DOCKER -d 172.18.0.2/32 ! -i br-ac3e0514d837 -o br-ac3e0514d837 -p tcp -m tcp --dport 80 -j ACCEPT
+-A DOCKER-ISOLATION-STAGE-1 -i br-ac3e0514d837 ! -o br-ac3e0514d837 -j DOCKER-ISOLATION-STAGE-2
+-A DOCKER-ISOLATION-STAGE-1 -i docker0 ! -o docker0 -j DOCKER-ISOLATION-STAGE-2
+-A DOCKER-ISOLATION-STAGE-1 -j RETURN
+-A DOCKER-ISOLATION-STAGE-2 -o br-ac3e0514d837 -j DROP
+-A DOCKER-ISOLATION-STAGE-2 -o docker0 -j DROP
+-A DOCKER-ISOLATION-STAGE-2 -j RETURN
+-A DOCKER-USER -j RETURN
+```
 
 ## nftables
 
@@ -262,4 +513,4 @@ table ip6 firewalld {
 ## 参考
 
 - [iptables详解（1）：iptables概念](https://www.zsythink.net/archives/1199)
-- [How to confirm that SNAT and MASQUERADE are using conntrack table to replace the destination IP address of the reply packet](http://fosshelp.blogspot.com/2014/07/how-to-confirm-that-snat-and-masquerade.html)
+- [网络地址转换（NAT）之报文跟踪](https://linux.cn/article-13364-1.html)
