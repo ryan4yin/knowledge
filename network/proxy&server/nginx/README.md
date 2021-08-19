@@ -61,3 +61,30 @@ server{
 因此正确的写法是，应该把外部的 `proxy_set_header` 配置拷贝到 `location ^~ /ws` 块中
 
 这里还有更详细的论述：[Set the HTTP headers with `add_header` and `proxy_*_header` directives properly](https://github.com/trimstray/nginx-admins-handbook/blob/master/doc/RULES.md#beginner-set-the-http-headers-with-add_header-and-proxy__header-directives-properly)
+
+
+### `rewrite xxx xxx break` 后面的 return 语句不生效
+
+如下配置中，`rewrite` 后面的 `return` 语句不会生效，请求会返回 `404`：
+
+```nginx
+# ......
+http {
+    # ......
+    server {
+        # ......
+
+        location /xxx/ {
+            rewrite ^/xxx/(.*)$ /yyy/$1 break;
+            return 200 "hhh";
+        }
+    }
+
+...
+}
+```
+
+查阅官方文档 [ngx_http_rewrite_module](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite) 发现，
+rewrite 的 `last` 和 `break` 两个都会停止处理当然的所有 `ngx_http_rewrite_module` 模块的所有指令，而 `return` 指令就是由 `ngx_http_rewrite_module` 模块提供的，因此它被直接忽略了。
+由于请求未得到处理，导致 nginx 直接返回了 `404`.
+
