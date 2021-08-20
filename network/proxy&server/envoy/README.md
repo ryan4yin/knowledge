@@ -2,7 +2,9 @@
 
 官方定义：Cloud-native high-performance edge/middle/service proxy
 
+envoy 目前是在云原生社区最流行的网络代理，没有之一。众多的 API 网关和服务网格，都是以它为基础。
 
+不论是为了学习研究，还是需要在生产环境使用基于 envoy 的服务网格/API 网关，学习 envoy 都是有必要的（否则生产环境出了问题就抓瞎了...）
 
 ## 与 Nginx 的异同
 
