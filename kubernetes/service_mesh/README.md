@@ -2,10 +2,10 @@
 
 目前这个领域，最流行的服务代理是 envoy，最流行或者最有前景的服务网格是：
 
-1. istio: 目前全球最流行的服务网格，功能强大，但是相对的也更复杂。
-2. linkerd2: 最初的服务网格的 rust 重构版，比 istio 简单，流控功能没那么强，但是性能更高。
+1. [istio](https://github.com/istio/istio): 目前全球最流行的服务网格，功能强大，但是相对的也更复杂。
+2. [linkerd2](https://github.com/linkerd/linkerd2): 最初的服务网格的 rust 重构版，比 istio 简单，流控功能没那么强，但是性能更高。
    - 但是它的数据平面可拓展性比较差，没有良好的插件机制，没有 envoy 灵活。
-3. dapr: 它给自己的定位是 Multi-Runtime - 一个比服务网格更通用、能力更强的运行时，一个运行时就能提供原本需要多个 Sidecar 实现的能力（如 网络代理，缓存代理，绑定代理）
+3. [dapr](https://github.com/dapr/dapr): 它给自己的定位是 Multi-Runtime - 一个比服务网格更通用、能力更强的运行时，一个运行时就能提供原本需要多个 Sidecar 实现的能力（如 网络代理，缓存代理，绑定代理）
 
 其他还有一些名气小一点的服务网格可供参考，但是目前都不推荐选用：
 
@@ -13,23 +13,23 @@
 2. [traefik mesh](https://github.com/traefik/mesh): 一个轻量级的，Node 模式部署的服务网格，好像目前不支持 TLS 加密
 3. [kuma](https://github.com/kumahq/kuma): 由 Kong 基于 Envoy 开发的一个服务网格，
 4. [osm](https://github.com/openservicemesh/osm): 微软开源的一个基于 Envoy 的服务网格，好像主要面向 Azure 用户，而且项目还在一个非常早期的阶段。
+5. apisix 等基于 nginx/openresty 的技术，也在向这个方向发展
+   - 它们的优势大概有：nginx 的「高性能」与「可扩展性」，以及企业能沿用上企业曾经在 nginx 领域多年的历史积累（坑都踩过了）。
 
-
-在选用服务网格产品时，要以自己的痛点为核心，再结合性能、易用性、复杂度来综合考量。
+在选用服务网格产品时，要以自己的痛点为核心，再结合**性能**、**可拓展性**、**复杂度**几个方案来综合考量。
 不是说功能最强大的 Istio 就是银弹，功能相对弱一些的 Linkerd2 或许就会是更好的选择，或者说直接自研。
 
 ## 服务网格的正确形态？
 
 目前主流的服务网格，核心元素有三个：
 
-- 定位: Service Mesh 的定位始终是提供**服务间通讯**的基础设施层，范围包括 HTTP 和 RPC——支持 HTTP1.1/REST，支持 HTTP2/gRPC，支持 TCP 协议。也有一些小的尝试如对 Redis 、 Kafka 的支持。
+- 定位: Service Mesh 的定位始终是提供**服务间通讯**的基础设施层，范围包括 HTTP 和 RPC ——支持 HTTP1.1/REST，支持 HTTP2/gRPC，支持 TCP 协议。也有一些小的尝试如对 Redis 、 Kafka 的支持。
 - 原理: Service Mesh 的工作原理是**原协议转发**，原则上不改变协议内容（通常只是 header 有些小改动）。为了达到零侵入的目标，还引入了 iptables 等流量劫持技术。
 - 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如 **Node 模式部署**。
     - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
-    - linkerd2 走的路则是做轻量的 sidecar，并且使用 rust 这类高效语言来实现。
+    - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
 
-不过我们现在已经看到了 dapr 这样更通用的 multi-runtime 产品来搅局。
-
+不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品来搅局。
 
 ## 一些问题的解答
 
