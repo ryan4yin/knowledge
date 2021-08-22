@@ -71,3 +71,8 @@ rust 的高阶函数 + 链式语法超级好用！
 
 
 待续
+
+
+## async/await
+
+- [async-book](https://rust-lang.github.io/async-book/)
