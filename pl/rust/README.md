@@ -45,13 +45,22 @@ rust 默认在栈上分配空间，即使使用 reference 引用，也是一样�
 
 - 智能指针的循环引用可能会导致内存泄漏。
 
+
+## 错误处理
+
+- https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/boxing_errors.html
+
+- 随意啦，能跑就行：https://github.com/dtolnay/anyhow
+- 还是严谨一点，要给人看的：https://github.com/dtolnay/thiserror
+
 ## 类型转换 - conversion
 
 还需要研究
 
 - `as_ref`/`as_mut`: 几乎没有性能损耗的类型转换
 - `from`/`into`: 所有实现了 `From` Trait 的类型，都会自动实现 `Into`
-- `try_into`
+- `try_into`/`try_from`/`from_str`: 这三个都是返回 Result 类型的类型转换方法。
+  - 自己实现时，都需要返回 `Result<Self, Self::Error>` 类型的值，这个对初学者而言有点难度。
 - `into_iter`/`iter`/`iter_mut`
 
 
