@@ -1,8 +1,12 @@
-# vlan 与 vxlan 网络虚拟化协议
+# 网络虚拟化
 
-vlan 是链路层（二层）虚拟技术，而 vxlan 是传输层（四层，UDP）虚拟化技术。
+- vlan 是链路层（二层）虚拟技术
+- vxlan 是传输层（四层，UDP）虚拟化技术
+- geneve
+- ipip
+- macvlan
+- ipvlan
 
-待续
 
 ## overlay 与 underlay
 

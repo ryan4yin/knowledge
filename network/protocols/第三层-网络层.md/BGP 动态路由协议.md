@@ -4,7 +4,7 @@
 
 大多数互联网服务提供商必须使用BGP来与其他ISP创建路由连接（尤其是当它们采取多宿主连接时）。因此，即使大多数互联网用户不直接使用它，但是与7号信令系统相比，即通过PSTN的跨供应商核心响应设置协议，BGP仍然是互联网最重要的协议之一。特大型的私有IP网络也可以使用BGP。例如当需要将若干个大型的开放最短路径优先（OSPF）网络进行合并，而OSPF本身又无法提供这种可扩展性时。使用BGP的另一个原因是其能为多宿主的单个ISP（RFC 1998）或多个ISP网络提供更好的冗余网络。
 
->比如 Kubernetes LoadBalancer Service 的实现，就需要用到 BGP 协议。详见 [kubernetes 如何将服务暴露到外部](/kubernetes/kubernetes%20如何将服务暴露到外部.md)
+>比如 Kubernetes 的众多网络实现，都使用了 BGP 协议。详见 [kubernetes 如何将服务暴露到外部](/kubernetes/kubernetes%20如何将服务暴露到外部.md)
 
 待续
 
