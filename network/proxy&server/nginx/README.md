@@ -2,14 +2,32 @@
 
 毫无疑问，nginx 是目前最流行的网页服务器（WebServer）、负载均衡器（LoadBalancer）和反向代理（ReverseProxy）.
 
+
+## 相关文档
+
+入门文档与查询手册：
+
 - [nginx-admins-handbook](https://github.com/trimstray/nginx-admins-handbook): 通俗易懂，快速入门
+
+自动生成配置：
+
 - [nginxconfig.io](https://github.com/digitalocean/nginxconfig.io)： 快速生成 nginx 配置文件
-- [nginx-proxy](https://github.com/jwilder/nginx-proxy)
-- [uwsgi-nginx-flask-docker](https://github.com/tiangolo/uwsgi-nginx-flask-docker)
-- [docker-letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion): 使用 docker 快速部署一个启用了 https 的 nginx 代理。
 - [nginx 配置模板](https://github.com/h5bp/server-configs-nginx)
 
 
+开箱即用的容器镜像：
+
+- [nginx-proxy](https://github.com/jwilder/nginx-proxy)
+- [uwsgi-nginx-flask-docker](https://github.com/tiangolo/uwsgi-nginx-flask-docker)
+- [docker-letsencrypt-nginx-proxy-companion](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion): 使用 docker 快速部署一个启用了 https 的 nginx 代理。
+
+源码阅读：
+
+- [nginx-1.9.2源码通读分析注释](https://github.com/y123456yz/reading-code-of-nginx-1.9.2)
+
+openresty:
+
+- [openresty-best-practices](https://github.com/moonbingbing/openresty-best-practices)
 
 ## 反向代理与长连接
 
