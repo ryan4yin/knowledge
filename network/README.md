@@ -19,3 +19,8 @@
 
 - [计算机网络 - 自顶向下方法](https://book.douban.com/subject/26176870/)
 
+
+## 网络模拟
+
+- [shadow](https://github.com/shadow/shadow): 离散事件网络模拟器，可以直接执行真实的应用。让你可以使用你的笔记本或者服务器，就可以模拟大型分布式网络系统。
+- [GNS3](https://github.com/GNS3/gns3-server): 据说是最知名的网络模拟器

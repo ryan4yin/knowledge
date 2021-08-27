@@ -74,6 +74,7 @@
 
 系统化的文档：
 
+- [school-of-sre](https://github.com/linkedin/school-of-sre)
 - [devops-exercises](https://github.com/bregman-arie/devops-exercises)
 - [test-your-sysadmin-skills](https://github.com/trimstray/test-your-sysadmin-skills)
 - [sdn-handbook](https://github.com/feiskyer/sdn-handbook)
@@ -86,6 +87,11 @@
 - [awesome-sre](https://github.com/dastergon/awesome-sre)
 - [阿里云容器服务 - DevOps 收藏夹](https://github.com/AliyunContainerService/DevOps)
 
+系统设计：
+
+- https://github.com/binhnguyennus/awesome-scalability
+- https://github.com/Vonng/ddia
+- https://github.com/donnemartin/system-design-primer
 
 ## 综合博客
 

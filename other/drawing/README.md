@@ -35,3 +35,8 @@ XMind 是目前最流行的思维导图工具。
 ## 专用绘图工具
 
 - [mingrammer/diagrams](https://github.com/mingrammer/diagrams): 通过 python 语言描述云端系统结构。
+
+
+## 其他
+
+- [slidev](https://github.com/slidevjs/slidev): 程序员的 PPT 工具
