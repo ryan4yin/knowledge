@@ -1,7 +1,5 @@
 package main
 
-// 参考文档：https://creaink.github.io/post/Computer/Linux/Linux-namespace.html
-
 import (
 	"fmt"
 	"os"
