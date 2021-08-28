@@ -21,7 +21,9 @@ Linux 提供了六种名字空间用于在内核中隔离出多个运行环境�
 
 - [Linux Namespace 技术与 Docker 原理浅析](https://creaink.github.io/post/Computer/Linux/Linux-namespace.html)
 - [Linux Namespace 入门系列：Namespace API - 米开朗基杨](https://www.cnblogs.com/ryanyangcs/p/12591372.html)
-- [docker 容器基础技术：linux cgroup 简介](https://cizixs.com/2017/08/25/linux-cgroup/)
+- [深入理解 Linux Cgroup 系列（一）：基本概念 -  - 米开朗基杨](https://www.cnblogs.com/ryanyangcs/p/11198140.html)
+- [Linux Capabilities 入门教程：概念篇 - 米开朗基杨](https://www.cnblogs.com/ryanyangcs/p/11757559.html)
+- [docker 容器基础技术：linux cgroup 简介 - cizixs](https://cizixs.com/2017/08/25/linux-cgroup/)
 
 
 参考的运行时：
