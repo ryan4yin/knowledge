@@ -361,3 +361,4 @@ sysctl/ulimit 设置不当，可以在上述指标都非常正常的情况下，
 - [linux常用的监控命令](https://www.cnblogs.com/huangxm/p/6278615.html)
 - [Linux常用网络带宽监控工具（转）](https://www.cnblogs.com/EasonJim/p/8099445.html)
 - [TIL: The difference between netstat and ss](https://pcarleton.com/2018/05/31/netstat-vs-ss/)
+- [Linux 性能诊断：快速检查单(Netflix版)](https://riboseyim.gitbook.io/perf/linux-perf-netflix)
