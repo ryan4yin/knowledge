@@ -137,13 +137,18 @@ sum by(host,uri,status)  (rate(nginx_http_requests_total{host="xxx.xxx", uri=~"/
 请求用时：
 
 ```promql
-# 延时低于 0.2s 的请求数
+# 每秒，延时低于 0.2s 的请求数
+rate(nginx_http_request_duration_seconds_bucket{host="xxx.xxx",le="00.200"}[1m])
+# 每秒，总的请求数
+rate(nginx_http_request_duration_seconds_count{host="xxx.xxx"}[1m])
+
+# 延时低于 0.2s 的请求数占比（多对一）
 nginx_http_request_duration_seconds_bucket{host="xxx.xxx",le="00.200"}
-# 总的请求数
+/
 nginx_http_request_duration_seconds_count{host="xxx.xxx"}
 
-# 延时低于 0.2s 的请求数占比
-nginx_http_request_duration_seconds_bucket{host="xxx.xxx",le="00.200"} / nginx_http_request_duration_seconds_count{host="xxx.xxx"}
+# 计算 p95（histogram_quantile 会使用 le 标签计算分位值，该标签必须存在），单位和 le 相同
+histogram_quantile(0.95, sum by (le) (rate(nginx_http_request_duration_seconds_bucket{host="xxx.xxx"}[1m])))
 ```
 
 #### 2.2 APISIX
@@ -156,15 +161,25 @@ sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix
 
 请求延迟(apisix 2.6+):
 ```promql
-# apisix 自身的处理延迟，低于 200ms 的请求数
-apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="prod", le="200"} > 0
-# 总数
-apisix_http_latency_count{type="request",service="<service_id>", kubernetes_namespace="prod"}
+# 每秒，apisix 自身的处理延迟，低于 200ms 的请求数
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging", le="200"}[1m]))
+# 每秒，请求的总数
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service,le)  (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging"}[1m]))
+
+# 延时低于 0.2s 的请求数占比（注意 / 两边指标的 tag 必须完全一致，否则需要使用 on）
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging", le="200"}[1m]))
+/
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging", le="+Inf"}[1m]))
+
+# 计算 p95（histogram_quantile 会使用 le 标签计算分位值，该标签必须存在），单位和 le 相同
+histogram_quantile(0.95, sum by (le, code) (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging"}[1m])))
 
 # upstream 的延迟，低于 200ms 的请求数
-apisix_http_latency_bucket{type="upstream",service="<service_id>", le="200"}
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service,le)  (rate(apisix_http_latency_bucket{type="upstream",service="<service_id>", le="200"}[1m]))
 # 总数
-apisix_http_latency_count{type="upstream",service="<service_id>", kubernetes_namespace="prod"}
+sum by(matched_host,code,matched_uri,kubernetes_namespace,service,le)  (rate(apisix_http_latency_count{type="upstream",service="<service_id>", kubernetes_namespace="prod"}[1m]))
+# 计算 p95（histogram_quantile 会使用 le 标签计算分位值，该标签必须存在），单位和 le 相同
+histogram_quantile(0.95, sum by (le, code) (rate(apisix_http_latency_bucket{type="upstream",service="<service_id>",kubernetes_namespace="staging"}[1m])))
 ```
 
 
