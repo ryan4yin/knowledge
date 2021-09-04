@@ -24,21 +24,22 @@ echo 'deb https://mirrors.bfsu.edu.cn/proxmox/debian buster pve-no-subscription'
 
 >完全参照官方文档 [Cloud-Init_Support - PVE Docs](https://pve.proxmox.com/wiki/Cloud-Init_Support)
 
-首先下载 Cloud 版本的系统镜像：
+首先下载 Cloud 版本的系统镜像（注意：下面的几种镜像都分别有自己的坑点...有时候可能不是你配置问题，单纯地是镜像的 bug...）：
 
-1. [CentOS Cloud 版本](https://cloud.centos.org/centos/): 提供 qcow2 格式的镜像
-2. [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/): 也提供 qcow2 格式的镜像
-3. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
-   - 注意：需要下载带有 kvm 字样的镜像！
-4. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
-   - 注意：请下载带有 x86_64 和 NoCloud/OpenStack 字样的镜像 
-5. [Amazon Linux 2 - VM Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-linux-2-virtual-machine.html#amazon-linux-2-virtual-machine-download)
+1. [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/): 也提供 qcow2 格式的镜像
+   - 请下载 `nocloud-amd64.qcow2` 结尾的镜像
+2. [Ubuntu Cloud Images (RELEASED)](https://cloud-images.ubuntu.com/releases/): 提供 img 格式的裸镜像（PVE 也支持此格式）
+   - 请下载带有 .img 结尾的镜像，其中 `kvm.img` 结尾的镜像会更精简一点。
+3. [OpenSUSE Cloud Images](https://download.opensuse.org/repositories/Cloud:/Images:/)
+   - 请下载带有 NoCloud 或者 OpenStack 字样的镜像。
+4. 对于其他镜像，可以考虑手动通过 iso 来制作一个 cloudinit 镜像，参考 [openstack - create ubuntu cloud images from iso](https://docs.openstack.org/image-guide/ubuntu-image.html)
 
+上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 `cloud-init`/`qemu-guest-agent`/`cloud-utils-growpart` 等 cloud 相关软件。
 
-上述镜像和我们普通虚拟机使用的 ISO 镜像的区别，一是镜像格式不同，二是都自带了 cloud-init/qemu-guest-agent/cloud-utils-growpart 等 cloud 相关软件。
+其中 NoCloud 表示支持 cloudinit NoCloud 数据源——即使用 `seed.iso` 提供 user-data/meta-data/network-config 配置，PVE 就是使用的这种模式。
+而 Openstack 镜像通常也都支持 NoCloud 模式，所以一般也是可以使用的。
 
-上述三个 cloud 镜像的默认名称和系统名称完全一致，分别为 `centos`/`debian`/`ubuntu`，
-均没有默认密码，并且禁用了 SSH 密码登录，必须通过 cloud-init 设置私钥方式进行远程登录。
+cloud image 基本都没有默认密码，并且禁用了 SSH 密码登录，必须通过 cloud-init 设置私钥方式进行 ssh 登录。
 
 建议在 cloud-init 配置中自行设置账号与私钥，不要使用默认的账号名。
 比如测试环境，可以直接设置账号为 root，并设置相应的私钥。
@@ -74,6 +75,23 @@ qm set 9000 --serial0 socket --vga serial0
 3. 安装所需的基础环境，如 docker/docker-compose/vim/git/python3
 4. 关闭虚拟机，然后将虚拟机设为模板（只读）。
 5. 接下来就可以从这个模板虚拟机，克隆各类新虚拟机了~
+
+## 一些遇到的坑
+
+ubuntu cloud image 的坑：
+- ubuntu 启动时会报错 `no such device: root`，但是过一会就会正常启动。
+  - 这是 ubuntu cloud image 的 bug: https://bugs.launchpad.net/cloud-images/+bug/1726476
+- ubuntu 启动后很快就会进入登录界面，但是 root 密码可能还没改好，登录会报密码错误，等待一会再尝试登录就 OK 了
+- ubuntu 的默认网卡名称是 ens3，不是 eth0，注意修改 network_config 的网卡名称，否则网络配置不会生效
+
+opensuse cloud image 的坑：
+- opensuse leap 15 只支持 network_config v1，对 v2 的支持有 bug，`gateway4` 不会生效
+
+debian cloud image 的坑：
+- debian 启动时会彻底卡住，或者直接报错 kernel panic
+  - 原因是添加了 spice 图形卡，换成 vnc 就正常了
+- debian-nocloud 不会在启动时运行 cloudinit，cloudinit 完全不生效
+  - 不清楚原因...
 
 ### cloud-init 高级配置
 

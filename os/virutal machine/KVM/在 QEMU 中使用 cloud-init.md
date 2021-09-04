@@ -4,6 +4,8 @@
 参考 [../ProxmoxVE/README.md](../ProxmoxVE/README.md)，在本机的 KVM 环境中，也可以使用 cloud-init 来初始化虚拟机。
 好处是创建虚拟机的时候，就能设置好虚拟机的 hostname/network/user-pass/disk-size 等一系列参数。
 
+>但是请注意，几个流行发行版的 cloud image 都有些自己的坑点，即使配置正确，也不一定能正常工作...详见 PVE 的文章，后面有讲。
+
 这需要用到一个工具：[cloud-utils](https://github.com/canonical/cloud-utils)
 
 ```shell
@@ -54,24 +56,25 @@ ssh_pwauth: false
 
 >注意 `user-data` 的第一行的 `#cloud-config` 绝对不能省略！它标识配置格式为 `text/cloud-config`！
 
-再编写 `network-config`(其格式和 ubuntu 的 netplan 基本完全一致):
+再编写 `network-config`(其格式和 ubuntu 的 netplan 基本完全一致，但是我只测通了 v1 版本，v2 版没测通):
 
 ```yaml
-version: 2
-ethernets:
-  eth0:
-    dhcp4: false
-    addresses: 
-    - 192.168.122.160/24
-
-    # TODO: 目前发现如下两个配置无法生效：默认网关，以及 dns servers
-    gateway4: 192.168.122.1
-    nameservers:
-      addresses:
-      - 192.168.122.1
+version: 1
+config:
+  - type: physical
+    name: eth0
+    subnets:
+      - type: static
+        address: 192.168.122.160
+        netmask: 255.255.255.0
+        gateway: 192.168.122.1
+  - type: nameserver
+    interface: eth0
+    address:
+      - 114.114.114.114
       - 8.8.8.8
-      search:
-      - 'pve.local'
+    # search:  # search domain
+    #   - xxx
 ```
 
 ```shell
@@ -103,6 +106,13 @@ virt-install --virt-type kvm \
 ```shell
 qemu-img resize ubuntu-server-cloudimg-amd64.img 30G
 ```
+
+
+## 自动化创建
+
+手动生成 seed.iso 有点太麻烦了，建议使用 pulumi 自动化创建：
+
+- [pulumi-libvirt#examples](https://github.com/ryan4yin/pulumi-libvirt#examples)
 
 ## 画外：cloudinit 主机名称
 

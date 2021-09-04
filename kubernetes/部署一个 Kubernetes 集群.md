@@ -6,52 +6,19 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 而且要把这些组件一个个安装配置好并且能协同工作，也是很不容易的。
 
-因此社区出现了各种各样的安装方案。安装方案如此之多，以致于我不晓得该用哪个好。。于是我特地调查了一番，将几个流行的安装方案罗列如下：
-
-> `-` 表示未测试，待考察。
-
-| 安装工具     | 安装难度 |  集群可靠程度  |  集群自定义难度 |  升级降级难度  |
-| --------     | -----:   | :----:  | :----:  | :----:  |
-| [sealos](https://github.com/fanux/sealos)       |    1     |   4     |    3    | - |
-| [kubespray](https://github.com/kubernetes-sigs/kubespray)    |    2     |   -     |    -    | - |
-| [kubeadm](https://kuboard.cn/install/install-k8s.html)      |    3     |   2     |    2    | 3 |
-| [rke](https://docs.rancher.cn/rke/) |    1     |   2     |    1    | 2 |
-| [minikube]](https://github.com/kubernetes/minikube) |    1     |   2     |    1    | 2 |
-| [k3s](https://github.com/k3s-io/k3s) |    1     |   -     |    -    | - |
+因此社区出现了各种各样的安装方案，下面主要介绍几种支持 baremetal 部署的工具：
 
 
-个人的使用体验：
+2. [kubeadm](https://kuboard.cn/install/install-k8s.html): 适合自己学习 kubernetes 架构使用
+   1. 需要提前手动整理好要用到的镜像，提前传到所有节点上，或者上传放在私有镜像仓库中。
+   2. 其使用方法还算简单，只是网络插件、ingress-controller 等需要自行部署
+   3. 另外 kube-apiserver 的负载均衡需要自行处理
+3. [k3s](https://github.com/k3s-io/k3s): 轻量级 kubernetes，资源需求小，部署也非常简单，适合开发测试用或者边缘环境
+    - 支持 airgap 离线部署
+4. [kubespray](https://github.com/kubernetes-sigs/kubespray): 适合自建生产级别的集群，是一个大而全的 kubernetes 安装方案，自动安装容器运行时、k8s、网络插件等组件，而且各组件都有很多方案可选，但是感觉有点复杂。
+   1. 底层使用了 kubeadm 部署集群
+   2. 在国内使用的话，最大的麻烦是网络问题，需要研究清楚它的 airgap 模式
 
-1. sealos: 「开发/测试环境」首选，是列表中最轻量级最简便的方案，而且是完全离线的。
-    - 缺点是只提供免费的 1.xx.0 版本的资源包，小版本的资源包收费，价格 50 元...
-    - 它支持的自定义参数比较少，很多参数都只能在部署完成后，再手动去修改 apiserver/kube-proxy 等组件的配置文件。
-2. kubespray: 适合自建生产级别的集群，是一个大而全的 kubernetes 安装方案。使用难度比 kubeadm 低一些。
-   1. 最大的麻烦是网络问题。。
-3. kubeadm: 适合自己学习 kubernetes 架构使用。其使用方法还算简单，只是网络插件、ingress-controller 等需要自行部署，另外 kube-apiserver 的负载均衡需要自行处理。
-4. rke: 部署也很简单，配置文件只有一个 cluster-config.yml，可以考虑使用。
-    - rke 最大的特点是「完全使用容器运行 k8s 自身」，kubelet 都跑在容器里面。相对二进制安装而言更容易出问题...反正我去年使用时感觉它出问题的可能性比 sealos 高。
-    - `rke up` 经常会健康检查失败，需要跑两三次才能成功。因此就感觉它对自动化加 k8s 节点很不友好...
-5. minikube: 单节点 k8s 集群，不过我觉得用 sealos/rke 部署单节点集群更舒服。。
-6. k3s: 轻量级 kubernetes，部署也非常简单。
-
-除了 minikube 外，其他方案都支持部署多节点集群。
-
-另外 metric-server/ingress-controller/dashboard 这些组件，上述工具可能不会帮你部署，需要自行安装。
-
-容器运行时方面，目前推荐使用经过生产环境验证的、成熟稳定的 containerd，未来应该会渐渐切换到 crio.
-
-## 离线部署
-
-我的使用体验中：
-
-- sealos 是最好用的离线部署工具，完整的离线资源包，一行命令部署，而且集群可靠性也不错。
-  - 但是注意，节点重启时 calico/k8s.gcr.io 的镜像可能被 kubernetes gc 清除掉，内网环境/无科学上网环境下，这可能导致节点下线。
-  - 解决方法：部署集群时通过 `--repo` 设定 `k8s.gcr.io` 的阿里云 mirrors: `registry.cn-hangzhou.aliyuncs.com/google_containers/`
-  - sealos 默认使用 ipvs 做负载均衡，源码值得学习。
-- rke: rke 只需要额外提供一个内网镜像仓库，官方也提供了镜像列表用于将镜像备份到内网。
-- kubespray: 离线安装需要一个 web 服务器托管 kubectl/crictl 等 artifacts，以及一个内网镜像仓库托管所有镜像。
-    - 还需要配置 yum/apt 镜像源。
-- k3s: 官方提供 airgap 资源包，也非常方便。但是它砍掉了一些功能，有些场景下不适合使用。
 
 ## 节点配置
 
@@ -67,30 +34,72 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 主节点至少需要 2c/3g，否则很可能出现性能问题，etcd 无法正常启动。
 
 
-## 1. Minikube: 部署一个本地测试用的单节点集群
+## 使用 kubeadm+containerd+calico 部署一个集群
 
+>适合开发测试使用，安全性、稳定性、长期可用性等方案都可能还有问题。
+
+>参考 [Kubernetes Docs - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+
+### 1. 节点的环境准备
+
+首先准备三台 Linux 虚拟机，系统这里选用 debian 11，然后调整这三台机器的设置：
+
+- 节点配置：
+  - master：不低于 2c/3g
+  - worker：看需求，建议不低于 2c/4g
+- 处于同一网络内并可互通（通常是同一局域网）
+- 各主机的 hostname 和 mac/ip 地址以及 `/sys/class/dmi/id/product_uuid`，都必须唯一
+  - 这里最容易出问题的，通常是 hostname 冲突！
+- **必须**关闭 swap，kubelet 才能正常工作！
+
+方便起见，我直接使用 [ryan4yin/pulumi-libvirt](https://github.com/ryan4yin/pulumi-libvirt#examples) 自动创建了五个虚拟机，并设置好了 ip/hostname.
+
+#### 1.1 iptables 设置
+
+目前 kubernetes 的容器网络，默认使用的是 bridge 模式，这种模式下，需要使 `iptables` 能够接管 bridge 上的流量。
+
+配置如下：
 ```shell
-# 1. 下载最新版 minikube: https://github.com/kubernetes/minikube/releases
-# 2. 以 docker 方式启动 minikube，注意 base-image 要换成最新的
-minikube start --driver=docker \
-    --cpus 4 --memory=10G \
-    --image-mirror-country cn \
-    --base-image registry.cn-hangzhou.aliyuncs.com/google_containers/kicbase:v0.0.10
-# 3. 或者也可以使用 hyperv 启动 minikube，注意 iso 的版本号要匹配
-minikube start  start --driver=hyperv \
-    --cpus 4 --memory=10G \
-    --image-mirror-country cn \
-    --iso-url  https://kubernetes.oss-cn-hangzhou.aliyuncs.com/minikube/iso/minikube-v1.10.0.iso
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
 ```
 
-## 2. 使用 kubespray 部署一个生产级别的 kubernetes 集群
+#### 1.2 开放节点端口
 
-使用 kubespray 部署集群，最大的难关是网络问题（这也是我喜欢用 sealos 的原因，它完全离线安装，基本遇不到网络问题）：
+>局域网环境的话，建议直接关闭防火墙。这样所有端口都可用，方便快捷。
 
-1. yum/apt 因为网络问题速度特别慢，导致 ansible 安装 socat/ebtalbes 等工具时卡住
-    - 解决方法：centos 打开 fast_mirrors，apt 手动配置镜像源
-1. crictl/kubectl/kubelet/kubeadm 等 artifacts 下载速度慢： 使用代理手工下载，然后在 `./inventory/sample/group_vars/k8s-cluster/offline.yml` 中配置好这些工具的本地下载地址。
-1. 镜像拉取慢：
-   1. 推荐：在 `./inventory/sample/group_vars/k8s-cluster/offline.yml` 中设置国内镜像源（或者私有镜像源）。
-   2. 或者开启 `download_run_once: true` 和 `download_localhost: true`，然后在本机设置国内镜像源或代理。
+>通常我们的云上集群，也是关闭防火墙的，只是会通过云服务提供的「安全组」来限制客户端 ip
+
+Control-plane 节点，也就是 master，需要开放如下端口：
+
+| Protocol | Direction | Port Range | Purpose                 | Used By                   |
+|----------|-----------|------------|-------------------------|---------------------------|
+| TCP      | Inbound   | 6443\*      | Kubernetes API server   | All                       |
+| TCP      | Inbound   | 2379-2380  | etcd server client API  | kube-apiserver, etcd      |
+| TCP      | Inbound   | 10250      | kubelet API             | Self, Control plane       |
+| TCP      | Inbound   | 10251      | kube-scheduler          | Self                      |
+| TCP      | Inbound   | 10252      | kube-controller-manager | Self                      |
+
+Worker 节点需要开发如下端口：
+
+| Protocol | Direction | Port Range  | Purpose               | Used By                 |
+|----------|-----------|-------------|-----------------------|-------------------------|
+| TCP      | Inbound   | 10250       | kubelet API           | Self, Control plane     |
+| TCP      | Inbound   | 30000-32767 | NodePort Services†    | All                     |
+
+
+另外通常我们本地测试的时候，可能更想直接在 `80` `443` `8080` 等端口上使用 `NodePort`，
+就需要修改 kube-apiserver 的 `--service-node-port-range` 参数来自定义 NodePort 的端口范围，相应的 Worker 节点也得开放这些端口。
+
+
+
+### 2. 安装 containerd
+
 
