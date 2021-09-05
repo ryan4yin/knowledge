@@ -102,27 +102,25 @@ metadata:
 
 ### 3. 监控：istioctl + prometheus-operator
 
-Istio 官方推荐在集群外部使用 [Prometheus Operator](https://github.com/coreos/prometheus-operator) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
+Istio 官方推荐在集群外部使用 [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
 Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
 
 配置步骤如下：
-1. 部署 Prometheus Operator，步骤参见 [telemetry - kube-prometheus](/telemetry/metrics%20-%20prometheus+grafana/kube-prometheus/README.md)
-2. 修改 [istio-operator-values.yaml](./istio-operator-values.yaml)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true.
-   1. 启用这项配置后，istio 将在数据层注入 prometheus 相关注解，使 prometheus-operator 开箱即用.
+1. 部署 [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations)
+2. 将 [istio-operator-values.yaml](./istio-operator-values.yaml)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true
+   1. 修改此参数后，istio 将在数据层注入 prometheus 相关注解，`prometheus-community/prometheus` 会自动识别这些注解并抓取指标
 3. `istioctl install -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
-
-
 
 #### Istio 的 Grafana 面板
 
-我们前面部署 Istio 时已经为 Prometheus Operator 创建了 `ServiceMoniter` 抓取规则，没问题的话现在 Prometheus 中已经有 Istio 的数据了。
-现在只缺少展示数据的 Grafana 面板。
+经过前面的部署，我们的 Prometheus 应该已经在通过注解识别到 istio proxy 及控制面的 targets，并开始抓取指标了。
 
-Prometheus Operator 会自动部署 Grafana 面板，详见 [telemetry - kube-prometheus](/telemetry/metrics%20-%20prometheus+grafana/kube-prometheus/README.md)，但是不包含 Istio 的 Dashboard 配置。
+接下来需要部署 grafana，然后导入 Istio 的 Dashboard 配置，即可查看到 Istio 的状态。
 
+grafana 的 helm chart: https://github.com/grafana/helm-charts/tree/main/charts/grafana
 
-在这个页面中找到最新版本的 Istio Dashboard ID: https://grafana.com/orgs/istio
-然后进入 kube-prometheus 的 Grafana 页面，使用 ID 就可一键导入 Istio Dashboard。
+部署好 grafana 后，在这个页面中找到最新版本的 Istio Dashboard ID: https://grafana.com/orgs/istio
+然后进入rafana 页面，使用 ID 就可一键导入 Istio Dashboard.
 
 ### 4. 链路追踪（Istio + Jaeger + OpenTelemetry）
 
