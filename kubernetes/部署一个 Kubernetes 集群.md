@@ -34,7 +34,7 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 主节点至少需要 2c/3g，否则很可能出现性能问题，etcd 无法正常启动。
 
 
-## 使用 kubeadm+containerd+calico 部署一个集群
+## 一、使用 kubeadm+containerd+calico 部署一个集群
 
 >适合开发测试使用，安全性、稳定性、长期可用性等方案都可能还有问题。
 
@@ -60,6 +60,7 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 配置如下：
 ```shell
+sudo modprobe br_netfilter
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
 EOF
@@ -102,4 +103,103 @@ Worker 节点需要开发如下端口：
 
 ### 2. 安装 containerd
 
+首先是环境配置：
 
+```shell
+cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+nf_conntrack
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo modprobe nf_conntrack
+
+# Setup required sysctl params, these persist across reboots.
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+# Apply sysctl params without reboot
+sudo sysctl --system
+```
+
+安装 containerd+nerdctl:
+
+```shell
+wget https://github.com/containerd/nerdctl/releases/download/v0.11.1/nerdctl-full-0.11.1-linux-amd64.tar.gz
+tar -axvf nerdctl-full-0.11.1-linux-amd64.tar.gz
+# 这里简单起见，rootless 相关的东西也一起装进去了，测试嘛就无所谓了...
+mv bin/* /usr/local/bin/
+mv lib/systemd/system/containerd.service /usr/lib/systemd/system/
+
+systemctl enable containerd
+systemctl start containerd
+```
+
+
+### 3. 安装 kubelet/kubeadm/kubectl
+
+```shell
+# CNI 插件
+CNI_VERSION="v0.8.2"
+ARCH="amd64"
+sudo mkdir -p /opt/cni/bin
+curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-${ARCH}-${CNI_VERSION}.tgz" | sudo tar -C /opt/cni/bin -xz
+
+# crictl 相关工具
+DOWNLOAD_DIR=/usr/local/bin
+CRICTL_VERSION="v1.17.0"
+ARCH="amd64"
+curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${ARCH}.tar.gz" | sudo tar -C $DOWNLOAD_DIR -xz
+
+# kubelet/kubeadm/kubectl
+RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
+ARCH="amd64"
+cd $DOWNLOAD_DIR
+sudo curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/${ARCH}/{kubeadm,kubelet,kubectl}
+sudo chmod +x {kubeadm,kubelet,kubectl}
+
+# kubelet/kubeadm 配置
+RELEASE_VERSION="v0.4.0"
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service
+sudo mkdir -p /etc/systemd/system/kubelet.service.d
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+systemctl enable --now kubelet
+```
+
+
+### 4. 初始化 kubeadm
+
+其实需要运行的就是这条命令：
+```shell
+cat <<EOF | sudo tee kubeadm-config.yaml
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+kubernetesVersion: v1.22.1
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: systemdnet.bridge.bridge-nf-call-iptables = 1
+EOF
+
+kubeadm init --config kubeadm-config.yaml
+```
+
+kubeadm 应该会报错，提示你有些依赖不存在，下面先安装好依赖项。
+```shell
+sudo zypper in -y socat ebtables conntrack-tools
+```
+
+再重新运行前面的 kubeadm 命令，应该就能正常执行了，它做的操作有：
+- 拉取控制面的容器镜像
+- 生成 ca 根证书
+- 使用根证书为 etcd/apiserver 等一票工具生成 tls 证书
+- 为控制面的各个组件生成 kubeconfig 配置
+- 
+
+>未完待续，现在全文走下来还有 bug，请勿按此文档操作.
