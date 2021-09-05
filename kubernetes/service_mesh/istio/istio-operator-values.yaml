@@ -16,7 +16,8 @@ spec:
     accessLogEncoding: TEXT  # 日志格式，默认为 JSON
     enableEnvoyAccessLogService: false  # 启动 Envoy 的 ALS **服务**，暂时不清楚其含义。不开启也能收集 access log
 
-    # 启用 prometheus 集成，istio 将在数据层注入 prometheus 相关注解，使 prometheus-operator 开箱即用
+    # 启用 prometheus 集成，istio 将在数据层注入 prometheus 相关注解
+    # prometheus 注解只适用于 prometheus 社区的 helm chart，而 prometheus-operator 只支持 ServiceMonitor 等 CRDs！
     enablePrometheusMerge: true
     enableTracing: true  # 启用链路追踪
     enableAutoMtls: true # 启用自动双向认证
@@ -118,7 +119,7 @@ spec:
         metadataExchange:
           wasmEnabled: false
         prometheus:
-          # 启用 prometheus 集成
+          # 干啥用的？不清楚...
           enabled: true
           wasmEnabled: false
 

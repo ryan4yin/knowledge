@@ -16,9 +16,9 @@ Prometheus + Grafana + Altermanager 也是目前云原生社区最流行的开�
 这套监控系统有两种主流的部署方式：
 
 1. docker-compose 方式：这种方式适合用于监控非 kubernetes 目标，或者用于和集群内部的 prometheus 做联邦集群。
-2. kube-prometheus 方式：在集群内部部署 prometheus，适合用于监控 kubernetes 集群。
+2. helm chart 方式：通过社区提供的 helm chart 部署 prometheus.
 
-详细的内容参见 `dockprom` 和 `kube-prometheus` 文件夹。
+详细的内容参见 `dockprom` 和 `Prometheus for Kubernetes`。
 
 ## 相关文档
 
