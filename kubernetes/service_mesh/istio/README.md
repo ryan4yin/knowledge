@@ -107,7 +107,7 @@ Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数�
 
 配置步骤如下：
 1. 部署 Prometheus Operator，步骤参见 [telemetry - kube-prometheus](/telemetry/metrics%20-%20prometheus+grafana/kube-prometheus/README.md)
-2. 修改 [istio-operator-values.yaml](./istio-operator-values.yamll)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true.
+2. 修改 [istio-operator-values.yaml](./istio-operator-values.yaml)，将 `spec.meshConfig.enablePrometheusMerge` 设为 true.
    1. 启用这项配置后，istio 将在数据层注入 prometheus 相关注解，使 prometheus-operator 开箱即用.
 3. `istioctl install -f istio-operator-values.yaml`：通过修改好的配置部署 istio 或更新 istio 配置。
 
