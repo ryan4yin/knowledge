@@ -38,7 +38,10 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 >适合开发测试使用，安全性、稳定性、长期可用性等方案都可能还有问题。
 
->参考 [Kubernetes Docs - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+参考：
+- [Kubernetes Docs - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+- [使用kubeadm安装kubernetes_v1.18.x - Kuboard Docs](https://kuboard.cn/install/install-k8s.html)
+
 
 ### 1. 节点的环境准备
 
