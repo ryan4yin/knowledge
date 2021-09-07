@@ -24,6 +24,20 @@ Envoy 的线程数是一个很重要的参数，可以通过 `--concurrency` 来
 详见 [Envoy threading model](https://blog.envoyproxy.io/envoy-threading-model-a8d44b922310)
 
 
+### 2. 客户端断开连接
+
+对于 proxy 还在处理数据，连响应 header 都还没返回给客户端的时候，客户端主动了断开连接的情况，
+nginx 和 envoy 在内部使用不同的状态码来记录这种情况：
+- nginx 使用状态码 `499`
+- envoy 则使用状态码 `0`
+
+如果出现这种状态码，通常有以下几种可能：
+
+- 客户端自身问题：客户端收到了 SIGTERM 信号，于是主动关闭了所有连接。
+  - 比如你手动终止一个正在高并发压测的 wrk 程序，就可能在 nginx/envoy 上看到 `499`/`0`
+- 服务端问题：客户端等了很久没等到响应，于是放弃了等待。
+  - 这可能说明服务端处理用的时间太久了。
+
 ## 参考
 
 - [Envoy 中文指南 - 云原生实验室](https://fuckcloudnative.io/envoy-handbook)
