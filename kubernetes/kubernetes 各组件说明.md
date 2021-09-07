@@ -17,6 +17,13 @@
 
 1. kubelet: 管理 kubernetes Pod
 1. kube-proxy: 管理 Kubernetes 网络
-1. apiserver 负载均衡(nginx proxy): kubelet 通过它访问 apiserver，以实现 apiserver 的高可用。
+2. apiserver 负载均衡(nginx proxy): kubelet 通过它访问 apiserver，以实现 apiserver 的高可用。
     - 每个节点都有自己的 apiserver 负载均衡，非中心化，以保证高可用。
     - 云厂商可能有不同的实现方式，比如依赖自己的云产品：负载均衡。
+
+### 相关问题
+
+- kube-proxy 短时间不可用，会有什么影响？
+  - EKS 的 kube-proxy 是使用 daemonset 部署的，如果某节点上的 kube-proxy pod 被 kill 掉，在新 pod 未就绪前，会发生什么？
+- 同理，网络插件也基本都有 node agent，如果该 agent 短时间不可用，会发生啥？
+
