@@ -38,6 +38,8 @@ kubernetes 是一个组件化的系统，安装过程有很大的灵活性，很
 
 >适合开发测试使用，安全性、稳定性、长期可用性等方案都可能还有问题。
 
+>目前仅单 master，高可用方案待更新...
+
 参考：
 - [Kubernetes Docs - Installing kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [使用kubeadm安装kubernetes_v1.18.x - Kuboard Docs](https://kuboard.cn/install/install-k8s.html)
@@ -147,39 +149,49 @@ systemctl start containerd
 ### 3. 安装 kubelet/kubeadm/kubectl
 
 ```shell
-# CNI 插件
+# 一些全局都需要用的变量
 CNI_VERSION="v0.8.2"
+CRICTL_VERSION="v1.17.0"
+# kubernetes 的版本号
+# RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
+RELEASE="1.22.1"
+# kubelet 配置文件的版本号
+RELEASE_VERSION="v0.4.0"
+# 架构
 ARCH="amd64"
+#　安装目录
+DOWNLOAD_DIR=/usr/local/bin
+
+
+# CNI 插件
 sudo mkdir -p /opt/cni/bin
 curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-${ARCH}-${CNI_VERSION}.tgz" | sudo tar -C /opt/cni/bin -xz
 
 # crictl 相关工具
-DOWNLOAD_DIR=/usr/local/bin
-CRICTL_VERSION="v1.17.0"
-ARCH="amd64"
 curl -L "https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-${ARCH}.tar.gz" | sudo tar -C $DOWNLOAD_DIR -xz
 
 # kubelet/kubeadm/kubectl
-RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
-ARCH="amd64"
 cd $DOWNLOAD_DIR
 sudo curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/${ARCH}/{kubeadm,kubelet,kubectl}
 sudo chmod +x {kubeadm,kubelet,kubectl}
 
 # kubelet/kubeadm 配置
-RELEASE_VERSION="v0.4.0"
 curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service
 sudo mkdir -p /etc/systemd/system/kubelet.service.d
 curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl enable --now kubelet
+# 验证 kubelet 启动起来了，但是目前还没有初始化配置，过一阵就会重启一次
+systemctl status kubelet
 ```
 
 
 ### 4. 初始化 kubeadm
 
 其实需要运行的就是这条命令：
+
 ```shell
+# 极简配置：
 cat <<EOF | sudo tee kubeadm-config.yaml
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta3
@@ -189,8 +201,12 @@ kind: KubeletConfiguration
 apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemdnet.bridge.bridge-nf-call-iptables = 1
 EOF
+# 查看 kubeadm 默认的完整配置
+kubeadm config print init-defaults > init.default.yaml
 
-kubeadm init --config kubeadm-config.yaml
+# 执行集群的初始化，这会直接将当前节点创建为 master
+# 成功运行的前提：前面该装的东西都装好了，而且 kubelet 已经在后台运行了
+kubeadm init --pod-network-cidr=10.244.0.0/16 --config kubeadm-config.yaml
 ```
 
 kubeadm 应该会报错，提示你有些依赖不存在，下面先安装好依赖项。
@@ -203,6 +219,76 @@ sudo zypper in -y socat ebtables conntrack-tools
 - 生成 ca 根证书
 - 使用根证书为 etcd/apiserver 等一票工具生成 tls 证书
 - 为控制面的各个组件生成 kubeconfig 配置
-- 
+- 生成 static pod 配置，kubelet 会根据这些配置自动拉起 kube-proxy
 
->未完待续，现在全文走下来还有 bug，请勿按此文档操作.
+#### 4.1. 自定义镜像地址
+
+如果你没有科学环境，kubeadm 默认的镜像仓库在国内是拉不了的。
+如果对可靠性要求高，最好是自建私有镜像仓库，把镜像推送到私有仓库。
+
+可以通过如下命令列出所有需要用到的镜像地址：
+
+```shell
+$ kubeadm config images list --kubernetes-version v1.22.1
+k8s.gcr.io/kube-apiserver:v1.22.1
+k8s.gcr.io/kube-controller-manager:v1.22.1
+k8s.gcr.io/kube-scheduler:v1.22.1
+k8s.gcr.io/kube-proxy:v1.22.1
+k8s.gcr.io/pause:3.5
+k8s.gcr.io/etcd:3.5.0-0
+k8s.gcr.io/coredns/coredns:v1.8.4
+```
+
+使用 `skopeo` 等工具或脚本将上述镜像拷贝到你的私有仓库，或者图方便（测试环境）也可以考虑网上找找别人同步好的镜像地址。将镜像地址添加到 `kubeadm-config.yaml` 中再部署：
+
+```yaml
+cat <<EOF | sudo tee kubeadm-config.yaml
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+kubernetesVersion: v1.22.1
+imageRepository: <your-image-repository>
+controlPlaneEndpoint: "apiserver.svc.local:6443"
+networking:
+  serviceSubnet: "10.96.0.0/16"
+  podSubnet: "10.244.0.0/16"
+  dnsDomain: "cluster.local"
+dns:
+  type: CoreDNS
+  imageRepository: <your-image-repository>/coredns
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+EOF
+```
+
+
+### 5. 添加其他节点
+
+走完上一步后，一个只有 master 的集群就创建好了，按照 kubeadm 的提示，将 kubeconfig 放到默认位置：
+
+```shell
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+现在可以使用 kubectl 查看集群状况了：
+
+```shell
+kubectl get node --show-labels
+```
+
+同时 kubeadm 还会打印出一行添加 `worker node` 节点的命令，格式类似：
+
+```shell
+kubeadm join apiserver.svc.local:6443 --token <some-token> \
+        --discovery-token-ca-cert-hash sha256:<hash-xxx> 
+```
+
+现在在其他节点运行此命令，即可将 worker 节点加入到集群中。
+
+
+### 6. 安装 calico 网络插件
+
+待续
