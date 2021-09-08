@@ -144,3 +144,9 @@ export DOCKER_TLS_VERIFY=1  # 表示要使用 tls 证书进行通信，否则会
 ```
 
 详见 [Deploy-and-Secure-a-Remote-Docker-Engine](https://github.com/IcaliaLabs/guides/wiki/Deploy-and-Secure-a-Remote-Docker-Engine)
+
+
+## Docker 桥接外部网络
+
+使用 macvlan/ipvlan 的网络驱动即可。
+
