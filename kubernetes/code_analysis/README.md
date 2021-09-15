@@ -1,3 +1,6 @@
+# Kubernetes Code Analysis
+
+我将在这里记录我对 Kubernetes 各组件源码的分析过程。
 
 ## 一、控制层（Control Plane, Master）
 
@@ -16,7 +19,7 @@
 ## 工作节点 Worker Node
 
 1. kubelet: 管理 kubernetes Pod
-1. kube-proxy: 管理 Kubernetes 网络
+1. kube-proxy: 管理 Kubernetes 网络，它需要对接 kubernetes CNI 网络插件
 2. apiserver 负载均衡(nginx proxy): kubelet 通过它访问 apiserver，以实现 apiserver 的高可用。
     - 每个节点都有自己的 apiserver 负载均衡，非中心化，以保证高可用。
     - 云厂商可能有不同的实现方式，比如依赖自己的云产品：负载均衡。
