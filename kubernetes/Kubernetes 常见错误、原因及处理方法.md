@@ -5,14 +5,15 @@
 1. Pod 一直 Pending: 这说明没有任何节点能满足 Pod 的要求，容器无法被调度。比如端口被别的容器用 hostPort 占用，节点有污点等。
 1. [FailedCreateSandBox: Failed create pod sandbox: rpc error: code = DeadlineExceeded desc = context deadline exceeded]()：很可能是 CNI 网络插件的问题（比如 ip 地址溢出），
 1. [SandboxChanged: Pod sandbox changed, it will be killed and re-created](https://cloud.tencent.com/developer/article/1411527): 很可能是由于内存限制导致容器被 OOMKilled，或者其他资源不足
-1. [FailedSync: error determining status: rpc error: code = DeadlineExceeded desc = context deadline exceeded](https://github.com/kubernetes/kubernetes/issues/55094): 常和前两个错误先后出现，很可能是 CNI 网络插件的问题。
-1. 开发集群，一次性部署所有服务时，各 Pod 互相争抢资源，导致 Pod 生存探针失败，不断重启，重启进一步加重资源使用。恶性循环。
+   1. 如果是 OOM，容器通常会被重启，`kubectl describe` 能看到容器上次被重启的原因 `State.Last State.Reason = OOMKilled`.
+2. [FailedSync: error determining status: rpc error: code = DeadlineExceeded desc = context deadline exceeded](https://github.com/kubernetes/kubernetes/issues/55094): 常和前两个错误先后出现，很可能是 CNI 网络插件的问题。
+3. 开发集群，一次性部署所有服务时，各 Pod 互相争抢资源，导致 Pod 生存探针失败，不断重启，重启进一步加重资源使用。恶性循环。
     - **需要给每个 Pod 加上 resources.requests，这样资源不足时，后续 Pod 会停止调度，直到资源恢复正常。**
-1. Pod 出现大量的 Failed 记录，Deployment 一直重复建立 Pod: 通过 `kubectl describe/edit pod <pod-name>` 查看 pod `Events` 和 `Status`，一般会看到失败信息，如节点异常导致 Pod 被驱逐。
-1. [Kubernetes 问题排查：Pod 状态一直 Terminating](https://zhuanlan.zhihu.com/p/70031676)
-1. 创建了 Deployment 后，却没有自动创建 Pod: 缺少某些创建 Pod 必要的东西，比如设定的 ServiceAccount 不存在。
-1. Pod 运行失败，状态为 MatchNodeSelector: 对主节点进行关机、迁移等操作，导致主调度器下线时，会在一段时间内导致 Pod 调度失败，调度失败会报这个错。
-2. Pod 仍然存在，但是 `Service` 的 Endpoints 却为空，找不到对应的 Pod IPs: 遇到过一次，是因为时间跳变（从未来的时间改回了当前时间）导致的问题。
+4. Pod 出现大量的 Failed 记录，Deployment 一直重复建立 Pod: 通过 `kubectl describe/edit pod <pod-name>` 查看 pod `Events` 和 `Status`，一般会看到失败信息，如节点异常导致 Pod 被驱逐。
+5. [Kubernetes 问题排查：Pod 状态一直 Terminating](https://zhuanlan.zhihu.com/p/70031676)
+6. 创建了 Deployment 后，却没有自动创建 Pod: 缺少某些创建 Pod 必要的东西，比如设定的 ServiceAccount 不存在。
+7. Pod 运行失败，状态为 MatchNodeSelector: 对主节点进行关机、迁移等操作，导致主调度器下线时，会在一段时间内导致 Pod 调度失败，调度失败会报这个错。
+8. Pod 仍然存在，但是 `Service` 的 Endpoints 却为空，找不到对应的 Pod IPs: 遇到过一次，是因为时间跳变（从未来的时间改回了当前时间）导致的问题。
 
 ### Pod 无法删除
 
