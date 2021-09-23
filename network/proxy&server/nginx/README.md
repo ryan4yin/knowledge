@@ -106,3 +106,28 @@ http {
 rewrite 的 `last` 和 `break` 两个都会停止处理当然的所有 `ngx_http_rewrite_module` 模块的所有指令，而 `return` 指令就是由 `ngx_http_rewrite_module` 模块提供的，因此它被直接忽略了。
 由于请求未得到处理，导致 nginx 直接返回了 `404`.
 
+
+###  proxy_pass 的 upstream DNS 缓存问题
+
+Nginx 的 upstream 地址只会在启动时被解析一次，后续如果 upstream DNS 存在变更，就会导致错误。
+
+参考文章：
+
+- [运维遇坑记录(3)-Nginx缓存了DNS解析造成后端不通](https://segmentfault.com/a/1190000022365954)
+
+解决方案：
+
+- 方案一：每次 DNS 变更都 reload nginx，比如写个脚本监控 DNS 变更，有变更就跑下 nginx reload
+- 方案二：通过 set+resolver 的方式动态更新 DNS
+  - 但是这个方案不适合 QPS 高的情况，因为它不支持 keepalive
+    ```conf
+    location / {
+        resolver 8.8.8.8;
+        set $backend https://demo-app.com$uri$is_args$args;
+        proxy_pass $backend;
+        include proxy_params;
+    }
+    ```
+- 方案三：使用第三方模块
+
+
