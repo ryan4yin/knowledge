@@ -206,3 +206,61 @@ finder 相关：
 由于苹果系统原因，外接 2K 显示器会导致字体特别小，非常难受。
 
 建议使用 [one-key-hidpi](https://github.com/xzhih/one-key-hidpi)，跑完脚本重启，就能将外接 2K 显示器变成 retina 屏，就能获得类似 windows 的分辨率缩放体验了。
+
+
+## MacOS 网络诊断相关命令
+
+查看路由表及对应的网卡：
+```
+❯ netstat -nr
+Routing tables
+
+Internet:
+Destination        Gateway            Flags        Netif Expire
+default            phicomm.me         UGScg          en0
+127                localhost          UCS            lo0
+localhost          localhost          UH             lo0
+169.254            link#6             UCS            en0      !
+192.168.2          link#6             UCS            en0      !
+192.168.2.1/32     link#6             UCS            en0      !
+phicomm.me         74:7d:24:dc:d:2f   UHLWIir        en0   1200
+brt-w09.lan        f2:7:9a:4e:a9:1c   UHLWI          en0   1189
+192.168.2.238/32   link#6             UCS            en0      !
+224.0.0/4          link#6             UmCS           en0      !
+224.0.0.251        1:0:5e:0:0:fb      UHmLWI         en0
+239.255.255.250    1:0:5e:7f:ff:fa    UHmLWI         en0
+255.255.255.255/32 link#6             UCS            en0      !
+```
+
+网卡相关
+```
+# 列出所有网卡的详细信息
+ ifconfig -a
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+	options=1203<RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP>
+	inet 127.0.0.1 netmask 0xff000000
+	inet6 ::1 prefixlen 128
+	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
+	nd6 options=201<PERFORMNUD,DAD>
+gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
+stf0: flags=0<> mtu 1280
+......
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=400<CHANNEL_IO>
+	ether 14:7d:da:9d:37:a0
+	inet6 fe80::42e:3664:dd14:7a29%en0 prefixlen 64 secured scopeid 0x6
+	inet 192.168.2.238 netmask 0xffffff00 broadcast 192.168.2.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+......
+
+# 列出所有网卡名称
+❯ ifconfig -l
+lo0 gif0 stf0 en5 ap1 en0 awdl0 llw0 en1 en2 en3 en4 bridge0 utun0 utun1
+
+# 列出网卡的 ip 地址
+ipconfig getifaddr en0
+```
+
+其他诸如 traceroute/dig/ping/lsof 的用法，和 linux 基本一致。
