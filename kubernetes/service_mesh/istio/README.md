@@ -195,11 +195,29 @@ kiali-operator 会根据 `kiali_cr.yaml` 的内容，创建/更新/修改 kiali 
 1. jaeger: kiali 还需要查询链路追踪的数据，因此还得配置 jaeger-query　的　api url: `http://jaeger.tracing:80`
 1. Web UI 相关：kiali 通过 Web UI 展示网格数据。
    1. `auth`: 测试环境可设置为 `anonymous`，方便测试。
-   2. 本地测试环境使用 NodePort 暴露出 Web UI 端口。
+   2. 本地测试环境使用 NodePort 暴露出 Web UI 端口
 
 ```shell
 kubectl apply -f my-kiali-cr.yaml -n istio-system
 ```
+
+## 其他生产环境需要注意的点
+
+- 将 istiod/ingressgateway 的 HPA 改成最少 3 副本，同时调整其资源请求与限制
+- 修改 istio-sidecar-injector 这个 configmap，在 sidecar 里添加 preStop sleep 命令.
+  - 如果 sidecar 比主容器先关闭，客户端将会收到 503 状态码: [Everything we do on 1.0.6 to minimise 503s](https://github.com/istio/istio/issues/12183)
+   ```yaml
+      containers:
+      - name: istio-proxy
+        # 添加下面这部分
+        lifecycle:
+        preStop:
+           exec:
+              command:
+              - /bin/sh
+              - -c
+              - "while [ $(netstat -plunt | grep tcp | grep -v envoy | wc -l | xargs) -ne 0 ]; do sleep 1; done"
+   ```
 
 ## 参考
 
