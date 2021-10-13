@@ -42,3 +42,17 @@ aws eks --region <region> update-kubeconfig --name <cluster_name>
 # 访问 eks 集群
 kubectl get pods
 ```
+
+## 给 EKS ServiceAccount 绑定一个 AWS IAM Role
+
+>[IAM roles for service accounts- AWS Docs](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
+
+>[](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html)
+
+1. 每个 EKS 集群都有一个 OIDC issuer URL，首先我们需要使用它，创建一个 IAM OIDC Prodiver
+   1. [Create an IAM OIDC provider for your cluster](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html)
+2. 创建 IAM Role，绑定需要的 Policy 权限策略，并将 EKS 集群的 serviceAccount 加入到「信任关系」中
+   1. [Creating an IAM role and policy for your service account](https://docs.aws.amazon.com/eks/latest/userguide/create-service-account-iam-policy-and-role.html)
+3. 创建 EKS ServiceAccount，使用 annotation 关联到前面创建的 IAM Role，然后在 Pod 中使用此 serviceaccount
+  1. [Associate an IAM role to a service account](https://docs.aws.amazon.com/eks/latest/userguide/specify-service-account-role.html)
+
