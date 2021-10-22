@@ -95,6 +95,8 @@ initContainers 还未运行成功，而 Containers 却 Ready 了，非常疑惑�
    1. Service 对应的 Pods 不存在，endpoints 为空
    2. Service 对应的 Pods 全部都 NotReady，导致 endpoints 为空
    3. 也有可能是服务自身出错返回的 503
+   4. 如果你使用了 envoy sidecar， 503 可能的原因就多了。基本上 sidecar 与主容器通信过程中的任何问题都会使 envoy 返回 503，使客户端重试。
+      1. 详见 [Istio：503、UC 和 TCP](https://blog.fleeto.us/post/istio-503-uc-debug/)
 2. 502：Bad Gateway，通常是由于上游未返回正确的响应导致的，可能的根本原因：
    1. 应用程序未正确处理 SIGTERM 信号，在请求未处理完毕时直接终止了进程。详见 [优雅停止（Gracful Shutdown）与 502/504 报错 - K8s 最佳实践](./最佳实践.md)
    2. 网络插件 bug
@@ -202,3 +204,4 @@ kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 - [Kubernetes管理经验](https://yq.aliyun.com/articles/703971?type=2)
 - [504 Gateway Timeout when accessing workload via ingress](https://www.reddit.com/r/kubernetes/comments/ced0py/504_gateway_timeout_when_accessing_workload_via/)
 - [Kubernetes Failure Stories](https://k8s.af/)
+- [Istio：503、UC 和 TCP](https://blog.fleeto.us/post/istio-503-uc-debug/)

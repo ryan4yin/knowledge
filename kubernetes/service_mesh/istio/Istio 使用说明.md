@@ -14,3 +14,7 @@ VirtualService 详细介绍，参见官方文档：[VirtualService Reference - I
    1. 别的名字空间的网关：` <gateway-namespace>/<gateway-name>`，比如 `my-namespace/my-gateway`
       1. gateway 名称不是域名 FQDN！而是使用 `/` 分隔的一个名称！
 
+
+### 监控中出现 503 可能的原因
+
+通过 istio 监控指标，能看到 503 对应的 [RESPONSE_FLAG](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#config-access-log-format-response-flags)，它给出了 503 更详细的原因。
