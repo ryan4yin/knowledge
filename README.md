@@ -8,13 +8,13 @@
 
 主要内容：
 
-1. 用于容器化部署常见应用的 docker-compose 配置（单机）。
-2. Kubernetes 生态：部署、配置、组件及使用笔记。
+1. 用于容器化部署常见应用的 docker-compose 配置（单机）
+2. Kubernetes 生态：部署、配置、组件及使用笔记
 3. Telemetry：监控、日志、链路追踪（学习中...）
 4. 容器：Docker、容器镜像仓库、Podman 等。
 5. CI/CD：Jenkins/GitLabCI/ArgoWorkflow 等
 6. 网络：Kubernetes 集群网络、Linux 网络（学习中）
-7. 操作系统：Linux 系统、KVM 虚拟化等。
+7. 操作系统：Linux 系统、KVM 虚拟化等
 8. 编程语言学习笔记：Python/Golang/Java
 9. DevOps 实用脚本
 10. 研发运维一体化平台：CI+CD+SRE
@@ -22,7 +22,6 @@
 12. 数学笔记：线代、数学物理方法等
 13. 机器学习/深度学习（貌似还没开始...）
 14. 信号与系统/数字信号处理（皮毛都还没学到...）
-15. 
 
 文件夹结构就是文档目录，这里就不额外列索引了—_—
 
