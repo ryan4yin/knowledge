@@ -11,9 +11,9 @@
     - Notes: [线性代数笔记 - 子实（Python）](https://github.com/zlotus/notes-linear-algebra)
 2. AI learning
     - machine learning
-      - [Hands-on Machine Learning with Scikit-Learn and TensorFlow](https://github.com/ageron/handson-ml)
+      - [Machine Learning for Beginners - MicroSoft](https://github.com/microsoft/ML-For-Beginners)
       - [100-Days-Of-ML-Code](https://github.com/Avik-Jain/100-Days-Of-ML-Code)
-      - [Implement basic ML models in TensorFlow 2.0 + Keras or PyTorch.](https://github.com/madewithml/basics)
+      - [Learn how to responsibly deliver value with ML.](https://github.com/GokuMohandas/MadeWithML)
     - deep learning
       - [fastai book](https://github.com/fastai/fastbook)
       - [动手学深度学习（Dive into Deep Learning，D2L）](https://github.com/d2l-ai/d2l-zh)
