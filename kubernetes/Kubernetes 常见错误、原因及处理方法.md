@@ -100,7 +100,7 @@ initContainers 还未运行成功，而 Containers 却 Ready 了，非常疑惑�
 2. 502：Bad Gateway，通常是由于上游未返回正确的响应导致的，可能的根本原因：
    1. 应用程序未正确处理 SIGTERM 信号，在请求未处理完毕时直接终止了进程。详见 [优雅停止（Gracful Shutdown）与 502/504 报错 - K8s 最佳实践](./最佳实践.md)
    2. 网络插件 bug
-3. 504：网关请求下游超时，主要有两种可能
+3. 504：网关请求 upstream 超时，主要有两种可能
     1. 考虑是不是 Ingress Controller 的 IP 列表未更新，将请求代理到了不存在的 ip，导致得不到响应
    1. Service Endpoints 移除不够及时，在 Pod 已经被终止后，仍然有个别请求被路由到了该 Pod，得不到响应导致 504。详见 [优雅停止（Gracful Shutdown）与 502/504 报错 - K8s 最佳实践](./最佳实践.md)
     2. Pod 响应太慢，代码问题
