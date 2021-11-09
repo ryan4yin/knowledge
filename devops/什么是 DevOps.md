@@ -31,6 +31,12 @@ DevOps 模式下的运维人员，要兼顾「快速地、高效地迭代」与�
 
 - [developer-roadmap#devops-roadmap](https://github.com/kamranahmedse/developer-roadmap#devops-roadmap)
 
+
+## 怎样的 SRE 才算是有灵魂的 SRE
+
+1. 技术能力
+2. 思维方式：要从产品的角度去思考问题，更好帮助业务方。不能盲目地承接业务方需求，这样就变成外包了。
+
 ## 参考
 
 - [DevOps 和敏捷：究竟有什么区别？](https://zhuanlan.zhihu.com/p/115611598)
