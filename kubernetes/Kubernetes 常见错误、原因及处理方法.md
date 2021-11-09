@@ -84,6 +84,12 @@ initContainers 还未运行成功，而 Containers 却 Ready 了，非常疑惑�
 1.  [DiskPressure](https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/#node-conditions)：节点的可用空间不足。（通过`df -h` 查看，保证可用空间不小于 15%）
 1. The node was low on resource: ephemeral-storage: 同上，节点的存储空间不够了。
 
+节点存储告警可能的原因：
+1. kubelet 的资源 GC 设置有问题，遗留的镜像等资源未及时 GC 导致告警
+2. 存在运行的 pod 使用了大量存储空间，在节点上通过 `docker ps -a --size | grep G` 可以查看到
+3. 如果使用的是 EKS，并且磁盘告警的挂载点为 `/var/lib/kubelet/plugins/kubernetes.io/aws-ebs/mounts/aws/us-east-1b/vol-xxxxx`
+   1. 显然是 EBS 存储卷快满了导致的
+   2. 可通过 ` kubectl get pv -A -o yaml | grep -C 30 vol-xxxxx` 来定位到具体的存储卷
 
 ## 网络常见错误
 
