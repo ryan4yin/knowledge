@@ -5,7 +5,14 @@
 
 Istio 1.7 版本新增了一个功能: [delay the application start until after the sidecar is started](https://istio.io/latest/news/releases/1.7.x/announcing-1.7/change-notes/#traffic-management)
 
-通过设置 `values.global.proxy.holdApplicationUntilProxyStarts=true`，就能让主容器在 Sidecar 就绪后启动。
+通过设置 operator 参数 `values.global.proxy.holdApplicationUntilProxyStarts=true`，就能让主容器在 Sidecar 就绪后启动。
+
+或者在 pod 上添加如下注解也是一样的效果（只在该 pod 上生效）：
+
+```yaml
+annotations:
+  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+```
 
 这实际上是利用了 kubernetes 的 postStart 功能，详见 [Delaying application start until sidecar is ready](https://medium.com/@marko.luksa/delaying-application-start-until-sidecar-is-ready-2ec2d21a7b74)，文中给出的 Pod 示例如下：
 
