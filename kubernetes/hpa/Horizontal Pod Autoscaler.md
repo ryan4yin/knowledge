@@ -98,6 +98,25 @@ kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.y
 也可以在「基础设施层面」解决：
 1. 像 AWS ALB TargetGroup 以及其他云服务商的 ALB 服务，通常都可以设置 `slow_start` 时长，即对新加入的实例，使用一定时间慢慢地把流量切过去，最终达到预期的负载均衡状态。这个可以解决服务预热问题。
 
+
+### 2. HPA 扩缩容过于敏感，导致 Pod 数量震荡
+
+通常来讲，EKS 上绝大部分负载都应该选择使用 CPU 进行扩缩容。因为 CPU 通常能很好的反映服务的负载情况，对大部分服务而言，也就是 QPS.
+
+但是有些服务会存在其他影响 CPU 使用率的因素，导致使用 CPU 扩缩容变得不那么可靠，比如：
+- 有些 Java 服务堆内存设得很大，GC pause 也设得比较长，因此内存 GC 会造成 CPU 间歇性飙升，CPU 监控会有大量的尖峰。
+
+因为上述问题存在，使用 CPU 扩缩容，就可能会造成服务频繁的扩容然后缩容。
+而有些服务（如我们的「推荐服务」），对「扩容」和「缩容」都是比较敏感的，每次扩缩都会造成服务可用率抖动。
+
+对这类服务而言，HPA 有这几种调整策略（可以结合使用）：
+- 调高 HPA CPU 的期望值，避免频繁扩容。
+  - 通常设成 60%/65% 是比较安全的，理想情况大概是设成 70%/80%
+  - 具体的值要看流量的最大瞬间变化率，期望值设得越低，扩容就越敏感，就能抗住更高的瞬间流量尖峰
+- 在流量高峰期，按历史经验直接调整 HPA 的最小实例数到较高水位，避免触发 HPA
+- 对 kubernetes 1.18+，可以直接使用 HPA 的 `behavior.scaleDown` 和 `behavior.scaleUp` 两个参数，控制每次扩缩容的最多 pod 数量或者比例。
+- 选择使用 QPS 等其他指标来进行扩缩容
+
 ## 参考
 
 - [Pod 水平自动伸缩 - Kubernetes Docs](https://kubernetes.io/zh/docs/tasks/run-application/horizontal-pod-autoscale/)
