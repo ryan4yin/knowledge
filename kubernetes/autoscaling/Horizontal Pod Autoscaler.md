@@ -4,6 +4,7 @@ Kubernetes 的 HPA 可以通过 CPU/RAM 进行 Pod 伸缩，另外也支持自�
 
 注意事项：
 
+1. HPA 需要从 metrics-server 获取监控指标，因此 kubernetes 集群一定要部署好 [metrics-server](../metrics/metrics-server.md).
 1. HPA 的「目标指标」可以使用两种形式：绝对度量指标和资源利用率。
     - 绝对度量指标：比如 CPU，就是设定绝对核数。
     - 资源利用率（资源使用量/资源请求 * 100%）：在 Pod 设置了资源请求时，可以使用资源利用率进行 Pod 伸缩。
@@ -33,40 +34,14 @@ HPA 的扩缩容算法为：
 2. `--horizontal-pod-autoscaler-cpu-initialization-period`: 
 3. 缩容冷却时间：默认 5 分钟。
 
-## 前置条件 - [metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 
-HPA 需要从 metrics-server 获取监控指标，因此 kubernetes 集群一定要部署好 metrics-server.
+## HPA 的期望值设成多少合适
 
-metrics-server 是 k8s 官方的一个轻量级指标收集器，负责收集集群中的 CPU/RAM 两项指标，提供给 HPA 等自动伸缩器使用，
-另外也提供对 k8s 集群的简单监控，比如 `kubectl top po` 命令以及 dashboard。
+这个具体情况具体分析，以最常用的 CPU 值为例：
 
-自己使用 kubeadm 等方式搭建的集群，是没有 metrics-server 的，需要另行部署。
-metrics-server 实质上是一个 kube-apiserver 的 api 扩展，针对它的请求需要由 kube-apiserver 转发。
-也就是说要想完整地安装 metrics-server，还需要修改 kube-apiserver 的配置。安全起见还需要为 kube-apiserver 和 metrics-server 配双向 TLS 认证，比较麻烦。
-
-测试环境不考虑安全性的话，可以一行命令部署 metrics-server:
-
-```shell
-kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.yaml
-```
-
-上面给出的 metrics-server 部署命令拷贝自 kuboard 的安装文档，经对比发现它只修改了 `metrics-server` 官方部署 yaml，添加了两个参数：
-
-```shell
-        args:
-          - --cert-dir=/tmp
-          - --secure-port=4443
-          # 下面两个参数是 kuboard 添加的
-          - --kubelet-insecure-tls=true
-          - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,externalDNS
-```
-
-另外 metircs-server 镜像地址也被 kuboard 换成了 dockerhub 源，避免被墙。
-
-别的注意事项：
-
-1. metrics-server 抓取数据的间隔默认为 60s，可通过 `metrics-resolution` 修改这个间隔，但是不建议低于 15s
-2. metrics-server 占用资源小，而且只会缓存 HPA 用得到的数据（也许就缓存几分钟的数据？反正不需要担心它吃存储）。
+- 通常情况下，HPA 期望值建议设为 60% 到 65% 可能是比较合适的。最小副本数建议设为 3/4/5
+  - 同时建议为服务添加 `PodDisruptionBudget`，将最小可用副本数设为 2/3/4，保证正常的节点伸缩场景下，同时被干掉的 pod 数量至多只有 1 个。
+- 如果服务性能不太行，QPS 稍微一变化，CPU 就可能飙升，那也只好调低服务的 HPA 期望值，比如调整到 50%
 
 
 ## 问题
@@ -109,13 +84,59 @@ kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.y
 因为上述问题存在，使用 CPU 扩缩容，就可能会造成服务频繁的扩容然后缩容。
 而有些服务（如我们的「推荐服务」），对「扩容」和「缩容」都是比较敏感的，每次扩缩都会造成服务可用率抖动。
 
-对这类服务而言，HPA 有这几种调整策略（可以结合使用）：
-- 调高 HPA CPU 的期望值，避免频繁扩容。
-  - 通常设成 60%/65% 是比较安全的，理想情况大概是设成 70%/80%
-  - 具体的值要看流量的最大瞬间变化率，期望值设得越低，扩容就越敏感，就能抗住更高的瞬间流量尖峰
-- 在流量高峰期，按历史经验直接调整 HPA 的最小实例数到较高水位，避免触发 HPA
-- 对 kubernetes 1.18+，可以直接使用 HPA 的 `behavior.scaleDown` 和 `behavior.scaleUp` 两个参数，控制每次扩缩容的最多 pod 数量或者比例。
-- 选择使用 QPS 等其他指标来进行扩缩容
+对这类服务而言，HPA 有这几种调整策略：
+- 选择使用 **QPS** 等相对比较平滑，没有 GC 这类干扰的指标来进行扩缩容
+- 对 kubernetes 1.18+，可以直接使用 HPA 的 `behavior.scaleDown` 和 `behavior.scaleUp` 两个参数，控制每次扩缩容的最多 pod 数量或者比例。 示例如下：
+
+```yaml
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    # 这个 behavior 注解，功能与下面的 behavior 字段等同，二选一即可
+    # 只在 kubernetes 1.18+ 生效，低版本可以 apply 此注解，但是实际上无效
+    autoscaling.alpha.kubernetes.io/behavior: |
+      {"ScaleDown":{
+        "StabilizationWindowSeconds":600,
+        "SelectPolicy":"Min",
+        "Policies":[
+          {"Type":"Percent","Value":5,"PeriodSeconds":1200},
+          {"Type":"Pods","Value":3,"PeriodSeconds":1200}
+        ]
+      }}'
+  name: podinfo
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podinfo
+  minReplicas: 3
+  maxReplicas: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50  # 期望的 CPU 平均值
+  behavior:
+    # 以下的一切配置，都是为了更平滑地缩容
+    scaleDown:
+      stabilizationWindowSeconds: 600  # 使用过去 10 mins 的最大 cpu 值进行缩容计算
+      policies:
+      - type: Percent  # 每 20 mins 最多缩容 `ceil[当前副本数 * 5%]` 个 pod（20 个 pod 以内，一次只缩容 1 个 pod）
+        value: 5
+        periodSeconds: 1200
+      - type: Pods  # 每 20 mins 最多缩容 3 个 pod（即 >= 60 个 pods 时，每次缩容的 pod 数就不会涨了）
+        value: 3
+        periodSeconds: 1200
+      selectPolicy: Min  # 上面的 policies 列表，只生效其中最小的值作为缩容限制（保证平滑缩容）
+```
+
+
+而对于扩容不够平滑这个问题，可以考虑提供类似 AWS ALB TargetGroup `slow_start` 的功能，在扩容时缓慢将流量切到新 Pod 上，以实现预热服务（JVM 预热以及本地缓存预热），这样就能达到比较好的平滑扩容效果。
 
 ## 参考
 
