@@ -598,3 +598,10 @@ kube-system   kube-vip-k8s-master-1                  2m           16Mi
 kube-system   kube-vip-k8s-master-2                  2m           17Mi            
 kube-system   metrics-server-559f85484-5b6xf         7m           27Mi    
 ```
+
+
+#### 10. 为 etcd 添加定期备份能力
+
+>参考 [etcd 的备份与恢复](/datastore/etcd/etcd%20的备份与恢复.md)
+
+
