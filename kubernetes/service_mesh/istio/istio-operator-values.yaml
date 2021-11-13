@@ -1,28 +1,34 @@
 # 配置文件对应的 istioctl 版本：1.8.x
-# 本地开发测试集群部署 istio，需要用到的自定义配置
+# 适用于生产环境，本地环境可以自行调低资源要求和实例数量
 # 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
-  # profile=default 是官方推荐的用于生产环境部署。它只部署 istiod/ingressgateway
-  # 从 istio 1.7 开始，第三方组件如 prometheus/grafana/jaeger(tracing)/kiali 都需要自行安装，istio 不再提供默认组件。建议使用 operator/helm 进行安装
-  profile: default
+  profile: minimal  # 只部署 istiod 与 CRDs, gateways 全部另行部署
   hub: image-registry.svc.local/istio # 使用私有 dockerhub 镜像仓库
   # meshConfig 的所有参数：https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
   meshConfig:
     # 改为 `/dev/stdout` 可将 access log 输出到容器日志中。但是注意，access log 会非常多，可能影响性能！
-    # 另外注意不要把日志输出到根文件系统中（如 /tmp/accesslog），因为 sidecar 的根文件系统是只读的！
-    accessLogFile: ""  # 不收集 access log。
+    # 另外注意不要把日志输出到文件系统中（如 /tmp/accesslog），因为 sidecar 的文件系统是只读的！
+    accessLogFile: ""  # 不收集 access log
     accessLogEncoding: TEXT  # 日志格式，默认为 JSON
     enableEnvoyAccessLogService: false  # 启动 Envoy 的 ALS **服务**，暂时不清楚其含义。不开启也能收集 access log
 
-    # 启用 prometheus 集成，istio 将在数据层注入 prometheus 相关注解
-    # prometheus 注解只适用于 prometheus 社区的 helm chart，而 prometheus-operator 只支持 ServiceMonitor 等 CRDs！
+    # 启用 prometheus 集成，istio 将在数据层注入 prometheus.io 相关注解
+    # 注意：prometheus 注解只适用于 prometheus 社区的 helm chart，而 prometheus-operator 只支持 ServiceMonitor 等 CRDs！
     enablePrometheusMerge: true
-    enableTracing: true  # 启用链路追踪
-    enableAutoMtls: true # 启用自动双向认证
+    enableTracing: false  # 启用链路追踪
+    # 启用自动双向认证（默认 true）。
+    # 这个有性能损耗，对安全性要求不高的话，一般是建议关掉。
+    # (其实很多公司内网都完全不设防的，安全风险最大的是数据库未启用 TLS 协议、以及账号密码保存不当，这个不解决，集群加了 mTLS 也没意义)
+    enableAutoMtls: false 
     outboundTrafficPolicy:
       mode: ALLOW_ANY # 允许任意流量出网。改为 REGISTRY_ONLY 将只允许访问已注册的域名。
+    # `defaultConfig`: sidecar 和 gateway 的默认配置(envoy)，Pod 上的 `proxy.istio.io/config` 注解可以覆盖此默认值
+    # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig
+    defaultConfig:
+    pathNormalization:  # sidecar 和 gateway 对 path 的预处理方式，istio 和 path 有关的所有操作，使用的都是预处理后的 path
+      normalization: MERGE_SLASHES  # 自动将多个斜线合并成一个（注意确认，这是否会对服务造成影响。可以先查几天的 access_log，确认下哪些 path 会受到影响，跟对应的业务方确认下）
   components:
     pilot:
       k8s:
@@ -33,93 +39,59 @@ spec:
             value: "true"
           - name: PILOT_ENABLE_REDIS_FILTER
             value: "true"
-        resources:
+        resources:  # istiod 毕竟是核心组件，保险起见配置给高点
           requests:
-            cpu: 1000m # override from default 500m
-            memory: 4096Mi # ... default 2048Mi
+            cpu: 2000m
+            memory: 1024Mi
+          limits:
+              cpu: 2000m
+              memory: 1024Mi
         hpaSpec:
-          maxReplicas: 3 # ... default 5
-          minReplicas: 2 # ... default 1
-    ingressGateways:
-      - name: istio-ingressgateway
-        enabled: true
-        k8s:
-          resources:
-            requests:
-              cpu: 1000m
-              memory: 1024Mi
-            limits: # 实测发现这东西还挺吃资源的
-              cpu: 2000m
-              memory: 2048Mi
-          hpaSpec:
-            maxReplicas: 5 # ... default 5
-            minReplicas: 2 # ... default 1
-          service: # 测试集群需通过 NodePort 导出 ingressgateway
-            ports:
-              - name: status-port
-                port: 15021
-                targetPort: 15021
-              - name: http2
-                port: 80
-                nodePort: 80
-                targetPort: 8080
-              - name: https
-                port: 443
-                # nodePort: 443
-                targetPort: 8443
-              - name: tcp
-                port: 31400
-                targetPort: 31400
-              - name: tls
-                port: 15443
-                targetPort: 15443
-    egressGateways:
-      - name: istio-egressgateway
-        enabled: true
-        k8s:
-          resources:
-            limits:
-              cpu: 2000m
-              memory: 1024Mi
-            requests:
-              cpu: 10m
-              memory: 40Mi
-          hpaSpec:
-            maxReplicas: 5 # ... default 5
-            minReplicas: 2 # ... default 1
+          maxReplicas: 15
+          minReplicas: 3
+        affinity:
+          podAntiAffinity:  # 使 istiod 更分散些
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchExpressions:
+                    - key: app
+                      operator: In
+                      values: istiod
   values:
     global: # 全局配置
       defaultNodeSelector:
-        network: "true" # 使用网络组件专用节点
-      jwtPolicy: first-party-jwt # 不使用第三方 jwt 验证。
+        eks.amazonaws.com/nodegroup: "network-proxy" # 使用专用的网络节点组，与业务服务隔离开
+      defaultPodDisruptionBudget:
+        enabled: true
+        minAvailable: 60%  # istio 服务默认的 PDB 策略，实例数最少（3 个）的情况下，它必须保证 ceil[3 * 60%] = 2 个 Pod 可用
       logAsJson: false  # 日志使用 json 格式
       logging:  # 日志级别
         level: default:info
       proxy:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
-        # 1.7.0+ 让主容器在 istio-proxy 就绪后，再启动。避免主容器因为网络未就绪而 Crash.
-        holdApplicationUntilProxyStarts: true
       tracer:
-        # 不使用 istio 自带的 jaeger，改用 Jaeger Operator 部署（或者测试环境可以使用集群外部的 jaeger）
         zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
           address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
     pilot:
       traceSampling: 0.1 # 链路追踪的采样率
-    gateways:
-      istio-ingressgateway:
-        type: NodePort # 本地测试集群用不了 LoadBalancer
-        autoscaleEnabled: true
-      istio-egressgateway: # 出网流量管控
-        autoscaleEnabled: true
     telemetry:
       enabled: true
+      # Istio telemetry V2，去掉了 mixer 组件，指标的处理直接在 proxy 上进行
+      # istio 使用了两个 envoy 插件来实现直接在数据面生成 k8s service 级别的指标：
+      # 1. metadata-exchange 负责在 client/server 两端，互相传递自身的 metadata 信息（两端需要这个信息生成 service 级别的指标，如 istio_requests_total）
+      # 2. stats 负责在 envoy 上采集 proxy 级别的流量指标
       v2:
         enabled: true
         metadataExchange:
-          wasmEnabled: false
+          # 对于 http 请求，此插件通过注入 HTTP Headers 实现 metadata 交换
+          # 而对于 tcp 流量，此插件使用基于 ALPN 的隧道来连接两端的 sidecar，完成 metadata 交换（只有开启了 mTLS 才支持此功能）
+          wasmEnabled: false  # 默认情况下 istio 使用二进制编译的插件，这个开关换成实验性的 wasm 模块（代码是同一套，只是加载方式不同）
         prometheus:
-          # 干啥用的？不清楚...
+          # istio 通过 EnvoyFilter 来配置 proxy 生成 prometheus 指标，这里可以实现自定义指标、增减指标的维度
           enabled: true
           wasmEnabled: false
 
