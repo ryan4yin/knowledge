@@ -124,7 +124,7 @@ grafana 的 helm chart: https://github.com/grafana/helm-charts/tree/main/charts/
 
 ### 4. 链路追踪（Istio + Jaeger + OpenTelemetry）
 
->OpenTracing 只支持跟踪 HTTP/GRPC 调用，而 Opencensus 提供了自定义指标的功能，使我们能跟踪任意自定义指标（比如 mysql 调用、redis 调用，甚至任意本地方法调用）。
+> Istio Sidecar 只支持 HTTP/GRPC **方法调用级别的链路跟踪**，而 Opencensus 提供了自定义指标的功能，使我们能跟踪任意自定义指标（比如 mysql 调用、redis 调用，甚至任意本地方法调用），但是这样会提升 sdk 的侵入性。
 现在上述两个开放标准已经合二为一：[OpenTelemetry](https://github.com/open-telemetry).
 
 Istio 链路追踪说是可以减少链路追踪对应用层的侵入，应用本身只需要转发一下 trace headers 就行，sidecar(也就是 envoy) 会自动帮你:
