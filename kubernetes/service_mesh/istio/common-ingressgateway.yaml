@@ -24,6 +24,11 @@ spec:
   selector:
     matchLabels:
       istio: common-ingressgateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
   template:
     metadata:
       # TODO 感觉这里缺少了节点
@@ -53,7 +58,13 @@ spec:
       containers:
       - name: istio-proxy
         image: auto # The image will automatically update each time the pod starts.
-        # TODO 调整 requests 和 limits 相等
+        resources:  # istiod 毕竟是核心组件，保险起见配置给高点
+          requests:
+            cpu: 2000m
+            memory: 1024Mi
+          limits:
+              cpu: 2000m
+              memory: 1024Mi
 ---
 # Set up roles to allow reading credentials for TLS
 apiVersion: rbac.authorization.k8s.io/v1
@@ -79,7 +90,7 @@ subjects:
 - kind: ServiceAccount
   name: default
 ---
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
@@ -87,19 +98,21 @@ metadata:
   name: common-ingressgateway
   namespace: istio-ingress
 spec:
-  maxReplicas: 50
-  minReplicas: 3
-  metrics:
-  - resource:
-      name: cpu
-      targetAverageUtilization: 70
-    type: Resource
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: common-ingressgateway
+  maxReplicas: 50
+  minReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: common-ingressgateway
