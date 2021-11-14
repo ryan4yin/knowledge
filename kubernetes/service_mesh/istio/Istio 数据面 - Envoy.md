@@ -40,7 +40,8 @@ Istio 1.7 新增了一个功能: [delay the application start until after the si
 ```yaml
 annotations:
   # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig
-  proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+  proxy.istio.io/config: |
+    holdApplicationUntilProxyStarts: true
 ```
 
 建议：通常只有一启动就需要访问外部网络的服务，会有这个问题，因此我认为应该按需在每个 Pod 上启用此功能，没必要改全局配置。

@@ -1,11 +1,11 @@
-# 配置文件对应的 istioctl 版本：1.8.x
+# 配置文件对应的 istioctl 版本：1.11.x
 # 适用于生产环境，本地环境可以自行调低资源要求和实例数量
 # 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
   profile: minimal  # 只部署 istiod 与 CRDs, gateways 全部另行部署
-  hub: image-registry.svc.local/istio # 使用私有 dockerhub 镜像仓库
+  hub: hub-mirror.c.163.com/istio # 使用 dockerhub 国内镜像仓库（或私有镜像仓库）
   # meshConfig 的所有参数：https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
   meshConfig:
     # 改为 `/dev/stdout` 可将 access log 输出到容器日志中。但是注意，access log 会非常多，可能影响性能！
@@ -40,8 +40,17 @@ spec:
               cpu: 2000m
               memory: 1024Mi
         hpaSpec:
-          maxReplicas: 15
-          minReplicas: 3
+          maxReplicas: 5
+          minReplicas: 2
+        podDisruptionBudget:
+          minAvailable: 60%
+        strategy:
+          type: RollingUpdate
+          rollingUpdate:
+            maxSurge: 20%
+            maxUnavailable: 0
+        nodeSelector:
+          eks.amazonaws.com/nodegroup: "network-proxy" # 使用专用的网络节点组，与业务服务隔离开
         affinity:
           podAntiAffinity:  # 使 pod 更分散些
             preferredDuringSchedulingIgnoredDuringExecution:
@@ -56,11 +65,6 @@ spec:
               weight: 1
   values:
     global: # 全局配置
-      defaultNodeSelector:
-        eks.amazonaws.com/nodegroup: "network-proxy" # 使用专用的网络节点组，与业务服务隔离开
-      defaultPodDisruptionBudget:
-        enabled: true
-        minAvailable: 60%  # istio 服务默认的 PDB 策略，实例数最少（3 个）的情况下，它必须保证 ceil[3 * 60%] = 2 个 Pod 可用
       logAsJson: false  # 日志使用 json 格式
       logging:  # 日志级别
         level: default:info
@@ -69,7 +73,7 @@ spec:
         tracer: zipkin
       tracer:
         zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
-          address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
+          # address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
     pilot:
       traceSampling: 0.1 # 链路追踪的采样率
     telemetry:

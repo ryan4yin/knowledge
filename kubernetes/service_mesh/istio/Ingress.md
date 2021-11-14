@@ -24,7 +24,7 @@ kubectl apply -f common-ingressgateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: my-gateway
+  name: common-gateway
   namespace: prod
 spec:
   selector:
@@ -35,8 +35,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - uk.bookinfo.com
-    - eu.bookinfo.com
+    - '*.k8s.local'
 ```
 
 之后就能通过 virtaulservice/destinationrule 等，来使用这个 ingressgateway 了。
