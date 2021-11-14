@@ -15,9 +15,7 @@
 
 ## 一、Istio
 
-> 永远推荐使用 Operator 进行有状态应用的部署！使用 helm 或者官方客户端(如 istioctl)部署 Operator.
-
->当前针对的 Istio 版本：1.8.x
+>当前针对的 Istio 版本：1.11.x，建议使用 istioctl + 自定义配置文件部署
 
 ### 1. 简单部署
 
@@ -34,10 +32,11 @@ istioctl install --set profile=default --set hub=registry.svc.local
 
 其中 `profile` 的选择，参见 [Installation Configuration Profiles - Istio Docs](https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
 
-生产/测试环境建议使用 `default`，开发环境/试用 istio 建议使用 `demo`。
-
+>生产环境建议使用 `minimal`，开发测试环境建议使用 `default`
 
 #### 1.1 自定义部署（推荐方式）
+
+>建议使用 `minimal` 这个 profile，然后另行部署 Gateways.
 
 可以通过 [istio-operator-values.yaml](./istio-operator-values.yaml) 配置文件进行自定义部署：
 
@@ -47,10 +46,14 @@ istioctl install -f istio-operator-values.yaml
 
 通过 [istio-operator-values.yaml](./istio-operator-values.yaml)，可以自定义 k8s 资源定义（节点选择器、HPA、资源预留与限制等等）、istio 组件本身的设置等等。而且可以直接保存在 git 仓库里，方便迭代、自动化部署。
 
-可以通过 `istioctl profile dump demo` 查看完整的 IstioOperator 配置，作为编写 [istio-operator-values.yaml](./istio-operator-values.yaml) 的参考。
+可以通过 `istioctl profile dump default` 查看完整的 IstioOperator 配置，作为编写 [istio-operator-values.yaml](./istio-operator-values.yaml) 的参考。
 
 更多自定义部署的信息，参见官方文档 [istioctl: configure-component-settings](https://istio.io/docs/setup/install/istioctl/#configure-component-settings)
 
+
+##### 1.2 手动部署 IngressGateways
+
+参见 [Ingress](./Ingress.md) 和 [Egress](./Egress.md)
 
 #### 1.2 升级与删除
 
