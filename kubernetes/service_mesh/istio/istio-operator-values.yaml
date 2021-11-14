@@ -32,13 +32,6 @@ spec:
   components:
     pilot:
       k8s:
-        # 启用实验性功能：记录 mysql/redis 的指标(metrics)
-        #（mysql/redis 流量不基于 http，加不了 trace headers，我们的应用只能主动上报这类 trace 信息）
-        env:
-          - name: PILOT_ENABLE_MYSQL_FILTER
-            value: "true"
-          - name: PILOT_ENABLE_REDIS_FILTER
-            value: "true"
         resources:  # istiod 毕竟是核心组件，保险起见配置给高点
           requests:
             cpu: 2000m
@@ -50,16 +43,17 @@ spec:
           maxReplicas: 15
           minReplicas: 3
         affinity:
-          podAntiAffinity:  # 使 istiod 更分散些
+          podAntiAffinity:  # 使 pod 更分散些
             preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 100
-                podAffinityTerm:
-                  topologyKey: kubernetes.io/hostname
-                  labelSelector:
-                    matchExpressions:
-                    - key: app
-                      operator: In
-                      values: istiod
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - istiod
+                topologyKey: kubernetes.io/hostname
+              weight: 1
   values:
     global: # 全局配置
       defaultNodeSelector:

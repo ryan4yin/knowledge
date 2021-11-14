@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-ingressgateway
+  namespace: istio-ingress
+spec:
+  type: LoadBalancer  # 建议使用 AWS ALB + aws-load-balancer-controller 绑定 LB，这里改成 ClusterIP 就行
+  selector:
+    istio: common-ingressgateway
+  ports:
+  - port: 80
+    name: http
+  - port: 443
+    name: https
+  - name: status-port
+    port: 15021
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-ingressgateway
+  namespace: istio-ingress
+spec:
+  selector:
+    matchLabels:
+      istio: common-ingressgateway
+  template:
+    metadata:
+      # TODO 感觉这里缺少了节点
+      annotations:
+        # Select the gateway injection template (rather than the default sidecar template)
+        inject.istio.io/templates: gateway
+      labels:
+        # Set a unique label for the gateway. This is required to ensure Gateways can select this workload
+        istio: common-ingressgateway
+        # Enable gateway injection. If connecting to a revisioned control plane, replace with "istio.io/rev: revision-name"
+        sidecar.istio.io/inject: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: istio
+                  operator: In
+                  values:
+                  - common-ingressgateway
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: network-proxy  # 使用专用节点组
+      containers:
+      - name: istio-proxy
+        image: auto # The image will automatically update each time the pod starts.
+        # TODO 调整 requests 和 limits 相等
+---
+# Set up roles to allow reading credentials for TLS
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: common-ingressgateway-sds
+  namespace: istio-ingress
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: common-ingressgateway-sds
+  namespace: istio-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: common-ingressgateway-sds
+subjects:
+- kind: ServiceAccount
+  name: default
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    istio: common-ingressgateway
+  name: common-ingressgateway
+  namespace: istio-ingress
+spec:
+  maxReplicas: 50
+  minReplicas: 3
+  metrics:
+  - resource:
+      name: cpu
+      targetAverageUtilization: 70
+    type: Resource
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: common-ingressgateway
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: common-ingressgateway
+  namespace: istio-ingress
+  labels:
+    istio: common-ingressgateway
+spec:
+  minAvailable: 60%
+  selector:
+    matchLabels:
+      istio: common-ingressgateway
+
