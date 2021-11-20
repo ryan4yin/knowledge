@@ -101,6 +101,11 @@ endpoint 也可以通过命令行参数/环境变量/配置文件手动设置，
 
 ### [nerdctl](https://github.com/containerd/nerdctl)
 
-nerdctl 是一个才开发几个月的新 cli 工具，提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`）
+nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`） 及其中的大部分参数。
 
-建议安装试用
+注意点：
+- nerdctl 对网络的支持不如 docker
+- nerdctl 与 kubernetes 的容器、镜像是隔离的，使用 nerdctl 查看不了 kubernetes 的容器与镜像，反之亦然。
+
+
+

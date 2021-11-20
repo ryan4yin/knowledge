@@ -138,6 +138,9 @@ systemctl enable containerd
 systemctl start containerd
 ```
 
+`nerdctl` 是一个 containerd 的命令行工具，但是它的容器、镜像与 Kubernetes 的容器、镜像是完全隔离的，不能互通！
+
+目前只能通过 `crictl` 来查看、拉取 Kubernetes 的容器、镜像，下一节会介绍 crictl 的安装。
 
 ### 3. 安装 kubelet/kubeadm/kubectl
 
@@ -178,6 +181,16 @@ systemctl enable --now kubelet
 systemctl status kubelet
 ```
 
+试用 crictl:
+
+```shell
+export CONTAINER_RUNTIME_ENDPOINT='unix:///var/run/containerd/containerd.sock'
+# 列出所有 pods，现在应该啥也没
+crictl  pods
+
+# 列出所有镜像
+crictl images
+```
 
 ### 4. 为 master 的 kube-apiserver 创建负载均衡实现高可用
 
