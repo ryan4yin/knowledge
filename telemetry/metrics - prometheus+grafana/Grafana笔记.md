@@ -8,10 +8,10 @@
 
 ## 自定义 Grafana 面板
 
-https://github.com/weaveworks/grafanalib
+使用程序自动生成 Grafana 面板：
+- https://github.com/weaveworks/grafanalib
 
-待续
-
+或者直接在页面上拖拽、编写 PromQL，需要花点时间学习的是右侧的各种设置。
 
 ## 如何简单快捷地导入导出 Grafana 模板？
 
