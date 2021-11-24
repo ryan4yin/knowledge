@@ -94,6 +94,9 @@ mysql> source /path/to/xxx.sql
 在 mysql 容器中执行备份还原：
 
 ```shell
+# 备份单个数据库
+mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" -h <host> my_db  > my_db.sql
+
 # 备份
 docker exec some-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
 
