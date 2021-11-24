@@ -4,6 +4,7 @@
 
 建议使用社区维护的 helm chart: [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations)
 
+grafana 也单独使用官方 helm chart 部署
 
 ## 指标抓取
 
