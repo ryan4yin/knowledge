@@ -237,7 +237,39 @@ spec:
 ```
 
 
-## 四、Pod 安全 {#security}
+## 四、Pod 的就绪探针、存活探针与启动探针
+
+>在 Kubernetes 1.18 之前，通用的手段是在「就绪探针」和「存活探针」中添加较长的 `initialDelaySeconds` 来实现类似「启动探针」的功能——探测前先等待容器慢启动。
+
+Pod 提供如下三种探针，均支持使用 Command、HTTP API、TCP Socket 这三种手段来进行服务可用性探测。
+
+- `startupProbe` 启动探针（Kubernetes v1.18 [beta]）: 此探针通过后，「就绪探针」与「存活探针」才会进行存活性与就绪检查
+  - 用于对慢启动容器进行存活性检测，避免它们在启动运行之前就被杀掉
+  - 程序将最多有 `failureThreshold * periodSeconds` 的时间用于启动，比如设置 `failureThreshold=20`、`periodSeconds=5`，程序启动时间最长就为 100s，如果超过 100s 仍然未通过「启动探测」，容器会被杀死。
+- `readinessProbe` 就绪探针:
+  - 
+  - 就绪探针失败次数超过 `failureThreshold` 限制（默认三次），服务将被暂时从 Service 的 Endpoints 中踢出，直到服务再次满足 `successThreshold`.
+- `livenessProbe` 存活探针: 检测服务是否存活，它可以捕捉到死锁等情况，及时杀死这种容器。
+  - 存活探针失败可能的原因：
+    - 服务发生死锁，对所有请求均无响应
+    - 服务线程全部卡在对外部 redis/mysql 等外部依赖的等待中，导致请求无响应
+  - 存活探针失败次数超过 `failureThreshold` 限制（默认三次），容器将被杀死，随后根据重启策略执行重启。
+    - `kubectl describe pod` 会显示重启原因为 `State.Last State.Reason = Error, Exit Code=137`，同时 Events 中会有 `Liveness probe failed: ...` 这样的描述。
+
+
+上述三类探测器的参数都是通用的，五个时间相关的参数列举如下：
+
+```yaml
+# 下面的值就是 k8s 的默认值
+initialDelaySeconds: 0  # 默认没有 delay 时间
+periodSeconds: 10
+timeoutSeconds: 1
+failureThreshold: 3
+successThreshold: 1
+```
+
+
+## 五、Pod 安全 {#security}
 
 这里只介绍 Pod 中安全相关的参数，其他诸如集群全局的安全策略，不在这里讨论。
 
