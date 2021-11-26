@@ -4,6 +4,172 @@
 
 - 将容器的资源请求与限制设置成一样的，避免出现资源竞争
 
+
+## 零、示例
+
+首先给出一个 Deployment+HPA+ PodDisruptionBudget 的 demo：
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-v3
+  namespace: prod
+  labels:
+    app: my-app
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 10%  # 滚动更新时，每次最多更新 10% 的 Pods
+      maxUnavailable: 0  # 滚动更新时，不允许出现不可用的 Pods，也就是说始终要维持 3 个可用副本
+  selector:
+    matchLabels:
+      app: my-app
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v3
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution: # 非强制性条件
+          - weight: 100  # weight 用于为节点评分，会优先选择评分最高的节点（只有一条规则的情况下，这个值没啥意义）
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - my-app
+                - key: version
+                  operator: In
+                  values:
+                  - v3
+              # 将 pod 尽量打散在多个可用区
+              topologyKey: topology.kubernetes.io/zone
+          requiredDuringSchedulingIgnoredDuringExecution:  # 强制性要求（这个建议按需添加）
+          # 注意这个没有 weights，必须满足列表中的所有条件
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - my-app
+              - key: version
+                operator: In
+                values:
+                - v3
+            # Pod 必须运行在不同的节点上
+            topologyKey: kubernetes.io/hostname
+      securityContext:
+        # runAsUser: 1000  # 设定用户
+        # runAsGroup: 1000  # 设定用户组
+        runAsNonRoot: true  # Pod 必须以非 root 用户运行
+        seccompProfile:  # security compute mode
+          type: RuntimeDefault
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: common  # 使用专用节点组，如果希望使用多个节点组，可改用节点亲和性
+      volumes:
+      - name: tmp-dir
+        emptyDir: {}
+      containers:
+      - name: my-app-v3
+        image: my-app:v3  # 建议使用私有镜像仓库，规避 docker.io 的镜像拉取限制
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-dir
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "while [ $(netstat -plunt | grep tcp | wc -l | xargs) -ne 0 ]; do sleep 1; done"
+        resources:  # 资源请求与限制，建议配置成相等的，避免资源竞争
+          requests:
+            cpu: 1000m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          # 将容器层设为只读，防止容器文件被篡改
+          ## 如果需要写入临时文件，建议额外挂载 emptyDir 来提供可读写的数据卷
+          readOnlyRootFilesystem: true
+          # 禁止 Pod 做任何权限提升
+          allowPrivilegeEscalation: false
+          capabilities:
+            # drop ALL 的权限比较严格，可按需修改
+            drop:
+            - ALL
+        startupProbe:  # 要求 kubernetes 1.18+
+          httpGet:
+            path: /actuator/health  # 直接使用健康检查接口即可
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20  # 最多提供给服务 5s * 20 的启动时间
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /actuator/health  # spring 的通用健康检查路径
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+        # Readiness probes are very important for a RollingUpdate to work properly,
+        readinessProbe:
+          httpGet:
+            path: /actuator/health  # 简单起见可直接使用 livenessProbe 相同的接口，当然也可额外定义
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: my-app
+  name: my-app-v3
+  namespace: prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app-v3
+  maxReplicas: 50
+  minReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: my-app-v3
+  namespace: prod
+  labels:
+    app: my-app
+spec:
+  minAvailable: 75%
+  selector:
+    matchLabels:
+      app: my-app
+      version: v3
+```
+
 ## 一、优雅停止（Gracful Shutdown）与 502/504 报错
 
 如果 Pod 正在处理大量请求（比如 1000 QPS+）时，因为节点故障或「竞价节点」被回收等原因被重新调度，
@@ -268,6 +434,49 @@ failureThreshold: 3
 successThreshold: 1
 ```
 
+示例：
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-v3
+spec:
+  # ...
+  template:
+    #  ...
+    spec:
+      containers:
+      - name: my-app-v3
+        image: xxx.com/app/my-app:v3
+        imagePullPolicy: IfNotPresent 
+        # ... 省略若干配置
+        startupProbe:
+          httpGet:
+            path: /actuator/health  # 直接使用健康检查接口即可
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20  # 最多提供给服务 5s * 20 的启动时间
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /actuator/health  # spring 的通用健康检查路径
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+        # Readiness probes are very important for a RollingUpdate to work properly,
+        readinessProbe:
+          httpGet:
+            path: /actuator/health  # 简单起见可直接使用 livenessProbe 相同的接口，当然也可额外定义
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+```
 
 ## 五、Pod 安全 {#security}
 

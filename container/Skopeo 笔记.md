@@ -38,7 +38,7 @@ skopeo copy --dest-tls-verify=false \
 
 # 从 docker-daemon 中拷贝镜像到私有镜像仓库
 skopeo copy --dest-tls-verify=false \
-  docker-daemon::docker.io/library/vault:1.6.1 docker://registry.svc.local/library/vault:1.6.1 
+  docker-daemon:docker.io/library/vault:1.6.1 docker://registry.svc.local/library/vault:1.6.1 
 
 # 将 registry 中的镜像改个名称(或者换个 project)
 skopeo copy --src-tls-verify=false --dest-tls-verify=false \
