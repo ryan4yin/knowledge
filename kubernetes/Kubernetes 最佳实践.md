@@ -38,12 +38,12 @@
     containers:
     - name: my-app
       # 添加下面这部分
-lifecycle:
-  preStop:
-    exec:
-      command:
-      - /bin/sleep
-      - "15"
+      lifecycle:
+        preStop:
+          exec:
+            command:
+            - /bin/sleep
+            - "15"
 ```
 
 更好的解决办法，是直接等待所有 tcp 连接都关闭（需要镜像中有 netstat）：
