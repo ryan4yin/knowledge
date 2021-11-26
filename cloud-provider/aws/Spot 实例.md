@@ -114,8 +114,8 @@ curl -H "X-aws-ec2-metadata-token: $TOKEN" –v http://169.254.169.254/latest/me
 
 结果可以导出为 csv/json，再丢到 excel 里就能很容易画出每日 Spot 中断数量的趋势图了。
 
-但是这边只能查到 instance_id，对应的机器类型、DNS 名称，这些信息都丢失了。
-要保留这些信息，感觉只能通过定时 `kubectl get nodes -o yaml` 来获取，并长期保存了。
+但是这边只能查到 instance_id，具体的 DNS 名称、IP 地址、实例类型等参数，可通过 instance_id 在 [AWS Config](https://console.aws.amazon.com/config/home) 中查询得到。
+
 
 #### 2. [Spot Instance Advisor](http://aws.amazon.com/ec2/spot/instance-advisor/)
 

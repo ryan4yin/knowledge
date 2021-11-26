@@ -184,13 +184,46 @@ Asume Role - STS 临时凭证
 通过 Tag 来查看成本
 
 
-### CloudWatch - 指标监控、事件监控与触发
+### [CloudWatch](https://console.aws.amazon.com/cloudwatch/home) - 指标监控、事件监控与触发
 
 cloudwatch 推送指标 + log 功能 - 像是 20 世纪初的设计，SRE 和 BE 都不太喜欢
 
-### CloudTrail - 操作审计
 
-监控账号中的所有 API 调用
+### [Amazon EventBridge](https://console.aws.amazon.com/events/home)
+
+可译为 Amazon 事件中继服务，能够监控 aws 上的各种事件，并触发某种操作：
+
+- 调用某个 aws lambda 函数处理该事件
+- 将事件丢到 SQS 里
+- ...
+
+比如用于监控「Spot 中断通知」及「EC2 再平衡建议」等事件。
+
+### [CloudTrail](https://console.aws.amazon.com/cloudtrail/home) - 操作审计
+
+监控账号中的所有 API 调用，不过只保留 90 天内的数据，不清楚这个能不能调。
+
+比如查询 90 天内所有的 Spot 中断事件。
+
+
+### [AWS Config](https://console.aws.amazon.com/config/home)
+
+AWS Config 提供了账户中所有历史 AWS 资源配置的详细信息，包括资源之间的关联方式以及资源的历史配置。
+
+简单点说，它就是一个 AWS 资源配置的历史版本管理系统，而且支持通过 SQL 查询数据。
+
+利用 AWS Config，您可以：
+
+- 检索一个或多个资源的历史配置
+  - 如果做了误操作，可以通过 AWS Config 找回该资源正确的配置。
+- 检索一个或多个资源的历史事件
+  - 比如什么时候创建、什么时候启动、修改、终止或者删除。
+- 在资源被创建、修改或删除时接收通知，审计这些操作是否符合规范，对有问题的进行某些操作，比如直接通知到对应责任人。
+- 查看不同资源之间的关系。例如，您可能想要找到使用特定安全组的所有资源。
+
+定价：主要成本是 ConfigurationRecord 的单价—— $0.003，对资源的 Tag 修改、配置变更、启动关闭，都会产生配置记录。
+
+如果使用了按需创建、销毁的 OnDemand/Spot 实例，就会造成大量的 ConfigurationRecord 记录成本。
 
 ### VPC 流日志
 
