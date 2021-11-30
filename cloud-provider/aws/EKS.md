@@ -1,6 +1,49 @@
 # EKS
 
 
+## IAM 与 ServiceAccount 的角色绑定
+
+- [Creating an IAM role and policy for your service account](https://docs.aws.amazon.com/eks/latest/userguide/create-service-account-iam-policy-and-role.html)
+- [Associate an IAM role to a service account](https://docs.aws.amazon.com/eks/latest/userguide/specify-service-account-role.html)
+
+
+具体而言，就是：
+
+- EKS 要先加好 OIDC Provider
+
+- 创建 IAM Role，并且为 EKS 配置信任关系 relationship
+
+```yaml
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::130132914922:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          # 尤其注意，这里的 key 要改成 `:sub` 结尾
+          "oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>:sub": "system:serviceaccount:<namespace>:<serviceAccountName>"
+        }
+      }
+    }
+  ]
+}
+```
+
+- 最后 ServiceAccount 添加注解，再提供给 Pod 使用：
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+```
+
 ## [amazon-vpc-cni-k8s](https://github.com/aws/amazon-vpc-cni-k8s) 网络插件
 
 即 EKS 集群的 ip 分配插件，它能直接为 pod 分配 vpc 网络的 ip 地址，打通 pod 网络和 vpc 网络
