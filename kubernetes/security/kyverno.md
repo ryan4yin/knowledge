@@ -4,7 +4,14 @@
 
 而且使用 kyverno，不仅仅能替代掉即将被淘汰的 PodSecurityPolicy，还有很多别的有趣的用处。
 
-待续
+## 使用案例
+
+- 自动添加默认的 SecurityContext、podAntiAffinity、禁用 default 名字空间、禁用镜像的 latest 标签等
+
+
+## 功能类似的其他软件
+
+- https://github.com/datreeio/datree: 这是一个客户端的 yaml 检查工具，也可以实现禁用 default 名字空间、禁用镜像的 latest 标签等功能
 
 ## 参考
 
