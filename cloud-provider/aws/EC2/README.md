@@ -3,19 +3,25 @@
 
 ### 实例类型介绍
 
-> 实例类型：https://aws.amazon.com/cn/ec2/instance-types/
+>实例类型：https://aws.amazon.com/cn/ec2/instance-types/
+
+>AWS and AMD https://aws.amazon.com/ec2/amd/
+
+>实例历史：https://aws.amazon.com/blogs/aws/ec2-instance-history/
 
 >OD 实例价格：https://aws.amazon.com/cn/ec2/pricing/dedicated-instances/
 
 >Spot 实例价格：https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/using-spot-instances-history.html
 
-针对通用计算而言，通常我们的 CPU/MEM 之比为 1:2 或者 1:4，这里主要介绍我用过的这类机器。
+针对通用计算而言，通常我们的 CPU/MEM 之比为 1:2 或者 1:4，影响服务性能的主要是 CPU/MEM，存储性能对服务有一定影响，但是不大。
+
+这里主要介绍针对 Web 服务与离线计算常用的实例类型，而且侧重考虑使用 Spot 实例，暂时不考虑「内存优化型(R/X)」与「存储优化(D/I)」这几个类型。
 
 下面以 us-east-1a 为例，分别介绍下各实例配置及价格，Spot 使用 2021/11/30 号前一周的历史数据进行统计。
 
 ### 1. 通用型 - M 系列 - 1:4
 
-- M4（又贵性能又差，但是资源池还算大）
+- M4（基于 Xen 虚拟化技术，又贵性能又差，但是资源池目前还算大）
   - CPU: 2.3 GHz Intel Xeon® E5-2686 v4 (Broadwell) 处理器或 2.4 GHz Intel Xeon® E5-2676 v3 (Haswell) 处理器
 
 
@@ -27,8 +33,9 @@
 | m4.10xlarge(40c/124.5g) | 2.00 | 0.8937 | 55.38% |
 
 
-- M5（目前的主力机型）
+- M5（基于 KVM 定制的 Nitro 虚拟化技术，性价比高）
   - CPU: 最高 3.1 GHz Intel Xeon® Platinum 8175M 处理器，支持 AVX512
+  - 成本：相比 M4 实例，性价比可提高 14%
 
 | 实例名称 | OD 单价（USD） | Spot 本周平均单价 | Spot 节约成本 |
 | :---: | :---: | :---: | :---: |
@@ -41,6 +48,7 @@
 
 - M5a
   - CPU: AMD EPYC 7000 系列处理器，全内核睿频时钟速度达 2.5GHz
+  - 存储：x/2x/4x 的 EBS 带宽上限只有 2880Mbps，低于 M5 的 4750Mbps
   - 成本: 相比 M5 成本最高降低 10%
 - M6i
   - CPU: 高达 3.5 GHz 的第 3 代英特尔至强可扩展处理器，支持 AVX512
@@ -66,6 +74,10 @@
 | m6g.8xlarge(32c/128g) | 1.3056 | 0.5713 | 53.63% |
 | m6g.8xlarge(48c/192g) | 1.9584 | 0.8570 | 53.63% |
 
+- M6a(2021/11/29)
+  - CPU: 第三代 AMD EPYC processors, 全核睿频 3.6 GHz
+  - 成本：对比 m5a 性价比最高提升 35%
+
 突增性能型，在运行低于基准阈值时累积积分，在需要时能通过消耗积分，在一分钟内突增至一个完整 CPU 核心：
 
 - T3: 目前主要使用的机型
@@ -82,7 +94,7 @@
 
 ### 2. 计算优化型 - C 系列 - 1:2
 
-- C4
+- C4（基于 Xen 虚拟化技术，又贵性能又差，但是资源池目前还算大）
   - CPU: 2.9GHz Intel Xeon E5-2666 v3 (Haswell) 处理器
 
 | 实例名称 | OD 单价（USD） | Spot 本周平均单价 | Spot 节约成本 |
@@ -92,10 +104,9 @@
 | c4.4xlarge(16c/30g) | 0.876 | 0.3015 | 62.12% |
 | c4.8xlarge(32c/60g) | 1.591 | 0.6448 | 59.47% |
 
-- C5
+- C5（基于 KVM 定制的 Nitro 虚拟化技术，性价比高）
   - CPU: 新启动的 C5 实例，都使用定制的 Intel Xeon 可扩展处理器 (Cascade Lake)，具有 3.6GHz 的持续全核 Turbo 频率和高达 3.9GHz 的单核 Turbo 频率.
-  - 成本：没有介绍
-
+  - 成本：与 C4 实例相比，性能/价格比提高了 49%
 
 | 实例名称 | OD 单价（USD） | Spot 本周平均单价 | Spot 节约成本 |
 | :---: | :---: | :---: | :---: |
@@ -107,7 +118,7 @@
 - C5a
   - CPU: 第二代 AMD EPYC 7002 系列处理器，运行频率高达 3.3GHz
   - 存储：EBS 带宽峰值从 c4 的 1000Mbps 提升至 4750Mbps
-  - 成本：无介绍，估计没啥性价比？
+  - 成本：性价比大概提升 10%
 
 | 实例名称 | OD 单价（USD） | Spot 本周平均单价 | Spot 节约成本 |
 | :---: | :---: | :---: | :---: |
