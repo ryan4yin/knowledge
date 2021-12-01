@@ -9,8 +9,10 @@
 
 开发与调试：
 
-- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。这对开发人员而言非常有用
-- [nocalhost](https://github.com/nocalhost/nocalhost): 也是一个专注于优化 k8s 本地开发体验的工具
+- [telepresence](https://github.com/telepresenceio/telepresence): 通过 proxy 将你的本机加入到 kubernetes 虚拟网络中，方便本地开发与调试微服务。但是本地环境跟容器环境仍然存在差异，这是它的问题所在。
+- [nocalhost](https://github.com/nocalhost/nocalhost): 它比 telepresence 更进一步，只在本地 IDE (JetBrains/VSCode)里编写代码，然后直接同步到 Kubernetes 的容器中运行，容器由项目的 Dockerfile 构建（会自动修改 entrypoint）
+
+- [eclipse/che](https://github.com/eclipse/che): 比 nocalhost 更进一步，直接把 IDE 也整进了 Kubernetes 容器，che 底层使用 theia 作为它的 Web IDE。它可以自动为每个用户按需创建 Workspace，通过 PV 为用户持久化数据。
 
 ## 技术文章收藏
 

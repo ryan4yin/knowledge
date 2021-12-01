@@ -11,3 +11,9 @@ grafana 也单独使用官方 helm chart 部署
 社区版的 helm chart 会可以通过注解自动发现 targets，并抓取指标，详见其 README。
 
 
+## 高可用 Prometheus
+
+目前最流行的是 thanos(灭霸):
+
+- [thanos-io/thanos](https://github.com/thanos-io/thanos): 通过 sidecar 将数据同步到 S3，确保数据不丢失。
+
