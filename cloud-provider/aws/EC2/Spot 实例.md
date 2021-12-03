@@ -12,6 +12,20 @@ Spot 实例的价格通常是对应 OnDemand 实例价格的 30% 到 70%，合�
 此外，为客户端提供 HTTP API 的服务，做了高可用的话，也可以跑在 Spot 实例上。
 比如每个服务设置 3 到 5 个实例，然后资源池配置较高比例的的 Spot 实例、较少比例的 OD 实例，在保证服务稳定性的同时，使用 Spot 实例节约成本。
 
+## Spot 实例历史价格
+
+方法一：https://docs.aws.amazon.com/zh_cn/AWSEC2/latest/UserGuide/using-spot-instances-history.html
+
+方法二：使用 awscli/api，下面简要介绍下：
+
+```yaml
+# 如果有使用 EC2 Classic 网络，请使用如下命令
+## 可以添加 --instance-types r5.2xlarge 来限定实例类型
+aws ec2 describe-spot-price-history --region=us-east-1 --start-time=$(date +%s) --product-descriptions="Linux/UNIX (Amazon VPC)"  > spot-price-now.yaml
+
+# 否则使用如下命令
+aws ec2 describe-spot-price-history --region=us-east-1 --start-time=$(date +%s) --product-descriptions="Linux/UNIX" > spot-price-now.yaml
+```
 
 ## Spot 实例中断
 

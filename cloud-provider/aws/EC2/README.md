@@ -155,3 +155,10 @@
 | c6g.12xlarge(48c/96g) | 1.7299 | 0.8162 | 49.99% |
 
 
+
+### EC2 与 AMI 的对应关系
+
+注意新的实例类型通常都需要新的 AMI 镜像才会支持，如果 EC2 类型与 AMI 不匹配，可能会造成实例无法启动等故障。
+
+EKS 的 AMI 对各机型的支持可以参考 [amazon-eks-ami/files/eni-max-pods.txt](https://github.com/awslabs/amazon-eks-ami/blob/v20211109/files/eni-max-pods.txt) 与仓库 tag.
+
