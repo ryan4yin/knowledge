@@ -86,3 +86,33 @@ Nginx 的 upstream 地址只会在启动时被解析一次，后续如果 upstre
 - 方案三：使用第三方模块
 
 
+### 带 path 的 proxy_pass 语句
+
+通常我们的 `proxy_pass` 是只传一个 upstream 名称，或者一个不带 Path 的 URI，举例：
+
+```conf
+location /xxx {
+    # requests_uri 会被原封不动地传递给 upstream
+    proxy_pass http://xxx.example.com:8080;
+}
+```
+
+但是有时候我们会看到带 Path 的 proxy_pass 配置：
+
+```conf
+location /xxx {
+    # requests_uri 会被替换掉 location 匹配的前缀后，再传递给 upstream.
+    # 比如请求 /xxx/yyy.html，实际上代理到 upstream 的地址会是 /yyy.html
+    proxy_pass http://xxx.example.com:8080/;
+}
+
+location /xxx {
+    # 比如请求 /xxx/yyy.html，实际上代理到 upstream 的地址会是 /aaayyy.html
+    proxy_pass http://xxx.example.com:8080/aaa;
+}
+
+location /xxx {
+    # 比如请求 /xxx/yyy.html，实际上代理到 upstream 的地址会是 /aaa/yyy.html
+    proxy_pass http://xxx.example.com:8080/aaa/;
+}
+```
