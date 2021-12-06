@@ -37,7 +37,9 @@ sudo kill -QUIT $OLD_MASTER
 - 首先确认 CPU/MEM/Network IO/Disk IO 是否达到瓶颈
 - 其次，检查 TCP 连接数量监控，是否有异常
 
+TODO 待续，暂时还没很好的思路
+
 ### 长尾请求延迟升高的排查思路
 
-
+TODO 待续
 
