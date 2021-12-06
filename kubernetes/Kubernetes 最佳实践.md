@@ -35,6 +35,21 @@ spec:
         version: v3
     spec:
       affinity:
+        podAffinity:
+          - weight: 100  # weight 用于为节点评分，会优先选择评分最高的节点（只有一条规则的情况下，这个值没啥意义）
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - my-app
+                - key: version
+                  operator: In
+                  values:
+                  - v3
+              # pod 尽量使用同一种节点类型，也就是尽量保证性能一致。（否则可能会出现请求均衡，但是 CPU 使用率不均衡的情况）
+              topologyKey: node.kubernetes.io/instance-type
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution: # 非强制性条件
           - weight: 100  # weight 用于为节点评分，会优先选择评分最高的节点（只有一条规则的情况下，这个值没啥意义）
