@@ -420,15 +420,14 @@ spec:
 
 ## 四、Pod 的就绪探针、存活探针与启动探针
 
->在 Kubernetes 1.18 之前，通用的手段是在「就绪探针」和「存活探针」中添加较长的 `initialDelaySeconds` 来实现类似「启动探针」的功能——探测前先等待容器慢启动。
-
 Pod 提供如下三种探针，均支持使用 Command、HTTP API、TCP Socket 这三种手段来进行服务可用性探测。
 
 - `startupProbe` 启动探针（Kubernetes v1.18 [beta]）: 此探针通过后，「就绪探针」与「存活探针」才会进行存活性与就绪检查
   - 用于对慢启动容器进行存活性检测，避免它们在启动运行之前就被杀掉
+    - startupProbe 显然比 livenessProbe 的 initialDelaySeconds 参数更灵活。
+    - 同时它也能延迟 readinessProbe 的生效时间，这主要是为了避免无意义的探测。容器都还没 startUp，显然是不可能就绪的。
   - 程序将最多有 `failureThreshold * periodSeconds` 的时间用于启动，比如设置 `failureThreshold=20`、`periodSeconds=5`，程序启动时间最长就为 100s，如果超过 100s 仍然未通过「启动探测」，容器会被杀死。
 - `readinessProbe` 就绪探针:
-  - 
   - 就绪探针失败次数超过 `failureThreshold` 限制（默认三次），服务将被暂时从 Service 的 Endpoints 中踢出，直到服务再次满足 `successThreshold`.
 - `livenessProbe` 存活探针: 检测服务是否存活，它可以捕捉到死锁等情况，及时杀死这种容器。
   - 存活探针失败可能的原因：
@@ -487,6 +486,44 @@ spec:
           httpGet:
             path: /actuator/health  # 简单起见可直接使用 livenessProbe 相同的接口，当然也可额外定义
             port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+```
+
+在 Kubernetes 1.18 之前，通用的手段是为「就绪探针」添加较长的 `initialDelaySeconds` 来实现类似「启动探针」的功能动，避免容器因为启动太慢，存活探针失败导致容器被重启。示例如下：
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-v3
+spec:
+  # ...
+  template:
+    #  ...
+    spec:
+      containers:
+      - name: my-app-v3
+        image: xxx.com/app/my-app:v3
+        imagePullPolicy: IfNotPresent 
+        # ... 省略若干配置
+        livenessProbe:
+          httpGet:
+            path: /actuator/health  # spring 的通用健康检查路径
+            port: 8080
+          initialDelaySeconds: 120  # 前两分钟，都假设服务健康，避免 livenessProbe 失败导致服务重启
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 5
+          successThreshold: 1
+        # 容器一启动，Readiness probes 就会不断进行检测
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 3  # readiness probe 不需要设太长时间，使 Pod 尽快加入到 Endpoints.
           periodSeconds: 5
           timeoutSeconds: 1
           failureThreshold: 5
