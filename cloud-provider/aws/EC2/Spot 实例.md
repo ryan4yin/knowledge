@@ -27,6 +27,9 @@ aws ec2 describe-spot-price-history --region=us-east-1 --start-time=$(date +%s) 
 aws ec2 describe-spot-price-history --region=us-east-1 --start-time=$(date +%s) --product-descriptions="Linux/UNIX" > spot-price-now.yaml
 ```
 
+>注意，实例价格与中断概率没有很强的相关性，官方只提供了 [Spot Instance Advisor](http://aws.amazon.com/ec2/spot/instance-advisor/) 可查看粗略的中断概率。
+如果需要准确的中断概率预测，可以考虑使用第三方服务，或者自己来统计，后面会有介绍。
+
 ## Spot 实例中断
 
 aws Spot 实例的资源池大小，会因为时间不同而出现显著变化。Spot 实例随时可能因为如下原因而中断：
