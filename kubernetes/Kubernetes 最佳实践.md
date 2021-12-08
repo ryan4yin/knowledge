@@ -49,7 +49,7 @@ spec:
                   operator: In
                   values:
                   - v3
-              # pod 尽量使用同一种节点类型，也就是尽量保证性能一致。（否则可能会出现请求均衡，但是 CPU 使用率不均衡的情况）
+              # pod 尽量使用同一种节点类型，也就是尽量保证节点的性能一致
               topologyKey: node.kubernetes.io/instance-type
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution: # 非强制性条件
@@ -355,6 +355,28 @@ spec:
                 values:
                 - spot-group-c
             weight: 80  # weight 用于为节点评分，会优先选择评分最高的节点
+          - preference:
+              matchExpressions:
+              # 优先选择 aws c6i 的机器
+              - key: node.kubernetes.io/instance-type
+                operator: In
+                values:
+                - "c6i.xlarge"
+                - "c6i.2xlarge"
+                - "c6i.4xlarge"
+                - "c6i.8xlarge"
+            weight: 70
+          - preference:
+              matchExpressions:
+              # 其次选择 aws c5 的机器
+              - key: node.kubernetes.io/instance-type
+                operator: In
+                values:
+                - "c5.xlarge"
+                - "c5.2xlarge"
+                - "c5.4xlarge"
+                - "c5.9xlarge"
+            weight: 60
          # 如果没 spot-group-c 可用，也可选择 ondemand-group-c 的节点跑
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -606,3 +628,10 @@ seccomp 和 seccomp-bpf 允许对系统调用进行过滤，可以防止用户�
 视频:
 
 - [Seccomp: What Can It Do For You? - Justin Cormack, Docker](https://www.youtube.com/watch?v=Ro4QRx7VPsY&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut$index=22)
+
+
+## 其他问题
+
+- 不同节点类型的性能有差距，导致 QPS 均衡的情况下，CPU 负载不均衡
+  - 解决办法：
+    - 尽量使用性能相同的实例类型：通过 `podAffinity` 及 `nodeAffinity` 添加节点类型的亲和性
