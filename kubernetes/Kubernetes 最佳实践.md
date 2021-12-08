@@ -36,6 +36,7 @@ spec:
     spec:
       affinity:
         podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution: # 非强制性条件
           - weight: 100  # weight 用于为节点评分，会优先选择评分最高的节点（只有一条规则的情况下，这个值没啥意义）
             podAffinityTerm:
               labelSelector:
