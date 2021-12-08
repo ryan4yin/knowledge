@@ -111,6 +111,7 @@ macOS 10.15 将默认 shell 由 bash 替换为了 zsh，要记得修改环境变
 要把 MacOS X 调教地比较适合用做主力开发环境，建议安装如下工具：
 
 ```
+brew install coreutils  # sha256sum/md5sum 
 brew install --cask visual-studio-code docker wireshark iterm2 firefox google-chrome
 # 安装视频播放器
 brew install --cask iina
