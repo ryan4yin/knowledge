@@ -44,7 +44,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 
 - [x] 负载均衡 - 目前打平（常用算法都支持、貌似都不支持 slow_start 模式）
 - [x] 观测指标 - 暂时平手（不清楚 Istio 的 flags 在 Linkerd2 这边有没有对应参数）
-- [x] 链路追踪 - 算平手，都支持 jaeger
+- [x] 链路追踪 - 算平手，都支持 jaeger，而且都只能做到 RPC 调用级别的链路追踪
 - [x] 流量切分 - weight_total 至少 1000 - Linkerd2 > Istio, 因为 Istio 有限制必须为 100
    - 都支持 pathRegex、method、headers
    - istio 支持更多的参数：params/schema/uriPrefix/ignoreUriCase/withoutHeaders/rewrite 等，而且支持忽略 URI 大小写、流量镜像 mirror
@@ -58,7 +58,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 
 以及另外一些看起来需求不强烈的功能：
 
-- [x] 可拓展性 - Istio Envoy 的 wasm 略胜一筹（感觉可能是伪需求）
+- [x] 可拓展性 - Istio Envoy 的 wasm 略胜一筹
 - [x] 故障注入 - Istio >> Linkerd2
   - 搞故障演练时估计用的到，但是我们还从没做过故障演练...
   - Istio 这方面支持比较完善，Linkerd2 建议直接跑个 nginx 当故障注入器，然后把流量切过去 hhh
@@ -93,22 +93,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
     - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
     - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
 
-不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品来搅局。
-
-## 一些问题的解答
-
-### 为何流量分配的配置通常只支持百分比/权重？不支持精确性的灰度？
-
-因为百分比/权重灰度就完全够用了。
-
-曾有人说「预热功能可能会需要精确性的灰度，避免因为流量变动而预热时的请求数也发生变动，为何 Istio 等一众工具都不支持呢？」
-
-确实，精确性的灰度，能确保它足够精确，绝对不会因为流量波动而在预热阶段过载。
-但是实际上我们可以通过设置一个非常小的权重来降低预热阶段的风险。
-
-我想你的服务不应该会在 1/100000 的比值下仍然被打垮，否则你应该考虑后端的设计问题了。
-
-或者如果你真的有如此高的 RPS，那你的团队应该完全有能力自己写流量分配组件了。
+不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品，以及 Proxyless Service Mesh.
 
 ## 我的相关博客
 
@@ -117,6 +102,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 
 ## 其他资料
 
+- [Proxyless Service Mesh在百度的实践与思考](https://mp.weixin.qq.com/s/8T7XI6jQfZunwVYDaDHvLw)
 - [Slime：让Istio服务网格变得更加高效与智能](https://cloudnative.to/blog/netease-slime/)
 - [基于 Apache APISIX 的下一代微服务架构](https://www.upyun.com/tech/article/512/%E5%9F%BA%E4%BA%8E%20Apache%20APISIX%20%E7%9A%84%E4%B8%8B%E4%B8%80%E4%BB%A3%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.html)
 - [Service Mesh Comparison](https://servicemesh.es/)

@@ -27,6 +27,7 @@ spec:
     # `defaultConfig`: sidecar 和 gateway 的默认配置(envoy)，Pod 上的 `proxy.istio.io/config` 注解可以覆盖此默认值
     # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig
     defaultConfig:
+      holdApplicationUntilProxyStarts: false  # 视情况设置
     pathNormalization:  # sidecar 和 gateway 对 path 的预处理方式，istio 和 path 有关的所有操作，使用的都是预处理后的 path
       normalization: MERGE_SLASHES  # 自动将多个斜线合并成一个（注意确认，这是否会对服务造成影响。可以先查几天的 access_log，确认下哪些 path 会受到影响，跟对应的业务方确认下）
   components:
