@@ -14,9 +14,10 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
     - 这个是容器级别的 Serverless，比 Serverless K8s 更进一步地分离了关注点。
     - 它的主要目标是成为一个通用的 Serverless 底层平台, 因此它暴露出了很多底层细节。
     - 通过 [serverless-knative](https://github.com/serverless/serverless-knative) 可支持 serverless-framework.
-1. Container as a Service - Kubevela: 从 serverless 角度看，它和 Knative 很类似。用户也只需要提供代码、Dockerfile，kubevela 通过 trait 插件帮你自动处理容器构建、调度、灰度升级回滚、弹性扩缩容...
-3. 函数计算（FaaS, Function as a Service）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
+3. Container as a Service - Kubevela: 从 serverless 角度看，它和 Knative 很类似。用户也只需要提供代码、Dockerfile，kubevela 通过 trait 插件帮你自动处理容器构建、调度、灰度升级回滚、弹性扩缩容...
+4. 函数计算（FaaS, Function as a Service）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
     - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。通过插件可支持 knative.
+5. [OpenFunction](https://github.com/OpenFunction/OpenFunction): 青云使用最前沿技术打造的 FaaS 平台，理念感觉很好，可以保持观察
 
 2020 年 CNCF 调查显示，Knative 市场占比 27%，而第二名 openfaas 只有 10%，第三名 kubeless 是 5%.
 
@@ -53,3 +54,4 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
 - [你学BFF和Serverless了吗](https://juejin.cn/post/6844904185427673095)
 - [Why Have Alibaba Started to Embrace OAM When Serverless Is So Popular?](https://www.alibabacloud.com/blog/why-have-alibaba-started-to-embrace-oam-when-serverless-is-so-popular_596593)
 - [serverless到底是个什么鬼 - 滴滴云](https://zhuanlan.zhihu.com/p/140419955)
+- [从 0 到 1，打造新一代开源函数计算平台 - KubeSphere](https://mp.weixin.qq.com/s?__biz=Mzg4NTU0MzEyMg==&mid=2247495210&idx=1&sn=4a16c23e5ed9f9c000171c134d1edee8)
