@@ -1,9 +1,27 @@
-# [Dapr](https://github.com/dapr/dapr)
+# Dapr
 
 Dapr 是一种可移植的，无服务器的，事件驱动的运行时，它使开发人员可以轻松构建弹性，无状态或有状态的微服务，让它们在云或边缘上运行，同时它支持多种编程语言和开发框架。
 
 看上面这句介绍，有 serverless 和 event-driven，因此它貌似和 knative/kubevela 都存在交集。
-同时它还有一堆状态管理、消息订阅、Secrets、Actor 模型等新特性，因此看起来好像比 knative/kubevela 要更强大。
 
-再观望吧，目前(2021-01-01)还在 alpha 状态。坐观 google/ibm(redhat)/alibaba 等神仙打架。。。
+它给自己的定位是 Multi-Runtime - 一个比服务网格更通用、能力更强的运行时，一个运行时就能提供原本需要多个 Sidecar 实现的能力（如缓存代理，绑定代理）
+
+但是 Dapr 主要关注服务的状态管理，并不负责流量治理。如果需要流量治理，可以同时使用 Dapr 与 Istio/Linkerd2.
+
+
+## Multi-Runtime 的特点和差异
+
+虽然同为 Sidecar 模式，但是和 Service Mesh 相比，Multi-Runtime 有自身的特点：
+
+- 提供能力的方式和范围：Multi-Runtime 提供的是分布式能力，体现为应用需要的各种分布式原语，并不局限于单纯的服务间点对点通讯的网络代理
+    - 服务网格专注于网络代理，而 Muti-Runtime 更通用，还可提供缓存、生命周期管理、状态管理等其他分布式能力。
+- Runtime 部署的方式：Multi-Runtime 的部署模型，不局限于 Sidecar 模式，**Node 模式**在某些场景下（如 Edge/IoT，Serverless FaaS）可能会是更好的选择。
+- 和 App 的交互方式：Multi-Runtime 和应用之间的交互是开放而有 API 标准的，Runtime 和 Micrologic 之间的“协议”体现在 API 上，而不是原生的 TCP 通讯协议。另外 Multi-Runtime 不要求无侵入，还会提供各种语言的 SDK 以简化开发。
+
+![](./_imgs/multiruntime-vs-servicemesh.webp)
+
+## 参考
+
+- [一年增加1.2w星，Dapr能否引领云原生中间件的未来？](https://mp.weixin.qq.com/s/KSln4MPWQHICIDeHiY-nWg)
+
 
