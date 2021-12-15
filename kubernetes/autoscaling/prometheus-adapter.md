@@ -51,3 +51,14 @@ spec:
 ```
 
 接下来可以压测一下，验证效果。
+
+
+## 直接获取裸指标
+
+```shell
+# 对应 Pod 类型的指标
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/istio_requests_per_second" | jq
+
+# 对应 Object 类型的指标
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/ingress.extensions/main-route/requests-per-second" | jq
+```
