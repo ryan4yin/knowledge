@@ -23,6 +23,7 @@
 如果需要更轻量，目前最佳的选择应该也只有 linkerd2.
 如果希望呆在原来的舒适区，继续使用 openresty，那估计得选择自研.
 
+而展望未来，最有潜力的服务网格，应该是最近 cilium 推出的内核级 Service Mesh.
 
 ## 性能对比
 
@@ -92,6 +93,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 - 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如 **Node 模式部署**。
     - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
     - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
+    - Cilium 则将目标聚焦在「eBPF」上，实现**内核级别**的服务网格，并通过 Envoy 支持 Node 模式的 Sidecar 以支持 mTLS 等更高级的能力。
 
 不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品，以及 Proxyless Service Mesh.
 
