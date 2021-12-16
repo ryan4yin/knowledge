@@ -33,16 +33,16 @@ spec:
   components:
     pilot:
       k8s:
-        resources:  # istiod 毕竟是核心组件，保险起见配置给高点
+        resources: 
           requests:
-            cpu: 2000m
+            cpu: 1000m
             memory: 1024Mi
           limits:
-              cpu: 2000m
+              cpu: 1000m
               memory: 1024Mi
         hpaSpec:
           maxReplicas: 5
-          minReplicas: 2
+          minReplicas: 3  # 3 副本高可用
         podDisruptionBudget:
           minAvailable: 60%
         strategy:

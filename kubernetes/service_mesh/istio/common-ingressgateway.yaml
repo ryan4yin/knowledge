@@ -4,7 +4,9 @@ metadata:
   name: common-ingressgateway
   namespace: istio-ingress
 spec:
-  type: LoadBalancer  # 建议使用 AWS ALB + aws-load-balancer-controller 绑定 LB，这里改成 ClusterIP 就行
+  # 建议使用 AWS ALB + aws-load-balancer-controller 绑定 LB，这里改成 ClusterIP 就行
+  # 使用 ALB 的原因，是为了方便在 ALB 上进行集群间的七层流量切分。否则的话也可以直接使用 NLB
+  type: LoadBalancer
   selector:
     istio: common-ingressgateway
   ports:
@@ -31,7 +33,6 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
-      # TODO 感觉这里缺少了节点
       annotations:
         # Select the gateway injection template (rather than the default sidecar template)
         inject.istio.io/templates: gateway
@@ -58,13 +59,13 @@ spec:
       containers:
       - name: istio-proxy
         image: auto # The image will automatically update each time the pod starts.
-        resources:  # istiod 毕竟是核心组件，保险起见配置给高点
+        resources:
           requests:
-            cpu: 2000m
-            memory: 1024Mi
+            cpu: 1000m
+            memory: 500Mi
           limits:
-              cpu: 2000m
-              memory: 1024Mi
+              cpu: 1000m
+              memory: 500Mi
 ---
 # Set up roles to allow reading credentials for TLS
 apiVersion: rbac.authorization.k8s.io/v1
@@ -102,15 +103,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: common-ingressgateway
-  maxReplicas: 50
-  minReplicas: 3
+  maxReplicas: 100
+  minReplicas: 5
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 60
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
