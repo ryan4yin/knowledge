@@ -104,6 +104,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 
 ## 其他资料
 
+- [告别 Sidecar—— 使用 EBPF 解锁内核级服务网格](https://mp.weixin.qq.com/s/nUCiC8_Yr9EplFk8uTgQpA)
 - [Proxyless Service Mesh在百度的实践与思考](https://mp.weixin.qq.com/s/8T7XI6jQfZunwVYDaDHvLw)
 - [Slime：让Istio服务网格变得更加高效与智能](https://cloudnative.to/blog/netease-slime/)
 - [基于 Apache APISIX 的下一代微服务架构](https://www.upyun.com/tech/article/512/%E5%9F%BA%E4%BA%8E%20Apache%20APISIX%20%E7%9A%84%E4%B8%8B%E4%B8%80%E4%BB%A3%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.html)
