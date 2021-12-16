@@ -72,6 +72,15 @@ spec:
       proxy:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
+        lifecycle:
+          postStart:  # holdApplicationUntilStart，因为会被自定义的 lifecycle 覆盖，因此直接写死在这了
+            exec:
+              command:
+              - pilot-agent
+              - wait
+          preStop:  # 等待请求全部处理完后，再关闭 sidecar
+            exec:
+              command: ["/bin/sh", "-c", "while [ $(netstat -plunt | grep tcp | grep -v envoy | wc -l | xargs) -ne 0 ]; do sleep 1; done"]
       tracer:
         zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
           # address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
