@@ -105,8 +105,7 @@ metadata:
 
 ### 3. 监控：istioctl + prometheus-operator
 
-Istio 官方推荐在集群外部使用 [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations) 等工具搭建生产级别的 Prometheus 集群，然后和 Istio 默认部署的 Prometheus 组成联邦。
-Istio Prometheus 只保存 6h 的数据，而外部的 Prometheus 可以将数据保存相当长的一段时间，并且提供自定义的 Grafana 面板。
+Istio 官方推荐在集群外部使用 [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations) 等工具搭建生产级别的 Prometheus 集群.
 
 配置步骤如下：
 1. 部署 [prometheus-community/prometheus](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/README.md#scraping-pod-metrics-via-annotations)
