@@ -1,5 +1,8 @@
 # [rook](https://github.com/rook/rook)
 
+>评价：部署非常简单，但是维护实际上会比 ceph 本身更复杂，引入了比传统的 ceph 更多的概念与组件。
+因此只建议个人玩一玩，生产级别的存储还是让专业的人来搞。
+
 Kubernetes 存储编排工具，这里主要记录 rook-ceph 相关内容。
 
 rook-ceph 支持块存储、对象存储、共享文件存储(CephFS)及 NFS，但是只有 NFS 和对象存储可以在集群外部使用，
