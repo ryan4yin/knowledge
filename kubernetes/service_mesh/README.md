@@ -39,6 +39,10 @@ The Istio load tests mesh consists of **1000 services and 2000 sidecars with 70,
 
 Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论显然是: linkerd2-proxy 性能继续吊打 envoy.
 
+linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P99 延迟只有 envoy 的 1/3 不到.
+
+性能提升还是很明显的。只要功能够用，那我觉得是有动力切换到 linkerd2 的。（但是功能可能不太够用...）
+
 ## 功能对比（Istio vs Linkerd2）
 
 核心能力：
@@ -93,7 +97,7 @@ Linkerd2 的测试方式看起来跟 istio 有些不同，不过得出的结论�
 - 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如 **Node 模式部署**。
     - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
     - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
-    - Cilium 则将目标聚焦在「eBPF」上，实现**内核级别**的服务网格，并通过 Envoy 支持 Node 模式的 Sidecar 以支持 mTLS 等更高级的能力。
+    - Cilium 则将目标聚焦在「eBPF」上，实现**内核级别**的服务网格，并通过 Envoy 支持 Node 模式的 Proxy 以支持 mTLS 等更高级的能力。
 
 不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品，以及 Proxyless Service Mesh.
 
