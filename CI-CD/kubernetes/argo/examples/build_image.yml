@@ -14,11 +14,11 @@ spec:
     requests:
       storage: 20Gi
 ---
-# 使用 Kaniko 构建容器镜像（建议换成 buildkit，kaniko 不支持缓存，而且官方不活跃）
+# 使用 Buildkit 构建容器镜像
 #
 # USAGE:
 #
-# push 镜像需要一个 config.json, 这个 json 需要被挂载到 `kaniko/.docker/config.json`.
+# push 镜像需要一个 config.json, 这个 json 需要被挂载到 `$DOCKER_CONFIG/config.json`.
 # 为此，你首先需要构建 config.json 文件，并使用它创建一个 kubernetes secret:
 #
 #    export DOCKER_REGISTRY="registry.svc.local"
@@ -33,6 +33,9 @@ spec:
 # REFERENCES:
 #
 # * https://github.com/argoproj/argo/blob/master/examples/buildkit-template.yaml
+# * https://github.com/moby/buildkit#expose-buildkit-as-a-tcp-service
+# * https://blog.alexellis.io/building-containers-without-docker/
+# * https://hub.docker.com/r/moby/buildkit
 #
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
@@ -95,22 +98,25 @@ spec:
           - name: dockerfile
           - name: image
       container:
-        image: gcr.io/kaniko-project/executor:v1.3.0
+        image: moby/buildkit:v0.7.2-rootless
         # 挂载 docker credential
         volumeMounts:
           - name: docker-config
-            mountPath: /kaniko/.docker/
+            mountPath: /.docker
           - name: home-cache
             mountPath: /home
         # 以 context 为工作目录
         workingDir: /work/{{inputs.parameters.context-path}}
+        command:
+          - buildctl-daemonless.sh
         args:
-          - --context=.
-          - --dockerfile={{inputs.parameters.dockerfile}}
-          # destination 可以重复多次，表示推送多次
-          - --destination={{inputs.parameters.image}}
-          # 私有镜像仓库，可以考虑不验证 tls 证书（有安全风险）
-          - --skip-tls-verify
-          # - --skip-tls-verify-pull
-          # - --registry-mirror=<xxx>.mirror.aliyuncs.com
-          - --reproducible #  Strip timestamps out of the image to make it reproducible
+          - build
+          - --frontend
+          - dockerfile.v0
+          - --local
+          - context=.
+          - --local
+          - dockerfile={{inputs.parameters.dockerfile}}
+          - --output
+          - type=image,name={{inputs.parameters.image}},push=true
+
