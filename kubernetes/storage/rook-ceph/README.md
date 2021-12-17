@@ -174,3 +174,4 @@ kubectl create -f wordpress.yaml
 视频:
 
 - [Rook: Intro and Ceph Deep Dive - Blaine Gardner, Alexander Trost, & Travis Nielsen, Sébastien Han](https://www.youtube.com/watch?v=aO-n4FuOU2w&list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut&index=25)
+- [Ceph容器化部署一时爽，运维火葬场~](https://mp.weixin.qq.com/s/wIQVkf4XCtNUE0XpLLI_tQ)
