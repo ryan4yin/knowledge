@@ -618,3 +618,27 @@ kube-system   metrics-server-559f85484-5b6xf         7m           27Mi
 >参考 [etcd 的备份与恢复](/datastore/etcd/etcd%20的备份与恢复.md)
 
 
+
+#### 11. 安装 Volume Provisioner
+
+在我们学习使用 Prometheus/MinIO/Tekton 等有状态应用时，它们默认情况下会通过 PVC 声明需要的数据卷。
+
+为了支持这个能力，我们需要在集群中部署一个 Volume Provisioner.
+
+对于云上环境，直接接入云服务商提供的 Volume Provisioner 就 OK 了，方便省事而且足够可靠。
+
+而对于 bare-metal 环境，比较有名的应该是 rook-ceph，但是这个玩意部署复杂，维护难度又高，不适合用来测试学习，也不适合生产环境。
+
+对于开发、测试环境，或者个人集群，建议使用：
+
+- local 数据卷，适合数据可丢失，且不要求分布式的场景，如开发测试环境
+  - https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner
+  - https://github.com/rancher/local-path-provisioner
+- NFS 数据卷，适合数据可丢失，对性能要求不高，并且要求分布式的场景。比如开发测试环境、或者线上没啥压力的应用
+  - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+  - https://github.com/kubernetes-csi/csi-driver-nfs
+  - NFS 数据的可靠性依赖于外部 NFS 服务器，企业通常使用群晖等 NAS 来做 NFS 服务器
+  - 如果外部 NFS 服务器出问题，应用就会崩。
+- 直接使用云上的对象存储，适合希望数据不丢失、对性能要求不高的场景。
+  - 直接使用 https://github.com/rclone/rclone mount 模式来保存数据，或者直接同步文件夹数据到云端（可能会有一定数据丢失）。
+
