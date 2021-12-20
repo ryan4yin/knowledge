@@ -267,7 +267,7 @@ metadata:
 spec:
   # 如果不满足 PDB，Pod 驱逐将会失败！
   minAvailable: 1      # 最少也要维持一个 Pod 可用
-#   maxUnavailable: 1  # 最大不可用的 Pod 数
+#   maxUnavailable: 1  # 最大不可用的 Pod 数，与 minAvailable 不能同时配置！二选一
   selector:
     matchLabels:
       app: podinfo
@@ -300,6 +300,16 @@ node/node-205 evicted
 大约 15 秒后，最先被驱逐走的 Pod 在新节点上启动完成了，另一个 Pod 满足了 PDB 所以终于也被驱逐了。这才完成了一个节点的 drain 操作。
 
 >ClusterAutoscaler 等集群节点伸缩组件，在缩容节点时也会考虑 PodDisruptionBudget. 如果你的集群使用了 ClusterAutoscaler 等动态扩缩容节点的组件，强烈建议设置为所有服务设置 PodDisruptionBudget.
+
+
+#### 在 PDB 中使用百分比的注意事项
+
+在使用百分比时，计算出的实例数都会被向上取整，这会造成两个现象：
+
+- 如果使用 `minAvailable`，实例数较少的情况下，可能会导致 ALLOWED DISRUPTIONS 为 0
+- 如果使用 `maxUnavailable`，因为是向上取整，ALLOWED DISRUPTIONS 的值一定不会低于 1
+
+因此从便于驱逐的角度看，如果你的服务至少有 2-3 个实例，建议在 PDB 中使用百分比配置 `maxUnavailable`，而不是 `minAvailable`.
 
 ### 最佳实践 Deployment + HPA + PodDisruptionBudget
 
