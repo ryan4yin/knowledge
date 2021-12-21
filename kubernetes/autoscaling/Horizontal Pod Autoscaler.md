@@ -8,7 +8,33 @@ Kubernetes 的 HPA 可以通过 CPU/RAM 进行 Pod 伸缩，另外也支持自�
 - [metrics-server](../metrics/metrics-server.md)
 
 
-## 注意事项
+## 计算方式
+
+
+### 当前指标的计算方式
+
+HPA 默认使用 Pod 的当前指标进行计算，公式为：
+
+```
+「Pod 的 CPU 利用率」= 100% * 「所有 Container 的 CPU 用量之和」/「所有 Container 的 CPU requests 之和」
+```
+
+注意分母是总的 requests 量，而不是 limits.
+
+#### 存在的问题与解决方法
+
+在 Pod 只有一个容器时这没啥问题，但是当 Pod 注入了 envoy 等 sidecar 时，这就会有问题了。
+
+因为 Istio 的 Sidecar requests 默认为 `100m` 也就是 0.1 核。
+在未 tuning 的情况下，服务负载一高，sidecar 的实际用量很容易就能涨到 0.2-0.4 核。
+把这两个值代入前面的公式，会发现 **对于 QPS 较高的服务，添加 Sidecar 后，「Pod 的 CPU 利用率」可能会高于「应用容器的 CPU 利用率」**，造成不必要的扩容。
+
+解决方法：
+- 方法一：针对每个服务的 CPU 使用情况，为 sidecar 设置不同的 requests/limits
+- 方法二：使用 KEDA 等第三方组件，获取到应用程序的 CPU 利用率（排除掉 Sidecar），使用它进行扩缩容
+- 方法三：使用 k8s 1.20 提供的 alpha 特性：[Container Resourse Metrics](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#container-resource-metrics). 
+
+### 扩缩容算法
 
 1. HPA 的「目标指标」可以使用两种形式：绝对度量指标和资源利用率。
     - 绝对度量指标：比如 CPU，就是设定绝对核数。

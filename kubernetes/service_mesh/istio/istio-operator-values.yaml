@@ -1,4 +1,4 @@
-# 配置文件对应的 istioctl 版本：1.11.x
+# 配置文件对应的 istioctl 版本：1.12.x
 # 适用于生产环境，本地环境可以自行调低资源要求和实例数量
 # 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
 apiVersion: install.istio.io/v1alpha1
@@ -27,7 +27,10 @@ spec:
     # `defaultConfig`: sidecar 和 gateway 的默认配置(envoy)，Pod 上的 `proxy.istio.io/config` 注解可以覆盖此默认值
     # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig
     defaultConfig:
-      holdApplicationUntilProxyStarts: false  # 视情况设置
+      holdApplicationUntilProxyStarts: false  # 等待 Proxy 启动后，再启动 Application 容器
+      gatewayTopology:
+        numTrustedProxies: 1
+        forwardClientCertDetails: 1
     pathNormalization:  # sidecar 和 gateway 对 path 的预处理方式，istio 和 path 有关的所有操作，使用的都是预处理后的 path
       normalization: MERGE_SLASHES  # 自动将多个斜线合并成一个（注意确认，这是否会对服务造成影响。可以先查几天的 access_log，确认下哪些 path 会受到影响，跟对应的业务方确认下）
   components:
@@ -40,9 +43,6 @@ spec:
           limits:
               cpu: 1000m
               memory: 1024Mi
-        hpaSpec:
-          maxReplicas: 5
-          minReplicas: 3  # 3 副本高可用
         podDisruptionBudget:
           minAvailable: 60%
         strategy:
@@ -66,14 +66,29 @@ spec:
               weight: 1
   values:
     global: # 全局配置
+      configValidation: true
       logAsJson: false  # 日志使用 json 格式
       logging:  # 日志级别
         level: default:info
+      istiod:
+        enableAnalysis: true  # 在 virtualserivce 的 status 里面显示分析结果。比如一些可能的隐患（host/subset 不存在）
       proxy:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
+        privileged: false
+        readinessFailureThreshold: 30
+        readinessInitialDelaySeconds: 1
+        readinessPeriodSeconds: 2
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
         lifecycle:
-          postStart:  # holdApplicationUntilStart，因为会被自定义的 lifecycle 覆盖，因此直接写死在这了
+          postStart:  # 即 holdApplicationUntilProxyStarts，因为会被自定义的 lifecycle 覆盖，因此直接写死在这了
+            # proxy 作为第一个容器，在它的 postStart 完成前，kubelet 不会启动后续容器~
             exec:
               command:
               - pilot-agent
@@ -85,7 +100,11 @@ spec:
         zipkin: # 目前 istio 只支持 zipkin 的协议格式（x-b3-xxx 请求头），不支持 w3c trace-context 标准
           # address: "<jaeger-service>.<jager-space>:9411" # 应该也可以使用外部的 jaeger
     pilot:
-      traceSampling: 0.1 # 链路追踪的采样率
+      autoscaleEnabled: true
+      autoscaleMax: 5
+      autoscaleMin: 3
+      cpu:
+        targetAverageUtilization: 80
     telemetry:
       enabled: true
       # Istio telemetry V2，去掉了 mixer 组件，指标的处理直接在 proxy 上进行

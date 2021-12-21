@@ -19,15 +19,19 @@ spec:
         exec:
           command:
           - /bin/wait-until-ready.sh
+          # Istio 1.7+ 的实现方式：
+          # command:
+          # - pilot-agent
+          # - wait
   - name: application
     image: my-application
 ```
 
 这个 triky 在官方支持 Sidecar 容器前，是个不错的临时解决方案。其他 Sidecar 软件也可以参考。
 
-但是注意它只解决了启动顺序的问题，容器的终止顺序它处理不了。另外 postStart 脚本报错也会导致主容器立即启动。
+注意 postStart 脚本报错也会导致主容器立即启动。
 
-
+另外还有一点，它只解决了启动顺序的问题，容器的终止顺序它处理不了，这需要借助 `preStop`，在最佳实践中有这个参数。
 
 ## Kubernetes 对 Sidecar 的支持
 

@@ -188,7 +188,7 @@ histogram_quantile(0.95, sum by (le, code) (rate(apisix_http_latency_bucket{type
 
 ```promql
 # istio http 状态指标查询
-sum by (destination_version, destination_service_name, namespace, response_code) (rate(istio_requests_total{destination_service_name="xxx", namespace="default"}[1m]))
+sum by (destination_version, destination_service_name, namespace, response_code) (rate(istio_requests_total{repoter="source", destination_service_name="xxx", namespace="default"}[1m]))
 ```
 
 

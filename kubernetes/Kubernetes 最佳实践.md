@@ -106,11 +106,16 @@ spec:
               - /bin/sh
               - -c
               - "while [ $(netstat -plunt | grep tcp | wc -l | xargs) -ne 0 ]; do sleep 1; done"
-        resources:  # 资源请求与限制，建议配置成相等的，避免资源竞争
+        resources:  # 资源请求与限制
+          # 对于核心服务，建议设置 requests = limits，避免资源竞争
           requests:
+            # HPA 会使用 requests 计算资源利用率
+            # 建议将 requests 设为服务正常状态下的 CPU 使用率，HPA 的目前指标设为 80%
+            # 所有容器的 requests 总量不建议为 2c/4G 4c/8G 等常见值，因为节点通常也是这个配置，这会导致 Pod 只能调度到更大的节点上，适当调小 requests 等扩充可用的节点类型，从而扩充节点池。 
             cpu: 1000m
             memory: 1Gi
           limits:
+            # limits - requests 为允许超卖的资源量，建议为 requests 的 1 到 2 倍，酌情配置。
             cpu: 1000m
             memory: 1Gi
         securityContext:
