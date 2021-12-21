@@ -1,12 +1,15 @@
-# CRD+Operator - 复杂有状态应用的管理器
+# 扩展 APIServer
+
+## 方案一 - CRD+Operator - 复杂有状态应用的管理器
 
 如果需要在 Kubernetes 中部署类似 rook-ceph/istio/mysql-cluster/prometheus-cluster/mongo-cluster 之类的复杂有状态应用，最好的方式就是 CRD+Operator。
 
-## 什么是 Operator?
+### 什么是 Operator?
 
-- [operator-framework](github.com/operator-framework/operator-sdk)
+工具：
+- [kubebuilder](https://github.com/kubernetes-sigs/kubebuilder)
 
-## 为什么需要 CRD+Operator
+### 为什么需要 CRD+Operator
 
 因为 Kubernetes 提供的 StatefulSet 功能太弱了，要部署一个可伸缩的有状态应用，StatefulSet 的功能远远不够。
 
@@ -21,7 +24,7 @@ StatefulSet 只适合用于部署比较简单的有状态应用，比如 [mqtt/e
 
 
 
-## 注意事项
+### 注意事项
 
 使用 operator 时，operator 和 cr 的删除必须遵循如下顺序：
 
@@ -29,3 +32,10 @@ StatefulSet 只适合用于部署比较简单的有状态应用，比如 [mqtt/e
 2. 删除 operator
 
 如果你先删了 operator，将导致 cr 无法完全清理，从而无法被删除！
+
+
+## 方案二 - APIServer Aggregation
+
+这是目前社区在推的方案，目前看来会更复杂些，但是有一些 operator 没有的能力。
+
+- [apiserver-builder-alpha](https://github.com/kubernetes-sigs/apiserver-builder-alpha)
