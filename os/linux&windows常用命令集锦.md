@@ -13,15 +13,18 @@ nohup python xxx.py &
 grep "main()" . -r --include *.{py, dart}
 
 ## 1） 全文搜索并替换
-sed -i "s/pattern_str/replace_str/g" `grep "key_pattern" 'path_pattern' -rl`
+### -i --in-place 原地替换（修改原文件）
+### -i=SUFFIX  替换后的文件添加 SUFFIX 这个后缀
+### -r  使用拓展的正则表达式，注意此正则不支持 \d\w\s 等语法，必须使用 [0-9] [a-zA-Z] 等来替换！！！
+sed -ri "s/pattern_str/replace_str/g" `grep "key_pattern" 'path_pattern' -rl`
 
 ## 2）文件名搜索，替换文件内容
-sed -i "s/pattern_str/replace_str/g" `find . -name "pattern"`
+sed -ri "s/pattern_str/replace_str/g" `find . -name "pattern"`
 
 ## 3）批量转换大小写
 # 将当前文件夹内，所有的 gitlab URL 都转换成小写
 # \L 转小写  \U 转大写
-sed -i 's@http://GITLAB.*.git@\L&@g' `find . -name pubspec*`
+sed -ri 's@http://GITLAB.*.git@\L&@g' `find . -name pubspec*`
 
 
 ## 4) 拷贝文件，并且保持文件夹结构（--parents 表示保持文件夹结构）
