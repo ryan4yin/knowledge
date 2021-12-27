@@ -1,6 +1,7 @@
 # 配置文件对应的 istioctl 版本：1.12.x
 # 适用于生产环境，本地环境可以自行调低资源要求和实例数量
 # 这份配置的官方文档：https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/
+# 对应的代码定义：https://github.com/istio/api/blob/1.12.1/mesh/v1alpha1/config.pb.go
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
