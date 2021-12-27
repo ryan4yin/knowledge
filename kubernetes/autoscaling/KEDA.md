@@ -53,8 +53,8 @@ spec:
     metadata:
         serverAddress: http://<prometheus-host>:9090
         metricName: istio_requests_total_my_app_v3
-        # istio 的 HTTP QPS 指标
-        query: sum(irate(istio_requests_total{reporter="destination", destination_service_name="my-app", destination_service_namespace="default", destination_version="v3"}[2m]))
+        # istio 的 HTTP QPS 指标，排除掉只有代理层才会产生的错误状态码：502/503/504
+        query: sum(irate(istio_requests_total{reporter="destination", response_code!~"502|503|504", destination_service_name="my-app", destination_service_namespace="default", destination_version="v3"}[2m]))
         # istio 的 GRPC 请求速率指标
         # query: sum(irate(istio_request_messages_total{reporter="destination", destination_service_name="my-app", destination_service_namespace="default", destination_version="v3"}[2m]))
         threshold: '180'  # （query 值 / 副本数）假设每个 Pod 能撑住 300 QPS，这里以 60% 为扩容临界值
