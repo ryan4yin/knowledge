@@ -147,18 +147,6 @@ HPA 默认只支持基于 CPU 的扩缩容，这满足了大部分服务的需�
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  annotations:
-    # 这个 behavior 注解，功能与下面的 behavior 字段等同，二选一即可
-    # 只在 kubernetes 1.18+ 生效，低版本可以 apply 此注解，但是实际上无效
-    autoscaling.alpha.kubernetes.io/behavior: |
-      {"ScaleDown":{
-        "StabilizationWindowSeconds":600,
-        "SelectPolicy":"Min",
-        "Policies":[
-          {"Type":"Percent","Value":5,"PeriodSeconds":1200},
-          {"Type":"Pods","Value":3,"PeriodSeconds":1200}
-        ]
-      }}'
   name: podinfo
   namespace: default
 spec:
@@ -176,21 +164,46 @@ spec:
         type: Utilization
         averageUtilization: 50  # 期望的 CPU 平均值
   behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0  # 默认为 0，只使用当前值进行扩缩容
+      policies:
+      - periodSeconds: 180  # 每 3 分钟最多扩容 5% 的 Pods
+        type: Percent
+        value: 5
+      - periodSeconds: 60  # 每分钟最多扩容 1 个 Pod，扩的慢一点主要是为了一个个地预热，避免一次扩容太多未预热的 Pods 导致服务可用率剧烈抖动
+        type: Pods
+        value: 1
+      selectPolicy: Min  # 选择最小的策略
     # 以下的一切配置，都是为了更平滑地缩容
     scaleDown:
-      stabilizationWindowSeconds: 600  # 使用过去 10 mins 的最大 cpu 值进行缩容计算
+      stabilizationWindowSeconds: 600  # 使用过去 10 mins 的最大 cpu 值进行缩容计算，避免过快缩容
       policies:
       - type: Percent  # 每 3 mins 最多缩容 `ceil[当前副本数 * 5%]` 个 pod（20 个 pod 以内，一次只缩容 1 个 pod）
         value: 5
         periodSeconds: 180
-      - type: Pods  # 每 3 mins 最多缩容 3 个 pod（即 >= 60 个 pods 时，每次缩容的 pod 数就不会涨了）
-        value: 3
-        periodSeconds: 180
+      - type: Pods  # 每 1 mins 最多缩容 1 个 pod
+        value: 1
+        periodSeconds: 60
       selectPolicy: Min  # 上面的 policies 列表，只生效其中最小的值作为缩容限制（保证平滑缩容）
 ```
 
-
 而对于扩容不够平滑这个问题，可以考虑提供类似 AWS ALB TargetGroup `slow_start` 的功能，在扩容时缓慢将流量切到新 Pod 上，以实现预热服务（JVM 预热以及本地缓存预热），这样就能达到比较好的平滑扩容效果。
+
+
+## 注意事项
+
+注意 kubectl 1.23 以下的版本，默认使用 `hpa.v1.autoscaling` 来查询 HPA 配置，`v2beta2` 相关的参数会被编码到 `metadata.annotations` 中。
+
+比如 `behavior` 就会被编码到 `autoscaling.alpha.kubernetes.io/behavior` 这个 key 所对应的值中。
+
+因此如果使用了 v2beta2 的 HPA，一定要明确指定使用 `v2beta2` 版本的 HPA：
+
+```shell
+kubectl get hpa.v2beta2.autoscaling
+```
+
+否则不小心动到 `annotations` 中编码的某些参数，可能会产生意料之外的效果，甚至直接把控制面搞崩...
+比如这个 issue: [Nil pointer dereference in KCM after v1 HPA patch request](https://github.com/kubernetes/kubernetes/issues/107038)
 
 ## 参考
 
