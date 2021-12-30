@@ -180,12 +180,12 @@ spec:
     scaleDown:
       stabilizationWindowSeconds: 600  # 使用过去 10 mins 的最大 cpu 值进行缩容计算
       policies:
-      - type: Percent  # 每 20 mins 最多缩容 `ceil[当前副本数 * 5%]` 个 pod（20 个 pod 以内，一次只缩容 1 个 pod）
+      - type: Percent  # 每 3 mins 最多缩容 `ceil[当前副本数 * 5%]` 个 pod（20 个 pod 以内，一次只缩容 1 个 pod）
         value: 5
-        periodSeconds: 1200
-      - type: Pods  # 每 20 mins 最多缩容 3 个 pod（即 >= 60 个 pods 时，每次缩容的 pod 数就不会涨了）
+        periodSeconds: 180
+      - type: Pods  # 每 3 mins 最多缩容 3 个 pod（即 >= 60 个 pods 时，每次缩容的 pod 数就不会涨了）
         value: 3
-        periodSeconds: 1200
+        periodSeconds: 180
       selectPolicy: Min  # 上面的 policies 列表，只生效其中最小的值作为缩容限制（保证平滑缩容）
 ```
 
