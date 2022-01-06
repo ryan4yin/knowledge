@@ -50,15 +50,16 @@ linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P9
 - [x] 负载均衡 - 目前打平（常用算法都支持、貌似都不支持 slow_start 模式）
 - [x] 观测指标 - 暂时平手（不清楚 Istio 的 flags 在 Linkerd2 这边有没有对应参数）
 - [x] 链路追踪 - 算平手，都支持 jaeger，而且都只能做到 RPC 调用级别的链路追踪
-- [x] 流量切分 - weight_total 至少 1000 - Linkerd2 > Istio, 因为 Istio 有限制必须为 100
+- [x] 流量切分
+   - 切分权重：istio 目前弱一些，因为它要求总权重必须为 100，也就是说切量的粒度只能到 1%（下个版本会放开这个限制）
    - 都支持 pathRegex、method、headers
    - istio 支持更多的参数：params/schema/uriPrefix/ignoreUriCase/withoutHeaders/rewrite 等，而且支持忽略 URI 大小写、流量镜像 mirror
    - Linkerd2 官方建议搞个 nginx pod 做流量镜像（毕竟只在测试时用嘛，搞个 nginx 确实能满足需求），其他参数估计也是觉得没必要支持，完全可以在 Gateway 上做 hhh
-- [x] 性能 - Linderd2 << Istio
+- [x] 性能 - Linderd2 强于 Istio
 - [x] 文档 - Istio == Linkerd2，Istio 的文档感觉条理更清晰，Linkerd2 的文档稍显简略了。
 - [x] 流控能力（限流限并发） - Istio > Linkerd2，Linkerd 不提供此能力
   - [Add support for rate limiting - Linkerd2](https://github.com/linkerd/linkerd2/issues/4649)
-- [ ] 流量拓扑图，配合流量监测能力 - Istio 有 Kiali 比较强大，Linkerd2 的 Dashboard 尚且不清楚是否同样牛逼。
+- [ ] 流量拓扑图，配合流量监测能力 - Istio 有 Kiali 比较强大，Linkerd2 的 Dashboard 尚且不清楚是否同样强。
 - [x] 易用性 - Linkerd2 >> Istio，Istio 和 Envoy 两个东西的配置都比 Linkerd2 复杂...
 
 以及另外一些看起来需求不强烈的功能：
