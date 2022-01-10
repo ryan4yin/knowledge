@@ -13,7 +13,8 @@ VirtualService 详细介绍，参见官方文档：[VirtualService Reference - I
    1. 当前名字空间的网关：`<gateway-name>`，直接填网关名称。
    1. 别的名字空间的网关：` <gateway-namespace>/<gateway-name>`，比如 `my-namespace/my-gateway`
       1. gateway 名称不是域名 FQDN！而是使用 `/` 分隔的一个名称！
-
+3. [routes 的匹配顺序](https://istio.io/latest/docs/concepts/traffic-management/#routing-rule-precedence)
+   1. Istio 按列表的顺序，从上至下地进行 routes 匹配。也就是说越靠前的规则优先级越高。
 
 ### 监控中出现 503 可能的原因
 
