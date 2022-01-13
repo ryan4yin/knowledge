@@ -58,7 +58,7 @@ http {
 ```
 
 查阅官方文档 [ngx_http_rewrite_module](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite) 发现，
-rewrite 的 `last` 和 `break` 两个都会停止处理当然的所有 `ngx_http_rewrite_module` 模块的所有指令，而 `return` 指令就是由 `ngx_http_rewrite_module` 模块提供的，因此它被直接忽略了。
+rewrite 的 `last` 和 `break` 两个都会停止处理当前上下文中 `ngx_http_rewrite_module` 模块的所有指令，而 `return` 指令就是由 `ngx_http_rewrite_module` 模块提供的，因此它被直接忽略了。
 由于请求未得到处理，导致 nginx 直接返回了 `404`.
 
 
