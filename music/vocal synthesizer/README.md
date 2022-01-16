@@ -10,8 +10,10 @@
 - [**Synthesizer V**](https://zh.moegirl.org.cn/Synthesizer_V): 华侃如研制的歌声合成工具，V 表示第五次重制。在 2020 年底引入了深度学习技术后，随着产品的迭代声音变得非常自然，「自动调教」能力可以节约传统上 90%+ 的手工参数调教时间，也降低了入门门槛
   - Synth V 除了 AI 带来的超强真实度外，还有一点就是「跨语言」歌声合成的能力也非常真实
   - Linux/MacOS/Windows 全平台支持，还支持 lua/ecmascript 脚本，程序员利好。
-- [**ACE 虚拟歌姬**](https://zh.moegirl.org.cn/ACE%E8%99%9A%E6%8B%9F%E6%AD%8C%E5%A7%AC)：一款 Android/IOS 软件，在 2021 年 1 月引入了 AI 能力后，真实度方面也能跟 SynthV PK，但是专业程度上仍有较大差距
-  - 免费软件
+  - SynthV AI + QingSu 官方价格 RMB 999
+- [**ACE 虚拟歌姬**](https://zh.moegirl.org.cn/ACE%E8%99%9A%E6%8B%9F%E6%AD%8C%E5%A7%AC)：一款 Android/IOS 软件，在 2021 年 1 月引入了 AI 能力后，真实度方面已经不输专业级别的 SynthV，但是专业程度上仍有较大差距
+  - 免费软件，但是拥有不输 SynthV 的性能！
+  - 官方透露正在开发专业版的软件「ACE Stuido」
 - [**CeVIO**](https://zh.moegirl.org.cn/zh-tw/CeVIO): 名字重组自单词 Voice，目前也在 2021 年 1 月推出了 CeVIO AI，效果貌似也挺不错的
   - CeVIO AI 非常自然，它目前相比 SynthV 最大的特点，应该是能很真实地模拟出说话的声音（但是是独立的声库）。
 - [**XStudio**](https://zh.moegirl.org.cn/X_Studio_%C2%B7_%E6%AD%8C%E6%89%8B): 由微软小冰衍生出来的一款歌声合成平台（Web 云平台），显然也应用了 AI 技术，发布于 2020 年 8 月
