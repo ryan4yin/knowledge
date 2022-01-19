@@ -2,7 +2,7 @@
 
 ## Pod 自动伸缩
 
-Kubernetes 集群传统的水平伸缩 HPA 所使用的指标，主要有两个来源：
+Kubernetes 集群的水平伸缩 HPA 所使用的指标，主要有如下几个方案：
 
 - [metrics-server](https://github.com/kubernetes-sigs/metrics-server): 仅提供了 cpu/memory 两个指标
 - [prometheus-adapter](https://github.com/kubernetes-sigs/prometheus-adapter): 使用 prometheus 中的 metrics 定义自定义指标用于 HPA
@@ -23,7 +23,6 @@ autoscaler 是 kubernetes 官方提供的一个节点伸缩组件，待研究
 
 ## 其他最佳实践
 
-- 「监控告警」与「自动伸缩」，应该分别使用不同的 Prometheus，避免互相影响。
-  - 「监控告警」的 Prometheus 应该保存较长的数据，如果做高可用，数据应该用 thanos 往 S3 同步
-    - 可能需要做限制，不允许一次查询太多的数据，否则容易把 Prometheus 搞挂。
-  - 「自动伸缩」的 Prometheus 只需要短期数据就行，可以只保留 3h（prometheus 最小的块好像是 2h）。 另外这个 Prometheus 挂了会导致自动伸缩失效，需要保证稳定性。
+- 「自动伸缩」的 Prometheus 只需要短期数据，而且要求分钟级别的可用性，可以考虑使用独立的 Prometheus 只保存短期数据。
+  - 当然如果你原有的 Prometheus 就是高可用的，可用性、性能都能满足要求，那就没必要给「自动伸缩」单独搞 P8s.
+
