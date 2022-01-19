@@ -41,6 +41,30 @@ curl localhost:15000/config_dump?resource=static_listeners
     - 两边都关掉了 Sidecar，那显然也不会有任何指标...
 
 
+## 数据面监控指标
+
+### Service-level Metrics
+
+>https://istio.io/latest/docs/concepts/observability/#service-level-metrics
+
+istio 通过 `metadataExchange` 与 `prometheus` 两个 envoy 插件，在数据面生成出 Service 级别的监控指标，提供给 Prometheus 抓取。
+
+Service 级别的指标，通过 `reporter` 这个标签来区分来源：
+
+- `reporter=source`: 表示数据来自客户端的 proxy
+- `reporter=destination`: 表示数据来自服务端的 proxy
+
+正常情况下，这两个不同来源的指标应该是一致的，但是如果不一致，可能的问题：
+
+- 重试/故障注入/镜像等 istio 特性，会导致 source/destination 两侧的指标出现区别
+- 只在 destination 侧观察到 503/0 指标，在 source 侧一切正常：原因暂时未知
+
+### Proxy-level Metrics
+
+>https://istio.io/latest/docs/concepts/observability/#proxy-level-metrics
+
+待续
+
 ## Istio 数据面性能优化
 
 待续
