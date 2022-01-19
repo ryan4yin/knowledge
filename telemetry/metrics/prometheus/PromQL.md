@@ -149,6 +149,12 @@ histogram_quantile(0.95, sum by (le, code) (rate(apisix_http_latency_bucket{type
 sum by (destination_version, destination_service_name, namespace, response_code) (rate(istio_requests_total{repoter="source", destination_service_name="xxx", namespace="default"}[1m]))
 ```
 
+查询出延迟超过 500ms 的请求数量变化：
+
+```
+sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="rem-st", response_code="0", le="+Inf"}) - 
+sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="rem-st", response_code="0", le="500"})
+```
 
 #### 2.4 Kubernetes
 
