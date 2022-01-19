@@ -2,6 +2,10 @@
 
 目前全球最大的云服务提供商，也是云服务的先驱。
 
+Github 上最流行的 AWS 实践手册：
+
+- [Amazon Web Services — a practical guide](https://github.com/open-guides/og-aws)
+
 ## EC2
 
 cloudinit: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html#user-data-cloud-init
