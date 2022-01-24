@@ -1,0 +1,1 @@
+内容移迁移至：https://ryan4yin.space/posts/kubernetes-deployemnt-using-kubeadm/

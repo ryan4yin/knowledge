@@ -47,5 +47,5 @@ kubectl rollout undo daemonset.v1.apps/<daemonset-name> -n prod
 
 删除所有 crash 的 Pod(在流量压力大的时候，快速启动所有 pod，分担请求压力，避免起一个 pod 被打死一个（预热阶段被打死了），导致全都启动不起来):
 ```
-kubectl delete pod `kubectl get pod -n prod | grep ad-gateway | awk '$3 == "CrashLoopBackOff" {print $1}'`
+kubectl delete pod `kubectl get pod -n prod | grep xxx | awk '$3 == "CrashLoopBackOff" {print $1}'`
 ```

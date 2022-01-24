@@ -57,7 +57,8 @@ Service 级别的指标，通过 `reporter` 这个标签来区分来源：
 正常情况下，这两个不同来源的指标应该是一致的，但是如果不一致，可能的问题：
 
 - 重试/故障注入/镜像等 istio 特性，会导致 source/destination 两侧的指标出现区别
-- 只在 destination 侧观察到 503/0 指标，在 source 侧一切正常：原因暂时未知
+- 只在 destination 侧才能观察到 0 指标，在 source 侧一切正常：
+  - Istio 只在 destination 侧统计连接被客户端主动断开的记录，使用 `0` 来标记
 
 ### Proxy-level Metrics
 
