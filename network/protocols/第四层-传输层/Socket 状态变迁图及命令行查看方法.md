@@ -88,8 +88,12 @@ Docker 容器有自己的 namespace，直接通过宿主机的 ss 命令是查�
 这个适合单机 docker 的网络诊断，用法如下：
 
 ```
+docker ps | grep xxx
+
+echo CONTAINER=xxx  # 容器名称或 ID
+
 # 1. 查询到容器对应的 pid
-PID=$(docker inspect --format {{.State.Pid}} <container_name_or_ID>)
+PID=$(docker inspect --format {{.State.Pid}} $CONTAINER)
 
 # 2. nsenter 通过 pid 进入容器的 network namespace，执行 ss 查看 socket 信息
 nsenter --target $PID --net ss -s
