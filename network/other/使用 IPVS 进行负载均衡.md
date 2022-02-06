@@ -1,6 +1,6 @@
 # 使用 IPVS 进行负载均衡
 
->本文需要前置知识：iptables 四表五链的概念，详见 [iptables 及 docker 容器网络分析](https://ryan4yin.space/posts/iptables-and-container-networks/)
+>本文需要前置知识：iptables 四表五链的概念，详见 [iptables 及 docker 容器网络分析](https://thiscute.world/posts/iptables-and-container-networks/)
 
 IPVS 是一个高性能的四层负载均衡器，由两部分组成：
 

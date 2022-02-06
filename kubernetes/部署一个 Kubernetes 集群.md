@@ -1,1 +1,1 @@
-内容移迁移至：https://ryan4yin.space/posts/kubernetes-deployemnt-using-kubeadm/
+内容移迁移至：https://thiscute.world/posts/kubernetes-deployemnt-using-kubeadm/

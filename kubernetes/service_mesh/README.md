@@ -104,7 +104,7 @@ linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P9
 
 ## 我的相关博客
 
-- [使用 Istio 进行 JWT 身份验证（充当 API 网关）](https://ryan4yin.space/posts/use-istio-for-jwt-auth/)
+- [使用 Istio 进行 JWT 身份验证（充当 API 网关）](https://thiscute.world/posts/use-istio-for-jwt-auth/)
 - [API Gateway vs Service Mesh](https://www.cnblogs.com/kirito-c/p/12394038.html)
 
 ## 其他资料

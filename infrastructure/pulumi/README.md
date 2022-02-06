@@ -9,5 +9,5 @@
 
 为了方便维护，pulumi 笔记的 README.md 已迁移至我的博客：
 
-- [Pulumi 使用体验 - 基础设施代码化](https://ryan4yin.space/posts/expirence-of-pulumi/)
+- [Pulumi 使用体验 - 基础设施代码化](https://thiscute.world/posts/expirence-of-pulumi/)
 

@@ -7,4 +7,4 @@ Vault 和 Apollo 相比，最大的特点是它对敏感信息的支持非常完
 3. 密钥引擎：也支持接入各大云厂商的账号体系（比如阿里云RAM子账号体系），实现 ACCESS_KEY/SECRET_KEY 的自动轮转。
 4. 支持接入 kubernetes rbac 权限体系，通过 serviceaccount+role 为每个 Pod 单独配置权限。
 
-详细内容已迁移至：<https://ryan4yin.space/posts/expirence-of-vault/>
+详细内容已迁移至：<https://thiscute.world/posts/expirence-of-vault/>

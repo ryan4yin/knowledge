@@ -2,7 +2,7 @@
 
 Kubernetes 的 HPA 可以通过 CPU/RAM 进行 Pod 伸缩，另外也支持自定义指标（如每秒请求数等）。
 
-大部分内容已迁移至博客：[二、服务的伸缩配置 - HPA](https://ryan4yin.space/posts/kubernetes-best-practices/#k8s-hpa)
+大部分内容已迁移至博客：[二、服务的伸缩配置 - HPA](https://thiscute.world/posts/kubernetes-best-practices/#k8s-hpa)
 
 ## 指标服务器
 

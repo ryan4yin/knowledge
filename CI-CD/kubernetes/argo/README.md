@@ -7,7 +7,7 @@ Argo Workflows 是一个云原生工作流引擎，专注于**编排并行任务
 2. 可以在短时间内轻松运行用于机器学习或数据处理的计算密集型作业。
 3. Argo Workflows 可以看作 Tekton 的加强版，因此显然也可以通过 Argo Workflows 运行 CI/CD 流水线(Pipielines)。
 
-文章已迁移至：[云原生流水线 Argo Workflows 的安装、使用以及个人体验](https://ryan4yin.space/posts/expirence-of-argo-workflow/)
+文章已迁移至：[云原生流水线 Argo Workflows 的安装、使用以及个人体验](https://thiscute.world/posts/expirence-of-argo-workflow/)
 
 ## 参考文档
 

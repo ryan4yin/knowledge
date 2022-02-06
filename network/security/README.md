@@ -10,7 +10,7 @@
 
 ## 我的博客
 
-- [TLS 协议、TLS 证书、TLS 证书的配置方法、TLS 加密的破解手段](https://ryan4yin.space/posts/about-tls-cert/)
+- [TLS 协议、TLS 证书、TLS 证书的配置方法、TLS 加密的破解手段](https://thiscute.world/posts/about-tls-cert/)
 
 ## 相关工具
 
