@@ -7,4 +7,4 @@ QEMU/KVM 是目前最流行的虚拟化技术，它基于 Linux 内核提供的 
 
 本文已迁移至我的博客：
 
-- [QEMU-KVM 虚拟化环境的搭建与使用](https://ryan4yin.space/posts/qemu-kvm-usage/)
+- [QEMU-KVM 虚拟化环境的搭建与使用](https://thiscute.world/posts/qemu-kvm-usage/)
