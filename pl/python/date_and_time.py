@@ -101,6 +101,8 @@ dt.datetime.strptime('2020-02-22 04:00:03', '%Y-%m-%d %H:%M:%S')  # => datetime.
 
 # 上海时区：东八区 utc+8
 tz_shanghai = dt.timezone(dt.timedelta(hours=8))
+now_shanghai = dt.datetime.now(tz=tz_shanghai)
+now_shanghai.strftime('%Y-%m-%dT%H:%M:%S%Z')  # => 2022-02-10T00:48:52UTC+08:00
 
 ## 第三方库
 
