@@ -35,11 +35,21 @@
   - 如果两边的 VPC 需要通过 NAT Gateway 通信，就还会涉及到 NAT Gateway 的费用（`usage_type=NatGateway-Bytes`）
 - 从 EC2 传输到 Internet 的流量：阶梯式收费
     - 注意这里还会涉及到 NAT Gateway 的流量成本
-    - 这告诫我们 - 只在必要的时候，才给 EC2/RDS/... 分配公网 IP/启用公网访问，避免带来额外的 Internet 流量成本.
+    - 这告诫我们 - 只在必要的时候，才给 EC2/RDS/ELB... 分配公网 IP/启用公网访问，避免带来额外的 Internet 流量成本.
 
 
 待补充
 
+
+## FAQ
+
+### 我能否通过加一层 ELB 来避免被收取 Cross Zone 的流量成本？
+
+参见 [ELB 负载均衡](./ELB%20负载均衡.md)，ALB 不收跨区流量费，NLB 会收跨区流量费。
+
+那对 HTTP 流量传输而言，ec2 => alb => ec2 这样的跨区传输方式，会不会比 ec2 => ec2 更便宜呢？
+
+待研究（感觉是不会...）
 
 ## 相关文档
 

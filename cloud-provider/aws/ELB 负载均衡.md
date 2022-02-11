@@ -34,4 +34,33 @@ ALB 的主要由两部分组成：
 
 NLB 按标准的计算算法，是比 ALB 更便宜的，而且性能更高，还可以设置静态 IP，看起来是好处多多。
 
-但是需要注意跨区流量问题，使用 `ip` 模式的 NLB targetgroup，否则可能会产生大量的跨区流量费
+但是需要注意跨区流量问题，使用 `ip` 模式的 NLB targetgroup，否则可能会产生大量的跨区流量费。后面会详细介绍。
+
+## 成本分析
+
+### 跨区流量成本
+
+#### 1. 只有 NLB 才会收取跨区流量成本
+
+官方文档 [data transferred "in" to and "out" of Amazon EC2](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer) 中有这么一句话：
+
+    Data transferred "in" to and "out" from Amazon Classic and Application Elastic Load Balancers using private IP addresses, between EC2 instances and the load balancer in the same AWS VPC is free.
+
+这说明 CLB/ALB 是免跨区流量费的，而 NLB 虽然更便宜，但是不免除跨区流量费！
+
+因此 NLB 需要注意使用 `ip` 模式的 NLB targetgroup，否则可能会产生大量的跨区流量费。后面会详细介绍。
+
+另外还不清楚 NLB 自身的地址是否是区分 zone 的，否则下游的流量也可能会产生跨区流量费...
+
+#### 2. ALB/CLB 也可能非直接地导致跨区流量成本
+
+在 Kubernetes 集群中，如果使用 instance 模式的 ALB，或者使用了 CLB，那么 LB 其实会在所有 nodes 上进行负载均衡。
+
+但是实际处理请求的 Pod 不一定在该 Node 上，这会导致 k8s 集群在 nodes 间进行不必要的流量转发，造成 ec2 之间跨区流量成本的上升！
+
+### 跨域流量成本
+
+如果 ELB 被跨域访问，那此 ELB 还将被收取跨域流量成本。
+
+如果 ELB 类型为 `internet-facing`，那它还将被收取公网传输成本。
+
