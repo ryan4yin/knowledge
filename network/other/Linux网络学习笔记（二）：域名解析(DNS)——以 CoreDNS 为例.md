@@ -1,1 +1,0 @@
-https://thiscute.world/posts/about-dns-protocol/
