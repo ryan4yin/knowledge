@@ -32,6 +32,10 @@ spec:
       gatewayTopology:
         numTrustedProxies: 1
         forwardClientCertDetails: 1
+      extraStatTags:  # 如果要在 metrics 中使用非默认的 stat 标签，就需要先补充到这
+      - request_host
+      - request_method
+      - request_url_path
     pathNormalization:  # sidecar 和 gateway 对 path 的预处理方式，istio 和 path 有关的所有操作，使用的都是预处理后的 path
       normalization: MERGE_SLASHES  # 自动将多个斜线合并成一个（注意确认，这是否会对服务造成影响。可以先查几天的 access_log，确认下哪些 path 会受到影响，跟对应的业务方确认下）
   components:
@@ -122,4 +126,27 @@ spec:
           # istio 通过 EnvoyFilter 来配置 proxy 生成 prometheus 指标，这里可以实现自定义指标、增减指标的维度
           enabled: true
           wasmEnabled: false
+          configOverride:
+            inboundSidecar:  # 服务端 sidecar 的指标
+              disable_host_header_fallback: false
+              metrics:
+                - name: requests_total
+                  dimensions:
+                    request_method: request.method
+                    request_url_path: request.url_path
+            outboundSidecar:  # 客户端 sidecar 的指标
+              disable_host_header_fallback: false
+              metrics:
+                - name: requests_total
+                  dimensions:
+                    request_method: request.method
+                    request_url_path: request.url_path
+            gateway:  # 网关层的指标
+              disable_host_header_fallback: true
+              metrics:
+                - name: requests_total
+                  dimensions:  # 网关层的 requests_total 添加 request_host 标签
+                    request_host: request.host
+                    request_method: request.method
+                    request_url_path: request.url_path
 
