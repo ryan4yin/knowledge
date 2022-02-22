@@ -126,6 +126,7 @@ spec:
           # istio 通过 EnvoyFilter 来配置 proxy 生成 prometheus 指标，这里可以实现自定义指标、增减指标的维度
           enabled: true
           wasmEnabled: false
+          # 如下配置建议写在 Telemetry API 里，它要更灵活，可以控制生效范围。
           configOverride:
             inboundSidecar:  # 服务端 sidecar 的指标
               disable_host_header_fallback: false
