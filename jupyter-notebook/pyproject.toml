@@ -12,7 +12,7 @@ matplotlib = "^3.3.2"
 numpy = "^1.19.2"
 
 # notebook
-jupyterlab = "^2.2.8"
+jupyterlab = "^2.2.10"
 ipywidgets = "^7.5.1"
 
 # machine learning
