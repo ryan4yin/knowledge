@@ -90,3 +90,8 @@ spec:
           value: "request.url_path"
 ```
 
+
+## 参考
+
+- [Customizing Istio Metrics](https://istio.io/latest/docs/tasks/observability/metrics/customize-metrics/)
+- [Classifying Metrics Based on Request or Response](https://istio.io/latest/docs/tasks/observability/metrics/classify-metrics/)
