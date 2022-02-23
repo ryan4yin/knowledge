@@ -54,7 +54,7 @@ spec:
   template: # pod template
     metadata:
       annotations:
-        sidecar.istio.io/extraStatTags: destination_port,request_host
+        sidecar.istio.io/extraStatTags: request_host,request_method,request_url_path
 ```
 
 然后配置 prometheus 插件，如下配置只在 `foo` 名字空间内生效：
