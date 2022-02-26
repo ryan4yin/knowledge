@@ -2,7 +2,26 @@
 
 家有 NAS，那肯定就会遇到影音相关的问题。
 
-## 视频转码
+
+## 图片处理
+
+图片压缩命令：
+
+```shell
+ffmpeg -i image_source -q compress_level out_source
+```
+
+## 视频处理
+
+### 简单用法
+
+查看视频信息：
+
+```shell
+ffprobe -i "xxx.mkv"
+```
+
+### 视频转码
 
 最近买了一个 VR 设备：Oculus Quest 2，想用它看 NAS 中的视频，但是又不想付费购买 Skybox 之类的软件。
 因此就在鼓捣如何通过浏览器直接观看 NAS 视频。
@@ -38,19 +57,19 @@ flv 等其他视频的互相转换，也是使用同样的命令。
 编码的详细参数参见 [不同编码器特有的设定](https://gloomy-ghost.gitbooks.io/-ffmpeg/content/08-differente-encoders-special-options.html#%E5%AD%A6%E4%BC%9A%E7%9C%8B%E6%96%87%E6%A1%A3)
 
 
+### 2. 视频压缩
+
+待续
 
 
-## 其他奇技淫巧
+### 3. 视频截取
 
-查看视频信息：
+待续
 
-```shell
-ffprobe -i "xxx.mkv"
-```
+### 4. 视频转 gif 图
 
-视频截取：
+待续
 
-视频转 gif 图:
 
 
 ## GPU 加速
