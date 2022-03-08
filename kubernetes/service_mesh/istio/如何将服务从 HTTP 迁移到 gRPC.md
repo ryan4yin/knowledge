@@ -159,3 +159,8 @@ spec:
 - https://github.com/GoogleCloudPlatform/microservices-demo: 这是 Google 提供的一套功能验证与演示服务，内部全部使用 gRPC 协议，复杂程度应该算是刚好够用。
 
 
+## 四、实际效果
+
+我跟推荐系统的大佬一起将核心服务从 HTTP 切换到 gRPC 后，效果立竿见影：服务流量下降 50% ~ 60%，延迟下降 30% ~ 50%
+
+可以说是付出了很小的代价，大大提升了服务性能，同时降低了大量的 AWS 跨区流量成本。
