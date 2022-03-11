@@ -1,6 +1,4 @@
-# 自动伸缩
-
-## Pod 自动伸缩
+# Pod 自动伸缩
 
 Kubernetes 集群的水平伸缩 HPA 所使用的指标，主要有如下几个方案：
 
@@ -14,11 +12,6 @@ Kubernetes 集群的水平伸缩 HPA 所使用的指标，主要有如下几个�
 
 KEDA 比 prometheus-adapter 强的地方在于，它支持从多种事件来源获取数据，而且支持缩容到零。
 它的这些特性使 KEDA 被 kubevela 用做底层的自动伸缩组件，knative 对它的支持也正在路上。
-
-
-## 节点自动伸缩 - [autoscaler](https://github.com/kubernetes/autoscaler)
-
-autoscaler 是 kubernetes 官方提供的一个节点伸缩组件，待研究
 
 
 ## 其他最佳实践

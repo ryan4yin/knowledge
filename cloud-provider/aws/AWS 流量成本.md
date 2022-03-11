@@ -18,6 +18,7 @@
   - Kubernetes: 尽量将有调用关系的 Pod/中间件 调度到同一可用区，或者多可用区均衡调度
   - Kubernetes/Istio: Zone Aware LoadBalancing，优先访问当前可用区内的服务
 - 尽量缩减跨区流量
+  - 使用 gRPC 等二进制消息格式+多路复用的协议（效果立竿见影）
   - 服务间调用的数据使用 gzip 等算法压缩
   - 往数据库存的 json 等数据，也可以在客户端压缩下，取出来再解压
   - 选择使用不收跨区流量费用的 AWS 服务，如 S3/DynamoDB 等
