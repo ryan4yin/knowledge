@@ -68,6 +68,12 @@ log: (*error or *exception) and kubernetes.container_name : *worker
 not log: (debug or info)
 ```
 
+查询某个 pod 的日志（双引号不能省略，它用于确保不会被分词）：
+
+```
+eks.pod_name: "xxx-pod-vfdsf"
+```
+
 ### 2. 过滤器（Filter）
 
 除了使用 KQL 进行查询，也可以通过添加 Filter 对日志进行过滤。
