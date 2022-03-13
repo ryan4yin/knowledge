@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import random
+import secrets
 import string
-import time
-from itertools import chain, zip_longest
 from operator import truth
 
 import logging
@@ -56,9 +54,9 @@ def equal(a, b):
 
 
 chars = string.digits + string.ascii_letters
-def random_string(length: int, seed: int = None):
-    """生成验证码（字符）"""
-    if seed:
-        random.seed(seed)
-    code = "".join(random.choices(chars, k=length))
+def random_string(length: int):
+    """生成随机字符串"""
+    # 注意，这里不应该直接使用 random 库！而应该使用 secrets
+    # 尤其是 random 库默认使用当前时间作为 seed，攻击者可以直接遍历最近的时间来猜测随机字符串的内容
+    code = "".join(secrets.choice(chars) for _ in range(length))
     return code
