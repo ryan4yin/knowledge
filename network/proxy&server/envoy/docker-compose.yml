@@ -1,16 +1,13 @@
 version: "3"
 services:
   proxy:
-    image: "envoyproxy/envoy:v1.15.0"
+    image: "envoyproxy/envoy:v1.21.1"
     container_name: "envoy"
     restart: always
-    environment:
-    # 只有 root 账户才能绑定 1-1024 端口。
-    # 因此需要将 envoy 用户的 uid 设为 0，也就是设为 root 账户。
-    - "ENVOY_UID=0"  
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:8080"
+      - "443:8443"
+      - "15000:15000"  # 仅测试用，直接暴露 admin 端口是非常危险的
     volumes:
       - "./envoy.yaml:/etc/envoy/envoy.yaml"
     networks:
