@@ -41,5 +41,6 @@ nginx 和 envoy 在内部使用不同的状态码来记录这种情况：
 ## 参考
 
 - [Envoy 中文指南 - 云原生实验室](https://fuckcloudnative.io/envoy-handbook)
-
-
+- [服务网格数据面性能深度调优](https://mp.weixin.qq.com/s/sRH-VKJh2izfSJuG7dNhGg)
+- [Envoy请求流程源码解析（一）：流量劫持](https://segmentfault.com/a/1190000041456849)
+- [Istio 中文指南 - 云原生实验室](https://github.com/yangchuansheng/envoy-handbook)
