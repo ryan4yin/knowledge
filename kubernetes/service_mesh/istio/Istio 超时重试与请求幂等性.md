@@ -74,7 +74,7 @@ yaml 中的三个重试触发条件，详细说明如下：
    2. 504 网关超时，后端无响应或者后端 IP 不存在，会导致报这个错。
 2. connect-failure: 连接失败
 3. refused-stream: 上游服务器重置了连接
-4. 其他条件参见 [x-envoy-retry-on - envoyproxy](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on)
+4. 其他条件参见 [x-envoy-retry-on - envoyproxy](https://www.envoyproxy.io/docs/envoy/v1.21.1/configuration/http/http_filters/router_filter#x-envoy-retry-on)
 
 但是实际测试发现，**任一请求的超时时间 = min(`http[0].retries.perTryTimeout`, `http[0].timeout`)**！（测试版本: 1.6.8）
 Istio 文档里没有找到相关描述信息！

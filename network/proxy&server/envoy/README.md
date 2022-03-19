@@ -36,7 +36,7 @@ Envoy 的线程数是一个很重要的参数，可以通过 `--concurrency` 来
 详见 [Envoy threading model](https://blog.envoyproxy.io/envoy-threading-model-a8d44b922310)
 
 
-### 2. 客户端断开连接
+### 2. HTTP 客户端断开连接
 
 对于 proxy 还在处理数据，连响应 header 都还没返回给客户端的时候，客户端主动了断开连接的情况，
 nginx 和 envoy 在内部使用不同的状态码来记录这种情况：
@@ -65,6 +65,16 @@ Nginx 的 http 配置块中，可以在全部或某个 location 上配置 gzip�
 Nginx 的 Upstream 负责在多个 server 之间进行负载均衡，而且不支持动态发现。
 Envoy 中与之对应的概念是 Cluster，每个 Cluster 都可以有多个 Endpoints.
 Cluster 负责在 Endpoints 之间进行负载均衡，也支持动态发现 Endpoints.
+
+### 4. inbound/outbound
+
+>这里可能还存在错误
+
+另外 Envoy 的核心是一个 L3/L4 代理，在这上面也提供了 L7 的支持。也就是说它可以直接在 L3 层代理一个主机或容器的所有流量。
+
+将 Envoy 作为一个 Kubernetes Pod Sidecar，进入 Pod 的流量被称为 inbound，而从 Pod 出去的流量被称作 outbound.
+
+而 Nginx 是一个 L4/L7 层的服务器，不支持 L3。
 
 
 ## 参考

@@ -1,21 +1,7 @@
 
 ## Envoy Sidecar 管理员 API
 
-登入 Pod 的 shell 中，可以通过如下命令，访问 Envoy 的管理员 API：
-
-```shell
-# 查看所有 管理员 api
-curl localhost:15000/help
-
-# 查看动态集群配置，内容相当多。。还没搞明白
-curl localhost:15000/config_dump?resource=dynamic_active_clusters
-
-# 查看静态监听配置，内容相当多。。还没搞明白
-curl localhost:15000/config_dump?resource=static_listeners
-
-```
-
-官方文档：[Administration interface - Enovy Docs](https://www.envoyproxy.io/docs/envoy/latest/operations/admin#)
+参见 [Envoy Admin API](/network/proxy&server/envoy/Envoy%20Admin%20API.md).
 
 
 ## [EnvoyFilter](https://istio.io/latest/docs/reference/config/networking/envoy-filter/)
