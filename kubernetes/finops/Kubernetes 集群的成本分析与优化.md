@@ -8,14 +8,21 @@ Kubernetes 作为一个多租户的计算平台，我们很自然地会在上面
 如果没有资源使用统计及成本统计，整个集群的资源用量就无法拆分，就很难定位到资源占用问题、成本增长问题，换句话说集群的资源池、成本就完全不可控。
 
 
-## 相关工具
+## 相关工具与文档
 
 开源工具：
 - [kubecost](https://github.com/kubecost/cost-model): 做得比较粗糙，而且没统计数据卷的成本
+- [crane](https://github.com/gocrane/crane): 腾讯开源的一款 Kubernetes 成本优化工具，待研究
+  - [腾讯推出国内首个云原生成本优化开源项目 Crane](https://cloud.tencent.com/developer/article/1960014)
 
 商业服务：
 - [spotisnt.com](spotisnt.com): Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容
     - 集群成本 API： [oceanK8sClusterCosts](https://docs.spot.io/api/#operation/oceanK8sClusterCosts)
+
+
+文档：
+
+- [Calculating Container Costs - FinOps Fundation](https://www.finops.org/projects/calculating-container-costs/)
 
 ## 简单的思路
 
