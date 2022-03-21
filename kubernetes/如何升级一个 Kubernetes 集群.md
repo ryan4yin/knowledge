@@ -95,3 +95,4 @@
 ## 参考
 
 - [Upgrading kubeadm clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+- [蚂蚁大规模 Kubernetes 集群无损升级实践指南【探索篇】](https://mp.weixin.qq.com/s/aB4CXC4P8F1q5LrE8mEBDg)
