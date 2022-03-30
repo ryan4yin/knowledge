@@ -50,6 +50,29 @@ group by
 order by regexp_extract(line_item_usage_start_date, '^..........'), line_item_operation
 ```
 
+
+CloudFront 成本分析：
+
+```sql
+SELECT
+  regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
+  sum(line_item_blended_cost) as blended_cost,
+  line_item_usage_amount,
+  line_item_usage_type,
+  line_item_line_item_description
+FROM "my_cur"
+where regexp_extract(line_item_usage_start_date, '^..........') = '2022-03-25'
+  and line_item_product_code  = 'AmazonCloudFront'
+  and line_item_resource_id like '%xxx'
+  -- and line_item_usage_type like '%DataTransfer-Out-OBytes'  -- 只查询回源流量的成本
+  and line_item_usage_type like '%DataTransfer-Out-Bytes'  -- 只查询 CDN 出网流量的成本
+group by 
+  regexp_extract(line_item_usage_start_date, '^..........'),
+  line_item_usage_amount,
+  line_item_usage_type,
+  line_item_line_item_description
+```
+
 ## Athena 自身的成本分析
 
 - 把 workspace 拆得更细致，可以单独分析每个 workspace 的成本
