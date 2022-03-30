@@ -20,6 +20,7 @@ HTTP/3 相比 HTTP/2 有如下优势：
 
 HTTP/3 综合实现了 TCP、TLS、HTTP/2 的部分功能，是一个 4/5/7 层的跨层次协议。
 
+QUIC: https://github.com/quicwg/
 
 ## 各类工具目前对 HTTP/3 的支持状况
 
