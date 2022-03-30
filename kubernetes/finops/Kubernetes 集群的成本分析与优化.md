@@ -14,6 +14,7 @@ Kubernetes 作为一个多租户的计算平台，我们很自然地会在上面
 - [kubecost](https://github.com/kubecost/cost-model): 做得比较粗糙，而且没统计数据卷的成本
 - [crane](https://github.com/gocrane/crane): 腾讯开源的一款 Kubernetes 成本优化工具，待研究
   - [腾讯推出国内首个云原生成本优化开源项目 Crane](https://cloud.tencent.com/developer/article/1960014)
+- [kube-opex-analytics](https://github.com/rchakode/kube-opex-analytics)
 
 商业服务：
 - [spotisnt.com](spotisnt.com): Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容
