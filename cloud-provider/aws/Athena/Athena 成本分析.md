@@ -73,6 +73,27 @@ group by
   line_item_line_item_description
 ```
 
+NAT 网关成本分析：
+
+```sql
+SELECT * from (
+
+SELECT
+    regexp_extract(line_item_usage_start_date, '^..........') as start_date,
+    line_item_usage_type,
+    sum(line_item_blended_cost) as blended_cost
+  FROM "my_cur"
+  where regexp_extract(line_item_usage_start_date, '^..........') > '2021-11-23'
+    and line_item_product_code  = 'AmazonEC2'
+    and line_item_resource_id like '%nat-%'  -- NAT 网关
+  group by 
+    line_item_usage_type,
+    regexp_extract(line_item_usage_start_date, '^..........')
+
+) where cost > 10
+order by 2, 1
+```
+
 ## Athena 自身的成本分析
 
 - 把 workspace 拆得更细致，可以单独分析每个 workspace 的成本
