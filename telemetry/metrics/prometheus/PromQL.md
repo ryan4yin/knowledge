@@ -156,13 +156,31 @@ sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destinat
 sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="rem-st", response_code="0", le="500"})
 ```
 
+
 #### 2.4 Kubernetes
 
+kubelet 中内嵌了 [cadvisor](https://github.com/google/cadvisor) ，它提供了容器层面的指标，对应的指标 path 为 `/metrics/cadvisor`.
+
+CPU 使用率：
+
 ```promql
-# CPU 使用率
 sum(irate(container_cpu_usage_seconds_total{namespace="istio-system", pod=~"<deployment_name>.+"}[3m])) by (namespace, pod) / (sum(container_spec_cpu_shares{namespace="istio-system", pod=~"<deployment_name>.+"}) by(namespace, pod) / 1024)
 ```
 
 
+服务流量速率查询（供带宽优化、跨区流量优化参考）：
+
+
+接收速率超过 50M/s 的服务：
+
+```promql
+sum by (namespace, service, interface) (label_replace(rate(container_network_receive_bytes_total{container!="istio-proxy", container=~"^[[:alpha:]]*", pod!="", interface=~"eth.+"}[10m]), "service", "$1", "pod", "(.*)-[^-]+")) / 1024 / 1024 > 20
+```
+
+发送速率超过 50M/s 的服务：
+
+```promql
+sum by (namespace, service, interface) (label_replace(rate(container_network_transmit_bytes_total{container!="istio-proxy", container=~"^[[:alpha:]]*", pod!="", interface=~"eth.+"}[10m]), "service", "$1", "pod", "(.*)-[^-]+")) / 1024 / 1024 > 20
+```
 
 
