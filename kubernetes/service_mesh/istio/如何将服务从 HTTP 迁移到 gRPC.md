@@ -131,7 +131,75 @@ spec:
       weight: 20
 ```
 
-### 4. 其他故障注入等能力
+### 4. 网关层转发配置
+
+如果一个服务既有对外提供 HTTP 服务，也有对集群内提供 gRPC 服务，迁移的时候需要做些额外的修改。
+
+比如服务 product 原来的网关层配置为：
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: test-gateway
+spec:
+  selector:
+    istio: test-ingress-gateway
+  servers:
+  - port:
+      number: 8080
+      name: http
+      protocol: HTTP
+    hosts:
+    - product.test.com
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: product.test.com
+spec:
+  hosts:
+    - product.test.com
+  gateways:
+    - test-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: product
+```
+
+上述配置未明确指定要将外部请求转发到 product 的哪个端口，在 product 服务只有一个 HTTP-8080 端口时，Istio 会默认使用该端口，因此是没问题的。
+
+但是在为 product 服务添加了 gRPC-9090 端口后，Istio 就无法判断该使用哪个端口了，这会导致从网关进来的所有请求都返回 503！
+
+解决方法是明确指定要转发的端口地址：
+
+```yaml
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: product.test.com
+spec:
+  hosts:
+    - product.test.com
+  gateways:
+    - test-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: product
+        port:
+          number: 8080
+```
+
+### 5. 其他故障注入等能力
 
 也跟流量切分一样，可直接通过端口 `match` 来分别对 HTTP/gRPC 端口进行操作。
 或者不使用 `match`，直接同步操作 HTTP/gRPC.
@@ -162,6 +230,6 @@ spec:
 ## 四、实际效果
 
 我跟推荐系统的大佬一起将核心服务从 HTTP 切换到 gRPC 后，效果立竿见影：服务流量下降超过 50%，延迟下降 30% ~ 50%
-此外我们在 gRPC 上添加了 gzip 后，服务流量再次大幅下降，将 AWS 跨区流量成本直接削减到计算成本的零头。
+此外我们在 gRPC 上添加了 gzip 后，服务流量还能再降 60%+，两项优化结合，流量能降到原来的 20% 以下。
 
-可以说是付出了很小的代价，大大提升了服务性能，同时降低了大量的 AWS 跨区流量成本。
+上述两项优化对服务的性能影响很小，可以说是付出了很小的代价，大大提升了服务性能，同时降低了大量的 AWS 跨区流量成本。
