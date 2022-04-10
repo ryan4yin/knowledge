@@ -28,6 +28,33 @@
 带着这些问题的区块链，不断的发展与遭受挫折（智能合约 Bug、51% 攻击等等），未来会如何发展呢？且让我们拭目以待吧。
 
 
-## 区块链结构与挖矿
+## 路线图
 
-TBD
+- https://github.com/OffcierCia/DeFi-Developer-Road-Map
+- https://github.com/dcbuild3r/blockchain-development-guide
+
+
+## 智能合约开发工具
+
+开发环境：
+
+- https://github.com/trufflesuite/truffle: 一个智能合约工具，提供本地完善的本地测试、模拟环境
+- http://dapp.tools/: 一套以太坊开发相关的 CLI 工具
+
+区块链客户端：
+
+- https://github.com/ethereum/go-ethereum: geth 官方客户端
+
+solidity 常用库：
+
+- https://github.com/OpenZeppelin/openzeppelin-contracts
+- https://github.com/NomicFoundation/hardhat
+
+
+其他：
+
+- https://github.com/ConsenSys/smart-contract-best-practices: 最佳实践
+
+## 参考文档
+
+- https://github.com/yeasy/blockchain_guide
