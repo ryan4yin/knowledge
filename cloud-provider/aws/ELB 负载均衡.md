@@ -3,7 +3,9 @@
 AWS ELB 提供了请求的负载均衡服务，我们目前用到的主要有如下几种：
 
 - Application Load Balancing: 基于 openresty 的七层负载均衡，支持 http 层的流量切分，推荐使用。
+  - 和阿里云不一样，它只按流量计费，而且可以扩容，理论上可以无限并发，但是扩容慢。如果预判流量要升高，需要提前调 API 扩容。
 - Network Load Balancing: 高性能的四层负载均衡，价格比 ALB 更贵。
+  - 性能高，但是流量费太贵，一般游戏行业用的多。
 - Classic Load Balancing: 旧版本的七层负载均衡（基于 Apache），已经不建议使用了
 
 

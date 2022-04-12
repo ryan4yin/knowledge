@@ -1,5 +1,18 @@
 ## AWS EC2 - 虚拟机实例
 
+EC2 实例类型
+
+1. 按需实例 - 临时测试用
+2. 预留实例 - 固定的工作，使用预留实例
+3. 竞价 Spot 实例，随时可能被终止 - 爬虫、map reduce 的 task 实例
+
+在任一 ec2 实例中调用固定的 http api，就能获取到它自身相关的 user-data/meta-data 以及资源绑定的 Role 相关的 Ak/SK 信息，
+这两个文件其实和 cloud-init 很类似，甚至就是用 cloud-init 实现的。
+
+
+### userdata 与 cloudinit
+
+cloudinit: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html#user-data-cloud-init
 
 ### 实例类型介绍
 

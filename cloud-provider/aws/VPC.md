@@ -101,3 +101,12 @@ VPC endpoints 有两种类型：
 
 比如 System Manager（SSM, 贼难用），默认只能管理外网资源，要管理内网资源，得添加 VPC endpoints
 
+应该为 DynamoDB/S3 配置 Gateway endpoint.
+
+**存疑：如果不给 ECR 配 Interface Endpoints，是否最造成比较大的 NAT 成本**？
+
+### VPC 流日志
+
+待续
+
+
