@@ -18,15 +18,37 @@ SELECT DISTINCT line_item_product_code FROM "my_cur";
 SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   line_item_operation,
-  sum(line_item_blended_cost) as blended_cost,
+  sum(line_item_blended_cost) as blended_cost
 FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-11-28'
   and line_item_product_code  = 'AmazonS3'
   and line_item_resource_id = 'bucket_name'
-group by
+group by 1, 2
+order by 1, 2
+```
+
+查询 S3 的流量成本:
+
+```sql
+SELECT
+  regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
+  sum(line_item_blended_cost) as blended_cost,
   line_item_operation,
-  regexp_extract(line_item_usage_start_date, '^..........')
-order by regexp_extract(line_item_usage_start_date, '^..........'),line_item_operation
+  line_item_usage_type,
+  line_item_usage_amount,
+  line_item_line_item_description,
+  product_from_location,
+  product_from_location_type,
+  product_to_location,        -- S3 只收传出到 internet/其他 region 的流量成本
+  product_to_location_type
+FROM "my_cur"
+where regexp_extract(line_item_usage_start_date, '^..........') = '2022-04-05'
+  and line_item_product_code  = 'AmazonS3'
+  and line_item_resource_id = 'bucket_name'
+  and line_item_usage_type like 'DataTransfer-Out-Bytes'  --  只查询 S3 传出的流量成本
+group by
+  1,3,4,5,6,7,8,9,10
+order by 1, 3, 2
 ```
 
 查询 EC2 成本：
@@ -43,11 +65,8 @@ where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-12-27'
   and line_item_resource_id = 'ec2_id'  -- 或者使用 tag 查一批 ec2 的成本
   -- and line_item_usage_type = 'DataTransfer-Regional-Bytes' -- 跨区/跨域流量成本
   and line_item_usage_type != 'DataTransfer-Regional-Bytes' -- 去掉流量成本，就是计算+存储的成本
-group by
-  regexp_extract(line_item_usage_start_date, '^..........'),
-  --line_item_usage_type,
-  line_item_operation
-order by regexp_extract(line_item_usage_start_date, '^..........'), line_item_operation
+group by 1, 2
+order by 1, 2
 ```
 
 
@@ -66,11 +85,7 @@ where regexp_extract(line_item_usage_start_date, '^..........') = '2022-03-25'
   and line_item_resource_id like '%xxx'
   -- and line_item_usage_type like '%DataTransfer-Out-OBytes'  -- 只查询回源流量的成本
   and line_item_usage_type like '%DataTransfer-Out-Bytes'  -- 只查询 CDN 出网流量的成本
-group by 
-  regexp_extract(line_item_usage_start_date, '^..........'),
-  line_item_usage_amount,
-  line_item_usage_type,
-  line_item_line_item_description
+group by 1,3,4,5
 ```
 
 NAT 网关成本分析：
@@ -86,9 +101,7 @@ SELECT
   where regexp_extract(line_item_usage_start_date, '^..........') > '2021-11-23'
     and line_item_product_code  = 'AmazonEC2'
     and line_item_resource_id like '%nat-%'  -- NAT 网关
-  group by 
-    line_item_usage_type,
-    regexp_extract(line_item_usage_start_date, '^..........')
+  group by 1,2
 
 ) where cost > 10
 order by 2, 1
