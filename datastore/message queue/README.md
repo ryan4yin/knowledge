@@ -19,6 +19,7 @@
 
 1. Kafka
 2. rabbitmq
+3. pulsar: 读写分离，不依赖 zookeeper（自己实现了 raft 共识算法），兼容 kafka 协议
 
 ## 参考
 
