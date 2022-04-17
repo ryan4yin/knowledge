@@ -1,5 +1,51 @@
 # Go 语言
 
+Go 是 Google 开发的一门编程语言，其主要特点如下：
+
+- 类似 C 的语法，但是有 GC，不需要自己管理内存
+  - GC 性能不如 JVM，这是 Go 目前较大的缺陷之一
+- 类似 C 语言的错误处理机制：基于函数的多返回值实现
+  - Go 设计者认为 try-catch 这种处理逻辑，会使代码逻辑混乱
+  - Go 的错误处理哲学是：**永远先处理出错的情况**，再编写无错误的逻辑。
+- 语言层面支持 goroutines 协程，从而提供了强大的并发编程能力
+- 仅支持静态链接，生成单个二进制文件，外部只依赖 glibc/musl.
+  - 好处是部署、更新、维护方便（对运维很友好），但是二进制文件的体积会偏大
+- 标准、统一、不易出错的规范
+  - Go 的设计哲学是：一件事情应该只存在一种最好的解决方法
+  - 这避免了规范层面一些无意义的争论，同时语言的静态分析、代码转换等工具实现起来也更简单
+  - 语言层面的规范举例如下
+    - 不需要使用分号结尾、左花括号 `{` 不允许换行
+    - 结构体的字面量，最后一行必须以逗号结尾，不允许省略逗号
+    - 不允许定义未使用的变量与 import 语句
+    - 通过变量首字母的大小写来区分其外部可见性：小写开头的是 packge 的私有变量，大写开头的才外部可见
+- 完善的工具链：
+  - 官方的 tools 工具包：godocs 文档生成、gofmt 格式化、goimports 导入管理、pprof 定位性能问题
+  - 完善的依赖管理 go modules：完全基于 git 实现的依赖管理，一行命令安装所有依赖，一行命令完成编译
+    - 不过 go modules 也被很多人吐槽...曾经这一块也是比较混乱的，这里略过不提
+- 丰富的官方标准库以及拓展库 `golang.org/x/...`
+  - 很多工作如网络编程、密码学编程、代码格式化与导入管理、文档生成、性能测试等，基本只用标准库或者其他官方库就可以解决问题，相比之下其他语言对社区库的依赖要重得多
+- 交叉编译：即跨平台编译，官方也提供了比较好的支持
+- 其他特性：
+  - 不限制栈空间大小，支持无限递归调用。
+  - 对闭包的良好支持
+  - 所有变量默认都会被初始化为其 0 值，避免使用了错误的未定义值导致异常。基本所有现代化语言都是这么干的，包括 rust
+  - 支持类型推导，很多场景下不需要手动指定变量类型。这也是现代化语言的一个通用特征，rust 也是这么干的
+  - Go 1.18 支持了泛型，但是跟其他语言的泛型区别很大，有些情况有性能损失，官方建议谨慎使用。
+  - Go 通过空接口 `interface{}` 实现了与动态语言有些类似的特性，它也可以说是 Go 中泛型的替代品。
+  - 不支持宏
+- 当然 Go 也存在许多收人诟病的缺陷，但是相比 C 问题应该是少了非常多。
+  - 你想想，C 甚至需要《C 与指针》、《C 缺陷》这样的书来专门分析语言的各种犄角旮旯...
+
+Go 语言核心团队都是牛逼哄哄的大佬，不少人都曾经留名青史。
+Robe Pike 是 UTF-8 编码的主要设计者，
+Ken Thompson 是 Unix 的创造者，C 语言前身 B 语言的设计者，1983 年图灵奖得主，著名的《C 程序设计语言》一书的作者之一，同时他也与人合著了《Go 程序设计语言》一书，广受好评。
+Robert Griesemer 是 JVM HotSpot 编译器及 JavaScript V8 引擎的开发者之一。
+
+Go 被认为是现代化的 C 语言，但是它的应用场景跟 C 只有部分交叉。因为在底层引入了 GC 以及 goroutines，它并不适合系统层面的编程。目前广泛认为系统编程领域真正的继任者应该是 Rust.
+
+Go 语言目前被大量应用在云原生领域，比如容器化工具 Docker、容器集群 Kubernetes、监控系统 Prometheus、分布式对象存储 MinIO 等等...
+其次 Go 也被大量应用在现代微服务开发、命令行工具、网络代理工具等领域。
+
 ## Go 环境变量
 
 可通过 `go env` 查看所有 Go 环境变量。
@@ -60,139 +106,38 @@ go get github.com/gorilla/mux@master    # records current meaning of master
 - `go mod download`: 下载项目的所有依赖
 - `go mod tidy`: 添加缺失的依赖项，删除未使用的依赖项
 
+## Go 基本概念
 
-## 最佳实践
-
-- 应该使用 make 为引用类型进行空间预分配
-- defer 的使用
-  - 主要用来管理上下文：比如 IO 句柄的自动关闭
-  - [尽量不要使用 defer 来自动解锁](https://segmentfault.com/a/1190000019490834)，因为性能比较差。应该手动调用 `Unlock`!
-- **不要使用 「 _ 」 丢弃任何返回的 err 错误**！要么把 err 传递到上层调用，要么使用 log 记录下来
-  - 直接丢弃 err 会导致错误被隐藏，排查错误时就两眼一抹黑。
-- 应该使用 `strings.Builder` 或者 `strings.Join` 拼接字符串
-   - 因为字符串是不可变对象，直接用 + 拼接会创建出大量无用对象，浪费大量内存
-  - 写过 java 的都应该很熟悉，写过 Python 的应该也知道要用 `''.join()`
-- 对于并发编程中需要频繁分配内存的场景（比如频繁反序列化 Json），可以考虑使用 `sync.Pool`，来降低向内核申请内存的频率，提升性能。
-- [谨慎关闭 channel，避免触发 panic](https://juejin.cn/post/7033671944587182087)
-  - 应该只在发送端关闭 channel（避免往已关闭的 channel 发送数据导致 panic）
-  - 存在多个发送者时不要关闭发送者 channel，而是使用专门的 stop channel
-  - 在参数类型中，使用 `chan<-` 与 `<-chan` 指定 channel 发送方向，避免关闭错误的 channel
-
-### Goroutine 最佳实践
-
-#### `sync.Once`
-
-提供了一个线程安全的单次执行接口，常用于单例模式或者初始化的场景。举例如下：
-
-```go
-package main
-import (
-    "sync"
-)
-type singleton struct {}
-var instance *singleton
-var once sync.Once
-func GetInstance() *singleton {
-    once.Do(func() {
-        instance = &singleton{} // 只会执行一次，后续调用该方法不会执行
-    })
-    return instance
-}
-```
-
-#### sync/atomic 原子操作
-
-在并发场景下，如果需要对一个整形变量进行修改，最好使用 atomic 而不是 sync/mutex , sync.atomic 的实现原理大致是向 CPU 发送对某一个块内存的 LOCK 信号，然后就将此内存块加锁，从而保证了内存块操作的原子性。这种对 CPU 发送信号对内存加锁的方式，比 sync.Mutex 这种在语言层面对内存加锁的方式更底层，因此也更高效。
-
-atomic 支持如下几种类型的：int32, int64, uint32, uint64, uintptr, unsafe.Pointer。这些原子操作函数有以下 5 种：增减（Add），存储（Store），载入（Load），交换（Swap），比较并交换（CompareAndSwap）。
-
-```go
-package main
-import (
-    "fmt"
-"sync"
-    "sync/atomic"
-)
-func main() {
-    var value int64
-    var wg sync.WaitGroup
-	wg.Add(2)
-    fun := func(count int) {
-        for index := 0; index < count; index++ {
-            atomic.AddInt64(&value, 1)  // not value++
-        }
-	wg.Done() }
-    go fun(100)
-    go fun(100)
-	wg.Wait()
-    fmt.Printf("%v\n", value)
-}
-```
-
-#### sync.map
-
-并发情况下如果需要对 map 进行操作，优先考虑使用 sync.map 而不是对 map 进行加锁，无论是互斥锁还是读写锁，相较于 sync.map 性能都是差很多的
-Sync.map 核心是读写分离与原子操作，底层会有两个 map: 一个 readonly，一个被称为 dirty.
-
-大概的原理：
-
-- 通过 read 和 dirty 两个字段将读写分离，读的数据存在只读字段 read 上，将最新写入的数据则存在 dirty 字段上
-- 读取时会先查询 read，不存在再查询 dirty，如果在dirty里查到了则记misses++。写入时则只写入 dirty。
-- 读取 read 并不需要加锁，而读或写 dirty 都需要加锁
-- 另外有 misses 字段来统计 read 被穿透的次数（被穿透指需要读 dirty 的情况），超过一定次数则将 dirty 数据同步到 read 上
-- 对于删除数据则直接通过标记来延迟删除
-
-```go
-var ma sync.Map                //无需初始化
-ma.Store("key", "value")       // 存储
-ma.Delete("key")               // 删除
-ma.LoadOrStore("key", "value") // 获取值。如果不存在则存储
-ma.Load("key") // 读取
-// 遍历
-ma.Range(func(key, value interface{}) bool{
-  fmt.Println(key, value)
-  // 如果返回 false 则退出循环
-  return true
-})
-```
-
-#### 其他锁的优化
-
-TODO
-
-#### 协程池
-
-对于需要频繁创建协程的业务场景，应尽可能使用协程池，重复利用资源，减少内存开销。
-比如海量 Url 的连通性监控，每个 url 开辟一个协程不太现实，此时就需要引入协程池共享协程。
-
-官方库并未提供协程池，如下是一个比较流行的实现：
-
-- https://github.com/panjf2000/ants
-
-### json 转 struct 工具
-
-在日常开发中，尤其是微服务场景下，经常会碰到需要解析接口返回的 json 数据。
-每一次都需要手工去构造一个结构体，太过繁琐而且难免会出错。推荐使用如下网站，将目标 json 复制上去就能自动生成对应的 Struct.
-
-- https://mholt.github.io/json-to-go/ 
-
-注意转换完后一定要确认一遍结果，不要直接闭眼 Copy. 比如有些字段可能就需要手动加上 required 等额外的属性。
-
-### 尽量避免使用 panic
-
-这是一个基本上所有语言都通用的最佳实践：强制退出程序的指令只应该用在程序最外部的入口方法里！
-而内部方法应该抛出异常，或者通过其他方法把错误传递出去。
-
-生产环境中应尽可能避免 panic，panic/recover 不是最佳的错误处理策略。仅当发生不可恢复的事情（例如：nil 引用），程序才必须 panic ，其他场景还是应该规规矩矩地 `return nil, err`.
-
-### Goroutine 泄漏问题
-
-Channel 可能会引发 goroutine 泄漏。
-
-泄漏的原因是 goroutine 操作 channel 后，处于发送或接收阻塞状态，而 channel 处于满或空的状态，一直得不到改变。同时，垃圾回收器也不会回收此类资源，进而导致 gouroutine 会一直处于等待队列中，不见天日。
-另外，程序运行过程中，对于一个 channel，如果没有任何 goroutine 引用了，gc 会对其进行回收操作，不会引起内存泄漏。
-
-TODO
+- 每个 package 可以由多个文件组成，可以有 `init()` 与 `main()` 两个特殊函数
+  - `init()` 会在包被初始化时调用
+  - `main()` 是程序的入口
+- 数组与 slice 切片
+- 常量
+  - 枚举类型是基于常量 + 自增器 `iota` 实现的
+  - 无类型常量（untyped constants）是一种特殊的常量，在使用时才会被确定类型，可以提供最高的精度
+- `new` 为某个类型分配空间，并返回其指针
+  - 用得很少，因为定义一个类型通常就自动分配空间了，而引用类型通常使用 `make`
+- `make` 为引用类型分配空间，并返回该类型的值。
+- go 中大量使用了 `nil` 以及与 `nil` 相等的其他类型的空值。
+  - 比如，就像茴字有四中写法，空切片也有四种定义方式:
+    - ``var s []int`
+    - `var s []int = nil`
+    - `s := []int{nil}`
+    - `s := []int{}`: 只有这个 `!= nil` 成立，前面三个跟 nil 完全相等
+- map 与 set
+  - `set` 通过 `map[string]bool` 实现
+    - 也有人用 `map[string]interface{}` 实现 `set`，能省一点存 `bool` 的空间，但是官方觉得这点空间微不足道，没必要这么干。
+- `struct` 结构体
+  - 匿名结构体，其实只一个语法糖
+  - 匿名结构体实际上会有一个与其类型同名的名称
+  - `struct` 的每个字段都可以定义一个 `metadata tag`，通常用于 `json` 的序列化与反序列化
+- Go 官方提供了一个模板语言包 `text/template`，它被大量应用在 `helm` 等配置文件渲染、网页渲染、代码生成等场景中。
+- Go 的 OOP - 方法定义
+  - Go 可以在命名类型上定义方法，方法有一个 `receiver`
+    - 如果类型比较大，或者需要修改类型的值，就需要将 receiver 定义为指针类型，如 `func (p *P) xxx () {}`
+    - 对于较小的类型，而且不需要修改类型的值，可以直接将 recevier 定义为值类型
+  - 不可在指针类型上定义方法，也就是说上面的 `P` 不能是指针类型，因为不能对指针类型再次取指针。
+  - 在调用类型上的方法时，不需要手动取指针，编译器会自动帮我们处理。
 
 ## 参考
 
