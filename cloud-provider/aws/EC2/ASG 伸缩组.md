@@ -59,6 +59,7 @@ ASG 支持非常多的伸缩策略：
 
 >https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-warm-pools.html
 
+TBD
 
 ## ASG 与 K8s 集群伸缩
 

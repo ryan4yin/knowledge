@@ -142,27 +142,64 @@ Karpenter 使用名为 `Provisioner` 的 CRD 来管理集群的伸缩，Kapenter
 
 一个简单的 Provisioner 配置如下：
 
-```shell
-cat <<EOF | tee > karpenter-provisioner.yaml
+```yaml
+# karpenter-provisioner.yaml
 apiVersion: karpenter.sh/v1alpha5
 kind: Provisioner
 metadata:
   name: default
 spec:
+  # EC2 节点的可选配置
   requirements:
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: [
+        "m6i.large", "m6i.xlarge", "m6i.2xlarge", "m6i.4xlarge",
+        "m5.large", "m5.xlarge", "m5.2xlarge", "m5.4xlarge",
+        ]
+    - key: "topology.kubernetes.io/zone"
+      operator: In
+      values: ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1f"]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["amd64"]
     - key: karpenter.sh/capacity-type
       operator: In
-      values: ["spot"]
+      values: ["spot"]  # 只允许用 spot 实例
+
   limits:
     resources:
-      cpu: 1000
+      cpu: 100
+      memory: 400Gi
+
   provider:
-    subnetSelector:  # 通过标签自动发现可用的 subnets
+    # EC2 需要借由 instance profile 来绑定一个 IAM Role
+    # 最简单的，
+    instanceProfile: xxx
+    # EC2 的启动模板，记录了磁盘大小、userdata 等信息。
+    # 如果不指定 karpenter 会自动创建
+    launchTemplate: xxx
+    subnetSelector:  # 通过资源标签自动发现可用的 subnets
       karpenter.sh/discovery: ${CLUSTER_NAME}
     securityGroupSelector:  # 通过标签自动发现可用的 security groups
       karpenter.sh/discovery: ${CLUSTER_NAME}
-  ttlSecondsAfterEmpty: 30  # 定义节点的最大空闲时间，超过此时间将被自动关闭
-EOF
+    # 为 EC2 节点添加自定义的标签
+    tags:
+      dev.corp.net/app: Calculator
+      dev.corp.net/team: MyTeam
+      eks.amazonaws.com/nodegroup: worker
+    amiFamily: AL2  # 通过 AMI 家族名称自动发现合适的 AMI 镜像，AL2/Bottlerocket
+    # 设定磁盘大小，它的优先级比 launchTemplate 低，两者不能共用
+    blockDeviceMappings: 
+      - deviceName: /dev/xvda
+        ebs:
+          volumeSize: 40Gi
+          volumeType: gp3
+          # iops: 3000
+          # throughput: 125
+          deleteOnTermination: true
+  ttlSecondsAfterEmpty: 180  # 定义节点的最大空闲时间（单位秒），超过此时间将被自动关闭
+  # ttlSecondsUntilExpired: 86400  # 定义节点的最大存活时间（单位秒），超过此时间将被强制回收。可用于确保所有节点都始终在使用最新的配置
 ```
 
 ## 节点回收 - Deprovisioning
