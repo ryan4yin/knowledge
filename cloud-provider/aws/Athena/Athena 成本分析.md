@@ -2,7 +2,7 @@
 
 ## Athena 分析 CUR 成本报表
 
-AWS CUR，即 AWS Cost and Usage Reports
+AWS CUR，即 AWS Cost and Usage Reports, 这里主要给出几个查询细节成本的 SQL 模板。
 
 详见官方文档：https://docs.aws.amazon.com/cur/latest/userguide/cur-data-view.html
 
@@ -106,6 +106,12 @@ SELECT
 ) where cost > 10
 order by 2, 1
 ```
+
+## SavingPlans/ReservedInstances 对 CUR 成本的影响
+
+SP/RI 会导致部分被 cover 的实例成本下降，而其他实例的成本没变化，而且它是根据一些难以预测的手段去选择 cover 哪些实例的。这会导致基于 CUR 的成本分析手段失效。
+
+解决方法是以 `pricing_public_on_demand_cost` 这个字段进行成本分析，这个给出的是按标准价格计算的实例成本。可以将总的 `blended_cost` 也就是真实成本，以上述 OD 成本为权重进行拆分，得到的就是一个比较准确的成本了。
 
 ## Athena 自身的成本分析
 
