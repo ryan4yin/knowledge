@@ -2,47 +2,29 @@
 
 >个人知识库，主要供自己查阅使用。并不是教程，也不保证正确！
 
->请带着批判的眼光看待本仓库中的任何内容。
+>为了维护方便，本仓库的内容可能会在完善后，被整理、润色，再发布到我的博客 <https://thiscute.world/> 中。这边将只保留一个链接。
 
->为了维护方便，此知识库中的一些文章，可能会在完善后，被整理、润色，然后迁移到我的博客 <https://thiscute.world/> 中。这边就只会留下一个博客链接啦。
+主要内容（大致按内容丰富程度排序）：
 
-主要内容：
-
-1. 用于容器化部署常见应用的 docker-compose 配置（单机）
-2. Kubernetes 生态：部署、配置、组件及使用笔记
-3. Telemetry：监控、日志、链路追踪（学习中...）
-4. 容器：Docker、容器镜像仓库、Podman 等。
-5. CI/CD：Jenkins/GitLabCI/ArgoWorkflow 等
-6. 网络：Kubernetes 集群网络、Linux 网络（学习中）
-7. 操作系统：Linux 系统、KVM 虚拟化等
-8. 编程语言学习笔记：Python/Golang/Java
-9. DevOps 实用脚本
-10. 研发运维一体化平台：CI+CD+SRE
-11. Homelab: 家庭服务器、硬件/电路/FPGA 玩家
-12. 数学笔记：线代、数学物理方法等
-13. 机器学习/深度学习（貌似还没开始...）
-14. 信号与系统/数字信号处理（皮毛都还没学到...）
+1. Kubernetes 生态：部署、配置、组件及使用笔记
+2. 网络：Kubernetes 集群网络、Linux 网络（学习中）
+3. 云服务：AWS/GCP/Alicloud 使用笔记
+4. 编程语言学习笔记：Go/Rust/Python
+5. Telemetry：监控（Prometheus+Grafana）、日志（ELK/Loki）、链路追踪
+6. 操作系统：Linux 系统、KVM 虚拟化等
+7. CI/CD：Jenkins/GitLabCI/ArgoWorkflow 等
+8.  Homelab: NAS、路由器/树莓派等硬件玩法、ffmpeg 玩法
+9.  音乐：乐理、口琴/竹笛、歌声合成、编曲（Reaper）
+10. 区块链、分布式系统及原理
+11. 建模与图形学：图形学编程、Blender、Unreal Engine 5
+12. 机器学习/深度学习（貌似还没开始...）
+13. 其他各种我感兴趣的知识
 
 文件夹结构就是文档目录，这里就不额外列索引了—_—
 
-## 工具选型
+## 镜像站点与加速
 
-随手甩出一张 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
-
-以及 2020 年度 CNCF 调研报告：[Cloud Native Survey 2020](https://www.cncf.io/wp-content/uploads/2020/11/CNCF_Survey_Report_2020.pdf)
-
-## 应用部署
-
-此仓库包含的软件，主要提供了如下几种部署方法
-
-- docker-compose 部署：可以参考 [awesome-compose](https://github.com/docker/awesome-compose)
-  - 对于使用 docker-compose 部署的单机应用，我倾向于使用 bind 文件夹绑定的方式来持久化数据。详见 [Docker 数据卷](/container/docker/Docker%20数据卷.md)
-- kubernetes 部署：可以在各软件的官方文档或者官方 Github 寻找。
-  - kubernetes 主流的部署方法：首推 helm，其次是 yaml 文件直接部署或者 kustomize.
-  - 工作中接触到的主要都是无状态应用，对 kubernetes 数据卷的了解目前还很欠缺。
-
-
-## 国内主流镜像站
+### 1. 国内主流镜像站
 
 由于众所周知的原因，很多时候我们需要为各种系统、应用、包管理器设置镜像源以加速下载。
 
@@ -60,7 +42,7 @@
 首推阿里云镜像源，稳定可靠速度快。
 
 
-## 其他加速方法
+### 2. 通过代理加速
 
 有些时候不方便设置镜像源，或者根本不存在镜像源。这时有另外两种方法进行下载加速：
 
@@ -69,7 +51,14 @@
 
 详见 [网络代理与科学上网](/network/other/网络代理与科学上网.md)
 
-## DevOps 资料
+## DevOps/SRE 相关
+
+### 1. 工具选型
+
+DevOps/SRE 领域，基本都可以直接参考 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
+
+
+### 2. DevOps 资料
 
 系统化的文档：
 
@@ -92,18 +81,55 @@
 - https://github.com/Vonng/ddia
 - https://github.com/donnemartin/system-design-primer
 
-## 综合博客
-
-企业/团队博客：
+企业/团队博客，各个方向的内容都有：
 
 - [阿里云智能基础软件部](https://kernel.taobao.org/)
 - [美团技术团队](https://tech.meituan.com/)
 
-个人博客：
+偏底层的个人博客：
 
 - [不周山作品集](https://wdxtub.com/work/): 学习知识就像不周山，永远不会有『周全』的一天，是为活到老，学到老。
 
+
+## 技术之外
+
+做一名程序员，并不是只需要技术。
+
+技术之外的能力
+
+- 识别关键问题
+  - 目前的关键目标是啥？存在哪些关键问题（实现关键目标最大的阻碍）？我最近做的主要工作，是不是在为关键目标服务？
+  - 每件事的重要程度、紧急程度、ROI 投入产出比
+  - 思考的层面越高，就越难看清楚什么是关键问题。
+- 如果规划项目、推进项目前进？
+  - 先把事情看清楚，然后以终推始
+- 沟通表达能力
+- ownership
+
+### 方法论
+
+- 极客时间《10x 程序员工作法》
+
+### 团队协作 - TeamWork
+
+需要学习如何进行高效地团队协作，提高效率。（加更少的班，还能更高质量地完成任务。）
+
+1. [领域驱动设计](https://book.douban.com/subject/5344973/)
+   1. 方法：事件风暴
+2. [人月神话：软件项目管理之道](https://book.douban.com/subject/26358448/)
+3. [程序员修炼之道](https://book.douban.com/subject/5387402/)
+4. [人件](https://book.douban.com/subject/1108725/)
+5. [《关键对话》：掌握沟通的方式](https://book.douban.com/subject/27046682/)
+   - 时刻注意维护对方的安全感；一定要牢记对话的目的。
+6. [重构](https://book.douban.com/subject/4262627/)
+
+### 老一辈程序员的思考
+
+- [MacTalk-池建强的随想录](http://macshuo.com/): 极客时间创始人，45+
+- [李凡希的Blog](https://www.freemindworld.com/blog/2016/160918_ten_years_2.shtml): 
+
 ## 文章转载利器
 
-- [domchristie/turndown](https://github.com/domchristie/turndown): An HTML to Markdown converter
+- [paste-markdown](https://github.com/github/paste-markdown): github 官方出的小工具，将 sheet/table 直接 copy 进来，自动转换为 markdown
+- [domchristie/turndown](https://github.com/domchristie/turndown): 将整个 html 页面转换为 markdown，不过对表格的支持好像有点问题
 
