@@ -6,6 +6,32 @@ Datastore 意即数据存储，这里用来指代所有数据存储相关的软�
 - Artifactory: 制品库，即 apt/yum/pypi/nuget/maven 等仓库
 - 文件存储与分享: 云盘、NAS
 
+
+
+## 值得了解的数据库
+
+- OLAP
+  - ClickHouse
+  - Snowflake
+  - Druid
+  - ElasticSearch
+- HTAP
+  - TiDB
+  - PostgreSQL
+- 键值数据库
+  - Redis
+  - Etcd
+  - 底层数据库：boltdb/rocksdb/leveldb
+- 文档数据库
+  - MongoDB
+- 时序数据库
+  - VictoriaMetrics
+  - Prometheus
+- 特征向量搜索 / 相似度搜索 / 视频搜索 / 语义搜索
+- 图数据库
+  - https://github.com/dgraph-io/dgraph
+
+
 ## 数据库相关
 
 1. ElasticSearch
