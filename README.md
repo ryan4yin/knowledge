@@ -58,9 +58,17 @@
 DevOps/SRE 领域，基本都可以直接参考 CNCF 蓝图：[CNCF Cloud Native Interactive Landscape](https://landscape.cncf.io/)
 
 
-### 2. DevOps 资料
+### 2. IT 资料
 
-系统化的文档：
+CS 全自学指南（汇集全球最牛逼的各种课程）：
+  - https://github.com/pkuflyingpig/cs-self-learning/
+  - https://github.com/ossu/computer-science
+
+偏底层的个人博客（CSAPP 笔记）：
+
+- [不周山作品集](https://wdxtub.com/work/): 学习知识就像不周山，永远不会有『周全』的一天，是为活到老，学到老。
+
+系统化的 SRE/DevOps 文档：
 
 - [school-of-sre](https://github.com/linkedin/school-of-sre)
 - [devops-exercises](https://github.com/bregman-arie/devops-exercises)
@@ -68,14 +76,14 @@ DevOps/SRE 领域，基本都可以直接参考 CNCF 蓝图：[CNCF Cloud Native
 - [sdn-handbook](https://github.com/feiskyer/sdn-handbook)
 - [docker_practice](https://github.com/yeasy/docker_practice)
 
-文章集锦：
+SRE/DevOps 文章集锦：
 
 - [StabilityGuide - 打造国内稳定性领域知识库](https://github.com/StabilityMan/StabilityGuide)
 - [awesome-scalability](https://github.com/binhnguyennus/awesome-scalability)
 - [awesome-sre](https://github.com/dastergon/awesome-sre)
 - [阿里云容器服务 - DevOps 收藏夹](https://github.com/AliyunContainerService/DevOps)
 
-系统设计：
+分布式系统设计：
 
 - https://github.com/binhnguyennus/awesome-scalability
 - https://github.com/Vonng/ddia
@@ -85,11 +93,6 @@ DevOps/SRE 领域，基本都可以直接参考 CNCF 蓝图：[CNCF Cloud Native
 
 - [阿里云智能基础软件部](https://kernel.taobao.org/)
 - [美团技术团队](https://tech.meituan.com/)
-
-偏底层的个人博客：
-
-- [不周山作品集](https://wdxtub.com/work/): 学习知识就像不周山，永远不会有『周全』的一天，是为活到老，学到老。
-
 
 ## 技术之外
 
