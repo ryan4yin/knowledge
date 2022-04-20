@@ -38,7 +38,7 @@ aws iam list-instance-profiles
 aws iam list-instance-profiles-for-role --role-name TestEKSClusterNodeInstanceRole
 
 # 获取某个 InstanceProfile 的详细信息
-aws iam get-instance-profile TestEKSClusterNodeInstanceRole
+aws iam get-instance-profile --instance-profile-name TestEKSClusterNodeInstanceRole
 
 # 1. 创建一个 InstanceProfile
 aws iam create-instance-profile --instance-profile-name TestEKSClusterNodeInstanceRole

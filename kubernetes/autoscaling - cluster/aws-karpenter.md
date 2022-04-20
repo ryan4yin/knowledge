@@ -15,14 +15,14 @@ karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes �
 
 ## 一、安装方法
 
-### 创建或关联实例配置文件 InstanceProfile 及 IAM Role
+### 创建并关联 Karpenter 节点的 IAM 相关资源
 
 AWS EC2 的 InstanceProfile 是一个 IAM Role 的容器，EC2 不能直接关联 IAM Role，必须使用 InstanceProfile 作为中介。
 
 Karpenter 也需要一个具备必要权限的 InstanceProfile 来为 EKS 创建新节点，这样新建出的节点才能正常加入到集群中。
 
 ```shell
-export KARPENTER_VERSION=v0.6.5
+export KARPENTER_VERSION=v0.8.2
 export CLUSTER_NAME="eks-xxx-cluster-v1"
 
 export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
@@ -84,7 +84,7 @@ data:
       username: system:node:{{EC2PrivateDNSName}}
 ```
 
-### 为 KarpenterController 创建 IAM Role
+### 为 KarpenterController 服务绑定 KarpenterControllerPolicy
 
 KarpenterController 需要必要的权限来创建、删除、修改 EC2 实例，为此需要为它创建相应的 Policy 与 IAM Role，之后再通过 Kubernetes ServiceAccount 关联上这个 IAM Role.
 
@@ -286,7 +286,7 @@ Resources:
 
 ```shell
 aws cloudformation create-stack \
-  --stack-name KarpenterLaunchTemplateStack \
+  --stack-name KarpenterCustomLaunchTemplateStack \
   --template-body file://$(pwd)/launch-template-eks-test.yaml
 ```
 
