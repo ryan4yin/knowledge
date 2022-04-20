@@ -1,5 +1,7 @@
 # 数学
 
+微积分、线代、概率论、数学物理方法
+
 [View Through NBViewer](https://nbviewer.jupyter.org/github/ryan4yin/knowledge/tree/master/math/)
 
 1. linear algebra
@@ -10,4 +12,3 @@
 2. mathematical methods for physics
     - Book: [数学物理方法 - 顾樵](https://book.douban.com/subject/10517521/)
     - Course: [数学物理方法 - 吴崇试](https://www.bilibili.com/video/av6292055)
-
