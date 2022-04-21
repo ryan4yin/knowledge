@@ -5,9 +5,12 @@ karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes �
 - karpenter 对 aws 数百种实例类型、可用区、购买参数的支持要更好些
 - Karpenter 直接管理每个节点实例，完全绕过了 AWS EKS NodeGroup 等编排机制，这免去了管理大量不同配置的 NodeGroups 的烦恼，而且使它的扩缩容、重试机制等更灵活快速
 - 社区的 Cluster Autoscaler 自身不提供 Pod 调度能力，完全依赖于 kube-scheduler 进行 pod 调度。而 Karpenter 在节点上线后会立即主动将未调度成功的 Pod 绑定到新节点，从而使 kubelet 预先准备容器运行时、预拉取镜像，这可以缩短几秒钟的节点启动延时
+- 只要你同时选择了 Spot/OD 两种实例类型，Karpenter 的扩容策略就会自动扩容最佳的实例，Spot 实例的分配优先级是比 OD 更高的，因此会被优先分配。
+  - 并且在 Spot 实例申请失败的时候（资源不足），fallback 到 OD，这个 fallback 的速度非常的快，不会影响集群扩容速度。
 
 注意 karpenter 并不会响应 spot 中断等 EC2 事件，这需要使用 [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) 实现。
 
+实际观测上看，karpenter 扩容确实非常迅速，而且会提前将节点配置加入到集群中，从扩容到新节点就绪，用时大概在 75s-120s 的样子。
 
 注意事项：
 
