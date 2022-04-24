@@ -3,8 +3,7 @@
 - 应该使用 make 为引用类型进行空间预分配
 - defer 的使用
   - 通常被用来管理上下文：比如 IO 句柄的自动关闭，加锁后的自动解锁
-  - defer 有性能损耗，在热点代码中使用 defer 时要注意
-  - **defer 最大的功能是 panic 后依然有效。如果没有 defer，panic 后就会导致 unlock 丢失，从而导致死锁了**
+  - 虽然 defer 有性能损耗，但是 **defer 最大的功能是 panic 后依然有效。如果没有 defer，panic 后如果程序被 recover 继续跑，就会导致 unlock 丢失，从而死锁**，针对这种场景就应该尽量使用 defer! 即使可能会损耗一点点性能。即便 defer 的性能问题真的无法接受，那也是之后做优化的事了（不要过早优化！）。
   - defer 在 return 语句更新了 result 数据后执行，因此可用于 check 甚至 update 函数最后的返回值。
   - 比如 defer 函数可用于 recover 可能存在的 panic，并修改返回的 err 错误内容
 - **不要使用 「 _ 」 丢弃任何返回的 err 错误**！要么把 err 传递到上层调用，要么使用 log 记录下来

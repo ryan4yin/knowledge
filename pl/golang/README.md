@@ -175,8 +175,13 @@ go get github.com/gorilla/mux@master    # records current meaning of master
 - break with label
   - go 的 `break label` 表示的是，打破 `label` 标记的这个语句块，直接从该语句块的下一条命令开始执行。
     - 这跟 c 语言或汇编的 `goto label` 是不一样的，它是让程序跳转到 `label` 处开始执行
-
-
+- go 工具链
+  - 包管理
+    - 空白导入语句 `import _ "image/png"`: 仅执行包的 init 函数，将包的 Decoder 注册到另一个包中，常用在编解码、数据库等场景中
+  - go build 如果提供目标地址，必须以 `.` 或者 `..` 开头！这是 go 的特殊规则
+  - 包文档，`go doc` 可以从函数注释、方法注释、包注释等地方提取生成出对应的文档
+  - 内部包：path 中带有 `internal` 段的包都是内部包，只可被 `internal` 父路径下的其他包导入
+  - `go list` 可列出或查询所有可用的包
 
 
 ## 参考
