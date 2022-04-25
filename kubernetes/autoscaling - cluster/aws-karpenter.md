@@ -15,6 +15,8 @@ karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes �
 注意事项：
 
 - karpenter 不支持 podAntiAffinity
+- karpenter 不会主动回收非空节点！除非该节点触发了 `Node Expired` 策略！
+  - 如果希望尽量节约成本，可以考虑部署一个 descheduler 来优化 pod 拓扑分布
 
 ## 一、安装方法
 
