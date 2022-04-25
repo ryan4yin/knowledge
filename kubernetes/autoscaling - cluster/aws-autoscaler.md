@@ -1,18 +1,18 @@
 # AWS - [kubernetes/autoscaler](https://github.com/kubernetes/autoscaler)
 
-autoscaler 是 kubernetes 官方提供的一个节点伸缩组件，支持 AWS.
+cluster-autoscaler（以下简写为 CAS）是 kubernetes 官方提供的一个节点伸缩组件，支持 AWS.
 
-CA 相比 karpenter 的区别在于，它底层是基于 AWS ASG 伸缩组实现的，因此也能很方便地用上 ASG 的各种特性：
+CAS 相比 karpenter 的区别在于，它底层是基于 AWS ASG 伸缩组实现的，因此也能很方便地用上 ASG 的各种特性：
 
 - Spot/OD、多种实例类型混用的 ASG
 
-当然也有些 ASG 特性 CA 目前还不支持：
+当然也有些 ASG 特性 CAS 目前还不支持：
 
 - 热池：提前扩容一批实例并关机，在需要时可以立即启动并加入集群
   - 这个可能是一个仅针对 OD 按需实例的功能？还是也支持 Spot 呢？有空可以研究下
   - https://github.com/kubernetes/autoscaler/issues/4005
 
-CA 还存在一个缺陷，就是 AWS ASG 虽然提供 Spot/OD 混用的能力，但是必须手动设定它们之间的比例。如果 Spot 资源不足，ASG 仍然会无法扩容！社区的解决方法是：
+CAS 还存在一个缺陷，就是 AWS ASG 虽然提供 Spot/OD 混用的能力，但是必须手动设定它们之间的比例。如果 Spot 资源不足，ASG 仍然会无法扩容！社区的解决方法是：
 
 - 配置两个节点组，一个只扩容 Spot 实例，另一个只扩容 OD 实例
 - 配置 cluster-autoscaler，优先扩容 Spot 实例的节点组，如果扩容失败，再 fallback 到 OD 节点组。
@@ -21,7 +21,10 @@ CA 还存在一个缺陷，就是 AWS ASG 虽然提供 Spot/OD 混用的能力�
 
 而 Karpenter 你直接配上 Spot/OD 两个实例类型，它就会优先扩容 Spot，在 Spot 申请失败时会自动 fallback 回 OD，配置非常简单。
 
-总的来看，karpenter 的特性是比 CA 更多的，使用也更简单，不需要手动建一堆 Node Group，文档也更清晰，因此 karpenter 是更好的选择。
+总的来看，karpenter 的特性是比 CAS 更多的，使用也更简单，不需要手动建一堆 Node Group，文档也更清晰。
+
+但是 karpenter 目前（0.8.2）比 CAS 缺少两个关键特性，这导致在生产环境中它还不太实用，详见此文件夹中的 karpenter 笔记。
+
 
 ## 安装 CA
 
@@ -61,7 +64,7 @@ CA 只会查询 ASG 配置，通过 ASG Tag 自动发现它需要管理的 ASG�
 
 如果你希望将权限限制到具体的 ASG，可以自行调整 `Resource` 参数的值。
 
-然后将该 Policy 绑定到 CA 的 ServiceAccount:
+然后将该 Policy 绑定到 CAS 的 ServiceAccount:
 
 ```shell
 export CLUSTER_NAME="xxx"
@@ -77,13 +80,13 @@ eksctl create iamserviceaccount \
 
 ## 2. 部署 Cluster AutoScaler
 
-首先下载自动发现节点组的 CA 配置模板：
+首先下载自动发现节点组的 CAS 配置模板：
 
 ```yaml
 curl https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
 ```
 
-- 修改其参数中的标签 `k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>`，填充上你的集群名称，这会使 CA 自动发现该集群下的所有节点组。
+- 修改其参数中的标签 `k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>`，填充上你的集群名称，这会使 CAS 自动发现该集群下的所有节点组。
 - 修改其 ServiceAccount，绑定前面创建好的 IAM Role `${CLUSTER_NAME}-cluster-autoscaler`
   - 添加此 annotations 即可: `eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-cluster-autoscaler`
 
@@ -91,7 +94,7 @@ curl https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/clo
 
 >https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md
 
-### 避免 Pod 被 CA 驱逐
+### 避免 Pod 被 CAS 驱逐
 
 添加如下 annotation 即可：
 
@@ -116,7 +119,7 @@ CA 默认在上次扩容 10mins 后，才会执行缩容评估，可手动添加
 --max-empty-bulk-delete=500
 ```
 
-尽量不要让 CA 缩容掉我们有实例正在跑的节点（可能会造成资源浪费，调整后需要验证效果）：
+尽量不要让 CAS 缩容掉我们有实例正在跑的节点（可能会造成资源浪费，调整后需要验证效果）：
 
 ```
 --scale-down-non-empty-candidates-count=30
@@ -206,7 +209,7 @@ data:
 - key: `k8s.io/cluster-autoscaler/node-template/label/eks.amazonaws.com/nodegroup`
 - value: `xxx`
 
-如果不加这个标签，在节点组缩容到 0 后，再次扩容时 CA 可能会因为无法识别到该节点组的 node labels 而扩容失败，提示你标签不匹配！
+如果不加这个标签，在节点组缩容到 0 后，再次扩容时 CAS 可能会因为无法识别到该节点组的 node labels 而扩容失败，提示你标签不匹配！
 
 
 ## 参考
