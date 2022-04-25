@@ -1,6 +1,8 @@
 # 通用监控方案：Prometheus + Grafana + Altermanager
 
-Prometheus + Grafana + Altermanager 也是目前云原生社区最流行的开源监控告警方案:
+在监控领域 netdata 是一个非常流行的监控方案，它有非常漂亮的监控面板，用的 CPU 据说也不多，很适合单机监控的场景。
+
+而在集群监控场景中，Node_Exporter + Prometheus + Grafana + Altermanager 是目前云原生社区最流行的开源监控告警方案:
 
 1. Prometheus: 指标暴露、抓取、存储以及告警
    1. expoter: 通常由被抓取目标主动 export 可供抓取的 http metrics endpoint.

@@ -18,6 +18,8 @@ karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes �
 - karpenter 不会主动回收非空节点！除非该节点触发了 `Node Expired` 策略！
   - 即使使用了 descheduler 来优化 pod 拓扑分布，也起不到应有的效果！
   - 相关 issue: https://github.com/kubernetes-sigs/descheduler/issues/749
+  - 临时解决方法：对于大数据这类纯计算的集群，创建一个小的 Spot 节点组专门给集群组件使用，跟计算任务隔离开。
+    - 修改所有这些实例的 nodeSelector，只允许在这个专用节点组上运行
 
 
 ## 一、安装方法
@@ -147,6 +149,13 @@ helm upgrade --install --namespace karpenter --create-namespace \
   --set clusterEndpoint=${CLUSTER_ENDPOINT} \
   --set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
   --wait # for the defaulting webhook to install before creating a Provisioner
+```
+
+详细的参数可以通过如下命令 check:
+
+```shell
+helm pull karpenter/karpenter  --untar
+cat karpenter/values.yaml
 ```
 
 ## 二、使用方法
