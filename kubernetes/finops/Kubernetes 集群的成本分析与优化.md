@@ -12,18 +12,45 @@ Kubernetes 作为一个多租户的计算平台，我们很自然地会在上面
 
 开源工具：
 - [kubecost](https://github.com/kubecost/cost-model): 做得比较粗糙，而且没统计数据卷的成本
-- [crane](https://github.com/gocrane/crane): 腾讯开源的一款 Kubernetes 成本优化工具，待研究
+- [crane](https://github.com/gocrane/crane): 腾讯开源的一款 Kubernetes 成本优化工具，支持成本报表以及 EHPA 两个功能，才刚开源几个月，目前还比较简陋。
   - [腾讯推出国内首个云原生成本优化开源项目 Crane](https://cloud.tencent.com/developer/article/1960014)
 - [kube-opex-analytics](https://github.com/rchakode/kube-opex-analytics)
 
 商业服务：
-- [spotisnt.com](spotisnt.com): Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容
+- [spotinst.com](spotinst.com): Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容
     - 集群成本 API： [oceanK8sClusterCosts](https://docs.spot.io/api/#operation/oceanK8sClusterCosts)
 
 
 文档：
 
 - [Calculating Container Costs - FinOps Fundation](https://www.finops.org/projects/calculating-container-costs/)
+
+### 商业服务 Spotinst.com 介绍
+
+Spotinst 使用机器学习算法帮助客户在上产环境充分利用 AWS 的 Spot 容量，达成云计算成本的节约，同时还能保证服务的 SLA.
+
+Spot 持续对不同操作系统、实例类型、可用区、区域和云提供商的不同容量池进行评分，以便实时做出最明智的决策，决定选择哪些实例进行配置，以及主动重新平衡和替换哪些实例。
+
+- 会持续分析集群的各种计算资源使用情况，自动选择最佳的 Spot/OD/RI 实例进行扩容
+- 设置 Spot 比例为 100% 后，会优先扩容 Spot 实例，在 Spot 实例资源紧张时会 fallback 到 OD 实例。
+- 可基于 EKS 的多种维度进行成本分析：Namespace/Deployment/StatefulSet/PodLabel...
+- 根据 Spot 中断概率以及服务的需求，动态调整实例配置，保障 SLA
+- 默认与 Kubernetes 社区的做法一致：检测到 Pending 的容器时执行节点扩容
+- 也支持为集群配置 Headroom，它会维护一个空闲缓冲池，确保新扩容的实例可以立即被启动，不需要等待节点扩容（节约了 2mins 时间）。
+  - 默认保留 5% 的余量，也就是不论如何扩缩容，总是保留 5% 的可用空间。
+- 缩容：Ocean 会主动缩容使用量低的节点，降低集群成本。不过会尊重 PDB 与它的一个 restric-down 标签
+- 集群自动分批滚动更新的功能
+
+与开源的 CA 相比，CA 缺少如下功能：
+
+- 成本分析
+- 优先扩容 Spot，fallback 到 OD
+- 使用机器学习算法进行扩缩容
+- CA 底层的 ASG 只建议使用相同大小的实例
+- 不支持 headroom 功能
+- 集群自动分批滚动更新的功能
+
+Karpenter 相比 CA 多一个 fallback 的功能，另外底层不使用 ASG，会更灵活很多。
 
 ## 简单的思路
 
