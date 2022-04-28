@@ -11,13 +11,13 @@ Kubernetes 作为一个多租户的计算平台，我们很自然地会在上面
 ## 相关工具与文档
 
 开源工具：
-- [kubecost](https://github.com/kubecost/cost-model): 做得比较粗糙，而且没统计数据卷的成本
+- [kubecost](https://github.com/kubecost/cost-model): kubecost 应该是目前最优秀的开源成本分析工具了，self-hosted 是免费的，也提供收费的云上版本，值得研究。
 - [crane](https://github.com/gocrane/crane): 腾讯开源的一款 Kubernetes 成本优化工具，支持成本报表以及 EHPA 两个功能，才刚开源几个月，目前还比较简陋。
   - [腾讯推出国内首个云原生成本优化开源项目 Crane](https://cloud.tencent.com/developer/article/1960014)
-- [kube-opex-analytics](https://github.com/rchakode/kube-opex-analytics)
+- [kube-opex-analytics](https://github.com/rchakode/kube-opex-analytics): 这个工具只依赖 metrics-server，而且只能做 namespace 级别的成本拆分，比较简陋。
 
 商业服务：
-- [spotinst.com](spotinst.com): Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容
+- [spotinst.com](spotinst.com): spotinst 的 Ocean 对 K8s 的成本统计做得比较精细，但是是商业服务，而且必须用它来进行扩缩容。而且它的统计或许还不如 kubecost 精准，因为它不依赖 prometheus 的数据。
     - 集群成本 API： [oceanK8sClusterCosts](https://docs.spot.io/api/#operation/oceanK8sClusterCosts)
 
 
@@ -51,6 +51,11 @@ Spot 持续对不同操作系统、实例类型、可用区、区域和云提供
 - 集群自动分批滚动更新的功能
 
 Karpenter 相比 CA 多一个 fallback 的功能，另外底层不使用 ASG，会更灵活很多。
+
+
+### kubecost 介绍
+
+TBD
 
 ## 简单的思路
 
