@@ -83,7 +83,7 @@ eksctl create iamserviceaccount \
 首先下载自动发现节点组的 CAS 配置模板：
 
 ```yaml
-curl https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+wget https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
 ```
 
 - 修改其参数中的标签 `k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>`，填充上你的集群名称，这会使 CAS 自动发现该集群下的所有节点组。
