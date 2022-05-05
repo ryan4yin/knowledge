@@ -12,5 +12,6 @@ Pixie 默认只保留 24h 历史数据。
 
 Pixie 最大的特点是**可实时交互**，就是说可以在节点上实时执行 eBPF 脚本，抓取需要的指标并展示。
 
+但是也存在缺陷，就是它的 Node Agent 需要更多的内存，默认保留 2Gi，文档推荐至少 1Gi.
 
 另一个与之类似的工具是 [mizu](https://github.com/up9inc/mizu)，不过它是基于 netfilter/tcpdump 进行的嗅探，没用上 ebpf，也就不支持实时运行自定义的 eBPF 脚本，因此它的自定义监控能力或者说潜力要比 Pixie 差一些。
