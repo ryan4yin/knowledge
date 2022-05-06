@@ -117,8 +117,8 @@ brew install --cask visual-studio-code docker wireshark iterm2 firefox google-ch
 brew install --cask iina
 # 安装常用命令行工具
 brew install fzf tmux zsh-autosuggestions aria2 p7zip
-# 作为 Linux 熟手，当然还需要安装我更熟悉的 gnu-tar，它 cli 名称为 `gtar`
-brew install gnu-tar
+# 作为 Linux 熟手，当然还需要安装我更熟悉的 gnu-tar 以及 gnu-sed，它们的 cli 名称为 `gtar` `gsed`
+brew install gnu-tar gnu-sed
 # 容器相关命令行工具
 brew install skopeo helm kubectl 
 # 安装编程语言 SDK
