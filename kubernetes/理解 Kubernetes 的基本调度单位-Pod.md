@@ -37,5 +37,28 @@ spec:
   hostPID: true
 ```
 
-凡是调度、网络、存储，以及安全相关的属性，基本上是 Pod 级别的
+Pod 的所有参数定义：<https://github.com/kubernetes/api/blob/master/core/v1/types.go#L3059>
+
+Pod 的容器之间，还可以共享数据卷，因为数据卷也是定义的 Pod 级别的。
+
+## 特殊数据卷
+
+- configmap/secret: 将敏感信息或配置投射到容器中
+- Downward API: 将 pod 自身的信息投射到容器中
+- ServiceAccountToken: 这是一个基于 K8s RBAC 体系的授权 token
+  - 可用于授权访问 apiserver，它的内部访问地址为 `kubernetes:8443`
+  - 也可用于授权访问其他服务，或者授权访问外部云服务
+
+## 容器的健康检查与恢复
+
+Pod 提供三种探针，分别有不同的作用：
+
+- 启动探针: 在启动探针成功前，阻止其他探针执行
+- 存活探针: 如果存活探测失败，重启 Pod
+  - 重启 Pod 时，虽然 Pod 还是同一个，但底层的容器实际上已经被重新创建了！
+  - 重启 Pod 时，因为 Pod 仍然是同一个，调度信息 `nodeName` 并未改变，因此仍然会运行在同一主机上
+- 就绪探针: 如果就绪探针失败，将 Pod 从 Service 的 endpoints 中移除
+
+
+
 
