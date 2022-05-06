@@ -47,7 +47,7 @@ kubectl get pods
 
 >[IAM roles for service accounts- AWS Docs](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 
->[](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html)
+>[为集群创建 IAM OIDC Provider](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html)
 
 1. 每个 EKS 集群都有一个 OIDC issuer URL，首先我们需要使用它，创建一个 IAM OIDC Prodiver
    1. [Create an IAM OIDC provider for your cluster](https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html)
