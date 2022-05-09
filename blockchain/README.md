@@ -58,3 +58,5 @@ solidity 常用库：
 ## 参考文档
 
 - https://github.com/yeasy/blockchain_guide
+- https://paper.seebug.org/category/blockchain/
+- [区块链被黑统计 - 慢雾科技](https://hacked.slowmist.io/statistics/?c=all&d=all)
