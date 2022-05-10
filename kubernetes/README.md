@@ -1,5 +1,31 @@
 # Kubernetes
 
+
+## helm 使用方法
+
+```shell
+# 添加 repo
+helm repo add bitnami https://charts.bitnami.com/bitnami
+# 查看版本号
+helm search repo bitnami/mongodb-sharded -l | head
+# 下载并解压某个 chart
+helm pull bitnami/mongodb-sharded --untar --version 1.6.5
+# 使用自定义 values 配置安装或更新本地的 chart
+helm upgrade --install mongo-sharded ./mongodb-sharded -f mongo-sharded-value.yaml
+
+# 使用自定义 values 配置，将本地的 chart 渲染成单个 yaml
+helm template ./mongodb-sharded -f mongo-sharded-value.yaml > mongo-sharded-all-in-one.yaml
+
+# 渲染成 yaml，并保留 Chart 的文件夹结构
+mkdir mongodb-sharded-yaml
+helm template ./mongodb-sharded -f mongo-sharded-value.yaml --output-dir mongodb-sharded-yaml
+
+# 列出集群内的所有 helm charts
+helm list --all-namespaces  # 或者 -A
+# 卸载某个 chart
+helm uninstall -n xxx vvv
+```
+
 ## 视频
 
 - [KubeCon + CloudNativeCon North America 2020 - Virtual](https://www.youtube.com/playlist?list=PLj6h78yzYM2Pn8RxfLh2qrXBDftr6Qjut): 全球大厂共享出来的 200+ 个视频，全都是干货。光看目录就能知道 2020 年 kubernetes 社区的热点与新兴技术。
