@@ -55,6 +55,43 @@ solidity 常用库：
 
 - https://github.com/ConsenSys/smart-contract-best-practices: 最佳实践
 
+
+## 区块链相关工作
+
+区块链相关初创公司的方向：
+
+- 去中心化存储
+- 跨链：区块链互联技术
+- DeFi 去中心化金融
+- 数据存证
+- 价值转移
+- 数据交换
+- Web3 dAPP: 去中心化应用如 Mirror、去中心化游戏
+
+3-5 年经验，看行情或许可以拿到 30k-60k 15-16 薪
+
+开发方向：
+
+- 前后端项目开发，但是需要用到一些 web3 专用的库
+- 智能合约开发
+- 核心协议与区块链开发
+- 密码学开发
+- 安全
+- ...
+
+区块链相关职位的要求汇总（一般只要求一部分，更多的是加分项）：
+
+- 要求
+  - 大部分要求 2 年或 3 年以上开发经验，部分职位要求有 1 年以上区块链开发经验
+  - 掌握 Go/Rust/C/C++ 中的一到两种语言
+  - 对密码学算法、安全协议(如 OAuth2)、有研究
+  - 熟悉分布式共识算法，如 PoW PoS dPoS PBFT Paxos Raft
+- 加分项
+  - 熟悉 Linux、容器技术、Kubernetes 优先
+  - 熟悉底层数据存储原理(rocksdb leveldb badgerdb)，有分布式存储(Ceph/IPFS)开发使用经验优先
+  - 熟悉主流区块链（以太坊/比特币/Solana/Cosmos/Hyperledger Fabric）的原理、机制，有公链开发经验优先
+  - 熟悉 Solidity 智能合约编写，有 DApp/DeFi 开发经验
+
 ## 参考文档
 
 - https://github.com/yeasy/blockchain_guide
