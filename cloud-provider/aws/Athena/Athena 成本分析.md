@@ -103,7 +103,7 @@ SELECT
     and line_item_resource_id like '%nat-%'  -- NAT 网关
   group by 1,2
 
-) where cost > 10
+) where blended_cost > 10
 order by 2, 1
 ```
 
