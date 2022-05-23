@@ -1,5 +1,6 @@
 # CloudFront
 
+>https://docs.aws.amazon.com/zh_cn/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
 
 ## CloudFront + Lambda@Edge
 
@@ -11,6 +12,10 @@
 
 TBD
 
+
+## Origin Sheild
+
+集中式缓存层，可以降低延迟，提高响应速度。
 
 ## 如何看 CloudFront 的监控
 
@@ -39,8 +44,32 @@ CloudFront 的请求数、上传下载字节数等指标有个特点是：它的
 TBD
 
 
-## CloudFront 回源成本
+## CloudFront 成本
 
-根据 [S3 定价文档](https://aws.amazon.com/s3/pricing/)，CloudFront 回源到 S3 是没有流量成本的，只收请求成本与其他成本。
+>https://aws.amazon.com/cloudfront/pricing/
 
-TBD
+首先介绍下回源成本：
+
+- CloudFront 边缘节点回源到 AWS 服务（如 S3/EC2/ELB/API Gateway）是不收流量费的。
+- CloudFront 回源到其他源站，会收回源流量费。
+
+而流量流出到公网的成本 `DataTransfer-Out-Bytes` 呢，默认是按梯度收费的。此外还有请求处理费、Origin Sheild 等费用是固定按量计费的。
+
+### 使用 CloudFront 作为后端服务的代理
+
+CDN 通常只用在静态站点、音视频、图片等领域，但是实际上有些时候，使用 CDN 代理后端服务也是有很多好处的。
+
+为线上 API 也使用 CloudFront => ELB/EC2 => K8s 的结构，主要有如下好处：
+
+- **降低后端服务的负载**：CloudFront 有 origin sheild 集中式缓存，也有边缘节点缓存，对于参数参数完全一模一样的请求，缓存可以帮助降低后端压力
+- **提升网络性能**：上述缓存层同样能提升请求的性能，降低服务延迟
+- **保护后端服务**：
+  - 首先只有合法的 HTTP 请求才会被 CloudFront 转发到 ELB 进而转发到后端服务，这可以防范所有 TCP 层的攻击
+  - 其次对于合法的 HTTP 请求，缓存层实际上也是为后端服务提供了一层保护，可以防范许多种 CC 攻击。
+
+但是用量小的情况下这么搞成本会比较高，所以这个方案可能不太适合用量不高的情况。
+
+而对于大客户而言（比如 CDN 每月用量接近 PB 级，其他 AWS 服务的用量也不少？）就不同了，CloudFront 的价格可以靠商业谈判获得非常大的折扣。
+
+如果你的 CloudFront 用量非常大，AWS 给的折扣非常高，CDN 费用甚至比 ELB/EC2 的出网流量价格还低的话，在线服务也使用 CloudFront + ELB/EC2 提供出网服务，还有一个非常大的好处就是**可以降低 ELB 的出网流量成本**（多加了一层 CDN 成本反而还降了，是不是有点不可思议 emmmm）。
+
