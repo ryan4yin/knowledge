@@ -16,6 +16,20 @@
 
 针对这几个问题，社区也出现了一些解决方案：
 
-- [karmada](https://github.com/karmada-io/karmada): 一款跨集群应用的管理系统，可以将一个应用同时部署在多个集群，并且可以跨集群做实例调度(资源管理)、服务发现+四层负载均衡（网络管理）。结合 Istio 能实现跨集群的七层负载均衡。
-- [cluster-api](https://github.com/kubernetes-sigs/cluster-api): 类似 terraform/pulumi 等工具，它提供了声明式的 API 来简化多集群的配置、升级等工作.
+- [karmada](https://github.com/karmada-io/karmada): 一款跨集群应用的管理系统，可以将一个应用同时部署在多个集群，并且可以跨集群做实例调度(资源管理)、服务发现 + L4/L7 负载均衡。
+  - 通过 ClusterPropagationPolicy 提供跨集群的 L4 负载均衡能力
+  - 通过 MultiClusterIngress 提供 L7 负载均衡能力
+- [kubevela](https://github.com/kubevela/kubevela): 基于 K8s 的应用平台，支持多集群/多云。
+  - 支持基于各种标签、名称的资源跨集群调度，但是不负责解决服务发现、跨集群网络、跨集群负载均衡等问题。
+
+其实很多场景下我们并不需要打通多集群之间的网络，但是基本上一定是需要一个共同的 L4/L7 网关。
+如果你确实需要多集群之间的网络连通，除了 karmada 自带的方案外，还可以使用：
+
+- 结合 Istio 可实现跨集群的服务网格能力，而且 Istio 支持对不同的 Region/Zone 设定不同的流量权重，比如强制所有流量都仅转发同一可用区内的其他实例。
+- [Cilium Cluster Mesh](https://docs.cilium.io/en/v1.11/gettingstarted/clustermesh/clustermesh/)：支持打通集群间的 Pod-to-Pod 网络
+
+
+而 K8s 集群自身的创建更新，社区已经提供了比较好的工具：
+
+- [cluster-api](https://github.com/kubernetes-sigs/cluster-api): 以声明的方式在各云平台/裸机上部署或更新 Kubernetes 集群，确保多集群的配置一致性，也降低集群的维护难度。
 
