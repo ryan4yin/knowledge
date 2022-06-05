@@ -24,6 +24,7 @@
 
 - [Google Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)
   - Google Cloud 提供的 Istio 服务网格功能，用于在本地或在 Google Cloud 上监控和管理可靠的服务网格。
+  - 根据 [Anthos Support Platforms](https://cloud.google.com/service-mesh/docs/supported-features#supported_platforms)，它支持 GKE/裸机/VMware/AWS，其中多集群模式仅支持 GCP/裸机
 - [VMware Tanzu Service Mesh](https://tanzu.vmware.com/service-mesh)
   - Multi-cloud and multi-runtime connectivity for distributed applications
   - Visibility and analytics across app end-users, microservices, APIs, and data
