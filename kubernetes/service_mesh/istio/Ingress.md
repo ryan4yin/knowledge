@@ -31,7 +31,7 @@ spec:
     app: commmon-ingressgateway
   servers:
   - port:
-      number: 80
+      number: 8080
       name: http
       protocol: HTTP
     hosts:

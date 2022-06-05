@@ -13,6 +13,33 @@
 2. 观察：集群内流量的可观察性，提供丰富的流量监控能力。
 3. 安全：东西向与南北向流量的 mTLS 加密，JWT 鉴权。
 
+
+## Istio 服务网格 - 商业版
+
+>https://istio.io/latest/about/ecosystem/
+
+在使用 Istio 时，尤其是使用多集群等更复杂场景的服务网格时，如果团队的技术能力不足，更好的选择是直接使用商业版的 Istio，由专业的团队来帮助维护这个核心组件，等技术能力提升上来了，再考虑是否自己来维护。
+
+我了解到的商业版服务网格有：
+
+- [Google Anthos Service Mesh](https://cloud.google.com/service-mesh/docs/overview)
+  - Google Cloud 提供的 Istio 服务网格功能，用于在本地或在 Google Cloud 上监控和管理可靠的服务网格。
+- [VMware Tanzu Service Mesh](https://tanzu.vmware.com/service-mesh)
+  - Multi-cloud and multi-runtime connectivity for distributed applications
+  - Visibility and analytics across app end-users, microservices, APIs, and data
+- [Tetrate Istio Subscription](https://www.tetrate.io/tetrate-istio-subscription/)
+  - Enterprise Istio support from creators of Istio
+  - 已在 AWS/GCP/Azure 上测试
+- [Solo.io Production Istio Support](https://lp.solo.io/istio-support)
+  - We offer support for open source Istio software as part of Gloo Mesh Enterprise.
+- [Red Hat OpenShift service mesh](https://www.redhat.com/en/technologies/cloud-computing/openshift/service-mesh)
+  - Connect, manage, and observe your microservices-based applications with Red Hat OpenShift® Service Mesh, based on the Istio open source project.
+- [阿里云 ASM](https://www.aliyun.com/product/cs/servicemesh)/[腾讯云 TCM](https://cloud.tencent.com/product/tcm)
+  - 一个统一管理微服务应用流量、兼容 Istio 的托管式平台。
+  - 仅支持阿里云/腾讯云
+
+从对 Istio 的贡献上看，Google/RedHat/VMware/Tetrate/Solo 这四家应该都还是比较靠谱的。
+
 ## 一、Istio
 
 >当前针对的 Istio 版本：1.11.x，建议使用 istioctl + 自定义配置文件部署
