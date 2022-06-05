@@ -33,3 +33,8 @@
 
 - [cluster-api](https://github.com/kubernetes-sigs/cluster-api): 以声明的方式在各云平台/裸机上部署或更新 Kubernetes 集群，确保多集群的配置一致性，也降低集群的维护难度。
 
+
+## 参考
+
+- [Kubernetes 多集群项目介绍](https://xinzhao.me/posts/kubernetes-multi-cluster-projects/)
+- [Kubernetes、集群联邦和资源分发](https://draveness.me/kuberentes-federation/)
