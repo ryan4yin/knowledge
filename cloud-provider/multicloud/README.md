@@ -2,7 +2,7 @@
 
 >https://github.com/topics/multicloud
 
-随着云计算的发展，为了避免被云服务商绑定，降低风险，提高企业的议价能力，企业对多云的需求越来越强烈。
+随着云计算的发展，为了避免被云服务商绑定（vendor lock-in）从而提高企业的议价能力，也为了提升服务的可用性（更多 Region/Zones），企业对多云的需求越来越强烈。
 
 此外部分金融政企等行业，企业会有私有化部署的需求，但同时可能也需要用到公有云的一些服务，这推动了私有云、混合云的发展。为了分到这块蛋糕，各家云服务商近两年都推出了一些核心云服务的私有化部署能力。
 
@@ -20,3 +20,7 @@
 - 多云的资源管理：从 SRE 角度看借助 terraform/pulumi 来管理多云资源是个不错的方案
 - 多云的权限统一管理：基本都是 RBAC，也可以考虑直接使用 terraform/pulumi 来管理
 
+
+## 参考
+
+- [Kubernetes Everywhere: Lessons Learned From Going Multi-Cloud - Niko Smeds, Grafana Labs](https://www.youtube.com/watch?v=ZY5h8Atc14A)
