@@ -1,9 +1,11 @@
 # [Flagger](https://github.com/weaveworks/flagger)
 
 
-Flagger 是一个 Kubernetes 上的渐进式交付 Operator，可以根据监控指标进行自动化的金丝雀发布、A/B 测试、蓝/绿发布等。
+Flagger 是一个 Kubernetes 上的渐进式交付 Operator，可以根据监控指标进行自动化的金丝雀发布、A/B 测试、蓝/绿发布。
 
 Flagger 可以和 fluxcd 集成，实现整个部署流程的自动化。
+
+>从我的角度看，flagger 对 Istio 的封装做得太彻底了，我们很难对 VirtualService/DestinationRule 去做一些自定义，因此我更倾向于使用 argo-rollouts.
 
 
 ## 一、部署 Flagger
