@@ -6,6 +6,7 @@ services:
     container_name: "caddy"
     restart: always
     # 文件服务器模式，启用文件索引页
+    # 也可以使用此命令启用本地静态站点，用于站点调试
     command: caddy file-server --browse --root /data/static
     ports:
       - "80:80"
