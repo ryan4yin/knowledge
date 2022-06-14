@@ -158,3 +158,25 @@ TCP 和 UDP 流量是指去往网络负载均衡器上的所有 TCP/UDP 侦听�
 
 如果 ELB 类型为 `internet-facing`，那它还将被收取公网传输成本。
 
+
+## 五、Gateway Load Balancer
+
+>https://aws.amazon.com/cn/blogs/networking-and-content-delivery/category/networking-content-delivery/elastic-load-balancing/gateway-load-balancer/
+
+Gateway Load Balancer 是一个 L3 + L4 负载均衡。
+
+GWLB 的结构如下：
+
+- GWLB 的前端仅提供 L3 的 Endpoint，叫做 GWLBe，这个 GWLBe 可被配置为路由的下一跳。
+  - 类似路由器的 IP，可以被配置在路由表中
+- GWLB 在 TargetGroup 中的实例上进行负载均衡，但是要求后端必须支持 GENEVE 隧道协议！在所有实例的 GENEVE 6081/UDP 端口上进行负载均衡。
+  - 后端实例可以使用 TCP/HTTP 等协议进行健康检查。
+
+>[GENEVE](https://thiscute.world/posts/linux-virtual-network-interfaces/#vxlan-geneve) 是新一代 overlay 网络协议，可取代 2014 年标准化的 vxlan 协议。目前 cilium 容器网络就支持通过 geneve 创建 overlay 容器集群网络。
+
+我理解它的主要用途：
+
+- 在一个 Security VPC 中对流量进行安全合规检测，比如说只允许合规的流量出网。
+- 深度流量检测，可用于防火墙、DDoS 防护等功能
+
+主要是提供给第三方的防火墙、DDoS、深度流量检测等服务提供商，它们可以通过 GWLBe 与 GWLB，为其他 AWS 云用户提供相关云服务。
