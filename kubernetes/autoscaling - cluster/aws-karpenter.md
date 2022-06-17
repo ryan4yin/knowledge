@@ -187,10 +187,10 @@ spec:
       values: ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1f"]
     - key: "kubernetes.io/arch"
       operator: In
-      values: ["amd64"]
+      values: ["amd64"]  # or arm64
     - key: karpenter.sh/capacity-type
       operator: In
-      values: ["spot"]  # 只允许用 spot 实例
+      values: ["spot"]  # or on-demand，两个都选中时优先扩容 spot 实例
 
 
   ttlSecondsAfterEmpty: 180  # 定义节点的最大空闲时间（单位秒），超过此时间将被自动关闭

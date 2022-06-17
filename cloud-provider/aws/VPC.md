@@ -103,10 +103,10 @@ VPC endpoints 有两种类型：
 
 应该为 DynamoDB/S3 配置 Gateway endpoint.
 
-**存疑：如果不给 ECR 配 Interface Endpoints，是否最造成比较大的 NAT 成本**？
+**存疑：如果不给 ECR 配 Interface Endpoints，是否会造成比较大的 NAT 成本**？
 
-### VPC 流日志
+### VPC Flow Log 流日志
 
-待续
+
 
 
