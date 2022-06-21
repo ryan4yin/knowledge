@@ -239,7 +239,9 @@ spec:
           # throughput: 125
           deleteOnTermination: true
   ttlSecondsAfterEmpty: 180  # 定义节点的最大空闲时间（单位秒），超过此时间将被自动关闭
-  # ttlSecondsUntilExpired: 86400  # 定义节点的最大存活时间（单位秒），超过此时间将被强制回收。可用于确保所有节点都始终在使用最新的配置
+  # 定义节点的最大存活时间（单位秒），超过此时间将被强制回收。可用于确保所有节点都始终在使用最新的配置
+  # 如果未设置，则默认禁用此功能，节点永远不会因为过期而被强制回收。
+  # ttlSecondsUntilExpired: 86400
 ```
 
 ## 节点回收 - Deprovisioning
