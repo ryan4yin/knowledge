@@ -92,10 +92,11 @@ VPC endpoints 有两种类型：
   - 一个绑定了一个私网 IP 的弹性网卡，它可将流量转发到 AWS 服务（如 S3）、AWS 用户或合作伙伴的服务
   - 有独立的域名，客户端必须使用这个独立域名来请求服务！比如 `vpce-1a2b3c4d-5e6f.s3.us-east-1.vpce.amazonaws.com`
   - 会收取数据处理费用，另外每个实例还会单独按小时计费
-- Gateway endpoints
-  - 它是一个路由网关，在路由表中添加将流量路由到 Gateway endpoints 的规则，就可将流量路由到 AWS 服务
+- [Gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)
+  - 它是一个路由网关，可将流量经由内部网络转发到 S3 或者 DynamoDB，无需经过 IGW 或者 NAT.
   - 目前只支持 DynamoDB 与 S3 这两个服务
   - 目前免费
+  - 配置方式：必须在 endpoints 页面上选择要绑定的 route_tables！（无法在 route_tables 页面绑定 gateway endpoints）
 
 常见的比如 S3/DynamoDB/SQS/ECR 等等，都需要添加 VPC endpoints 才能走内网访问。
 
