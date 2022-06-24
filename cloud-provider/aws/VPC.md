@@ -108,6 +108,187 @@ VPC endpoints 有两种类型：
 
 ### VPC Flow Log 流日志
 
+建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按小时分区保存到 S3，然后通过 Athena 查询分析。
+可用于按 IP 段分析跨区流量、NAT 网关流量，从而进行深度优化，或者实施某些流量控制策略。
 
+这种方式创建的 Flow Logs，应该只收 S3 的存储费用，以及 Athena 的查询费用。
 
+>https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log
 
+示例：
+
+```hcl
+resource "aws_flow_log" "example" {
+  traffic_type         = "ALL"
+  
+  # vpc/subnet/eni 三选一
+  # vpc_id               = aws_vpc.example.id
+  # subnet_id = "xxx"
+  eni_id    = "xxx"
+  
+  # bucket_ARN/folder_name/ 
+  log_destination      = "${aws_s3_bucket.example.arn}/nat-xxx/"
+  log_destination_type = "s3"
+  destination_options {
+    file_format        = "parquet"
+    # 路径前缀使用兼容 hive 的格式，这使 athena 能够使用 `MSCK REPAIR TABLE xxx` 非常快捷地添加新分区
+    # hive 兼容格式的 path 举例：
+    # s3://my-flow-log-bucket/prefix/AWSLogs/aws-account-id=123/aws-service=vpcflowlogs/aws-region=us-east-1/year=2021/month=10/day=07/xxx.log.parquet
+    hive_compatible_partitions = true
+    per_hour_partition = true  # 默认仅按 year/month/day 分区，启用此项再加一个 hour 分区
+  }
+
+  tags = {
+    Name = "flow-logs-xxx"
+    "app-name"            = "flow-logs-xxx"
+    "owner-name"          = "xxx"
+    "owner-team"          = "xxx"
+  }
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket = "example"
+
+  tags = {
+    Name = "flow-logs-xxx"
+    "app-name"            = "flow-logs-xxx"
+    "owner-name"          = "xxx"
+    "owner-team"          = "xxx"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "example" {
+  bucket = aws_s3_bucket.example.id
+
+  rule {
+    id = "flow-log"
+
+    # applies to all objects in the bucket
+    filter {}
+
+    # Expire current versions of objects to permanently removes the object.
+    expiration {
+      days = 3
+    }
+  
+    # Choose when Amazon S3 permanently deletes specified noncurrent versions of objects.
+    noncurrent_version_expiration {
+      noncurrent_days = 3
+    }
+
+    status = "Enabled"
+  }
+}
+```
+
+然后使用 Athena 建表分析，
+
+>https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html
+
+建表：
+
+```sql
+CREATE EXTERNAL TABLE IF NOT EXISTS vpc_flow_logs_parquet (
+  `version` int, 
+  `account_id` string, 
+  `interface_id` string, 
+  `srcaddr` string, 
+  `dstaddr` string, 
+  `srcport` int, 
+  `dstport` int, 
+  `protocol` bigint, 
+  `packets` bigint, 
+  `bytes` bigint, 
+  `start` bigint, 
+  `end` bigint, 
+  `action` string, 
+  `log_status` string, 
+  `vpc_id` string, 
+  `subnet_id` string, 
+  `instance_id` string, 
+  `tcp_flags` int, 
+  `type` string, 
+  `pkt_srcaddr` string, 
+  `pkt_dstaddr` string, 
+  `region` string, 
+  `az_id` string, 
+  `sublocation_type` string, 
+  `sublocation_id` string, 
+  `pkt_src_aws_service` string, 
+  `pkt_dst_aws_service` string, 
+  `flow_direction` string, 
+  `traffic_path` int
+)
+PARTITIONED BY (
+  `aws-account-id` string,
+  `aws-service` string,
+  `aws-region` string,
+  `year` string, 
+  `month` string, 
+  `day` string,
+  `hour` string
+)
+ROW FORMAT SERDE 
+  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
+LOCATION
+  --- 需要手动替换下面 <xxx> 占位符为实际的值
+  's3://<DOC-EXAMPLE-BUCKET>/<prefix>/AWSLogs/'
+TBLPROPERTIES (
+  'EXTERNAL'='true', 
+  'skip.header.line.count'='1'
+  )
+```
+
+自动加载与更新所有 Hive 风格的分区到 metastore 中：
+
+```sql
+MSCK REPAIR TABLE default.vpc_flow_logs_xxx
+```
+
+上述 SQL 的输出大概如下：
+
+```
+Partitions not in metastore:	vpc_flow_logs_xxx:aws-account-id=123/aws-service=vpcflowlogs/aws-region=us-east-1/year=2022/month=06/day=24/hour=09 ...
+Repair: Added partition to metastore default.vpc_flow_logs_xxx:aws-account-id=123/aws-service=vpcflowlogs/aws-region=us-east-1/year=2022/month=06/day=24/hour=09
+...
+```
+
+分析 NAT 网关的流日志，确定流量大的内外网 IP 地址，反查对应的公网域名、内网服务，再考虑优化手段：
+
+```sql
+SELECT
+  interface_id,
+  srcaddr,
+  dstaddr,
+  sum(bytes) as bytes
+FROM vpc_flow_logs_xxx
+WHERE
+  year = '2022'
+  AND month = '06'
+  AND day = '24'
+  AND hour = '09'
+  and "action" = 'ACCEPT'
+  and interface_id = 'xxx'
+group by 1,2,3
+order by
+  4 DESC
+```
+
+分析某可用区（子网）的跨区流量，确定此可用区的跨区流量成本：
+
+```sql
+SELECT
+  sum(bytes) as bytes
+FROM vpc_flow_logs_ecs_vpc
+WHERE
+  year = '2022'
+  AND month = '06'
+  AND day = '24'
+  and srcaddr like '172.30%'
+  and dstaddr not like '172.30%'  -- 目的地址不是当前子网
+  and dstaddr not like '172.xx%'  -- 目的地址不是当前可用区的其他子网
+```
