@@ -44,14 +44,27 @@ NLB 是四层负载均衡，主要由两部分组成：
 
 - 极高的性能与动态拓展速度、超低延迟
   - ALB 的拓展速度可能不够块，不适合流量剧烈波动的场景。在 ALB 之间切量时也要考虑到这点，提工单让 AWS 提前扩容 ALB
-- 支持将静态 IP 地址用于负载均衡器。还可以针对为负载均衡器启用的每个子网分配一个弹性 IP 地址。
-  - ALB 不具有这项工具
+- 每个 NLB 在每个可用区中提供单个静态 IP 地址
+- 客户端的流量到达 NLB 在某个可用区提供的静态 IP 后，NLB 会向相同可用区内的后端实例分发流量。
+  - 也即默认情况下仅在同可用区内进行负载均衡。性能更好。
+  - 如果手动启用了跨区流量负载均衡，性能会更差，而且还会收跨区流量费！
+- 利用 Route53 的健康检查，NLB 支持在一个区域内及跨区域和本地站点实现故障切换。
 
 其他 FAQ：
 
 - TCP 连接的 NLB 空闲超时为 350 秒。UDP 流的空闲超时为 120 秒。
 - 每个可用区目前最多支持 200 个 Targets
 
+从 ALB 切换到 NLB 可能会遇到的问题：
+
+- ALB 上可以直接绑定安全组，而 NLB 不提供此功能！
+  - NLB 设置了源 IP 透传后，基于源 IP 的安全组，就得加在后端的所有实例上了！
+- ALB 会在 L7 上启用 TCP 连接复用，而 NLB 是 L4 负载均衡不存在此功能，因此从 ALB 切换到 NLB 后，后端实例的 TCP 连接数很可能会上升。
+- ALB 会通过 HTTP 的 `X-Forwarded-For` `X-Forwarded-Proto` Headers 将 IP/协议透传到后端实例，而 NLB 仅工作在 L4 层，使用这些 headers 的逻辑将会失效。
+  - 对于客户端 IP，NLB 可以设置直接在 L3 层透传该源 IP
+  - 对于 HTTP/HTTPS 协议的判断。最好的处理办法是 TLS/TCP 分别使用不同的 targetgroup，转发到后端实例的不同端口，通过端口来区分前端协议。
+
+其他问题参见官方文档 [排查您的 Network Load Balancer 问题](https://docs.aws.amazon.com/zh_cn/elasticloadbalancing/latest/network/load-balancer-troubleshooting.html)
 
 ## 三、结合 Kubernetes 的应用
 
