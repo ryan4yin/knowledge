@@ -243,7 +243,7 @@ TBLPROPERTIES (
   )
 ```
 
-自动加载与更新所有 Hive 风格的分区到 metastore 中：
+加载与更新所有 Hive 风格的分区到 metastore 中（建议搞个脚本每小时跑下这个命令，实现定期导入）：
 
 ```sql
 MSCK REPAIR TABLE default.vpc_flow_logs_xxx
