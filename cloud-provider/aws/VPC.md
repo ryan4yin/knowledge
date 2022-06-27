@@ -292,3 +292,5 @@ WHERE
   and dstaddr not like '172.30%'  -- 目的地址不是当前子网
   and dstaddr not like '172.xx%'  -- 目的地址不是当前可用区的其他子网
 ```
+
+Flow Logs 的所有字段说明参见 [使用 VPC 流日志记录 IP 流量](https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/flow-logs.html#flow-logs-basics)
