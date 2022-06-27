@@ -57,14 +57,15 @@ order by 1, 3, 2
 SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   line_item_operation,
-  --line_item_usage_type,
+  CASE
+    WHEN line_item_usage_type = 'DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
+    ELSE 'Compute'  -- 计算+存储的成本
+  END as usage_type,
   sum(line_item_blended_cost) as blended_cost,
 FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-12-27'
   and line_item_product_code  = 'AmazonEC2'
   and line_item_resource_id = 'ec2_id'  -- 或者使用 tag 查一批 ec2 的成本
-  -- and line_item_usage_type = 'DataTransfer-Regional-Bytes' -- 跨区/跨域流量成本
-  and line_item_usage_type != 'DataTransfer-Regional-Bytes' -- 去掉流量成本，就是计算+存储的成本
 group by 1, 2
 order by 1, 2
 ```
