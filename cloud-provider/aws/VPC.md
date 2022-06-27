@@ -111,8 +111,6 @@ VPC endpoints 有两种类型：
 建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按小时分区保存到 S3，然后通过 Athena 查询分析。
 可用于按 IP 段分析跨区流量、NAT 网关流量，从而进行深度优化，或者实施某些流量控制策略。
 
-这种方式创建的 Flow Logs，应该只收 S3 的存储费用，以及 Athena 的查询费用。
-
 >https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log
 
 示例：
@@ -125,7 +123,14 @@ resource "aws_flow_log" "example" {
   # vpc_id               = aws_vpc.example.id
   # subnet_id = "xxx"
   eni_id    = "xxx"
-  
+
+  # Flow Log 的所有字段介绍：https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/flow-logs.html#flow-logs-basics
+  # 注意！flow logs 默认仅包含所有版本 2 的字段，需要更高版本的字段，则需要自定义！
+  # 这里为了分析跨区流量，我补充了 vpc-id subnet-id az-id 等非默认字段，并去掉了感觉用不到的 account-id
+  # terraform HCL 语言中，$ 具有特殊含义，得使用 $$ 转义
+  log_format = "$${version} $${interface-id} $${vpc-id} $${subnet-id} $${az-id} $${flow-direction} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${bytes} $${packets} $${start} $${end} $${action} $${log-status}"
+
+
   # bucket_ARN/folder_name/ 
   log_destination      = "${aws_s3_bucket.example.arn}/nat-xxx/"
   log_destination_type = "s3"
@@ -282,15 +287,47 @@ order by
 
 ```sql
 SELECT
+  srcaddr,
+  dstaddr,
+  az_id,
   sum(bytes) as bytes
 FROM vpc_flow_logs_ecs_vpc
 WHERE
   year = '2022'
   AND month = '06'
   AND day = '24'
-  and srcaddr like '172.30%'
-  and dstaddr not like '172.30%'  -- 目的地址不是当前子网
-  and dstaddr not like '172.xx%'  -- 目的地址不是当前可用区的其他子网
+  and regexp_extract(dstaddr, '^......') = 'xxx.xxx'  -- 目的地是当前 VPC xxx.xxx.0.0/16，即 VPC 内部流量
 ```
 
-Flow Logs 的所有字段说明参见 [使用 VPC 流日志记录 IP 流量](https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/flow-logs.html#flow-logs-basics)
+这个查出来的数据，dstaddr 是分子网的，如果子网的 CIDR 不是直接 `/24` 的话，直接用 SQL 会比较难去分析，这时可能就得先做一次聚合，然后用 pandas + ipaddress 进行分析。
+
+使用 python 判断 ip 是否在某个子网的代码示例如下：
+
+```python
+import ipaddress
+ipaddress.ip_address('192.168.0.1') in ipaddress.ip_network('192.168.0.0/24')
+```
+
+#### Flow Logs 费用
+
+Flow Logs 的主要成本在于 CloudWatch，即使数据是存到 S3 也是需要经过 CloudWatch 的，仅保留近期数据（如一周）的话 S3 的存储费用很低，而 CloudWatch 费用却不可小觑，通常还是应该在测试完成后关闭，临时启用即可。
+
+<https://aws.amazon.com/cloudwatch/pricing/> 中给出了一个 Flow Logs 传输到 S3 的费用计算示例：
+
+```
+如果您监控的 VPC 每月以可选的 Apache Parquet 格式向 S3 直接发送 72TB 提取的 VPC 流日志，并且您存档一个月的数据，您的费用将如下所示：
+
+月度日志提取费用
+0 到 10TB (0.25 USD/GB) = 10 * 1024 * 0.25 USD = 2560.00 USD
+10TB 到 30TB (0.15 USD/GB) = 20 * 1024 * 0.15 USD = 3072.00 USD
+30TB 到 50TB (0.075 USD/GB) = 20 * 1024 * 0.075 USD = 1536.00 USD
+50TB 到 72TB (0.05 USD/GB) = 22 * 1024 * 0.05 USD = 1126.40 USD
+总提取费用 = 2560 美元 + 3072 美元 + 1536 美元 + 1126.40 美元 = 8294.40 美元
+
+每月 Apache Parquet 格式转换月费（可选）
+72TB（每 GB 0.03 美元）= 72 * 1024 * 0.03 美元 = 2211.84 美元
+月度日志存档费用（假设日志数据压缩到 6.5TB）* *
+6.5TB（每 GB 0.023 美元）= 6.5 * 1024 * 0.023 美元 = 153.01 美元
+
+月度费用 = 8294.40 美元 + 153.01 美元 + 2211.84 美元 = 10659.25 美元
+```
