@@ -48,12 +48,18 @@ TBD
 
 >https://aws.amazon.com/cloudfront/pricing/
 
-首先介绍下回源成本：
+CloudFront 成本分成这几个部分：
 
-- CloudFront 边缘节点回源到 AWS 服务（如 S3/EC2/ELB/API Gateway）是不收流量费的。
-- CloudFront 回源到其他源站，会收回源流量费。
-
-而流量流出到公网的成本 `DataTransfer-Out-Bytes` 呢，默认是按梯度收费的。此外还有请求处理费、Origin Sheild 等费用是固定按量计费的。
+- 回源成本：
+  - CloudFront 边缘节点回源到 AWS 服务（如 S3/EC2/ELB/API Gateway）均免费。
+  - CloudFront 回源到其他源站，会收回源流量费。
+- 出网成本 DTO
+  - 流量流出到公网的成本 `DataTransfer-Out-Bytes`，默认按梯度收费的，而且分 Region 进行统计。
+- 请求处理费
+  - 对于大的静态文件而言，请求的处理费占比通常很小，DTO 是主要成本。
+  - 对于使用 CloudFront 作为 API 前端的情况，情况可能会不同。
+- Origin Sheild
+  - 固定按量计费
 
 ### 使用 CloudFront 作为后端服务的代理
 
