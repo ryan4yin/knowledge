@@ -1,9 +1,20 @@
 
 ## 查询
 
-```
+```shell
 # 查询某节点上的所有 pods
 kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=<nodeName>
+
+# 各可用区的节点数量统计
+# uniq -c 按出现次数(count)进行统计
+# sort -nr  按数值(number)比较排序并逆序(reverse)输出结果
+kubectl get nodes --label-columns "topology.kubernetes.io/zone" --no-headers | awk '{print $6}' | uniq -c | sort -nr
+
+# 各实例类型的节点数量统计
+kubectl get nodes --label-columns "node.kubernetes.io/instance-type" --no-headers | awk '{print $6}' | sort | uniq -c | sort -nr
+
+kubectl get nodes --label-columns "topology.kubernetes.io/zone,node.kubernetes.io/instance-type" --no-headers | awk '{print $6,$7}' | sort | uniq -c | sort -nr
+
 ```
 
 ```shell
