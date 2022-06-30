@@ -262,51 +262,7 @@ Repair: Added partition to metastore default.vpc_flow_logs_xxx:aws-account-id=12
 ...
 ```
 
-分析 NAT 网关的流日志，确定流量大的内外网 IP 地址，反查对应的公网域名、内网服务，再考虑优化手段：
-
-```sql
-SELECT
-  interface_id,
-  srcaddr,
-  dstaddr,
-  sum(bytes) as bytes
-FROM vpc_flow_logs_xxx
-WHERE
-  year = '2022'
-  AND month = '06'
-  AND day = '24'
-  AND hour = '09'
-  and "action" = 'ACCEPT'
-  and interface_id = 'xxx'
-group by 1,2,3
-order by
-  4 DESC
-```
-
-分析某可用区（子网）的跨区流量，确定此可用区的跨区流量成本：
-
-```sql
-SELECT
-  srcaddr,
-  dstaddr,
-  az_id,
-  sum(bytes) as bytes
-FROM vpc_flow_logs_ecs_vpc
-WHERE
-  year = '2022'
-  AND month = '06'
-  AND day = '24'
-  and regexp_extract(dstaddr, '^......') = 'xxx.xxx'  -- 目的地是当前 VPC xxx.xxx.0.0/16，即 VPC 内部流量
-```
-
-这个查出来的数据，dstaddr 是分子网的，如果子网的 CIDR 不是直接 `/24` 的话，直接用 SQL 会比较难去分析，这时可能就得先做一次聚合，然后用 pandas + ipaddress 进行分析。
-
-使用 python 判断 ip 是否在某个子网的代码示例如下：
-
-```python
-import ipaddress
-ipaddress.ip_address('192.168.0.1') in ipaddress.ip_network('192.168.0.0/24')
-```
+至于 Flow Log 的数据分析，请参见 [使用 Athena 进行 Flow Log 数据分析](./Athena/Flow%20Log%20数据分析.md)
 
 #### Flow Logs 费用
 
