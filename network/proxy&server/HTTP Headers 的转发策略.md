@@ -3,8 +3,31 @@
 
 在使用 nginx/traefik/caddy 做代理服务器时，我们需要考虑到 Headers 转发相关的问题：
 
-1. 默认情况下，proxy 会转发哪些 headers？会修改哪些 headers？又会添加/删除哪些 headers?
-1. 如何自定义 headers 的转发策略？
+## 默认情况下，Proxy 会如何处理请求 Headers？
+
+### 1. Proxy 会修改哪些 Headers？
+
+- Nginx:
+  - 默认情况下，Nginx 会将 `Host` 修改为 `$proxy_host` 的值， 将 `Connection` 设为 `close`.
+  - 可以通过 `proxy_set_header` 修改这项行为。
+  - 参考 [Nginx Reverse Proxy - Passing Request Headers](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#headers)
+- Envoy:
+  - TODO
+
+### 2. Proxy 会删除哪些 Headers？
+
+- Nginx:
+  - 默认情况下有 `proxy_pass_request_headers on;`，也即会转发几乎所有 headers，但有如下介绍的这些例外。
+    - Nginx 会删除掉所有带有下划线的 Headers，可通过设置 `underscores_in_headers on;` 禁用这一默认行为。（这是完全符合 HTTP 标准的行为）
+    - 前面提到了 `Host` 跟 `Connection` 会被 proxy_pass 重写。
+    - 如果启用了缓存，与缓存相关的请求头不会被传递到 upstream（`If-Modified-Since`, `If-Unmodified-Since`, `If-None-Match`, `If-Match`, `Range`, and `If-Range`）.
+  - 参考
+    - [Nginx - Missing (disappearing) HTTP Headers](https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/#missing-disappearing-http-headers)
+    - [ngx_http_proxy_module - docs](http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass_request_headers)
+
+### 3. Proxy 会添加哪些 Headers？
+
+- `X-Forward-X`...
 
 ## Request Headers 的转发策略
 
@@ -30,4 +53,3 @@
 
 ## 参考
 
-- [Nginx Reverse Proxy - Passing Request Headers](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#headers)
