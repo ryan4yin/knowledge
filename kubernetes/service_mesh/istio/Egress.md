@@ -9,6 +9,7 @@ Istio 有 IngressGateway 作为集中式的流量入口，方便统一管理入�
 2. 可以限制只允许访问某些需要的域名，禁止所有其他的域名。
 3. 可以监控外外部域名的请求，统计 HTTP/HTTPS 请求的 2xx/4xx/5xx 数据，甚至对请求做某些修改。
 
+我基本没用过这个功能，不过感觉它跟 Network Policy 有点类似？只是它可以在 L7 层生效。
 
 ## 一、部署 EgressGateway
 

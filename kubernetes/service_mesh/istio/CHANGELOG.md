@@ -27,7 +27,15 @@
   - [alpha] 为 WASM 插件添加 API: `WasmPlugin`
   - 优化 helm chart
   - [alpha] Gateway API 升级到 v1alpha2
+- istio 1.13
+  - 在 k8s 1.21+ 集群上，通过 EndpointSlice 资源获取所有 workloads，而不是 Endpoint
+  - fix: 有部分连接被 reset: [Drop packets in INVALID state to avoid intermittent connection reset from sidecar](https://github.com/istio/istio/pull/36566)，感觉这个可能就是造成 0 状态码的罪魁祸首？
+  - fix: [HTTP/1.0 requests to be rejected (with a 426 Upgrade Required error) in some cases](https://github.com/istio/istio/issues/36707)
+- istio 1.14
+  - 默认负载均衡算法从 ROUND_ROBIN 切换到 LEAST_REQUEST。
+    - 官方通过一系列测试发现，LEAST_REQUEST 在几乎所有虚拟场景中，效果都优于 ROUND_ROBIN，因此决定做这一修改。
+  - [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings) 添加参数 `warmupDurationSecs`
+    - fix [支持 Pod 扩容时，新 Pod 的 slow start](https://github.com/istio/istio/issues/21228)
+    - 但也存在一些 bug: [slow start in istio](https://github.com/istio/istio/issues?q=slow+start)
 - upcomming istio 1.1x
   - [取消总权重为 `100` 的限制，可以设为任意整数](https://github.com/istio/istio/issues/36069)
-  - [支持 Pod 扩容时，新 Pod 的 warm up](https://github.com/istio/istio/issues/21228)
-
