@@ -59,7 +59,11 @@ SELECT
   line_item_operation,
   CASE
     WHEN line_item_usage_type = 'DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
-    ELSE 'Compute'  -- 计算+存储的成本
+    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
+    WHEN line_item_usage_type like '%NatGateway-Hours' THEN 'NatGateway-Hours'
+    ELSE line_item_usage_type
   END as usage_type,
   sum(line_item_blended_cost) as blended_cost,
 FROM "my_cur"
@@ -76,17 +80,23 @@ CloudFront 成本分析：
 ```sql
 SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
-  sum(line_item_blended_cost) as blended_cost,
+  CASE
+    WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
+    WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
+    WHEN line_item_usage_type like '%Requests%' THEN 'Requests'
+    WHEN line_item_usage_type like '%Bytes-OriginShield' THEN 'Bytes-OriginShield'
+    WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
+    WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
+    ELSE line_item_usage_type
+  END as usage_type,
   line_item_usage_amount,
-  line_item_usage_type,
-  line_item_line_item_description
+  line_item_description,
+  sum(line_item_blended_cost) as blended_cost
 FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') = '2022-03-25'
   and line_item_product_code  = 'AmazonCloudFront'
   and line_item_resource_id like '%xxx'
-  -- and line_item_usage_type like '%DataTransfer-Out-OBytes'  -- 只查询回源流量的成本
-  and line_item_usage_type like '%DataTransfer-Out-Bytes'  -- 只查询 CDN 出网流量的成本
-group by 1,3,4,5
+group by 1,2,3,4
 ```
 
 NAT 网关成本分析：
