@@ -31,6 +31,11 @@ ALB 域名解析出的 IP 地址是不固定的，可能会随负载变化与后
 当有新的 target 加入到 TargetGroup 时，ALB 会慢慢地将线上请求一点点切到该 target 上，起到一个 warm up 的作用。
 此功能主要针对「推荐服务」等对本地缓存依赖比较重的程序，使其首先在较低 QPS 下完成缓存预热，实现平滑扩容。
 
+### ALB 取消注册 targets
+
+ALB 取消注册（Deregistering）一个 target，ALB 会立即停止向该 targets 转发请求。
+在未处理完的请求结束前，该 target 会处于 `draining` 状态，所有请求处理完毕后它会被直接从 targetgroup 中移除。
+
 ## 二、NLB 功能与使用方法
 
 >https://docs.aws.amazon.com/zh_cn/elasticloadbalancing/latest/network/introduction.html
@@ -65,6 +70,48 @@ NLB 是四层负载均衡，主要由两部分组成：
   - 对于 HTTP/HTTPS 协议的判断。最好的处理办法是 TLS/TCP 分别使用不同的 targetgroup，转发到后端实例的不同端口，通过端口来区分前端协议。
 
 其他问题参见官方文档 [排查您的 Network Load Balancer 问题](https://docs.aws.amazon.com/zh_cn/elasticloadbalancing/latest/network/load-balancer-troubleshooting.html)
+
+### Health Check
+
+NLB 有两种健康检查功能：
+
+- 主动健康检查：这个是用户可以配置的健康检查功能，NLB 基于用户提供的参数进行主动健康检查。
+- 被动健康检查：用户无法控制此行为，NLB 通过监控流量的情况，来判断 targets 是否存在异常，并决定是否要把它设置为 unhealthy.
+
+如果 targets 进入 unhealthy 状态，NLB 不会再将流量转发给它，对于已存在的连接，NLB 会向客户端发送 TCP RST 数据包。
+
+而如果所有 targets 都不处于 healthy 状态，NLB 进入 fail open 状态，此状态下 NLB 将所有流量随机的转发给所有的 targets，而不管它们的状态如何。
+
+### 跨区负载均衡
+
+NLB 在 DNS 解析中，为每个 Zone 提供一个 IP 地址，如果某可用区的 targets 全部被取消注册， NLB 会从 DNS 中删除对应的 IP 地址。但是我们都知道 DNS 是有 TTL 的，所以这可能会造成部分请求失败。
+
+所以最好的办法是：一定要确保使用到的每个 Zone，都始终有足够的 Targets 可用！
+
+### NLB 取消注册 targets
+
+NLB 取消注册（Deregistering）target 的逻辑跟 ALB 不太一样。
+在一个 targets 被取消注册后，它会进入 `draining` 状态，在此状态的停留时间由 `deregistration_delay` 参数设定，默认为 300s。
+在 `draining` 状态中，NLB 不会向 targets 建立新的连接，但是仍然会保持已有的连接。（这是因为 NLB 只清楚 L4 层的信息，它无法判定在什么时间点中断连接不会造成问题）。
+
+**而最坑的一点是，如果被取消注册的 targets 仍然维持在 healthy 状态，并且已存在的连接持续被使用，未进入 idle 状态，NLB 就会持续将流量转发到这个 targets 上**！
+**这导致如果被取消注册的 target 已经终止了，在 health_check 将它的状态变更为 unhealthy 之前的这段时间，请求仍然有机会被转发到这个已经终止的 target，导致请求无响应而超时**！
+
+官方对这个问题给出的建议是：
+
+- 启用 targetgroup 的 `connection termination` 功能
+  - 此功能将在超过 `deregistration_delay` 时间后，强制关闭所有 LB 与 targets 之间的连接
+- 确保在取消注册 target 前，它已经进入了 unhealthy 状态
+
+其他资料：
+
+- 官方文档：[Deregistration delay - AWS NLB](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-target-groups.html#deregistration-delay)
+- 相关 issue: 
+  - <https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2131>
+  - <https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2366>
+
+根据上述资料，NLB target 被取消注册后，大概需要 60s-180s 的时间进行 drain 操作，这之前都持续会有请求被转发到该 targets！
+因此对 k8s 而言，建议在 pod 上设置 180s - 240s 的 preStop 以及对应的 terminationGracePeriodSeconds，确保所有请求都能被正常处理！
 
 ## 三、结合 Kubernetes 的应用
 
