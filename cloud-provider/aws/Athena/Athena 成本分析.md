@@ -34,7 +34,19 @@ SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   sum(line_item_blended_cost) as blended_cost,
   line_item_operation,
-  line_item_usage_type,
+  CASE
+    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
+    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
+    WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
+    WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
+    WHEN line_item_usage_type like '%Requests%' THEN 'Requests'
+    WHEN line_item_usage_type like '%Bytes-OriginShield' THEN 'Bytes-OriginShield'
+    WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
+    WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
+    ELSE line_item_usage_type
+  END as usage_type,  
   line_item_usage_amount,
   line_item_line_item_description,
   product_from_location,
@@ -45,7 +57,7 @@ FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') = '2022-04-05'
   and line_item_product_code  = 'AmazonS3'
   and line_item_resource_id = 'bucket_name'
-  and line_item_usage_type like 'DataTransfer-Out-Bytes'  --  只查询 S3 传出的流量成本
+  and line_item_usage_type like '%DataTransfer-Out-Bytes'  --  只查询 S3 传出的流量成本
 group by
   1,3,4,5,6,7,8,9,10
 order by 1, 3, 2
@@ -58,7 +70,7 @@ SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   line_item_operation,
   CASE
-    WHEN line_item_usage_type = 'DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
+    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
     WHEN line_item_usage_type like '%BoxUsage:%' THEN 'Compute'
     WHEN line_item_usage_type like '%SpotUsage:%' THEN 'Compute'
     WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
