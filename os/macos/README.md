@@ -189,18 +189,35 @@ finder 相关：
 锁屏后一段时间 macOS 会自动进入休眠状态，并且断网，这可能会导致各种 ssh 连接直接断掉，
 如果没用 tmux/screen 等终端复用器的话，工作环境也会丢失。
 
-为了避免这个问题，可以在「System」-「Battery」-「Power Adapter」中勾选上「防止电脑自动休眠」。
+为了避免这个问题，可以在「System」-「Battery」-「Power Adapter」中勾选上「防止电脑自动休眠」。
 
-### 键盘「option/alt+字母」组合键输入奇怪字符，无法实现光标跳转？
+### 键盘「option+字母」组合键输入奇怪字符，无法实现光标跳转？
 
 这个是 MacOS 系统的全局设置，改起来很麻烦。
 
-比较好的解决方法是只修改 iterm2 的设置，将 `option` 映射为 `esc+` 或者 `meta`.
-一般光标跳转也只在 iterm2 中用得到，所以感觉这是个比较简单优雅的解决方案。
-
-具体的设置方法为在 iterm2 的「preferences」-「profile」-「keys」中，有两个很显眼的设置项，在这里将左右 option 键都设置为 `esc+` 就大功告成了。
+比较好的解决方法是只修改 Terminal + IDE 程序的设置，将 `option` 映射为 `esc+` 或者 `meta`.
+一般光标跳转也只在 Terminal + IDE 中用得到，所以感觉这是个比较简单优雅的解决方案。
 
 这样改好，你就可以在 iterm2 中使用 `option+f` 前进一个单词，`option+b` 回退一个单词了，非常方便。
+
+#### iterm2 的 option 键映射
+
+目前 MacOS 上最流行的 Terminal 是 iterm2，
+具体的设置方法为在 iterm2 的「preferences」-「profile」-「keys」中，有两个很显眼的设置项，在这里将左右 option 键都设置为 `esc+` 就大功告成了。
+
+#### vscode 的 option 键映射
+
+vscode 的 option 映射参数如下：
+
+```json
+"terminal.integrated.macOptionIsMeta": true
+```
+
+直接在 VSCode 配置中搜索 `macOptionIsMeta` 即可找到该选项。
+
+#### jetbrains IDE
+
+jetbrains 系列 IDE 的 2021.2 开始，在「tools」-「terminal」中添加了参数「Use Option as Meta key」，启用该参数即可。
 
 ## 2K 显示器的分辨率问题
 
