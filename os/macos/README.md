@@ -219,6 +219,40 @@ vscode 的 option 映射参数如下：
 
 jetbrains 系列 IDE 的 2021.2 开始，在「tools」-「terminal」中添加了参数「Use Option as Meta key」，启用该参数即可。
 
+### 通过 Touch ID 进行 sudo 命令授权
+
+默认情况下此文件为只读，先给 owner 加上写权限：
+
+```shell
+sudo chmod +w /etc/pam.d/sudo
+```
+
+现在通过 `sudo vim /etc/pam.d/sudo` 编辑此文件，在最前面添加这一行：
+
+```
+auth       sufficient     pam_tid.so
+```
+
+添加完后内容如下：
+
+```
+# sudo: auth account password session
+auth       sufficient     pam_tid.so
+auth       sufficient     pam_smartcard.so
+auth       required       pam_opendirectory.so
+account    required       pam_permit.so
+password   required       pam_deny.so
+session    required       pam_permit.so
+```
+
+这样就大功告成了，现在再收回写权限：
+
+```shell
+sudo chmod -w /etc/pam.d/sudo
+```
+
+之后可以开个新窗口测试下 `sudo` 命令，会弹出 Touch ID 窗口~
+
 ## 2K 显示器的分辨率问题
 
 由于苹果系统原因，外接 2K 显示器会导致字体特别小，非常难受。
