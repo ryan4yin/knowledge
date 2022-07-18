@@ -36,8 +36,8 @@ SELECT
   line_item_operation,
   CASE
     WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
-    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'Compute'
-    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'ComputeOD'
+    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'ComputeSpot'
     WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
     WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
     WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
