@@ -118,7 +118,11 @@
   - [ab](https://httpd.apache.org/docs/2.4/programs/ab.html): apache server 附带的性能测试工具，历史悠久。但是它是单线程的，没有 wrk 那么强悍，也就不适合用于压力测试。
   - [siege](https://github.com/JoeDog/siege): 又一款 c 语言实现的压测工具，暂时不清楚和 wrk 有多大区别
   - [vegeta](https://github.com/tsenart/vegeta): 这玩意在 github 上 star 非常高，go 写的，但是用起来感觉数据不太对劲
+    - 2020/10 开始就没更新了
   - [hey](https://github.com/rakyll/hey): 又一款 go 语言实现的压测工具，自称是 ab 的替代品，使用也和 ab 一样简单。k9s 就集成了它。但是它的准确性也有待考证。
+    - 2021/04 开始就没更新了
+
+目前感觉这一串列表里，locust 跟 grafana/k6 是最好用的，这两个里面 k6 是最漂亮、精致的。
 
 ## 参考
 
