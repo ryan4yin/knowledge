@@ -14,7 +14,7 @@ Flagger 可以和 fluxcd 集成，实现整个部署流程的自动化。
 helm repo add flagger https://flagger.app
 # 查看 flagger 版本号
 helm search repo flagger/flagger -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull flagger/flagger --untar --version 1.2.0
 
 # 查看生成出的 kubernetes yaml 内容

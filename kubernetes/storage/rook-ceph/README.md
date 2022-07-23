@@ -59,7 +59,7 @@ helm repo add rook-release https://charts.rook.io/release
 
 # 查看历史版本
 helm search repo rook-release/rook-ceph -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull rook-release/rook-ceph --untar --version v1.4.1
 
 # 2. 查看 chart 的 values.yaml 内容，将需要自定义的参数写入 custom-values.yaml 中

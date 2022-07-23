@@ -7,7 +7,7 @@
 helm repo add traefik https://helm.traefik.io/traefik
 # 查看历史版本
 helm search repo traefik/traefik -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull traefik/traefik  --untar --version 2.15.1
 
 # 查看生成出的 kubernetes yaml 内容

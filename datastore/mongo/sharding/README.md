@@ -20,7 +20,7 @@
 helm repo add bitnami https://charts.bitnami.com/bitnami
 # 查看 mongo-sharded 版本号
 helm search repo bitnami/mongodb-sharded -l | head
-# 下载并解压 mongo-sharded chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull bitnami/mongodb-sharded --untar --version 1.6.5
 # 安装 mongo-sharded
 helm upgrade --install mongo-sharded ./mongodb-sharded

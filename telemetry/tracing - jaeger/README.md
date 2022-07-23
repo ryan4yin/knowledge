@@ -21,7 +21,7 @@ Jaeger 是云原生社区最流行的开源链路追踪工具。
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 # 查看历史版本
 helm search repo jaegertracing/jaeger-operator -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull jaegertracing/jaeger-operator  --untar --version 2.15.1
 
 # 查看生成出的 kubernetes yaml 内容

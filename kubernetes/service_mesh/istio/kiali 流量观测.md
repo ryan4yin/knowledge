@@ -14,7 +14,7 @@
 helm repo add kiali https://kiali.org/helm-charts
 # 查看历史版本
 helm search repo kiali/kiali-operator -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull kiali/kiali-operator --untar --version 1.23.0
 
 # 安装或更新

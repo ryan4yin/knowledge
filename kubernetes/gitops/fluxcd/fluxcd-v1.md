@@ -76,7 +76,7 @@ kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/d
 helm repo add fluxcd https://charts.fluxcd.io
 # 查看历史版本
 helm search repo fluxcd/flux -l | head
-# 下载并解压 chart
+# 下载并解压 chart，目的是方便 gitops 版本管理
 helm pull fluxcd/flux --untar --version 1.5.0
 
 # 查看生成出的 kubernetes yaml 内容
