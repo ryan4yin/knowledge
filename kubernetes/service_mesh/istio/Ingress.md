@@ -19,7 +19,7 @@ Istio IngressGateway 跟 APISIX-Ingress-Conroller 等类似，都是 EKS 集群�
 - 访问日志：统一收集好访问日志后，可使用 SQL 对全局流量的 Host/Path/Headers/Params 等进行深度分析
   - Istio 支持，也可以通过 EnvoyFilter/Telemetry API 自定义访问日志格式
   - 不过将日志直接上传到 S3/Kafka 的功能，就需要自己写插件或者加 Sidecar 来实现了
-- direct_reponse 只能通过 envoyfilter 搞
+- direct_response 只能通过 envoyfilter 搞
   - 这个已经有对应的 PR 了：https://github.com/istio/istio/pull/39776
 - API 生命周期管理
   - Istio 没这功能，不过好消息是绝大部分网关都没这功能

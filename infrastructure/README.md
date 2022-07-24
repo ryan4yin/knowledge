@@ -29,6 +29,15 @@
 因此 Crossplane 的未来也值得期待。
 
 
+## 三、其他工具
+
+成本估算：
+- [infracost](https://github.com/infracost/infracost): 根据 terraform 配置变更，估算成本变化
+
+资源导入（配置备份）：
+
+- [terraformer](https://github.com/GoogleCloudPlatform/terraformer)
+
 ## 参考
 
 - [OAM和Crossplane: 构建现代应用的下一个阶段](https://zhuanlan.zhihu.com/p/145443259)
