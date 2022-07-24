@@ -4,8 +4,8 @@ metadata:
   name: common-ingressgateway
   namespace: istio-ingress
 spec:
-  # 建议使用 AWS ALB + aws-load-balancer-controller 绑定 LB，这里改成 ClusterIP 就行
-  # 使用 ALB 的原因，是为了方便在 ALB 上进行集群间的七层流量切分。否则的话也可以直接使用 NLB
+  # 建议使用 aws-load-balancer-controller 绑定 AWS NLB，使用 IP 模式
+  # 但是要注意 NLB 开跨区负载均衡是收费的！
   type: LoadBalancer
   selector:
     istio: common-ingressgateway

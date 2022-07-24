@@ -227,7 +227,7 @@ spec:
     # 证书的补充信息
     # 字段索引：https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.X509Subject
     organizations:
-      - mobiuspace
+      - xxx
   # Issuer references are always required.
   issuerRef:
     name: letsencrypt-prod
@@ -303,21 +303,86 @@ cert-manager 提供的 `Certificate` 资源，会将生成好的公私钥存放�
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: gateway
+  name: example-gateway
 spec:
   selector:
     istio: ingressgateway
   servers:
   - port:
-      number: 443
+      number: 8080
+      name: http
+      protocol: HTTP
+    hosts:
+    - product.example.com
+    tls:
+      httpsRedirect: true # sends 301 redirect for http requests
+  - port:
+      number: 8443
       name: https
       protocol: HTTPS
     tls:
-      mode: SIMPLE
+      mode: SIMPLE # enables HTTPS on this port
       credentialName: tls-example.com # This should match the Certificate secretName
     hosts:
-    - my.example.com # This should match a DNS name in the Certificate
+    - product.example.com # This should match a DNS name in the Certificate
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: product
+spec:
+  hosts:
+  - product.example.com
+  gateways:
+  - example-gateway
+  http:
+  - route:
+    - destination:
+        host: product
+        port:
+          number: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: product
+  name: product
+  namespace: prod
+spec:
+  ports:
+  - name: grpc
+    port: 9090
+    protocol: TCP
+    targetPort: 9090
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: product
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: product
+spec:
+  host: product
+  # 定义了两个 subset
+  subsets:
+  - labels:
+      version: v1
+    name: v1
+  - labels:
+      version: v2
+    name: v2
+---
+# 其他 deployment 等配置
 ```
+
+之后再配合 VirtualService 等资源，就可以将 Istio 跟 cert-manager 结合起来啦。
 
 ## 将 cert-manager 证书挂载到自定义网关中
 

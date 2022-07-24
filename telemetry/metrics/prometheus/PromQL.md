@@ -152,8 +152,8 @@ sum by (destination_version, destination_service_name, namespace, response_code)
 查询出延迟超过 500ms 的请求数量变化：
 
 ```
-sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="rem-st", response_code="0", le="+Inf"}) - 
-sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="rem-st", response_code="0", le="500"})
+sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="xxx", response_code="0", le="+Inf"}) - 
+sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="xxx", response_code="0", le="500"})
 ```
 
 
