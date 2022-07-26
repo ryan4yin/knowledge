@@ -29,22 +29,44 @@ helm install \
 
 ## 二、创建 Issuer
 
-### 1. 通过权威机构创建公网受信证书 - ACME
+### 1. 通过权威机构创建公网受信证书
 
 通过权威机构创建的公网受信证书，可以直接应用在边界网关上，用于给公网用户提供 TLS 加密访问服务，比如各种 HTTPS 站点、API。
 这是需求最广的一类数字证书服务。
 
-cert-manager 支持 [ACME（Automated Certificate Management Environment (ACME) Certificate Authority server）](https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment)证书自动化申请与管理协议，支持使用此开放协议申请证书的权威机构有：
+cert-manager 支持两种申请公网受信证书的方式：
+
+- [ACME（Automated Certificate Management Environment (ACME) Certificate Authority server）](https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment)证书自动化申请与管理协议。
+- [venafi-as-a-service](https://cert-manager.io/docs/configuration/venafi/#creating-a-venafi-as-a-service-issuer): venafi 是一个证书的集中化管理平台，它也提供了 cert-manager 插件，可用于自动化申请 DigiCert/Entrust/GlobalSign/Let's Encrypt 四种类型的公网受信证书。
+
+这里主要介绍使用 ACMEv2 协议申请公网证书，支持使用此开放协议申请证书的权威机构有：
 
 - 免费服务
   - Let's Encrypt: 众所周知，它提供三个月有效期的免费证书。
+  - [ZeroSSL](https://zerossl.com/documentation/acme/):  貌似也是一个比较有名的 SSL 证书服务
+    - 通过 ACME 协议支持不限数量的 90 天证书，也支持多域名证书与泛域名证书。
 - 付费服务
-  - DigiCert: 这个非常有名，官方文档 [Digicert - Third-party ACME client automation](https://docs.digicert.com/certificate-tools/Certificate-lifecycle-automation-index/acme-user-guide/)
+  - DigiCert: 这个非常有名（但也是相当贵），官方文档 [Digicert - Third-party ACME client automation](https://docs.digicert.com/certificate-tools/Certificate-lifecycle-automation-index/acme-user-guide/)
+  - Google Trust Services: Google 推出的公网证书服务，也是三个月有效期，其根证书交叉验证了 GlobalSign。官方文档 [Automate Public Certificates Lifecycle Management via RFC 8555 (ACME)](https://cloud.google.com/blog/products/identity-security/automate-public-certificate-lifecycle-management-via--acme-client-api)
   - Entrust: 官方文档 [Entrust's ACME implementation](https://www.entrust.com/knowledgebase/ssl/how-to-use-acme-to-install-ssl-tls-certificates-in-entrust-certificate-services-apache#step1)
+  - GlobalSign: 官方文档 [GlobalSign ACME Service](https://www.globalsign.com/en/acme-automated-certificate-management)
 
+这里也顺便介绍下收费证书服务对证书的分级，以及该如何选用：
 
->如果你使用了 AWS，你可以想通过 cert-manager 使用 AWS Certificate Manager 提供的免费公网证书服务，毕竟它免费、有一年有效期，而且会自动轮转。
->但是根据 [AWS Certificate Manager 文档](https://docs.aws.amazon.com/acm/latest/userguide/export-private.html)，ACM 申请的公网受信证书仅能在 AWS ELB/CloudFront 等 AWS 服务上使用，不提供私钥导出功能，**也就是说无法被应用在自部署的 Nginx/Istio 等网关上，根本没法在 K8s 中使用**！
+- Domain Validated（DV）证书
+  - **仅验证域名所有权**，验证步骤最少，价格最低，仅需要数分钟即可签发。
+  - 优点就是易于签发，很适合做自动化。
+  - 各云厂商（AWS/GCP/Cloudflare，以及 Vercel/Github 的站点服务）给自家服务提供的免费证书都是 DV 证书，Let's Encrypt 的证书也是这个类型。
+    - 很明显这些证书的签发都非常方便，而且仅验证域名所有权。
+    - 但是 AWS/GCP/Cloudflare/Vercel/Github 提供的 DV 证书都仅能在它们的云服务上使用，不提供私钥功能！
+- Organization Validated (OV) 证书
+  - 是企业 SSL 证书的首选，通过企业认证确保企业 SSL 证书的真实性。
+  - 除域名所有权外，CA 机构还会审核组织及企业的真实性，包括注册状况、联系方式、恶意软件等内容。
+  - 如果要做合规化，可能至少也得用 OV 这个级别的证书。
+- Extended Validation（EV）证书
+  - 最严格的认证方式，CA 机构会深度审核组织及企业各方面的信息。
+  - 被认为适合用于大型企业、金融机构等组织或企业。
+  - 而且仅支持签发单域名、多域名证书，不支持签发泛域名证书，安全性杠杠的。
 
 ACME 支持 HTTP01 跟 DNS01 两种域名验证方式，其中 DNS01 是最简便的方法。下面以 AWS Route53 为例介绍如何申请一个 Let's Encrypt 证书。
 
@@ -413,3 +435,13 @@ spec:
 对于 nginx 而言，可以简单地搞个 sidecar 监控下，有配置变更就 reload 下 nginx，实现证书自动更新。
 
 或者可以考虑直接写个 k8s informer 监控 secret 的变更，有变更就直接 reload 所有 nginx 实例，总之实现的方式有很多种。
+
+## 注意事项
+
+### OCSP 证书验证协议会大幅拖慢 HTTPS 协议的响应速度
+
+如果客户端直接通过 OCSP 协议去请求 CA 机构的 OCSP 服务器验证证书状态，这会大幅拖慢 HTTPS 协议的响应速度，而且 CA 机构的 OCSP 站点本身的性能也会有很大的影响。
+
+解决方法：HTTPS 服务器一定要启用 OCSP stapling 功能，它使服务器提前访问 OCSP 获取证书状态信息并缓存到本地，
+在客户端使用 TLS 协议访问时，直接在握手阶段将缓存的 OCSP 信息发送给客户端，这样就完成了证书状态的校验。
+因为 OCSP 信息会带有 CA 证书的签名及有效期，服务端不可能伪造它，这样也能确保安全性。

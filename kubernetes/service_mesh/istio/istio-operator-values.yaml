@@ -28,7 +28,9 @@ spec:
     # `defaultConfig`: sidecar 和 gateway 的默认配置(envoy)，Pod 上的 `proxy.istio.io/config` 注解可以覆盖此默认值
     # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig
     defaultConfig:
-      holdApplicationUntilProxyStarts: false  # 等待 Proxy 启动后，再启动 Application 容器
+      # 等待 Proxy 启动后，再启动 Application 容器
+      ## 如果这个设为 true，istio proxy 会被注入为 pod 的第一个容器，并且带上 postStart 等待 istio proxy 就绪后再启动后续容器
+      holdApplicationUntilProxyStarts: true
       gatewayTopology:
         numTrustedProxies: 1
         forwardClientCertDetails: 1
@@ -43,10 +45,10 @@ spec:
       k8s:
         resources: 
           requests:
-            cpu: 1000m
+            cpu: 1650m   # 2c 的 82.5%，使 pilot 能独占一个 2 核的节点
             memory: 1024Mi
           limits:
-              cpu: 1000m
+              cpu: 1650m
               memory: 1024Mi
         podDisruptionBudget:
           minAvailable: 60%
@@ -69,6 +71,8 @@ spec:
                     - istiod
                 topologyKey: kubernetes.io/hostname
               weight: 1
+  # valus 的内容见如下 helm values
+  # https://github.com/jacob-delgado/istio/blob/master/manifests/charts/istio-control/istio-discovery/values.yaml
   values:
     global: # 全局配置
       configValidation: true
@@ -81,12 +85,20 @@ spec:
         logLevel: info # sidecar(envoy) 的日志级别
         tracer: zipkin
         privileged: false
-        readinessFailureThreshold: 30
+        # 仅拦截指定网段的 Outbound 流量（如果不启用 Egress，建议设置为仅拦截 K8s 集群内的流量、或者私网流量）
+        ## 功能等同于 Pod annotation: `traffic.sidecar.istio.io/includeOutboundIPRanges`
+        ## 官方文档：https://istio.io/latest/docs/tasks/traffic-management/egress/egress-control/
+        includeIPRanges: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        # 如下参数可用于设置排除对某些端口的 Inbound 流量拦截
+        ## 比如可用于排除掉 prometheus metrics 端口
+        ## 功能等同于 Pod annotation: `traffic.sidecar.istio.io/excludeInboundPorts`
+        excludeInboundPorts: ""
+        readinessFailureThreshold: 30  # 官方给的默认值即为 30
         readinessInitialDelaySeconds: 1
         readinessPeriodSeconds: 2
         resources:
           limits:
-            cpu: 2000m
+            cpu: 1650m     # 适当下调 sidecar 的资源上限
             memory: 1024Mi
           requests:
             cpu: 100m
@@ -109,7 +121,7 @@ spec:
       autoscaleMax: 5
       autoscaleMin: 3
       cpu:
-        targetAverageUtilization: 80
+        targetAverageUtilization: 70
     telemetry:
       enabled: true
       # Istio telemetry V2，去掉了 mixer 组件，指标的处理直接在 proxy 上进行
@@ -133,6 +145,10 @@ spec:
               metrics:
                 - name: requests_total
                   dimensions:
+                    # 直接添加这两个指标，会导致指标量剧增！
+                    ## 建议参照如下官方文档对 url_path/http_status 等标签进行分类
+                    ## （可以考虑将对应的 envoyfilter 抽象一层简化配置，通过 operator 或者其他工具自动翻译为最终的 EnvoyFilter）
+                    ## https://istio.io/latest/docs/tasks/observability/metrics/classify-metrics/
                     request_method: request.method
                     request_url_path: request.url_path
             outboundSidecar:  # 客户端 sidecar 的指标
@@ -149,5 +165,6 @@ spec:
                   dimensions:  # 网关层的 requests_total 添加 request_host 标签
                     request_host: request.host
                     request_method: request.method
+                    # 如前所述，直接添加这两个指标，会导致指标量剧增！
                     request_url_path: request.url_path
 

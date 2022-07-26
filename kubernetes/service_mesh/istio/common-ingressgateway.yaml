@@ -10,12 +10,18 @@ spec:
   selector:
     istio: common-ingressgateway
   ports:
-  - port: 80
-    name: http
-  - port: 443
-    name: https
-  - name: status-port
-    port: 15021
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 8443
+  - name: http3    # HTTP/3 use UDP protocol
+    protocol: UDP
+    port: 443
+    targetPort: 8443
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -111,7 +117,11 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 60
+        # 网关的目标 CPU 目标值得看使用场景
+        # 对于流量波动比较大的，资源就得预留得更多些
+        # 比如假设流量在 3mins 内（节点扩容 + 网关 Pod 就绪的大概用时）存在 20% 的流量波动
+        # 那么如果要确保 CPU 利用率在 80% 内，平均 CPU 的设置就不能超过 60%
+        averageUtilization: 55
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
