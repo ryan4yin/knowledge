@@ -113,6 +113,7 @@
   - [Locust](https://github.com/locustio/locust): 使用 python 编写测试脚本，非常适合编写复杂的链路压测。
   - [grafana/k6](https://github.com/grafana/k6): grafana 开源的性能测试工具，很受欢迎，生态也很好。仅支持使用 js 编写测试脚本。而且官方有提供工具把 har/jmeter/postman 文件翻译成 k6 脚本。
   - [wrk](https://github.com/wg/wrk): 压力测试的不二之选，能够使用单机生成非常大的压力，而且还支持使用 lua 编写压测脚本。
+  - [fortio](https://github.com/fortio/fortio): Istio 的御用负载测试工具
 - 其他工具：
   - [JMeter](https://github.com/apache/jmeter): 貌似是 java 界最流行的性能测试工具
   - [ab](https://httpd.apache.org/docs/2.4/programs/ab.html): apache server 附带的性能测试工具，历史悠久。但是它是单线程的，没有 wrk 那么强悍，也就不适合用于压力测试。
