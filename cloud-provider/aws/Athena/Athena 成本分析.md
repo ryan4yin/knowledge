@@ -34,19 +34,6 @@ SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   sum(line_item_blended_cost) as blended_cost,
   line_item_operation,
-  CASE
-    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
-    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'ComputeOD'
-    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'ComputeSpot'
-    WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
-    WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
-    WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
-    WHEN line_item_usage_type like '%Requests%' THEN 'Requests'
-    WHEN line_item_usage_type like '%Bytes-OriginShield' THEN 'Bytes-OriginShield'
-    WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
-    WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
-    ELSE line_item_usage_type
-  END as usage_type,  
   line_item_usage_amount,
   line_item_line_item_description,
   product_from_location,
@@ -59,7 +46,7 @@ where regexp_extract(line_item_usage_start_date, '^..........') = '2022-04-05'
   and line_item_resource_id = 'bucket_name'
   and line_item_usage_type like '%DataTransfer-Out-Bytes'  --  只查询 S3 传出的流量成本
 group by
-  1,3,4,5,6,7,8,9,10
+  1,3,4,5,6,7,8,9
 order by 1, 3, 2
 ```
 
@@ -70,13 +57,21 @@ SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   line_item_operation,
   CASE
-    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
-    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'Compute'
-    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'Compute'
+    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'ComputeOD'
+    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'ComputeSpot'
     WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
+
+    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
+    WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
+    WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
     WHEN line_item_usage_type like '%NatGateway-Hours' THEN 'NatGateway-Hours'
+
+    WHEN line_item_usage_type like '%Requests%' THEN 'Requests'
+    WHEN line_item_usage_type like '%Bytes-OriginShield' THEN 'Bytes-OriginShield'
+    WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
+    WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
     ELSE line_item_usage_type
-  END as usage_type,
+  END as usage_type,  
   sum(line_item_blended_cost) as blended_cost,
 FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-12-27'
@@ -93,14 +88,21 @@ CloudFront 成本分析：
 SELECT
   regexp_extract(line_item_usage_start_date, '^..........') as usage_start_date,
   CASE
+    WHEN line_item_usage_type like '%BoxUsage:%' THEN 'ComputeOD'
+    WHEN line_item_usage_type like '%SpotUsage:%' THEN 'ComputeSpot'
+    WHEN line_item_usage_type like '%EBS:%' THEN 'EBS'
+
+    WHEN line_item_usage_type like '%DataTransfer-Regional-Bytes' THEN 'DTAZ'  -- Region 内（跨区）流量成本
     WHEN line_item_usage_type like '%DataTransfer-Out-OBytes' THEN 'DT-Origin'
     WHEN line_item_usage_type like '%DataTransfer-Out-Bytes' THEN 'DTO'
+    WHEN line_item_usage_type like '%NatGateway-Hours' THEN 'NatGateway-Hours'
+
     WHEN line_item_usage_type like '%Requests%' THEN 'Requests'
     WHEN line_item_usage_type like '%Bytes-OriginShield' THEN 'Bytes-OriginShield'
     WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
     WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
     ELSE line_item_usage_type
-  END as usage_type,
+  END as usage_type,  
   line_item_usage_amount,
   line_item_description,
   sum(line_item_blended_cost) as blended_cost
