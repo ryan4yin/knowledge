@@ -39,10 +39,10 @@ http {
 
     # a log format demo
     log_format main '[$time_local] remote_addr=$remote_addr '
-                    '"$request" $status $body_bytes_sent '
-                    '"$ssl_protocol" "$ssl_cipher" '
+                    '"$request" $status $body_bytes_sent "host=$host"'
                     'gzip_ratio="$gzip_ratio" '
-                    'referer="$http_referer" "user_agent="$http_user_agent" '
+                    '"scheme=$scheme" "$ssl_protocol" "$ssl_cipher" '
+                    '"http_x_forwarded_for=$http_x_forwarded_for" referer="$http_referer" "user_agent="$http_user_agent" '
                     'req_time="$request_time" up_conn_time="$upstream_connect_time" up_header_time="$upstream_header_time" up_resp_time="$upstream_response_time"';
     access_log /dev/stdout main;
 
