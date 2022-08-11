@@ -136,7 +136,7 @@ http {
 
     # SSL
     ssl_session_timeout    1d;
-    ssl_session_cache      shared:SSL:10m;
+    ssl_session_cache      shared:SSL:10m; # about 40000 sessions
     ssl_session_tickets    off;
 
     # Diffie-Hellman parameter for DHE ciphersuites
@@ -147,13 +147,17 @@ http {
     ssl_stapling           on;
     ssl_stapling_verify    on;
 
-    # Mozilla Intermediate configuration
-    ssl_protocols          TLSv1.2 TLSv1.3;
-    ssl_ciphers            ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
-
     # resolver in kubernetes
     resolver kube-dns.kube-system.svc.cluster.local valid=10s;
     resolver_timeout       2s;
+
+    # verify chain of trust of OCSP response using Root CA and Intermediate certs
+    # you can generate this file by yourshelf, or by certbot
+    ssl_trusted_certificate root_intermediate_ca_bundle.pem;
+
+    # Mozilla Intermediate configuration
+    ssl_protocols          TLSv1.2 TLSv1.3;
+    ssl_ciphers            ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
 
     # allow any source ip
     allow 0.0.0.0/0;
@@ -173,28 +177,20 @@ http {
 
 
     server {
-        # process the requests do not match any server_name
+        # process the requests do not match any sni!
         # set several additional parameters specific to socket-related system calls: 
         #    reuseport & backlog
         # reuseport can only be set once per port!
-        listen 8443 reuseport backlog=4096;
+        listen 8443 default ssl http2 reuseport backlog=4096;
+        server_name _;
 
-        # no where, only intended to hold the socket-related parameters for port 8443.
-        server_name nowhere.local;
-        
-        access_log     off;
-        ssl_stapling   off;
+        # must use valid certs, and it's ca should contains in cabundle.crt!
+        # otherwise the ssl_stapling will not work!
+        ssl_certificate     /tls-certs/example.com/tls.crt;
+        ssl_certificate_key /tls-certs/example.com/tls.key;
 
-        # generate certs:
-        # generate self signed certs:
-        #   openssl req -x509 -new -nodes \
-        #       -sha256 -newkey rsa:2048 -days 36500 \
-        #       -subj "/CN=nowhere.local" \
-        #       -keyout tls.key -out tls.crt
-        ssl_certificate     default_ssl_cert/tls.crt;
-        ssl_certificate_key default_ssl_cert/tls.key;
-
-        return 404;
+        # deny all traffic do not match any sni!
+        deny all;
     }
 
     include sites-enabled/*;
