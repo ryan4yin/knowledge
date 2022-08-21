@@ -9,6 +9,9 @@
 
 ```shell
 ffmpeg -i input.png  -vf scale=iw:ih -codec libwebp -lossless 0 -quality 75 out.webp
+
+# 转换格式的同时进行图片放缩
+ffmpeg -i input.png -c:v libwebp -vf scale=2000:-1 out.webp
 ```
 
 注：
