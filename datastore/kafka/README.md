@@ -19,4 +19,25 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topicNam
 ```
 
 
+## 更复杂的命令
+
+使用 python 读取特定 partition 的消息:
+
+```python
+# 安装依赖: pip3 install kafka-python
+# manually assign the partition list for the consumer
+from kafka import (
+    KafkaConsumer,
+    TopicPartition,
+)
+consumer = KafkaConsumer(bootstrap_servers=[
+			'localhost:9092',
+])
+consumer.assign([TopicPartition('foobar', 0)])
+
+# 读取 10 条消息
+[next(consumer).value for it in range(10)]
+```
+
+
 
