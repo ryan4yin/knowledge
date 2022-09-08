@@ -37,5 +37,7 @@
   - [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings) 添加参数 `warmupDurationSecs`
     - fix [支持 Pod 扩容时，新 Pod 的 slow start](https://github.com/istio/istio/issues/21228)
     - 但也存在一些 bug: [slow start in istio](https://github.com/istio/istio/issues?q=slow+start)
-- upcomming istio 1.1x
+- istio 1.15
+  - 支持越来越流行的 arm64 架构
   - [取消总权重为 `100` 的限制，可以设为任意整数](https://github.com/istio/istio/issues/36069)
+- upcomming istio 1.1x
