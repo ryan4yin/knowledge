@@ -11,7 +11,7 @@
   - 支持通过 `X-Forwarded-For` (XFF) and `X-Forwarded-Client-Cert` (XFCC) 请求头转发客户端 IP/证书：[Configuring Gateway Network Topology](https://istio.io/latest/docs/ops/configuration/traffic-management/network-topologies/)
 - istio 1.9
   - 虚拟机支持进入 beta
-  - Request Classification 进入 beta（监控指标相关的优化，还没搞懂具体的用处）
+  - Request Classification 进入 beta（监控指标相关的优化，可用于按 path/header 等信息进行指标分类，分类的目的是为了在指标精细度与指标数据量之间取得一个平衡）
   - 添加镜像仓库 `gcr.io/istio-release` 以避免 Dockerhub 的镜像拉取速率限制
 - istio 1.10
   - 服务发现方面的性能优化
