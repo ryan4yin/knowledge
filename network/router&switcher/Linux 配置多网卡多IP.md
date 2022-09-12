@@ -117,6 +117,3 @@ $ ip route add 192.168.0.0/16 via 192.168.1.1 dev enp2s0
 systemctl restart network
 ```
 
-## 其他信息
-
-- [linux-router](https://github.com/garywill/linux-router): 一行命令将 linux 服务器变成一台路由器
