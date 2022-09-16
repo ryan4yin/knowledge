@@ -10,13 +10,15 @@
 
 ### 1. 制作普通图表
 
-- [在线绘图 - processon](https://www.processon.com/)
+- [figma](https://www.figma.com/): 线上平面设计工具，全球最流行的 UI 设计工具，个人可免费使用，上手也不难。
+  - 其他同类国产竞品（同样个人免费）：[mastergo](https://mastergo.com/), [即时设计](https://js.design/workspace)
+- [processon](https://www.processon.com/)
 - <https://draw.io>: 最流行的网页绘图工具之一，有对应的 vscode 插件。
 - [excalidraw](https://github.com/excalidraw/excalidraw): 手绘风格的作图工具，画出来的图很好看。
+  - 开源，支持 self-host
 
-此外，如果你是一个学过点UI设计的程序员，不妨考虑直接用 [Figma](https://www.figma.com/) 画图，优点就是自定义程度相当高，缺点就是门槛高咯。
 
-### 2. 通过编程自动生成图标
+### 2. 通过编程自动生成图表
 
 - [Markdown 嵌入绘图语言 - mermaid](https://github.com/mermaid-js/mermaid)：适合自己写文档时，直接通过在 IDE 里绘图。（适合手写）
 - [graphviz 的 dot 绘图语言](https://www.graphviz.org/doc/info/lang.html): 这项语言适合通过程序自动生成，比如扫描后端 API Routers 生成 DOT 语言描述，这样就能可视化 API 结构树；又或者扫描生成后端依赖树的 DOT 语言描述。
