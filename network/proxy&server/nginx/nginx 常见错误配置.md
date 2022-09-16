@@ -136,6 +136,7 @@ location / {
 location = /mirror {
     internal;
 
+    # mirror upstream 单独设置 timeout 超时，避免影响到源请求
     proxy_connect_timeout 350ms;
     proxy_read_timeout 350ms;
     proxy_send_timeout 350ms;
