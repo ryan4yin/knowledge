@@ -116,3 +116,36 @@ location /xxx {
     proxy_pass http://xxx.example.com:8080/aaa/;
 }
 ```
+
+###  使用 Nginx 的 Mirror 流量镜像时未单独设置连接 timeout 参数
+
+>http://nginx.org/en/docs/http/ngx_http_mirror_module.html
+
+Nginx 的源请求，会一直等待到默认 Upstream 与 Mirror Upstream 全部处理完成后，才会把响应发送给客户端！
+
+所以如果 Mirror 镜像的 Upstream 出了问题，比如完全宕机了，就会导致所有请求全部会在等待超过 TCP 连接超时时间后，才被返回给客户端！
+
+为了避免 mirror upstream 问题影响源请求，建议按如下方式给 mirror upstream 单独设置超时参数：
+
+```conf
+location / {
+    mirror /mirror;
+    proxy_pass http://backend;
+}
+
+location = /mirror {
+    internal;
+
+    proxy_connect_timeout 350ms;
+    proxy_read_timeout 350ms;
+    proxy_send_timeout 350ms;
+
+    proxy_http_version 1.1;
+    proxy_set_header Host $upstream_host;
+
+    # proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+    # proxy_set_header   X-Forwarded-Host     $xxx;
+
+    proxy_pass http://test_backend$request_uri;
+}
+```
