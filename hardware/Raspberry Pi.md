@@ -1,7 +1,4 @@
-# HomeLab
-
-
-## 一、树莓派4b
+# 树莓派
 
 树莓派本身安装 Raspberry Pi OS，即  raspbian 系统，然后通过社区提供的脚本安装 [NAS](NAS/README.md) 系统。
 
