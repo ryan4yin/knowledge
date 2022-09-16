@@ -129,7 +129,9 @@ sudo kill -QUIT $OLD_MASTER
 ### 504 超时请求上升，健康检查失败的排查思路
 
 - 确认是否存在 CPU 性能问题
-- 如果 CPU 利用率正常，再检查 nginx 的 `worker_rlimit_nofile` `worker_connections` 以及 Linux 内核的 `ulimit -n` `sysctl: fs.file-max` 等参数
+- 如果 CPU 利用率正常，再检查 upstream 的 `keepalive` 配置，如果配的连接数不够也会导致请求超时。
+- 再检查 nginx 的 `worker_rlimit_nofile` `worker_connections` 以及 Linux 内核的 `ulimit -n` `sysctl: fs.file-max` 等参数
 - 检查实例当前的连接数状况：`while true; do  netstat -an | awk '{print $6}' | sort | uniq -c | sort -nr; sleep 5; echo =====; done`
   - 若当前连接数状况已经接近 Linux 内核或者 nginx 的 rlimit/connections 设置，则可确定是这些参数的问题
+  - 检查 error_log 里有没有 `worker_connections are not enough, reusing connections` 类似的日志。
 
