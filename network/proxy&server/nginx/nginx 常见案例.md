@@ -1,5 +1,5 @@
 
-## Nginx 的 DNS 缓存问题
+## 一、Nginx 的 DNS 缓存问题
 
 >参考官方文档：https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
 
@@ -80,7 +80,7 @@ server {
 
 Nginx Plus 支持在 `upstream` 中进行动态 DNS 解析.
 
-## 热重启 Nginx Master
+## 二、热重启 Nginx Master
 
 如果 lua 代码存在隐患，长期运行的 Nginx Master 可能会遇到内存溢出，为此需要定期重启（比如两三个星期一次）：
 
@@ -101,9 +101,9 @@ sudo kill -QUIT $OLD_MASTER
 ```
 
 
-## Nginx 反向代理的排查思路
+## 三、Nginx 反向代理的排查思路
 
-### 延迟上升的排查思路
+### P99 延迟上升的排查思路
 
 排查状态码：
 
@@ -117,9 +117,19 @@ sudo kill -QUIT $OLD_MASTER
 - 首先确认 CPU/MEM/Network IO/Disk IO 是否达到瓶颈
 - 其次，检查 TCP 连接数量监控，是否有异常
 
-TODO 待续，暂时还没很好的思路
+再次，排查客户端的问题：
 
-### 长尾请求延迟升高的排查思路
+- 客户端网络状况如何？是否存在部分请求上传 body 过大、网络较差，导致延迟高或者 499/408 状态码
+- 客户端代码逻辑是否存在问题？比如说出现 TCP 连接泄漏，这些泄漏连接超时触发 Nginx 返回 408
 
-TODO 待续
+相关案例：
+
+- [APISIX - bug: P99 latency is too high](https://github.com/apache/apisix/issues/7919)
+
+### 504 超时请求上升，健康检查失败的排查思路
+
+- 确认是否存在 CPU 性能问题
+- 如果 CPU 利用率正常，再检查 nginx 的 `worker_rlimit_nofile` `worker_connections` 以及 Linux 内核的 `ulimit -n` `sysctl: fs.file-max` 等参数
+- 检查实例当前的连接数状况：`while true; do  netstat -an | awk '{print $6}' | sort | uniq -c | sort -nr; sleep 5; echo =====; done`
+  - 若当前连接数状况已经接近 Linux 内核或者 nginx 的 rlimit/connections 设置，则可确定是这些参数的问题
 
