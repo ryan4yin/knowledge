@@ -1,5 +1,5 @@
 
-## 一、Nginx 的 DNS 缓存问题
+## 一、Nginx 的 DNS 缓存以及配置 Reload 代价过高的问题
 
 >参考官方文档：https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
 
