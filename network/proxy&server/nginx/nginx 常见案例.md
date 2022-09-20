@@ -134,7 +134,7 @@ sudo kill -QUIT $OLD_MASTER
 - 检查实例当前的连接数状况：`while true; do  netstat -an | awk '{print $6}' | sort | uniq -c | sort -nr; sleep 5; echo =====; done`
   - 若当前连接数状况已经接近 Linux 内核或者 nginx 的 rlimit/connections 设置，则可确定是这些参数的问题
   - 检查 error_log 里有没有 `worker_connections are not enough, reusing connections` 类似的日志。
-- 检查服务器的网络带宽是否跑满了。
+- 检查服务器的网络带宽是否跑满了
 
 如果上述参数都正常，那很可能是其他 TCP/IP 协议栈的问题导致的丢包，最终造成 504 超时，丢包通常会有些连带的现象：
 
@@ -142,36 +142,4 @@ sudo kill -QUIT $OLD_MASTER
 - Pod 健康检查超时无响应
 - 对许多其他服务的请求都失败，但是其他服务各种指标一切正常
 
-丢包问题的排查方法如下：
-
-- [Linux服务器丢包故障的解决思路及引申的TCP/IP协议栈理论 ](https://www.cnblogs.com/276815076/p/5736272.html)
-- [[踩坑总结] nf_conntrack: table full, dropping packet](http://keithmo.me/post/2018/08/25/conntrack-tuning/)
-
-
-比如我遇到的连接跟踪表溢出问题，使用如下命令能观察到大量的相关报错：
-
-```shell
-$ dmesg |grep nf_conntrack
-......
-[15070.104447] nf_conntrack: nf_conntrack: table full, dropping packet
-[15070.108804] nf_conntrack: nf_conntrack: table full, dropping packet
-[15070.113322] nf_conntrack: nf_conntrack: table full, dropping packet
-[15070.117529] nf_conntrack: nf_conntrack: table full, dropping packet
-[15070.130883] nf_conntrack: nf_conntrack: table full, dropping packet
-[15070.137240] nf_conntrack: nf_conntrack: table full, dropping packet
-[15086.428937] nf_conntrack: nf_conntrack: table full, dropping packet
-[15086.430656] nf_conntrack: nf_conntrack: table full, dropping packet
-[15086.433743] nf_conntrack: nf_conntrack: table full, dropping packet
-
-# 查看最大值
-$  cat /proc/sys/net/netfilter/nf_conntrack_max
-131072
-# 查看当前值，发现跟最大值完全一致，连接跟踪表已经爆了
-$ cat /proc/sys/net/netfilter/nf_conntrack_count
-131072
-```
-
-上面的文中有给出推荐的值，我根据其计算方式发现我机器（Amazon Linux 2 for EKS AMI）的 `net.netfilter.nf_conntrack_max` 跟 `net.netfilter.nf_conntrack_buckets` 都已经是最近值了，只有 `nf_conntrack_tcp_timeout_established` 仍然是默认值 `432000` 也就是 5 天，将其下调至 `3600`（即 1h）后发现是有些效果的，但是按比例计算仍然远远不够用。
-
-
-
+这类问题最常出现在边缘网关这类需要承接大量客户端请求的位置。其排查解决方法参见 [Linux 504 超时丢包问题解决思路](/linux/Linux%20504%20%E8%B6%85%E6%97%B6%E4%B8%A2%E5%8C%85%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF.md)
