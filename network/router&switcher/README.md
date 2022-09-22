@@ -23,3 +23,9 @@
 - 使用 openwrt 等路由器专用系统的好处是，有大量现成的插件生态可用，也提供久经考验的 Web 面板，对会友好很多
 - 使用 Ubuntu/Debian 等其他发行版的主要原因可能是，用户对这些系统要更熟悉，而且熟知 iptables/netfilter 的各项功能与命令
 
+
+## 相关知识点
+
+- MASQUERADE：即 IP 伪装技术，所有 NAT 网关都需要启用此功能与 nf_conntrack 连接跟踪，用于实现 NAT 的 IP 地址翻译
+- 混杂模式（promiscuous mode）：是指一台机器的网卡能够接收所有经过它的数据流，而不论其目的地址是否是它。
+
