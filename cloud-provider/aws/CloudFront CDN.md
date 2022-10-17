@@ -48,16 +48,27 @@ TBD
 
 >https://aws.amazon.com/cloudfront/pricing/
 
+>https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/billing-and-usage-interpreting.html
+
 CloudFront 成本分成这几个部分：
 
-- 回源成本：
-  - CloudFront 边缘节点回源到 AWS 服务（如 S3/EC2/ELB/API Gateway）均免费。
-  - CloudFront 回源到其他源站，会收回源流量费。
-- 出网成本 DTO
-  - 流量流出到公网的成本 `DataTransfer-Out-Bytes`，默认按梯度收费的，而且分 Region 进行统计。
+- 回源成本，分成两个部分
+  - **CloudFront => Origin 服务器** - `region-DataTransfer-Out-OBytes`
+    - 针对转发给 Origin 的 DELETE/PATCH/POST/PUT 等 HTTP 请求或 WebSocket 数据，将会收取一份流量费
+    - 价格名目为 `Regional Data Transfer Out to Origin (per GB)`，价格页中有列出此收费项的单价
+  - **Origin 服务器 => CloudFront** - `region-DataTransfer-Out-Bytes`
+    - 若 Origin 服务器为 AWS 服务（如 S3/EC2/ELB/API Gateway），则这部分流量免费
+    - 若源站非 AWS 服务，这部分流量也要收公网流量费
+- 公网流量费 DTO - `region-DataTransfer-Out-Bytes`
+  - 流量流出到公网的成本，默认按梯度收费，而且分 Region 进行统计
 - 请求处理费
-  - 对于大的静态文件而言，请求的处理费占比通常很小，DTO 是主要成本。
-  - 对于使用 CloudFront 作为 API 前端的情况，情况可能会不同。
+  - 对于大的静态文件而言，请求的处理费占比通常很小，DTO 是主要成本
+  - 但是对于使用 CloudFront 作为 API 前代理的情况，情况会不同，请求成本很可能高于流量成本
+  - 请求处理费的单价都是一样的，但是分成多个维度分别计费
+    - `region-Requests-Tier1` 为 HTTP GET/HEAD 的请求数计费项
+    - `region-Requests-Tier2-HTTPS` 为 HTTPS GET/HEAD 的请求数计费项
+    - `region-Requests-HTTP-Proxy` 跟 `region-Requests-HTTPS-Proxy` 为非 DELETE/PATCH/POST/PUT 等动态请求数的计费项
+    - 其他参见前面给出的官方文档
 - Origin Sheild
   - 固定按量计费
 
@@ -87,6 +98,7 @@ CDN 通常只用在静态站点、音视频、图片等领域，但是实际上�
 如果你的 CloudFront 用量非常大，AWS 给的折扣非常高，CDN 出网流量价格比 ELB/EC2 的出网流量价格低很多的话，在线服务也使用 CloudFront + ELB/EC2 提供出网服务，在成本上甚至可能有优惠：
 
 - DTO 出网流量价格低很多
-- 回源到 AWS 自身的服务是免费的（S3）
+- GET/HEAD 请求回源到 AWS 自身的服务是免费的（S3）
 - CloudFront 会多一个按请求量的收费项
+  - 注意这个的 GET/HEAD 方法，跟 POST/PUT 等动态方法使用了不同的计费维度，使用跟谈价格时要注意区分
 
