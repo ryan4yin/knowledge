@@ -1,6 +1,10 @@
 # 我的 Homelab
 
-## 规划中的新家庭服务器架构
+## 服务器架构
+
+<img src="_img/my-homelab.webp" style="width:50%">
+<img src="_img/my-homlab-internal.webp" style="width:50%">
+
 
 - Raspberry Pi 4B
   - 定位: 主力设备，超低功耗，7 x 24h 不间断运行
@@ -21,6 +25,8 @@
 
 ## 软件架构
 
+![](_img/dashy-hompage.webp)
+
 - Raspberry Pi 4B
   - OS: Raspberry Pi OS
   - APPs
@@ -32,9 +38,9 @@
 - Minisfroum UM560
   - OS: Proxmox VE
   - VMs
-    - Envoy Proxy Server: 0.5c/0.5G
+    - Envoy Proxy Server: 1c/0.5G
       - 边缘网关，设为 DMZ 主机面向公网提供访问
-    - OpenMediaVault: 2c/8G
+    - OpenMediaVault: 2c/4G
       - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 SMB/SFTP/ISCSI 等局域网 NAS 服务
       - 也通过 docker-compose 运行一些需要访问硬盘盒数据的其他服务，比如
         - Caddy 文件浏览器
@@ -42,11 +48,13 @@
         - [Nextcloud](https://github.com/nextcloud) 私有云盘
         - [calibre-web](https://github.com/janeczku/calibre-web) 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
         - [Syncthing](https://github.com/syncthing/syncthing): 在 NAS、Android、MacOS/Windows/Linux 之间自动同步数据，比如说 logseq 笔记。
-    - OpenWRT: 作为软路由系统，实现网络加速、DDNS 等功能
-    - k3s single master
+    - OpenWRT: 2c/1G
+      - 作为软路由系统，实现网络加速、DDNS 等功能
+    - k3s single master 1c/2G
       - 家庭网络，单 master 就够用了，省点性能开销
-    - k3s worker node
-    - docker-compose server: 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
+    - k3s worker node 2c/4G
+    - docker-compose server 2c/4G
+      - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
       - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件，它底层使用 dnsmasq 作为 DHCP 服务器 + DNS 服务器
       - CoreDNS: 私有 DNS，这样要做些局域网 DNS 配置，就不需要改每台机器的 /etc/hosts 了。
         - 需要将 CoreDNS 设置为 Pihole 的 upstream server.
@@ -84,15 +92,18 @@ k3s 集群里可以跑这些负载：
 - Raspberry Pi 4B
   - 稳定功耗 3W，电源最大功率 5V x 3A
 - Minisfroum UM560
-  - 待测量
+  - 空闲状态下约 6W
+  - 工作状态下功耗 15W 多一点
 - Beelink GTR5 AMD Ryzen 9 5900H
-  - 待测量
-- 双盘位硬盘盒：满载两块 4T x 2
-  - 单盘稳定功耗 6W，双盘待测量
+  - 空闲状态下约 6W
+  - 传输数据跑满 1GbE 时是 38W（受限于路由器只能跑到 1GbE） 
+- 双盘位硬盘盒
+  - 插满两块 4T 硬盘，功耗稳定在 12W
 - 小米 AX1800
-  - 稳定功耗 6W
+  - 约 6W
 - 中兴 ZTE AX5400OPro+
-  - 待测量
+  - 约 10W
+  - 测试 AX210 网卡连接此 WIFI，能跑到 180MiB/s
 
 
 ## 参考
