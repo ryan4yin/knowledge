@@ -14,7 +14,7 @@
   - DISK1: 512G SSD
   - DISK2: 4T * 2 HDD
 - Beelink GTR5 AMD Ryzen 9 5900H
-  - 定位: 次主力设备，中等功耗，7 x 24H 不间断运行
+  - 定位: 次主力设备，中等功耗，7 x 24H 不间断运行，或者在不需要时关机省电
   - CPU: AMD R9 5900HX, 45W, 8C16T
   - MEM: 16G * 2
   - DISK: 512G SSD
@@ -24,7 +24,7 @@
 - Raspberry Pi 4B
   - OS: Raspberry Pi OS
   - APPs
-    - k3s master: 
+    - k3s worker node
       - 需要添加污点，容忍该污点即可将任务调度到此节点。
       - 这也是当前 k3s 集群中唯一的 arm 节点，主要用于做一些 ARM 相关的测试
       - node_exporter 作为 daemonset
@@ -41,31 +41,31 @@
         - [jellyfin](https://github.com/jellyfin/jellyfin) 影音系统
         - [Nextcloud](https://github.com/nextcloud) 私有云盘
         - [calibre-web](https://github.com/janeczku/calibre-web) 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
+        - [Syncthing](https://github.com/syncthing/syncthing): 在 NAS、Android、MacOS/Windows/Linux 之间自动同步数据，比如说 logseq 笔记。
     - OpenWRT: 作为软路由系统，实现网络加速、DDNS 等功能
-    - k3s master
-    - k3s worker
-      - etcd
-      - prometheus + vectoriametrics + grafana
-      - MinIO: 兼容 S3 的对象存储系统
+    - k3s single master
+      - 家庭网络，单 master 就够用了，省点性能开销
+    - k3s worker node
     - docker-compose server: 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
-      - [Syncthing](https://github.com/syncthing/syncthing): 在 NAS、Android、MacOS/Windows/Linux 之间自动同步数据，比如说 logseq 笔记。
+      - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件，它底层使用 dnsmasq 作为 DHCP 服务器 + DNS 服务器
+      - CoreDNS: 私有 DNS，这样要做些局域网 DNS 配置，就不需要改每台机器的 /etc/hosts 了。
+        - 需要将 CoreDNS 设置为 Pihole 的 upstream server.
 - Beelink GTR5 AMD Ryzen 9 5900H
   - OS: Proxmox VE
   - VMs
-    - k3s master
-    - k3s worker
+    - k3s worker node
     - Debian Test Server
-    - [Gentoo](https://wiki.gentoo.org/wiki/Main_Page) Test Server
-    - [LFS](https://www.linuxfromscratch.org/) Test Server
-    - docker-compose server: 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
-      - Home Assistant: 干一些自动化的活，比如我到家后自动播放歌曲？？？
-      - [Tailscale VPN](https://github.com/tailscale/tailscale): 基于 wireguard 的家庭 VPN
-      - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
-      - CoreDNS: 私有 DNS，这样要做些局域网 DNS 配置，就不需要改每台机器的 /etc/hosts 了
-      - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件
-      - [dashy](https://github.com/lissy93/dashy) HomePage 页
-        - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
     - [CasaOS](https://github.com/IceWhaleTech/CasaOS): 随便玩玩
+
+k3s 集群里可以跑这些负载：
+
+- 数据库：etcd/mysql/postgresql/Presto/minio
+- 可观测性：prometheus + vectoriametrics + grafana
+- Home Assistant: 干一些自动化的活，比如我到家后自动播放歌曲？？？
+- [Tailscale VPN](https://github.com/tailscale/tailscale): 基于 wireguard 的家庭 VPN
+- [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
+- [dashy](https://github.com/lissy93/dashy) HomePage 页
+  - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
 
 局域网有了总共 14C28T 的 amd64 算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T + Nvidia RTX 3070 的算力），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
@@ -77,7 +77,7 @@
 
 - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
 - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-- [巨大的Docker整合】影视下载全自动化的部署](https://blog.ddsrem.com/archives/film)：很丰富的内容，值得一试
+- [【巨大的Docker整合】影视下载全自动化的部署](https://blog.ddsrem.com/archives/film)：很丰富的内容，值得一试
 
 ## 功耗测量
 
