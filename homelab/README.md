@@ -14,13 +14,13 @@
 - Minisfroum UM560
   - 定位: 主力设备，低功耗，7 x 24H 不间断运行
   - CPU: AMD R5 5625U, 15W, 6C12T
-  - MEM: 8G * 2
+  - MEM: 16G * 2
   - DISK1: 512G SSD
   - DISK2: 4T * 2 HDD
 - Beelink GTR5 AMD Ryzen 9 5900H
   - 定位: 次主力设备，中等功耗，7 x 24H 不间断运行，或者在不需要时关机省电
   - CPU: AMD R9 5900HX, 45W, 8C16T
-  - MEM: 16G * 2
+  - MEM: 32G * 2
   - DISK: 512G SSD
 
 ## 软件架构
