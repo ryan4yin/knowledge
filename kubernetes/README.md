@@ -53,6 +53,11 @@ Github:
 - [宋净超](https://github.com/rootsongjc): Istio/Kubernetes 国内最前沿的领军人物。
 
 
+## 腾讯大佬写的 Kubernetes/Istio 踩坑指南
+
+- [imroc/kubernetes-guide](https://github.com/imroc/kubernetes-guide): 
+- [imroc/istio-guide](https://github.com/imroc/istio-guide)
+
 ## 值得关注的云原生项目
 
 - [openkruise](https://github.com/openkruise/kruise): 阿里开源的一套增强 Kubernetes 功能的系统，对 k8s 的 Deployment/StatefulSet/Job/DaemonSet 均提供了对应的增强版，而且增强的特性很吸引人。
