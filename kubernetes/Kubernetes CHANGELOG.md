@@ -6,6 +6,10 @@
 
 >通常所有 beta/stable 特性都是默认启用的，而 alpha 则需要手动设定控制面参数来打开。
 
+此外对于相应的云厂商发行版，可能还存在一些不一样的点，比如权限验证、树内插件的移除等等，请参考对应云厂商的相关文档，如：
+
+- [AWS EKS Versions](https://docs.aws.amazon.com/zh_cn/eks/latest/userguide/kubernetes-versions.html)
+
 ## [1.16](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.16.md#whats-new-major-themes)
 
 - server side apply 进入 beta 并默认开启
