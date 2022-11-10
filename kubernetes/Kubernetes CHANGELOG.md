@@ -96,6 +96,7 @@
 
 - IPv4/IPv6 Dual-stack Networking GA
 - HorizontalPodAutoscaler v2 GA
+  - autoscaling/v2beta2 被标记为弃用
 - Generic Ephemeral Volume GA
 - 旨在替代 PSP 的 [Pod Security Admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/) 进入 Beta
 - K8s 现在默认使用 Container Runtime Interface (CRI) v1 API
@@ -110,4 +111,9 @@
 - 彻底移除 Dockershim，不再支持使用 Docker 作为容器运行时。
   - 请改用目前已经广泛使用的 containerd，或者面向未来的 cri
 
+## [1.25](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#whats-new-major-themes)
+
+- PodSecurityPolicy 被移出，替代品 Pod Security Admission GA
+- Ephemeral Containers GA
+- cgroups v2 的支持 GA
 
