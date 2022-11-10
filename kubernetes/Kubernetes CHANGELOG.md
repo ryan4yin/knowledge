@@ -110,10 +110,12 @@
 
 - 彻底移除 Dockershim，不再支持使用 Docker 作为容器运行时。
   - 请改用目前已经广泛使用的 containerd，或者面向未来的 cri
+- 无不兼容的 API 变更
 
 ## [1.25](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#whats-new-major-themes)
 
-- PodSecurityPolicy 被移出，替代品 Pod Security Admission GA
+- PodSecurityPolicy 被移除，替代品 Pod Security Admission GA
+- policy/v1beta1 被移除，PodDisruptionBudget 需要改用 policy/v1
 - Ephemeral Containers GA
 - cgroups v2 的支持 GA
 
