@@ -68,7 +68,7 @@
 
 k3s 集群里可以跑这些负载：
 
-- 数据库：etcd/mysql/postgresql/Presto/minio
+- 数据库：etcd/mysql/postgresql/presto/minio
 - 可观测性：prometheus + vectoriametrics + grafana
 - [Tailscale VPN](https://github.com/tailscale/tailscale): 基于 wireguard 的家庭 VPN
 - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
@@ -80,8 +80,12 @@ k3s 集群里可以跑这些负载：
 - 大数据
   - Spark on K8s on K8s
   - apach pulsar on K8s
+  - flink on eks
   - redis cluster
   - programming toolbox Web 版
+- 区块链
+  - 自建区块链集群
+
 
 其他从 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 中找到的，比较感兴趣的项目：
 
