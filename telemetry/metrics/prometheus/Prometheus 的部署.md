@@ -41,7 +41,7 @@ thanos 本身结构会复杂些，会有些额外的维护成本，但是除了 
 
 从实践的角度看，建议 P8s 只当作指标采集器使用，并且按 targets 类型拆分成多个以降低压力、也降低个别 P8s 挂掉的影响面，再通过 Kubernetes 实现 P8s 的高可用（快速重新调度），这是迁移难度最小的方案。
 
-当然 VicotiaMetrics 本身也有提供 agnet 用于指标采集，它也是可用的，对于没有历史配置且很信任 VicotiaMetrics 的公司而言，使用这种方法会更简单。
+当然 VicotiaMetrics 本身也有提供 agnet 用于指标采集，而且它完全兼容 Prometheus 的配置，也使用 Remote Write 协议将配置写入到 VicotiaMetrics。
 
 ## 指标抓取
 
