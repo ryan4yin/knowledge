@@ -40,30 +40,26 @@
   - VMs
     - Envoy Proxy Server: 1c/1G 32G
       - 边缘网关，设为 DMZ 主机面向公网提供访问
-    - OpenMediaVault: 2c/8G 64G
+    - OpenMediaVault: 2c/8G 32G
       - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 SMB/SFTP/ISCSI 等局域网 NAS 服务
       - 也通过 docker-compose 运行一些需要访问硬盘盒数据的其他服务，比如
-        - Caddy 文件浏览器
+        - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
         - [jellyfin](https://github.com/jellyfin/jellyfin) 影音系统
-        - [Nextcloud](https://github.com/nextcloud) 私有云盘
         - [calibre-web](https://github.com/janeczku/calibre-web) 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
         - [Syncthing](https://github.com/syncthing/syncthing): 在 NAS、Android、MacOS/Windows/Linux 之间自动同步数据，比如说 logseq 笔记。
-    - OpenWRT: 2c/1G 16G - host CPU
+    - OpenWRT: 2c/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
-    - k3s single master 1c/2G 32G
+    - k3s single master 2c/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
     - k3s worker node 4c/8G 32G
     - docker-compose server 4c/8G 32G
       - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
       - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件，它底层使用 dnsmasq 作为 DHCP 服务器 + DNS 服务器
-      - CoreDNS: 私有 DNS，这样要做些局域网 DNS 配置，就不需要改每台机器的 /etc/hosts 了。
-        - 需要将 CoreDNS 设置为 Pihole 的 upstream server.
+    - Home Assistant: 干一些自动化的活，比如我到家后自动播放歌曲？？？
 - Beelink GTR5 AMD Ryzen 9 5900H
   - OS: Proxmox VE
   - VMs
     - k3s worker node
-    - Debian Test Server
-    - Home Assistant: 干一些自动化的活，比如我到家后自动播放歌曲？？？
 
 
 k3s 集群里可以跑这些负载：
@@ -78,7 +74,7 @@ k3s 集群里可以跑这些负载：
 局域网有了总共 14C28T 的 amd64 算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T + Nvidia RTX 3070 的算力），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
-  - Spark on K8s on K8s
+  - Spark on K8s
   - apach pulsar on K8s
   - flink on eks
   - redis cluster

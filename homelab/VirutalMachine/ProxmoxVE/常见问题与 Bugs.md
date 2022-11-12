@@ -1,5 +1,51 @@
-Bugs
+常见问题与 Bugs
 ---
+
+## 操作常见问题
+
+1. 对于还没有安装 `qemu-guest-agent` 的任何主机，或者已经无响应的主机，千万不要点 `shutdown` 按钮，因为一定会失败！
+2. 对于任何卡住的 `shutdown` 操作，一定要先手动在下方的面板中双击它然后点「stop」停止该操作，否则它会锁住该虚拟机，导致后续的所有操作都会卡住并失败！
+
+## can’t lock file ‘/var/lock/qemu-server/lock-xxx.conf’ – got timeout
+
+PVE 虚拟机卡在 BIOS 系统引导这一步，无法启动，也无法关机/强制关机/重置！
+
+解决方法：手动删除掉 lockfile: `/var/lock/qemu-server/lock-xxx.conf`
+
+因为虚拟机还卡在 BIOS 引导这一步，删除掉 lockfile 再关闭虚拟机并不会导致数据丢失。
+
+## 集群有一个节点宕机，如何解除关联？
+
+将多个节点组成一个 PVE Cluster 是很自然的一个选择，它能提供虚拟机热迁移（同 CPU 供应商）、统一管理面板等非常方便的功能。
+但是这会带来集群级别的高可用问题。
+
+根据官方文档 [Cluster_Manager - Proxmox](https://pve.proxmox.com/wiki/Cluster_Manager)，如果你需要容忍一定数量的节点宕机，PVE Cluster 至少需要三台主机（这跟 Etcd 一样，是 Raft 共识算法的要求），并且所有节点的 PVE 版本要完全一致。
+
+那么如果节点除了问题，无法修复，该如何将它踢出集群呢？
+
+
+如果节点仍然处于可用状态，宕机节点数低于 1/2，流程如下：
+
+- 首先通过访问节点的 shell 界面，通过命令 `pvecm nodes` 确认集群的所有节点
+- 将需要移除的节点彻底关机，并且确保它不会以当前配置再次启动（也就是说关机后需要清空硬盘，避免数据混乱）
+- 通过命令 `pvecm delnode xxx` 将问题节点移除集群
+- 将旧节点清理干净，重新装机。
+
+如果你的集群只有 2 个节点，或者有超过 3 个节点但是有超过 1/2 不可用且无法恢复，那出于数据一致性要求，上面的流程就走不通了。会报错 `cluster not ready - no quorum?` 这时需要首先修改配置，使剩下的节点重新达成一致。其实就是修改选主节点时的投票数。
+
+对于 2 个节点但挂掉 1 个的情况，首先执行如下指令允许当前节点自己选主：
+
+```shell
+# 设置只需要 1 票就能当前主节点
+# 潜在问题是可能有些集群元数据只在损坏节点上有，这么改会导致这些数据丢失，从而造成一些问题。
+# 安全起见，建议在修复集群后，再重启一遍节点...
+pvecm expected 1
+```
+
+现在 quorum 就已经恢复了，可以走前面给出的节点移除流程。
+
+如果 corosync 完全无法启动，上面给出的命令也会修改选主投票参数也会失败，这时可以直接手动修改 `/etc/corosync/corosync.conf` 使 corosync 能正常启动。
+
 
 ## ubuntu cloud image 的坑
 
@@ -21,16 +67,6 @@ debian 的 cloud 镜像根本没法用，建议避免使用它。
   - 原因是添加了 spice 图形卡，换成 vnc 就正常了
 - [Debian Cloud Images](https://cdimage.debian.org/cdimage/cloud/) 中的 nocloud 镜像不会在启动时运行 cloudinit，cloudinit 完全不生效
   - 不知道是啥坑，没解决
-
-
-## can’t lock file ‘/var/lock/qemu-server/lock-xxx.conf’ – got timeout
-
-PVE 虚拟机卡在 BIOS 系统引导这一步，无法启动，也无法关机/强制关机/重置！
-
-解决方法：手动删除掉 lockfile: `/var/lock/qemu-server/lock-xxx.conf`
-
-因为虚拟机还卡在 BIOS 引导这一步，删除掉 lockfile 再关闭虚拟机并不会导致数据丢失。
-
 
 ## 克隆创建的虚拟机，卡在 `Booting from Hard Disk...` 状态
 
