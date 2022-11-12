@@ -6,35 +6,27 @@
 <img src="_img/my-homlab-internal.webp" style="width:50%">
 
 
-- Raspberry Pi 4B
-  - 定位: 主力设备，超低功耗，7 x 24h 不间断运行
-  - CPU: Broadcom BCM2711(1.5 GHz，64-bit，4 Cores，ARM Cortex-A72)
-  - MEM: 2G
-  - DISK: 128G TF Card
 - Minisfroum UM560
   - 定位: 主力设备，低功耗，7 x 24H 不间断运行
   - CPU: AMD R5 5625U, 15W, 6C12T
-  - MEM: 32G * 2
+  - MEM: 16G * 2
   - DISK1: 512G SSD
   - DISK2: 4T * 2 HDD
+- Raspberry Pi 4B
+  - 定位: 次主力设备，超低功耗，7 x 24h 不间断运行
+  - CPU: Broadcom BCM2711(1.5 GHz，64-bit，4 Cores，ARM Cortex-A72)
+  - MEM: 2G
+  - DISK: 128G TF Card
 - Beelink GTR5 AMD Ryzen 9 5900H
-  - 定位: 次主力设备，中等功耗，7 x 24H 不间断运行，或者在不需要时关机省电
+  - 定位: 次设备，中等功耗，在不需要时关机省电
   - CPU: AMD R9 5900HX, 45W, 8C16T
-  - MEM: 16G * 2
+  - MEM: 32G * 2
   - DISK: 1T SSD
 
 ## 软件架构
 
-![](_img/dashy-hompage.webp "Homlab 面板（旧版）")
+![](_img/dashy-homepage.webp "Homelab 面板 2022-11-14")
 
-- Raspberry Pi 4B
-  - OS: Raspberry Pi OS
-  - APPs
-    - k3s worker node
-      - 需要添加污点，容忍该污点即可将任务调度到此节点。
-      - 这也是当前 k3s 集群中唯一的 arm 节点，主要用于做一些 ARM 相关的测试
-      - node_exporter 作为 daemonset
-      - etcd
 - Minisfroum UM560
   - OS: Proxmox VE
   - VMs
@@ -51,16 +43,28 @@
       - 作为软路由系统，实现网络加速、DDNS 等功能
     - k3s single master 2c/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
-    - k3s worker node 4c/8G 32G
-    - docker-compose server 4c/8G 32G
+    - k3s worker node 4c/8G 32G * 2
+      - 跑各种实验、监控吧
+    - docker-compose server 1c/2G 32G
       - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
       - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件，它底层使用 dnsmasq 作为 DHCP 服务器 + DNS 服务器
-    - Home Assistant: 干一些自动化的活，比如我到家后自动播放歌曲？？？
+    - Home Assistant 2c/2G
+      - 干一些自动化的活，比如我到家后自动播放歌曲？？？
 - Beelink GTR5 AMD Ryzen 9 5900H
   - OS: Proxmox VE
   - VMs
+    - k3s worker node * 3
+      - 4c/16G 200G 
+    - ubuntu test server * 1
+      - 2c/8G 32G
+- Raspberry Pi 4B
+  - OS: Raspberry Pi OS
+  - APPs
     - k3s worker node
-
+      - 需要添加污点，容忍该污点即可将任务调度到此节点。
+      - 这也是当前 k3s 集群中唯一的 arm 节点，主要用于做一些 ARM 相关的测试
+      - node_exporter 作为 daemonset
+      - etcd
 
 k3s 集群里可以跑这些负载：
 
