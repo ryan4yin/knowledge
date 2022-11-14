@@ -109,6 +109,30 @@ nginx_http_request_duration_seconds_count{host="xxx.xxx"}
 histogram_quantile(0.95, sum by (le) (rate(nginx_http_request_duration_seconds_bucket{host="xxx.xxx"}[1m])))
 ```
 
+
+接口 5mins 内 QPS 突然下降超过 50%（可以检测到一些底层网络问题，如流量突降）：
+
+```promql
+100 * delta(istio_qps:grpc:sum[5m]) * -1 / (istio_qps:grpc:sum offset 5m > 10) > 50
+
+# 上面表达式中使用的 istio_qps:grpc:sum 是一个 recording rule，表达式如下
+sum by (namespace, destination_app, source_app)
+    (irate(istio_requests_total{
+        namespace="xxx",
+        reporter="destination", request_protocol="grpc"
+        source_app!="unknown", destination_app!="unknown",
+    }[1m]))
+```
+
+5 分钟未抓取到指标（说明机器可能出问题了）：
+
+```promql
+(absent(avg_over_time(job:host:nginx_qps:sum{}[5m]))) > 0
+
+# 上面表达式中的 job:host:nginx_qps:sum 是一个 recording rule，其表达式如下
+sum by (job,host)(irate(nginx_http_requests_total{status=~"2xx|3xx|4xx|499|5xx"}[3m]))
+```
+
 #### 2.2 APISIX
 
 请求速率，按 host/uri/k8s_namespace/apisix_service 分类:
