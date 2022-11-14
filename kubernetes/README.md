@@ -29,7 +29,8 @@ helm uninstall -n xxx vvv
 ## 视频
 
 - [KubeCon + CloudNativeCon 2022](https://www.youtube.com/playlist?list=PLj6h78yzYM2MCEgkd8zH0vJWF7jdQ-GRR): 全球大厂共享出来的 200+ 个视频，全都是干货。光看目录就能知道 2020 年 kubernetes 社区的热点与新兴技术。
-
+- [Kubernetes: The Documentary [PART 1]](https://cult.honeypot.io/originals/kubernetes-the-documentary-part-1): 一个讲述 Kubernetes 历史的纪录片
+- [Prometheus Project](https://prometheusprojectdoc.com/): 一个讲述 Prometheus 前世今生的纪录片
 
 ## Kubernetes 相关项目
 
