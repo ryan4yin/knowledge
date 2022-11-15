@@ -9,6 +9,10 @@ services:
     expose:
       - 2379
       - 2380
+    # 仅对外暴露此节点的端口，对于单机运行这就够用了，照样能读能写
+    ports:
+      - 2379:2379
+      - 2380:2380
     networks:
       cluster_net:
         ipv4_address: 172.16.238.100
