@@ -41,4 +41,11 @@
   - 支持越来越流行的 arm64 架构
     - 要知道 AWS 的 arm64 实例比 amd64 性价比高 40%！升级后 Istio 网关层将能立即取得到这项收益
   - [取消总权重为 `100` 的限制，可以设为任意整数](https://github.com/istio/istio/issues/36069)
+- istio 1.16
+  - Kubernetes Gateway API 进入 Beta
+  - 添加对 MAGLEV 负载均衡算法的支持
+  - 支持 OpenTelemetry Provider 用于 Tracing
+    - 同时 Telemetry API 改用新的 native 插件替换旧的 wasm 插件，降低了其 CPU/MEM 消耗
+  - 其他小变更
+    - Host 的匹配，默认忽略端口号，可通过环境变量 `SIDECAR_IGNORE_PORT_IN_HOST_MATCH` 控制这一行为
 - upcomming istio 1.1x
