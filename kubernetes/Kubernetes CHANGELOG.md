@@ -97,7 +97,8 @@
 
 ## [1.23](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.23.md#whats-new-major-themes)
 
-
+- [beta] `TopologyAwareHints` 功能升级到 Beta
+  - 此功能能使流量尽量在同一可用区内路由，能帮助减少跨区流量。
 - IPv4/IPv6 Dual-stack Networking GA
 - HorizontalPodAutoscaler v2 GA
   - autoscaling/v2beta2 被标记为弃用
@@ -114,7 +115,12 @@
 
 - 彻底移除 Dockershim，不再支持使用 Docker 作为容器运行时。
   - 请改用目前已经广泛使用的 containerd，或者面向未来的 cri
-- 无不兼容的 API 变更
+  - 迁移到 containerd 的主要难题
+    - 使用了 docker in docker：请改用 buildah/buildkit 实现镜像构建
+    - 挂载了宿主机 `docker.socket` 等：请改用相关组件提供的其他方案，比如 argo-workflows 官方文档
+    - GPU 等特殊硬件的支持
+    - docker 日志插件：containerd 开始日志全部由 kubelet 接管，如果做了自定义的日志插件，建议改用 fluentbit 等流行社区组件
+- `client.authentication.k8s.io/v1alpha1` 被移除，它影响 kubeconfig 的配置方式，如果使用了此版本的 kubeconfig，需要升级到 `v1`
 
 ## [1.25](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#whats-new-major-themes)
 
