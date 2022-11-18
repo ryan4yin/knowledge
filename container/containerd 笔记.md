@@ -99,6 +99,21 @@ crictl 支持连接任何兼容 cri 的运行时，它默认情况下按顺序�
 endpoint 也可以通过命令行参数/环境变量/配置文件手动设置，详见 [docs/crictl](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)
 
 
+### 导入导出镜像压缩包
+
+有时候在本地为了避免重复拉镜像，我们会希望将镜像导出并传递到其他节点上，方法如下：
+
+```shell
+# 查看本地所有镜像
+ctr image ls
+
+# 将镜像导出为 tar 包
+ctr image export calico-node-v3.11.2.tar docker.io/calico/node:v3.11.2
+
+# 导入镜像供 k8s 使用（必须加上 -n=k8s.io）
+ctr -n=k8s.io images import calico-node-v3.11.2.tar
+```
+
 ### [nerdctl](https://github.com/containerd/nerdctl)
 
 nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`） 及其中的大部分参数。
