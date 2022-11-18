@@ -113,6 +113,7 @@ histogram_quantile(0.95, sum by (le) (rate(nginx_http_request_duration_seconds_b
 接口 5mins 内 QPS 突然下降超过 50%（可以检测到一些底层网络问题，如流量突降）：
 
 ```promql
+# 参考文档：<https://stackoverflow.com/questions/72947434/how-to-alert-anomalies-on-network-traffic-jump-with-prometheus>
 100 * delta(istio_qps:grpc:sum[5m]) * -1 / (istio_qps:grpc:sum offset 5m > 10) > 50
 
 # 上面表达式中使用的 istio_qps:grpc:sum 是一个 recording rule，表达式如下
