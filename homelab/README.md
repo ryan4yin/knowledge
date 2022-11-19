@@ -7,9 +7,10 @@
 
 | 机器名称 | CPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| Minisfroum UM560 | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力设备，低功耗，常驻 |
-| Beelink GTR5 AMD Ryzen 9 5900HX | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能实验专用节点，常驻 |
-| Raspberry Pi 4B | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | 超低功耗 ARM64 节点，常驻 |
+| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力设备，低功耗，常驻 |
+| MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 高性能、低功耗节点，常驻 |
+| Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能实验节点，平常维持低功耗运行 |
+| Raspberry Pi 4B 2GB  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | 超低功耗 ARM64 节点，常驻 |
 
 
 ## 网络拓扑
@@ -17,18 +18,30 @@
 ```mermaid
 graph TD
   WAN[WAN 公网] <-- 1GbE -->edge_router
-  edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1[Proxmox VE 集群 - 主力节点]
-	edge_router <-- 2.5GbE --> PVE-Node2[Proxmox VE 集群 - 高性能节点]
-	edge_router <-- 1GbE --> pi[Raspberry PI 4B - K3s ARM 节点]
+	edge_router <-- 2.5GbE --> PVE-Node2
+  edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1
 
-	subgraph PVE-node1[Minisfroum UM560]
+	edge_router <-- 1GbE --> raspberrypi[Raspberry PI 4B - K3s ARM 节点]
+  edge_router <-- WiFi6 1800M --> R9000P[联想 R9000P 游戏机]
+  edge_router <-- WiFi6 --> android_pad1[小米平板 5 Pro]
+  edge_router <-- WiFi5 --> android1[手机 Realme X2 Pro]
+
+	subgraph PVE-node1[Minisfroum UM560 - R5 5625U]
+    PVE-Node1[Proxmox VE 集群 - 主力节点1]
     PVE-Node1 <-- USB3 --> USB-NIC1[USB3 2.5G 网卡 1]
 	end
-	USB-NIC1 <-- 2.5G --> USB-NIC2[USB3 2.5G 网卡 2] -- USB3 --> R9000P[联想拯救者 R9000P RTX3070]
+  
+  PVE-Node1 <-- USB3 --> USB-Storage1[USB 硬盘盒 4T * 2]
+	USB-NIC1 <-- 2.5G --> PVE-Node3
 	
-	subgraph PVE-node2[Beelink GTR5 R9 5900HX]
-    PVE-Node2
+	subgraph PVE-node2[MoreFine S500+ - R7 5825U]
+    PVE-Node2[Proxmox VE 集群 - 主力节点2]
 	end
+
+	subgraph PVE-node3[Beelink GTR5 R9 5900HX]
+    PVE-Node3[Proxmox VE 集群 - 高性能节点]
+	end
+
 ```
 
 ## 软件架构
@@ -48,20 +61,20 @@ graph TD
         - [calibre-web](https://github.com/janeczku/calibre-web) 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
     - OpenWRT: 2c/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
+      - 安装 openclash、广告拦截插件、tailscale-vpn 等
     - k3s single master 2c/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
     - k3s worker node 4c/8G 32G * 2
       - 跑各种实验、监控吧
     - docker-compose server 1c/2G 32G
       - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
-      - [Pihole](https://github.com/pi-hole/pi-hole) 广告屏蔽组件，它底层使用 dnsmasq 作为 DHCP 服务器 + DNS 服务器
     - Home Assistant 2c/2G
       - 干一些自动化的活，比如我到家后自动播放歌曲？？？
 - Beelink GTR5 AMD Ryzen 9 5900H
   - OS: Proxmox VE
   - VMs
     - k3s worker node * 3
-      - 4c/16G 200G 
+      - 4c/16G 100G 
     - ubuntu test server * 1
       - 2c/8G 32G
 - Raspberry Pi 4B
@@ -81,7 +94,7 @@ k3s 集群里可以跑这些负载：
 - [dashy](https://github.com/lissy93/dashy) HomePage 页
   - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
 
-局域网有了总共 14C28T 的 amd64 算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T + Nvidia RTX 3070 的算力），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
+局域网有了总共 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
   - Spark on K8s
@@ -104,12 +117,57 @@ k3s 集群里可以跑这些负载：
 
 | 设备名称 | 空载功耗 | 平时功耗 | 满载功耗 | 电源最大功率 |
 | :---: | :---: | :---: | :---: | :---: |
-| 中兴 ZTE AX5400OPro+ | 10W | 10W | 10W | 
-| Minisfroum UM560 | 6W | 15W | 15W | - |
-| Raspberry Pi 4B | 3W | - | - | 5V x 3A | 
-| Beelink GTR5 AMD Ryzen 9 5900H | 6W | 30W~40W | 50W | 
-| 双盘位硬盘盒 + 4T * 2 | - | 12W | 12W | - |
-| 小米 AX1800（已闲置） | 6W | 6W | 6W | - |
+| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W | 10W | 10W | 
+| Minisfroum UM560 (AMD R5 5625U)    | 6W | 15W | 15W | - |
+| Raspberry Pi 4B 2GB                    | 3W | - | - | 5V x 3A | 
+| Beelink GTR5 (AMD R9 5900HX)       | 6W | 30W~40W | 50W | 
+| 双盘位硬盘盒 + 4T * 2                | - | 12W | 12W | - |
+| 小米 AX1800（已闲置）                | 6W | 6W | 6W | - |
+
+## 价格与购入时间
+
+主要设备：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 |  说明 |
+| :---: | :---: | :---: | :---: |  :---: | 
+| 小米 AX1800                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，目前已闲置 |
+| Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
+| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
+| Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | - |
+| Beelink GTR5 准系统 (AMD R9 5900HX)       | 2022-11-02 | 京东官方店 | ￥2545 | 就性能比较高，并且双 2.5G 网口吧，不过如果现在让我选，可能不会买它 |
+|  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，从 6C12T 升级到 8C16T，而功耗仍然是 15W，感觉很划算 |
+
+
+内存条与硬盘：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | 
+| 优越者双盘位硬盘盒 Y-3355                | 2020-07-10 | 拼多多    | ￥369 | 主要用途：ISCSI 远程游戏存储、数据备份、影视下载 |
+| 西数紫盘 4TB SATA 6Gb/s (WD40EZRZ)               | 2020-07-11 | 京东自营    | ￥539 | 插硬盘盒里，接在 UM560 上（2022 年价格: 306） |
+| 西数蓝盘 4TB SATA 6Gb/s (WD40EJRX)               | 2020-07-11 | 京东自营    | ￥579 | 插硬盘盒里，接在 UM560 上（2022 年价格: 302） |
+| 光威战将 DDR4 16GB 3200 笔记本内存    | 2021-06-08 | 京东自营    | ￥439 * 2 | 一开始是给 R9000P 用的，现在换到 UM560 上了（2022 年价格: 259 * 2） |
+| ZhiTai SSD - TiPlus5000 512GB (TLC, 长江存储)        | 2022-11-02 | 京东自营    | ￥309 | 笔记本 Windows 游戏机存储（游戏都 ISCSI 远程存储了，所以本机不需要大空间） |
+| Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 京东自营    | ￥249 | UM560 的存储 |
+| 京东京造 128G TF 卡（写入 120MB/s, 读取 160MB/s）  | 2022-11-06 | 京东自营    | ￥89 | Raspberry Pi 的存储 |
+| 光威战将 DDR4 32GB 3200 笔记本内存 * 2            | 2022-11-07 | 京东自营    | ￥579 * 2 | GTR5 的内存条 |
+| 西数 SSD - WD Blue SN570 1T (TLC) * 2          | 2022-11-17 与 2022-11-19 | 京东自营    | ￥559 * 2 | GTR5 的存储 |
+| 玖合 NB-DDR4-32G-3200 * 2           | 2022-11-19 | 京东自营    | ￥429 * 2 | S500+ 的内存条 |
+
+
+其他小配件：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | 
+| 标康电力监测插座 BK-033                  | 2020-07-29 | 京东自营    | ￥41 | 监测整个 Homelab 的功耗情况 |
+| 斯泰克 USB 网卡 2.5GbE * 2             | 2022-11-02 | 京东自营    | ￥77 * 2 | 用于拓展 mini 主机与笔记本电脑的 2.5G 网口 |
+| 绿巨能 HDMI 视频采集卡（1080P 输出, USB/Type-C 接口） | 2022-11-02 | 京东自营    | ￥79 | 配合 USB Camera APP 将安卓设备当成显示器用，主要用于机器装机 |
+| 公牛抗电涌浪涌插座 6 位 GN-H3060 | 2022-11-17 | 京东自营    | ￥89 | Homelab 都插这个插座上 |
+
+以及已经翻车的设备/配件：
+
+| 设备名称 | 购入时间 | 翻车时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | :---: | 
+| 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 |本来是给 Windows 游戏机用的，换到 GTR5 上没跑几天就掉盘了（`nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
 
 
 ## 数据备份与同步策略
