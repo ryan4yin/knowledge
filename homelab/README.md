@@ -17,7 +17,7 @@
 
 ```mermaid
 graph TD
-  WAN[WAN 公网] <-- 1GbE -->edge_router
+  WAN[WAN - 电信 1000M 宽带] <-- 1GbE / 端口受限型 NAT -->edge_router
 	edge_router <-- 2.5GbE --> PVE-Node2
   edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1
 
@@ -46,23 +46,22 @@ graph TD
 
 ## 软件架构
 
-![](_img/dashy-homepage.webp "Homelab 面板 2022-11-14")
+![](_img/dashy-homepage.webp "Homelab 面板 2022-11-24")
 
 - Minisfroum UM560
   - OS: Proxmox VE
   - VMs
-    - Envoy Proxy Server: 1c/1G 32G
-      - 边缘网关，设为 DMZ 主机面向公网提供访问
-      - 注：选择 envoy 单纯是为了熟悉 envoy 的使用，没这需求的建议用 traefik/caddy，更简单好用
+    - tailscale-gateway 1c/1G
+      - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
     - OpenMediaVault: 2c/8G 32G
       - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 SMB/SFTP/ISCSI 等局域网 NAS 服务
       - 也通过 docker-compose 运行一些需要访问硬盘盒数据的其他服务，比如
         - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
-        - [jellyfin](https://github.com/jellyfin/jellyfin) 影音系统
-        - [calibre-web](https://github.com/janeczku/calibre-web) 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
-    - OpenWRT: 2c/1G 2G - host CPU
+        - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+        - [calibre-web](https://github.com/janeczku/calibre-web): 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
+    - OpenWRT: 1c/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
-      - 安装 openclash、广告拦截插件、tailscale-vpn 等
+      - 安装 openclash、广告拦截插件
     - k3s single master 2c/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
     - k3s worker node 4c/8G 32G * 2
@@ -70,7 +69,10 @@ graph TD
       - 跑各种其他 k8s 实验负载
     - docker-compose server 1c/2G 32G
       - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
-      - programming toolbox 自托管版
+      - Envoy Gateway: 作为局域网所有小站点的网关（选择 envoy 单纯是为了熟悉 envoy 的使用）
+      - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
+      - [dashy](https://github.com/lissy93/dashy) HomePage 页
+        - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
       - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
       - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
     - Home Assistant 2c/2G
@@ -101,24 +103,42 @@ graph TD
 
 k3s 集群里可以跑这些负载：
 
-- 数据库：etcd/mysql/postgresql/presto/minio
-- 可观测性：prometheus + vectoriametrics + grafana
-- [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
-- [dashy](https://github.com/lissy93/dashy) HomePage 页
-  - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
+- 数据库：etcd/mysql/postgresql/minio/redis
+- 可观测性：
+  - 监控：vectoriametrics + grafana
+  - 日志：loki + promtail + grafana
+- 证书管理：cert-manager
+- 集群网咯：cilium
+- 服务网格：istio
+- 多集群管理：karmada
+- 配置部署与同步：argo-cd
+- CICD: argo-workflows/tekton
+- serverless: keda + dapr + knative + openfunction
+  - 这一套方案集成了很多 serverless 的前沿技术，玩一玩能学到很多东西
+- 本地镜像仓库: harbor
+- 镜像分发：[dragonfly](https://github.com/dragonflyoss/Dragonfly2)
+  - 为了省点代理流量，也提升大镜像的拉取速度，有必要给 K3s 安装一个 dragonfly 搞局域网的镜像分发
+- 集群安全策略: kyverno
+- 等等
 
 局域网有了总共 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
-  - spark on k8s
-  - apache pulsar on k8s
-  - flink on eks
-  - redis cluster
+  - [airbyte](https://github.com/airbytehq/airbyte) 数据管道
+  - [alluxio](https://github.com/Alluxio/alluxio) 统一的数据存储接口
+  - Presto SQL 查询引擎，可对接多种数据源
+  - [doris](https://github.com/apache/doris) 高性能实时数仓（OLAP 分析型关系数据库）
+  -  分布式消息发布与订阅系统
+    - apache pulsar on k8s: 对标 kafka，专为高吞吐量、低延迟、快速(或至少表现均匀)的消费者而设计，不适合 RPC
+    - NATS on k8s: 一个轻量级的云原生消息系统，高性能、低功耗、体积小，跟 redis 一样适合较小的消息。
+  - spark on k8s 离线数据分析
+  - flink on eks 实时数据分析
+  - superset 数据可视化平台
 - 区块链
   - 自建区块链集群
 
 
-还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 翻翻有没有自己感兴趣的项目。
+除了上面这些，还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 跟 [CNCF Landscape](https://landscape.cncf.io/) 翻翻有没有自己感兴趣的项目。
 
 ## 功耗测量
 
@@ -174,8 +194,12 @@ k3s 集群里可以跑这些负载：
 
 | 设备名称 | 购入时间 | 翻车时间 | 购入渠道 | 价格 | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: | 
-| 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 |本来是给 Windows 游戏机用的，换到 GTR5 上没跑几天就掉盘了（`nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
+| 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 | 之前给 Windows 游戏机用了一年多，然后换到 GTR5 上没跑几天就掉盘了（`nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
 
+总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
+跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
+配置差别还是有点大的，不过胜在静音 + 低功耗 + 不占空间 + 发热小，对于小租房而言也算是不错的选择。
+具体是要机架服务器还是 mini 主机，还是看个人需求吧。
 
 ## 数据备份与同步策略
 
@@ -186,9 +210,28 @@ k3s 集群里可以跑这些负载：
 
 ## 远程访问
 
-打算用下面这个：
+前面提过了，使用的方案是 [Tailscale VPN](https://github.com/tailscale/tailscale)，它是一个基于 wireguard 的家庭 VPN，安装非常简单，基本傻瓜式操作。
 
-- [Tailscale VPN](https://github.com/tailscale/tailscale): 基于 wireguard 的家庭 VPN
+在 Homelab 上跑了一个 [tailscale-gateway](https://tailscale.com/kb/1019/subnets/) 作为 homelab 的入口节点，这样无论在哪，我的 Android、Macbook 等
+设备都可以无缝接入 Homelab~
+
+注意 MacOS/Linux 等终端设备需要使用如下命令启动 tailscale，这样才能自动添加 Homelab 相关的路由，而 Android 设备实测会自动添加相关路由规则:
+
+```shell
+tailscale up --accept-routes
+```
+
+以及，使用如下命令可以检查确认节点是直连（`direct`）还是中继（`DERP relay`），如果显示为中继，说明 NAT 或防火墙规则比较严格，导致难以直连，这会导致延迟明显上升、带宽下降！
+
+```shell
+# 查看当前所有节点的状态
+tailscale status
+
+# 检测到某个 ip 地址 / hostname 是否直连
+tailscale ping <hostname-or-ip>
+```
+
+另外安全起见，虽然已经取得了公网 IP，暂时仍未启用任何面向公网的 Web 服务，仅将路由器 NAT 类型设为了「端口受限型」（未改为「全锥型」）。
 
 ## 监控告警
 

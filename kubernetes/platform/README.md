@@ -47,7 +47,8 @@ Serverless 的好处是它**分离了关注点**，底层的服务器配置与�
     - 通过 [serverless-knative](https://github.com/serverless/serverless-knative) 可支持 serverless-framework.
 3. 函数计算（FaaS, Function as a Service）：将运维能力封装到了极致。用户只要给源码，其他的杂事都由云平台处理。
     - [serverless-framework](https://github.com/serverless/serverless) 是目前最流行的 faas sdk，基本上所有 serverless 平台都有对应的插件。通过插件可支持 knative.
-4. [OpenFunction](https://github.com/OpenFunction/OpenFunction): 青云使用最前沿技术打造的 FaaS 平台，理念感觉很好，可以保持观察
+    - [OpenFunction](https://github.com/OpenFunction/OpenFunction): 青云使用最前沿技术打造的 FaaS 平台，理念感觉很好，可以保持观察
+      - 相关文章 [OpenFunction：新一代开源函数计算平台](https://www.infoq.cn/article/aqzsasowifaywvgmku9o)
 
 2020 年 CNCF 调查显示，Knative 市场占比 27%，而第二名 openfaas 只有 10%，第三名 kubeless 是 5%.
 
