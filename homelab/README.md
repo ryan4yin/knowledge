@@ -70,6 +70,9 @@ graph TD
       - 跑各种其他 k8s 实验负载
     - docker-compose server 1c/2G 32G
       - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
+      - programming toolbox 自托管版
+      - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
+      - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
     - Home Assistant 2c/2G
       - 干一些自动化的活，比如我到家后自动播放歌曲？？？
 - MoreFine S500+ 
@@ -107,21 +110,15 @@ k3s 集群里可以跑这些负载：
 局域网有了总共 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
-  - Spark on K8s
-  - apach pulsar on K8s
+  - spark on k8s
+  - apache pulsar on k8s
   - flink on eks
   - redis cluster
-  - programming toolbox Web 版
 - 区块链
   - 自建区块链集群
 
 
-其他从 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 中找到的，比较感兴趣的项目：
-
-- [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
-- [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-- [【巨大的Docker整合】影视下载全自动化的部署](https://blog.ddsrem.com/archives/film)：很丰富的内容，值得一试
-- [CasaOS](https://github.com/IceWhaleTech/CasaOS): 随便玩玩
+还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 翻翻有没有自己感兴趣的项目。
 
 ## 功耗测量
 
