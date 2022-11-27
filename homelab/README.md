@@ -46,6 +46,7 @@ graph TD
 
 ## 软件架构
 
+![](_img/ryan-pve-console.webp "PVE Web 控制台")
 ![](_img/dashy-homepage.webp "Homelab 面板 2022-11-24")
 
 - Minisfroum UM560
