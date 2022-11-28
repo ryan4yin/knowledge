@@ -47,49 +47,53 @@ graph TD
 ## 软件架构
 
 ![](_img/ryan-pve-console.webp "PVE Web 控制台")
-![](_img/dashy-homepage.webp "Homelab 面板 2022-11-24")
+![](_img/dashy-homepage.webp "Homelab 面板")
 
 - Minisfroum UM560
   - OS: Proxmox VE
   - VMs
-    - tailscale-gateway 1c/1G
+    - tailscale-gateway 1C/1G 32G
       - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
-    - OpenMediaVault: 2c/8G 32G
-      - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 SMB/SFTP/ISCSI 等局域网 NAS 服务
-      - 也通过 docker-compose 运行一些需要访问硬盘盒数据的其他服务，比如
-        - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
-        - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
-    - OpenWRT: 1c/1G 2G - host CPU
+    - OpenWRT: 1C/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
       - 安装 openclash、广告拦截插件
-    - k3s single master 2c/4G 32G
+    - k3s single master 2C/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
-    - k3s worker node 4c/8G 32G * 2
+    - k3s worker node 4C/8G 32G * 2
       - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
       - 跑各种其他 k8s 实验负载
-    - docker-compose server 1c/2G 32G
-      - 用于跑一些不需要访问硬盘盒，但是需要常驻的容器化应用
-      - Envoy Gateway: 作为局域网所有小站点的网关（选择 envoy 单纯是为了熟悉 envoy 的使用）
-      - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
-      - [dashy](https://github.com/lissy93/dashy) HomePage 页
-        - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
-      - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
-      - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-    - Home Assistant 2c/2G
+    - docker-compose server 4C/8G 32G
+      - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 WebDAV 协议与 HTTP File Server.
+      - 目前跑了这些服务
+        - [sftpgo](https://github.com/drakkan/sftpgo): 一个文件共享服务器，支持 sftp、webdav、ftp/s 等协议，支持本地存储，或者使用 AWS/GCP/Azure 的对象存储。
+        - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
+        - [dashy](https://github.com/lissy93/dashy) HomePage 页
+          - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
+        - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+        - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步。
+        - Envoy Gateway: 作为局域网所有小站点的网关（选择 envoy 单纯是为了熟悉 envoy 的使用）
+        - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
+        - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
+        - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
+    - Home Assistant 2C/2G 32G
       - 干一些自动化的活，比如我到家后自动播放歌曲？？？
+    - Edge Gateway 边缘网关 1C/1G 32G: 跟 envoy 网关不同的是，这台机器会直接面向公网提供服务，所以对安全会有更高的要求。
+      - DMZ 风险比较高，暂时还是打算通过端口映射的方式提供公网服务。
+      - 所有面向公网的服务都需要经过这个网关，这样网关层也能提供一层额外的数据审计功能。
+      - 还没想好用啥，可能 nginx/caddy/envoy 三选一吧。
 - MoreFine S500+ 
   - OS: Proxmox VE
   - VMs
     - k3s worker node * 3
-      - 4c/16G 100G
+      - 4C/16G 100G
       - 跑各种其他 k8s 实验负载
     - ubuntu test server * 1
-      - 2c/8G 32G
+      - 2C/8G 32G
 - Beelink GTR5
   - OS: Proxmox VE
   - VMs
     - k3s worker node * 3
-      - 4c/16G 100G
+      - 4C/16G 100G
       - 作为 k3s 高性能实验节点
     - 跑其他测试负载
 - Raspberry Pi 4B
@@ -98,8 +102,6 @@ graph TD
     - k3s worker node
       - 需要添加污点，容忍该污点即可将任务调度到此节点。
       - 这也是当前 k3s 集群中唯一的 arm 节点，主要用于做一些 ARM 相关的测试
-      - node_exporter 作为 daemonset
-      - etcd
 
 k3s 集群里可以跑这些负载：
 
@@ -126,87 +128,38 @@ k3s 集群里可以跑这些负载：
 - 大数据
   - [airbyte](https://github.com/airbytehq/airbyte) 数据管道
   - [alluxio](https://github.com/Alluxio/alluxio) 统一的数据存储接口
-  - Presto SQL 查询引擎，可对接多种数据源
+  - [Presto](https://github.com/prestodb/presto) SQL 查询引擎，可对接多种数据源
   - [doris](https://github.com/apache/doris) 高性能实时数仓（OLAP 分析型关系数据库）
   -  分布式消息发布与订阅系统
-    - apache pulsar on k8s: 对标 kafka，专为高吞吐量、低延迟、快速(或至少表现均匀)的消费者而设计，不适合 RPC
-    - NATS on k8s: 一个轻量级的云原生消息系统，高性能、低功耗、体积小，跟 redis 一样适合较小的消息。
-  - spark on k8s 离线数据分析
-  - flink on eks 实时数据分析
-  - superset 数据可视化平台
+     - [apache pulsar on k8s](https://github.com/apache/pulsar): 对标 kafka，专为高吞吐量、低延迟、快速(或至少表现均匀)的消费者而设计，不适合 RPC
+     - [NATS on k8s](https://github.com/nats-io/nats-server): 一个轻量级的云原生消息系统，高性能、低功耗、体积小，跟 redis 一样适合较小的消息。
+  - [spark on k8s](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) 离线数据分析
+    - 一篇写得很好的相关文章：[Setting up, Managing & Monitoring Spark on Kubernetes](https://spot.io/blog/setting-up-managing-monitoring-spark-on-kubernetes/)
+    - 结合 argocd + argo-workflows 可实现 gitops 的 spark 任务编排
+  - [flink on k8s](https://github.com/apache/flink-kubernetes-operator) 实时数据分析
+  - [superset](https://github.com/apache/superset) 数据可视化平台
 - 区块链
   - 自建区块链集群
 
 
 除了上面这些，还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 跟 [CNCF Landscape](https://landscape.cncf.io/) 翻翻有没有自己感兴趣的项目。
 
-## 功耗测量
 
-| 设备名称 | 空载功耗 | 平时功耗 | 满载功耗 | 电源最大功率 |
-| :---: | :---: | :---: | :---: | :---: |
-| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W | 10W | 10W | 
-| Minisfroum UM560 (AMD R5 5625U)    | 6W | 15W | 15W | - |
-| Raspberry Pi 4B 2GB                    | 3W | - | - | 5V x 3A | 
-| Beelink GTR5 (AMD R9 5900HX)       | 6W | 30W~40W | 50W | 
-| 双盘位硬盘盒 + 4T * 2                | - | 12W | 12W | - |
-| 小米 AX1800（已闲置）                | 6W | 6W | 6W | - |
+## 服务器虚拟化
 
-## 价格与购入时间
+使用的 PVE，相关使用心得参见我的文章 [Proxmox Virtual Environment 使用指南](https://thiscute.world/posts/proxmox-virtual-environment-instruction/)
 
-主要设备：
+## NAS 网络存储
 
-| 设备名称 | 购入时间 | 购入渠道 | 价格 |  说明 |
-| :---: | :---: | :---: | :---: |  :---: | 
-| 小米 AX1800                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，目前已闲置 |
-| Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
-| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
-| Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，不过只有 6C12T，内存最高只支持 16G * 2 |
-| Beelink GTR5 准系统 (AMD R9 5900HX)       | 2022-11-02 | 京东官方店 | ￥2545 | 双 2.5G 网口，性能高但是功耗也高些，颜值尚可 |
-|  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
-
-
-内存条与硬盘：
-
-| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
-| :---: | :---: | :---: | :---: | :---: | 
-| 优越者双盘位硬盘盒 Y-3355                | 2020-07-10 | 拼多多    | ￥369 | 主要用途：ISCSI 远程游戏存储、数据备份、影视下载 |
-| 西数紫盘 4TB SATA 6Gb/s (WD40EZRZ)               | 2020-07-11 | 京东自营    | ￥539 | 插硬盘盒里，接在 UM560 上 |
-| 西数蓝盘 4TB SATA 6Gb/s (WD40EJRX)               | 2020-07-11 | 京东自营    | ￥579 | 插硬盘盒里，接在 UM560 上 |
-| 光威战将 DDR4 16GB 3200 笔记本内存    | 2021-06-08 | 京东自营    | ￥439 * 2 | 一开始是给 R9000P 用的，现在换到 UM560 上了（2022 年价格: 259 * 2） |
-| ZhiTai SSD - TiPlus5000 512GB (TLC, 长江存储)        | 2022-11-02 | 京东自营    | ￥309 | 笔记本 Windows 游戏机存储（游戏都 ISCSI 远程存储了，所以本机不需要大空间） |
-| Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 京东自营    | ￥249 | UM560 的存储 |
-| 京东京造 128G TF 卡（写入 120MB/s, 读取 160MB/s）  | 2022-11-06 | 京东自营    | ￥89 | Raspberry Pi 的存储 |
-| 光威战将 DDR4 32GB 3200 笔记本内存 * 2            | 2022-11-07 | 京东自营    | ￥579 * 2 | GTR5 的内存条 |
-| 西数 SSD - WD Blue SN570 1T (TLC) * 2          | 2022-11-17 与 2022-11-19 | 京东自营    | ￥559 * 2 | GTR5 与 S500+ 的存储 |
-| 玖合 NB-DDR4-32G-3200 * 2           | 2022-11-19 | 京东自营    | ￥429 * 2 | S500+ 的内存条 |
-
-
-其他小配件：
-
-| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
-| :---: | :---: | :---: | :---: | :---: | 
-| 标康电力监测插座 BK-033                  | 2020-07-29 | 京东自营    | ￥41 | 监测整个 Homelab 的功耗情况 |
-| 斯泰克 USB 网卡 2.5GbE * 2             | 2022-11-02 | 京东自营    | ￥77 * 2 | 用于拓展 mini 主机与笔记本电脑的 2.5G 网口 |
-| 绿巨能 HDMI 视频采集卡（1080P 输出, USB/Type-C 接口） | 2022-11-02 | 京东自营    | ￥79 | 配合 USB Camera APP 将安卓设备当成显示器用，主要用于机器装机 |
-| 公牛抗电涌浪涌插座 6 位 GN-H3060 | 2022-11-17 | 京东自营    | ￥89 | Homelab 都插这个插座上 |
-
-以及已经翻车的设备/配件：
-
-| 设备名称 | 购入时间 | 翻车时间 | 购入渠道 | 价格 | 说明 |
-| :---: | :---: | :---: | :---: | :---: | :---: | 
-| 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 | 之前给 Windows 游戏机用了一年多，然后换到 GTR5 上没跑几天就掉盘了（`nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
-
-总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
-跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
-配置差别还是有点大的，不过胜在静音 + 低功耗 + 不占空间 + 发热小，对于小租房而言也算是不错的选择。
-具体是要机架服务器还是 mini 主机，还是看个人需求吧。
+详见 [Network Attached Storage](./Network%20Attached%20Storage.md)
 
 ## 数据备份与同步策略
 
-- 数据备份：因为没啥重要的东西，暂时未设置任何备份。
-  - 后面会考虑把 PVE 虚拟机备份同步到 HDD 上
-- 数据同步：考虑之后有时间整个 [Syncthing](https://github.com/syncthing/syncthing)
-  - 它可以在 NAS、Android、MacOS/Windows/Linux 之间自动同步数据，比如说 logseq 笔记。
+- PVE 虚拟机备份
+  - 通过定时任务调用 PVE 的接口备份所有重要虚拟机，并使用 rsync 将 `/var/lib/vz/dump` 中的备份文件同步到 HDD
+- PVE 虚拟机高可用
+  - 对于 k3s master 或者 openwrt 软路由这类要求高可用的虚拟机，可以考虑使用 [PVE 的 High_Availability](https://pve.proxmox.com/wiki/High_Availability) 实现故障自动恢复。
+- 手机/电脑数据同步：使用 [Syncthing](https://github.com/syncthing/syncthing) 将手机与电脑的数据同步到 homelab 的 HDD 中
 
 ## 远程访问
 
@@ -239,6 +192,71 @@ tailscale ping <hostname-or-ip>
 
 告警也打算使用 Victoria-Metrics 的 vmalert，但是因为还没搭建完成，所以还没接告警。
 或许会将告警发送到 Telegram/Discord/QQ，还没想好发给哪个。
+
+## 功耗测量
+
+| 设备名称 | 空载功耗 | 平时功耗 | 满载功耗 | 电源最大功率 |
+| :---: | :---: | :---: | :---: | :---: |
+| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W | 10W | 10W | 
+| Minisfroum UM560 (AMD R5 5625U)    | 6W | 15W | 15W | - |
+| Raspberry Pi 4B 2GB                    | 3W | - | - | 5V x 3A | 
+| Beelink GTR5 (AMD R9 5900HX)       | 6W | 30W~40W | 50W | 
+| 双盘位硬盘盒 + 4T * 2                | - | 12W | 12W | - |
+| 小米 AX1800（已闲置）                | 6W | 6W | 6W | - |
+
+## 价格与购入时间
+
+主要设备：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 |  说明 |
+| :---: | :---: | :---: | :---: |  :---: | 
+| 小米 AX1800                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，目前已闲置 |
+| Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
+| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
+| Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，不过只有 6C12T，内存最高只支持 16G * 2 |
+| Beelink GTR5 准系统 (AMD R9 5900HX)       | 2022-11-02 | 京东官方店 | ￥2545 | 双 2.5G 网口，性能高但是功耗也高些，颜值尚可 |
+|  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
+
+
+内存条与硬盘：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | 
+| 优越者双盘位硬盘盒 Y-3355                | 2020-07-10 | 拼多多    | ￥369 | 主要用途：WebDAV 远程游戏存储、数据备份、影视下载 |
+| 西数紫盘 4TB SATA 6Gb/s (WD40EZRZ)               | 2020-07-11 | 京东自营    | ￥539 | 插硬盘盒里，接在 UM560 上 |
+| 西数蓝盘 4TB SATA 6Gb/s (WD40EJRX)               | 2020-07-11 | 京东自营    | ￥579 | 插硬盘盒里，接在 UM560 上 |
+| 光威战将 DDR4 16GB 3200 笔记本内存    | 2021-06-08 | 京东自营    | ￥439 * 2 | 一开始是给 R9000P 用的，现在换到 UM560 上了（2022 年价格: 259 * 2） |
+| ZhiTai SSD - TiPlus5000 512GB (TLC, 长江存储)        | 2022-11-02 | 京东自营    | ￥309 | 笔记本 Windows 游戏机存储（游戏都 WebDAV 远程存储了，所以本机不需要大空间） |
+| Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 京东自营    | ￥249 | UM560 的存储 |
+| 京东京造 128G TF 卡（写入 120MB/s, 读取 160MB/s）  | 2022-11-06 | 京东自营    | ￥89 | Raspberry Pi 的存储 |
+| 光威战将 DDR4 32GB 3200 笔记本内存 * 2            | 2022-11-07 | 京东自营    | ￥579 * 2 | GTR5 的内存条 |
+| 西数 SSD - WD Blue SN570 1T (TLC) * 2          | 2022-11-17 与 2022-11-19 | 京东自营    | ￥559 * 2 | GTR5 与 S500+ 的存储 |
+| 玖合 NB-DDR4-32G-3200 * 2           | 2022-11-19 | 京东自营    | ￥429 * 2 | S500+ 的内存条 |
+
+
+其他小配件：
+
+| 设备名称 | 购入时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | 
+| 标康电力监测插座 BK-033                  | 2020-07-29 | 京东自营    | ￥41 | 监测整个 Homelab 的功耗情况 |
+| 斯泰克 USB 网卡 2.5GbE * 2             | 2022-11-02 | 京东自营    | ￥77 * 2 | 用于拓展 mini 主机与笔记本电脑的 2.5G 网口 |
+| 绿巨能 HDMI 视频采集卡（1080P 输出, USB/Type-C 接口） | 2022-11-02 | 京东自营    | ￥79 | 配合 USB Camera APP 将安卓设备当成显示器用，主要用于机器装机 |
+| 公牛抗电涌浪涌插座 6 位 GN-H3060 | 2022-11-17 | 京东自营    | ￥89 | Homelab 都插这个插座上 |
+
+以及已经翻车的设备/配件：
+
+| 设备名称 | 购入时间 | 翻车时间 | 购入渠道 | 价格 | 说明 |
+| :---: | :---: | :---: | :---: | :---: | :---: | 
+| 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 | 之前给 Windows 游戏机用了一年多，然后换到 GTR5 上没跑几天就掉盘了（`nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
+
+总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
+跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
+配置差别还是有点大的，不过胜在静音 + 低功耗 + 不占空间 + 发热小，对于小租房而言也算是不错的选择。
+具体是要机架服务器还是 mini 主机，还是看个人需求吧。
+
+mini 主机领域性价比高的机器，目前主要就是零刻、minisfroum、morefine 这三家，我刚好每家买了一台...
+
+此外一些便宜的工控机其实也可以考虑，不过从我个人角度看，性价比高的工控机的性能都比较弱，性能上来后跟 mini 主机价格也差不多了，所以一般都被用做专门的软路由，目前不太符合我用来跑虚拟机的需求。
 
 ## 参考
 
