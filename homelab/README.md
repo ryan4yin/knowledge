@@ -59,7 +59,6 @@ graph TD
       - 也通过 docker-compose 运行一些需要访问硬盘盒数据的其他服务，比如
         - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
         - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
-        - [calibre-web](https://github.com/janeczku/calibre-web): 私有电子书系统，不再需要在每台设备之间同步各种电子书了。
     - OpenWRT: 1c/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
       - 安装 openclash、广告拦截插件
