@@ -35,7 +35,7 @@
 - ZTE AX5400 Pro+ 无线路由器
 - Homelab + NAS: 8T 机械硬盘存储 + 三台 mini 主机 + 树莓派 4B（四台机器均带有 wifi 蓝牙模块）
 
-除了上面的品牌智能家居产品，用 [ESPHome](https://github.com/esphome/esphome) + Home Assistant 做智能家居 DIY 目前在国内外也很流行。
+前面提到除了上面的品牌智能家居产品，用 [ESPHome](https://github.com/esphome/esphome) + Home Assistant 做智能家居 DIY 目前在国内外也很流行。
 它流行的主要原因显然是价格相当便宜，上手难度也不高（基本只需要写 yaml，完全不需要写任何代码）。
 一个 ESP8266 就算是开发版也才 13 块钱，ESP32-C3 开发版也就买 20 块钱左右，各种传感器更是白菜价。
 跟前述的品牌智能家居产品相比便宜太多了。
