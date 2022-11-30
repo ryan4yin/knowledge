@@ -164,6 +164,8 @@ http {
     ssl_trusted_certificate root_intermediate_ca_bundle.pem;
 
     # Mozilla Intermediate configuration
+    # Android 4.4 （发布于 2013/11/01）开始支持 tls1.2，Android 4.0 开始支持 ECC 证书
+    # 现在是 2022 年了，全面弃用 tls1.1，改用 ECC 证书，对客户端应该不会产生任何负面影响
     ssl_protocols          TLSv1.2 TLSv1.3;
     ssl_ciphers            ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
 
