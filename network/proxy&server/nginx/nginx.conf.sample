@@ -149,8 +149,11 @@ http {
     ssl_dhparam            dhparam.pem;
 
     # OCSP Stapling
-    ssl_stapling           on;
-    ssl_stapling_verify    on;
+    # 如果客户端访问 OCSP 服务器速度慢，建议启用此功能，但是会带来额外的流量开销
+    ssl_stapling           off;
+    ssl_stapling_verify    off;
+    resolver kube-dns.kube-system.svc.cluster.local valid=10s;
+    resolver_timeout       2s;
 
     # resolver in kubernetes
     resolver kube-dns.kube-system.svc.cluster.local valid=10s;
