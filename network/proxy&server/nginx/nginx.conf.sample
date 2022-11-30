@@ -184,13 +184,9 @@ http {
         listen 8443 default ssl http2 reuseport backlog=4096;
         server_name _;
 
-        # must use valid certs, and it's ca should contains in cabundle.crt!
-        # otherwise the ssl_stapling will not work!
-        ssl_certificate     /tls-certs/example.com/tls.crt;
-        ssl_certificate_key /tls-certs/example.com/tls.key;
-
-        # deny all traffic do not match any sni!
-        deny all;
+        # reject all handshake with unknown server_name
+        # http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_reject_handshake
+        ssl_reject_handshake on;
     }
 
     include sites-enabled/*;
