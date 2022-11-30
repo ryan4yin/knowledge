@@ -64,29 +64,7 @@ NAS 存储共享协议主要有这几种：
   - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
   - ...
 
-## 使用 ubuntu cloud image 自建 NAS 系统踩过的坑
-
-### 1. Ubuntu Cloud Image 无法识别到 USB 设备
-
-现象：
-
-- 在尝试使用 PVE 将 USB 接口直通到 Ubuntu Cloud Image 启动的虚拟机作为 NAS 系统时，发现 `lsblk` 根本无法找到我的 USB 硬盘
-- 换成我笔记本接硬盘盒，能够正常识别并挂载硬盘
-- 使用 `lsusb` 不会报错，但是也看不到任何内容
-- 使用 `lspci` 能找到 USB 对应的 PCI 设备
-- 进一步使用 `cat /proc/modules | grep usb` 与 `lsmod | grep usb` 均查不到任何 usb 相关的内核模块
-  - 而在我笔记本上 `lsmod | grep usb` 能够输出 `usb_storage` `usb_core` 等多项内核模块。 
-- 再用 `modprobe usb` 会提示 `modprobe: FATAL: Module usb not found in directory /lib/modules/5.15.0-1021-kvm`
-
-问题原因很明显了，Ubuntu 根本没有为 cloud image 预置 usb 内核模块，所以才有这个问题...
-
-进一步搜索发现这个帖子：[What's the difference between ubuntu's amd64-disk-kvm.img and the regular amd64.img cloud images?](https://askubuntu.com/questions/1315370/whats-the-difference-between-ubuntus-amd64-disk-kvm-img-and-the-regular-amd64)，解答了我的疑惑。
-
-原因是，我使用了 ubuntu 为 cloud 环境做了精简的 kvm 内核，非常轻量，但是缺少 usb 等常用内核模块。
-
-对于 NAS 外接存储这个场景，我应该使用不以 kvm 结尾的 ubuntu cloud image，换了个基础镜像后问题就解决了~
-
-### 2. Linux 如何自动挂载 USB 硬盘合
+## Linux 如何自动挂载 USB 硬盘合
 
 网上很多文章会教你使用 `/etc/fstab` 去挂载 USB 硬盘，我得说这是一项非常危险的操作！因为 `/etc/fstab` 出任何问题都将导致系统无法启动，也就是说如果对应的 USB 设备接触不良了，或者被拔掉了，机器可能就启动不了了！（猜测哈，我有时间验证下...）
 
