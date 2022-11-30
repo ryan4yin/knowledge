@@ -31,7 +31,8 @@ events {
 }
 
 http {
-    server_tokens off;
+    charset            utf-8;
+    server_tokens      off;
     more_clear_headers Server;
 
     include       mime.types;
@@ -61,14 +62,18 @@ http {
     gzip_comp_level 6;
     gzip_types      text/plain text/css text/xml application/json application/javascript application/xml application/rss+xml application/atom+xml image/svg+xml;
 
+    # 大文件传输优化
+    # https://nginx.org/en/docs/http/ngx_http_core_module.html#aio
     aio                 threads;
     aio_write           on;
-
-    charset             utf-8;
+    # sendfile 是一个系统调用，直接在内核空间完成文件发送，不需要先 read 再 write，没有上下文切换开销
+    # 启用 sendfile 可以提高 Nginx 静态资源托管效率
     sendfile            on;
     sendfile_max_chunk  2m;
-
+    # https://imququ.com/post/my-nginx-conf-for-wpo.html
+    # TCP_NOPUSH 是要等数据包累积到一定大小才发送
     tcp_nopush          on;
+    # TCP_NODELAY 是要尽快发送。跟 TCP_NOPUSH 一起启用，效果是先填满包，再尽快发送
     tcp_nodelay         on;
 
     log_subrequest      on;
