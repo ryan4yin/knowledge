@@ -107,6 +107,14 @@ VPC endpoints 有两种类型：
 
 **存疑：如果不给 ECR 配 Interface Endpoints，是否会造成比较大的 NAT 成本**？
 
+### NAT 网关
+
+AWS 托管版的 NAT 网关按流量收费，其价格为 $.045 per GB，在流量大的情况下成本相当高！
+
+针对此情况存在一些开源解决方案，自建 EC2 实例做 NAT，可大幅缩减 NAT 网关的费用：
+
+- https://github.com/1debit/alternat
+
 ### VPC Flow Log 流日志
 
 建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按小时分区保存到 S3，然后通过 Athena 查询分析。
