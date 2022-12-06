@@ -23,9 +23,10 @@ NAS 存储共享协议主要有这几种：
 
 - **WebDAV**: HTTP 协议的一个拓展，安全性高，在公网局域网上都可使用它部署文件访问服务。
   - 对延迟不敏感，常被用于各类公网的数据同步，比如各类写作软件都支持 WebDAV 数据同步。
-  - Windows 挂载(powershell): `New-PSDrive -Name S -PSProvider FileSystem -Root '\\live.sysinternals.com\Tools'`
-    - 注意 URI 需要去掉 `https:` 头部！
-    - 或者直接在「我的电脑」=>「映射网络驱动器」，输入盘号跟 WebDAV/SMB 地址点击连接即可。
+  - Windows 挂载(powershell): `net use Y: http://sftpgo.writefor.fun:10080/ /user:<user> /persistent:YES <passsword>`
+    - 注意 windows 默认仅允许基于 https 的 WebDAV 挂载，如果需要挂载 http，需要将注册表中的 `BasicAuthLevel` 修改为 `2`，另外默认的最大文件数仅为 50MB，要调大也得改注册表，详见 [WebDAV Redirector Registry Settings](https://learn.microsoft.com/en-us/iis/publish/using-webdav/using-the-webdav-redirector#webdav-redirector-registry-settings)
+    - 或者直接在「我的电脑」=>「映射网络驱动器」，输入盘号跟 WebDAV/SMB 地址点击连接即可
+    - 还有个 `New-PSDrive` 也能用于干这个活，但是不好用
   - Linux 挂载:
     - 首先安装 `davfs2`，一般直接 apt/yum 安装就行
     - `sudo mount -t davfs https://xxxxxx /mnt/webdav -o username=xxx,password=your-password,gid=1000,uid=1000`
