@@ -1,6 +1,6 @@
-# 嵌入式开发 Embedded System
+# 嵌入式系统 Embedded System
 
-嵌入式分两个方向：
+嵌入式系统分两个方向：
 
 - 单片机开发
   - 介绍：单片机的英文名叫 Microcontroller Unit，即 **MCU**. 它是把 CPU、RAM、定时/计数器（timer/counter）、I/O 接口等都集成在一块集成电路芯片上的微型计算机

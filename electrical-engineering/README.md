@@ -24,7 +24,6 @@
 
 边玩边学习相关知识是最有意思的，先玩到一定阶段后，再补一补基础知识如《模拟和数字电子电路基础》，并结合 Multisim（元器件仿真）、Proteus（单片机仿真）等仿真软件同步学习。
 
-
 ## 当前我很想玩的项目
 
 如何将 Android/Linux 设备模拟成键盘，实现使用笔记本自带键盘，或者安卓触摸屏，直接进行我家 homelab 的装机。
@@ -38,6 +37,13 @@
 
 ## 相关资料
 
-- [我花了半个月，整理出了这篇嵌入式开发学习指南（学习路线+知识点梳理）](https://zhuanlan.zhihu.com/p/169316828)：劝退式嵌入式全景图
+机器人相关：
+
+- [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
+- [gobot](https://github.com/hybridgroup/gobot)
+- 书籍
+  - Learn Robotics With Raspberry Pi
+  - Learn Robotics Programming, 2nd Edition
+
 
 
