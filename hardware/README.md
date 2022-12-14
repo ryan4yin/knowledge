@@ -7,3 +7,37 @@
 
 更进一步，我能否做一些更有意思的东西呢？比如说机器人！
 
+
+## 我的学习计划
+
+### 1. Linux 与嵌入式
+
+我自身已经有一定 Linux 基础，最近正在学《Linux/Unix 系统编程手册》，也有丰富的 Linux 运维经验，因此基于我自身的条件，我打算这么学嵌入式：
+
+- 从零开始为树莓派 4B 开发一个操作系统：https://github.com/isometimes/rpi4-osdev
+- 《Linux/Unix 系统编程手册》
+- [Linux Device Drivers (LDD3) ](https://github.com/d0u9/Linux-Device-Driver): Linux 驱动开发经典书籍
+- 《深入理解 Linux 内核》
+- 《Linux 内核设计与实现》
+
+### 2. 电子电路
+
+边玩边学习相关知识是最有意思的，先玩到一定阶段后，再补一补基础知识如《模拟和数字电子电路基础》，并结合 Multisim（元器件仿真）、Proteus（单片机仿真）等仿真软件同步学习。
+
+
+## 当前我很想玩的项目
+
+如何将 Android/Linux 设备模拟成键盘，实现使用笔记本自带键盘，或者安卓触摸屏，直接进行我家 homelab 的装机。
+
+补充条件：我不想购买任何额外的硬件，比如 Raspberry Zero 或者 Arduino Leonardo.
+
+相关资料：
+
+- [android-usb-gadget](https://github.com/tejado/android-usb-gadget)
+- [DIY 一个运维神器 Open IP-KVM](https://zhuanlan.zhihu.com/p/578602475)
+
+## 相关资料
+
+- [我花了半个月，整理出了这篇嵌入式开发学习指南（学习路线+知识点梳理）](https://zhuanlan.zhihu.com/p/169316828)：劝退式嵌入式全景图
+
+
