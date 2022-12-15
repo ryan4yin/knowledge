@@ -34,6 +34,9 @@
 
 - [android-usb-gadget](https://github.com/tejado/android-usb-gadget)
 - [DIY 一个运维神器 Open IP-KVM](https://zhuanlan.zhihu.com/p/578602475)
+- PD充电器诱骗
+  - [自制QC2.0诱骗器](https://yuanze.wang/posts/qc2-0-adapter/)
+  - 也可以使用成熟的芯片方案，关键词为「PD/QC 取电芯片」
 
 ## 相关资料
 
@@ -41,9 +44,7 @@
 
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
 - [gobot](https://github.com/hybridgroup/gobot)
-- 书籍
-  - Learn Robotics With Raspberry Pi
-  - Learn Robotics Programming, 2nd Edition
+
 
 
 
