@@ -44,7 +44,7 @@
 一个 ESP8266 就算是开发版也才 13 块钱，ESP32-C3 开发版也就买 20 块钱左右，各种传感器更是白菜价。
 跟前述的品牌智能家居产品相比便宜太多了。
 
-具体的玩法，就请自行探索了。我个人的硬件笔记记录在了 [hardware](/hardware/Electrical%20Engineering.md) 中
+具体的玩法，就请自行探索了。我个人的硬件笔记记录在了 [electrical-engineering](/electrical-engineering) 中
 
 ## Home Assistant 使用指南
 

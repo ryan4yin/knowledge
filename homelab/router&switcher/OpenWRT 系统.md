@@ -63,6 +63,7 @@ config interface 'wan6'
 	option proto 'dhcpv6'
 ```
 
+
 修改完成后 `/etc/init.d/network restart` 重启网络服务，然后就能直接通过 `http://192.168.5.201` 访问此 OpenWRT 虚拟机啦，命令行有提示初始密码为 `passwd`，进入 Web 页面后需要自行修改。 
 
 ## 常用插件
@@ -76,10 +77,12 @@ config interface 'wan6'
 
 列举一些常用插件如下：
 
+- `qemu-ga`: 即 qemu-guest-agent 的 openwrt 版本，建议安装，Proxmox-VE 通过它控制 openwrt 启停、获取 openwrt 内部信息（如 ip 地址）。
 - 一款漂亮的 OpenWRT Web 皮肤：[luci-theme-argon](https://github.com/jerrykuku/luci-theme-argon)
 - OpenClash 网络代理工具：[OpenClash](https://github.com/vernesong/OpenClash)
 - 解锁网易云灰色歌曲：[luci-app-unblockneteasemusic](https://github.com/cnsilvan/luci-app-unblockneteasemusic)
 
+插件可以使用 `opkg install` 安装，也可通过 openwet web console 安装，请随意。
 
 >画外：额好像上述这几个插件都没什么特点，换个操作系统照样能搞...考虑拿 Ubuntu Server 取代掉它...
 
