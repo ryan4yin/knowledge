@@ -2,7 +2,7 @@
 
 ## 开发环境搭建
 
-使用基于 [platformio](https://github.com/platformio) 的开源跨平台嵌入式 IDE 开发环境（别再用 keli 之类的 windows 商业软件啦）。
+使用基于 [platformio](https://github.com/platformio) 的开源跨平台嵌入式 IDE 开发环境。
 
 platformio 是一个 VSCode 插件，所以先安装好 VSCode，然后直接在插件市场搜索 platformio 安装即可。
 
