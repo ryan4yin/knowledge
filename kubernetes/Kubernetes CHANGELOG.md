@@ -14,7 +14,7 @@
 
 - server side apply 进入 beta 并默认开启
   - 这会导致 `kubectl get po` 多出一堆的 `metadata.managedFields` 数据，它是 server side apply 自动生成的
-  - 要避免输出没啥用的 managedFields 信息， 可使用 yq，或者使用 `kubectl 1.21+`:
+  - 要避免输出没啥用的 managedFields 信息， 可使用 [yq](https://github.com/mikefarah/yq)，或者使用 `kubectl 1.21+`:
     - `kubectl get po xxx -o yaml | yq eval 'del (.metadata.managedFields)' -`
 - 不兼容的 API 变更:
     - All resources under `apps/v1beta1` and `apps/v1beta2` - use `apps/v1` instead
