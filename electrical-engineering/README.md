@@ -1,4 +1,4 @@
-# 硬件 Hardware
+# 电子电路
 
 小时候同村的一个伙伴买了台遥控赛车，我们羡慕地不行，眼巴巴地希望他能多分一点时间给我玩。但是我从小到大从来没买过任何一台遥控赛车。
 
@@ -19,6 +19,13 @@
 - [Linux Device Drivers (LDD3) ](https://github.com/d0u9/Linux-Device-Driver): Linux 驱动开发经典书籍
 - 《深入理解 Linux 内核》
 - 《Linux 内核设计与实现》
+
+我可能的发烧路线图：51 MCU　=> ESP32 MCU => STM32 MCU => FPGA
+
+目前感兴趣的板子：
+
+- Orange Pi 5: 高性能 SBC，支持　8K 视频解码，不过据说 GPU/NPU 的软件栈还需要至少半年迭代（当前 2022/12/21）
+- Vision Five 2: 赛昉科技的 RISC-V 开发板，对 RISC-V 有些兴趣，不过没想好买它干啥...
 
 ### 2. 电子电路
 
