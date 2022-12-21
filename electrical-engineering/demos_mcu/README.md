@@ -2,7 +2,7 @@
 
 ## 开发环境搭建
 
-使用基于 [platformio](https://github.com/platformio) 的开源跨平台嵌入式 IDE 开发环境。
+因为刚入门，先使用基于 [platformio](https://github.com/platformio) 的开源跨平台嵌入式 IDE 开发环境。
 
 platformio 是一个 VSCode 插件，所以先安装好 VSCode，然后直接在插件市场搜索 platformio 安装即可。
 
@@ -11,6 +11,8 @@ platformio 是一个 VSCode 插件，所以先安装好 VSCode，然后直接在
 在创建工程的页面，PlatformIO 有提供几乎所有主流单片机平台可选，我个人目前接触到的只有 ESP32、ESP8266、Intel MSC-51(8051) 这三个平台。
 
 创建工程时 platformio 会自动下载对应平台的编译调试工具链（建议使用全局代理），然后就可以玩耍啦。
+
+如果什么时候觉得 platformio 不顶用的话，再看看 [PlatformIO 目前只是玩具，单片机开发还得用 Keil](https://www.v2ex.com/t/771173) 这个帖子里介绍的 OpenOCD
 
 ### Linux 环境特定的配置
 
