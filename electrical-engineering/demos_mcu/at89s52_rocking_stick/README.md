@@ -3,7 +3,7 @@
 
 ## 编译上传相关
 
->国内广泛使用的 keli 是仅适用于 windows 的商业软件，而且比较丑，不过仅就 51 单片机而言，keli 的实际功能貌似要比 platformio 更成熟
+>国内广泛使用的 keli ~~是仅适用于~~ windows 的商业软件，而且比较丑，不过仅就 51 单片机而言，keli 的实际功能貌似要比 platformio 更成熟
 
 >我因为已经很长时间只将 windows 当成游戏机使用，未安装也不打算在 windows 上安装任何开发环境，所以这里倾向于使用 Linux 系统能支持的环境，也就是 platformio，它底层用的是 sdcc
 
@@ -17,7 +17,9 @@
 以及踩过的 platformio 的坑：
 
 - [platform-intel_mcs51/issues/47](https://github.com/platformio/platform-intel_mcs51/issues/47)
-  - 程序编译完成后 upload 时会卡在 `Cycling power: done` 这一步，通过此 issue 中描述的方法，删除 `-a` 参数后手动执行 upload 命令，上传就成功了。
+  - 程序编译完成后 upload 时会卡在 `Cycling power: done` 这一步，通过此 issue 中描述的方法，删除 `-a` 参数后手动执行 upload 命令。
+  - 这个摇摇棒没有接复位电路，上传时需要手动插拔 VCC 引脚复位，但是这个成功率不高，要多试几次。
+  - 注意摇摇棒周围不要有任何金属，避免电路紊乱。
 
 未解决的问题：
 
@@ -83,6 +85,23 @@
 ## 后续
 
 我有点想试试给它加一个电机自动旋转，做成全息风扇玩玩。
+
+## 手动编译上传命令
+
+platformio 实际就是跑下面几个命令编译上传的，你可以越过 platformio 使用如下命令手动做这些事：
+
+```shell
+sdcc=/home/ryan/.platformio/packages/toolchain-sdcc/bin/sdcc
+stcgal="/home/ryan/.platformio/penv/bin/python /home/ryan/.platformio/packages/tool-stcgal/stcgal.py"
+
+# 编译 src/main.c
+$sdcc -o .pio/main.rel -c --std-sdcc11 --opt-code-size --peep-return -mmcs51 -DF_CPU=11059200L -DHEAP_SIZE=128 -DPLATFORMIO=60105 -DSTC89C5XRX -DSTC89C52RC -DNAKED_ARCH_MCS51 -DNAKED_MCS51_STC89C5XRX -Iinclude -Isrc src/main.c
+# 将 rel 文件转换为 hex 文件
+$sdcc -o .pio/firmware.hex -mmcs51 --iram-size 256 --xram-size 256 --code-size 8192 --out-fmt-ihx .pio/main.rel -L.pio/
+# 通过 /dev/ttyUSB0 上传固件
+$stcgal -P stc89 -p /dev/ttyUSB0 -t 11059 .pio/firmware.hex
+```
+
 
 ## 参考资料
 
