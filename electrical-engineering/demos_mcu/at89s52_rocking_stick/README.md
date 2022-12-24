@@ -88,20 +88,19 @@
 
 ## 手动编译上传命令
 
-platformio 实际就是跑下面几个命令编译上传的，你可以越过 platformio 使用如下命令手动做这些事：
+platformio 实际就是跑下面几个命令编译上传的，你也可以越过 platformio 使用如下命令手动做这些事：
 
 ```shell
-sdcc=/home/ryan/.platformio/packages/toolchain-sdcc/bin/sdcc
-stcgal="/home/ryan/.platformio/penv/bin/python /home/ryan/.platformio/packages/tool-stcgal/stcgal.py"
+# 不依赖 platformio 内部的 sdcc/stcgal，我们在全局安装一个单独的环境：
+yay -S sdcc stcgal
 
 # 编译 src/main.c
-$sdcc -o .pio/main.rel -c --std-sdcc11 --opt-code-size --peep-return -mmcs51 -DF_CPU=11059200L -DHEAP_SIZE=128 -DPLATFORMIO=60105 -DSTC89C5XRX -DSTC89C52RC -DNAKED_ARCH_MCS51 -DNAKED_MCS51_STC89C5XRX -Iinclude -Isrc src/main.c
+sdcc -o .pio/main.rel -c --std-sdcc11 --opt-code-size --peep-return -mmcs51 -DF_CPU=11059200L -DHEAP_SIZE=128 -DPLATFORMIO=60105 -DSTC89C5XRX -DSTC89C52RC -DNAKED_ARCH_MCS51 -DNAKED_MCS51_STC89C5XRX -Iinclude -Isrc src/main.c
 # 将 rel 文件转换为 hex 文件
-$sdcc -o .pio/firmware.hex -mmcs51 --iram-size 256 --xram-size 256 --code-size 8192 --out-fmt-ihx .pio/main.rel -L.pio/
+sdcc -o .pio/firmware.hex -mmcs51 --iram-size 256 --xram-size 256 --code-size 8192 --out-fmt-ihx .pio/main.rel -L.pio/
 # 通过 /dev/ttyUSB0 上传固件
-$stcgal -P stc89 -p /dev/ttyUSB0 -t 11059 .pio/firmware.hex
+stcgal -P stc89 -p /dev/ttyUSB0 -t 11059 .pio/firmware.hex
 ```
-
 
 ## 参考资料
 
