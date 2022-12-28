@@ -1,13 +1,17 @@
-# pip install gpiozero pygame
+# 四驱小车控制代码，通过 pygame 接入 Xbox One 手柄进行控制
+# 只需要使用到遥控器的左上方摇杆
+#  pip install gpiozero pygame
 import os
 import gpiozero
 import pygame
 from pygame.constants import *
 
 # 通过 gpio 连接电机
+## 左侧两个电机
 motor_l_head = gpiozero.Motor(6,13)
 motor_l_tail = gpiozero.Motor(19,26)
 
+# 右侧两个电机
 motor_r_tail = gpiozero.Motor(18, 17)
 motor_r_head = gpiozero.Motor(27,22)
 
