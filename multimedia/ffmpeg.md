@@ -29,6 +29,12 @@ ffmpeg -i input.png -c:v libwebp -vf scale=2000:-1 out.webp
 ffprobe -i "xxx.mkv"
 ```
 
+去除音频（`-an` 表示 disable audio）：
+
+```shell
+ffmpeg -i videoWithAudio.mp4 -c:v copy -an videoWithoutAudio.mp4
+```
+
 ### 视频转码
 
 最近买了一个 VR 设备：Oculus Quest 2，想用它看 NAS 中的视频，但是又不想付费购买 Skybox 之类的软件。

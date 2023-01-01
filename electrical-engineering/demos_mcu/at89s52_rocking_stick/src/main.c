@@ -124,7 +124,7 @@ void DelayUs(unsigned int N)
 }
 
 /*****中断服务程序*****/
-void interrupt_handler(void) __interrupt 0
+void interrupt_handler(void) __interrupt 1
 {
    ;
    KY = ~KY; // 每个摇动来回水银开关会在摆幅两端分别产生下降沿中断，只提取其中一次（从左向右摇才显示）
