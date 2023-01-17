@@ -49,3 +49,5 @@
   - 其他小变更
     - Host 的匹配，默认忽略端口号，可通过环境变量 `SIDECAR_IGNORE_PORT_IN_HOST_MATCH` 控制这一行为
 - upcomming istio 1.1x
+  - [istio/experimental-ambient](https://github.com/istio/istio/tree/experimental-ambient): istio 实验性的 ambient mesh 功能
+
