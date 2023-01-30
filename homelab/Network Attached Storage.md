@@ -46,14 +46,19 @@ NAS 存储共享协议主要有这几种：
 在折腾了 [OpenMediaVault](https://www.openmediavault.org/)、[TrueNAS](https://github.com/truenas) 以及 Windows Server 后，我发现直接 docker 跑几个小容器提供 WebDAV 网络存储是符合我个人需求的。
 
 我实际没有 ISCSI/SMB 等协议的需求，而且 OpenMediaVault 的 ISCSI 插件性能还奇差，Windows Server 我也不太感冒，TrueNAS 底层是 freebsd 也玩不明白。
-所以直接用 docker 跑几个 Web 文件服务器跟 webdav 服务器，实际就完全 cover 住我的需求了，根本没必要搞啥专用 NAS 系统。
+~~所以直接用 docker 跑几个 Web 文件服务器跟 webdav 服务器，实际就完全 cover 住我的需求了，根本没必要搞啥专用 NAS 系统~~。
 
-所以我现在的方案是，使用 docker-compose 跑下面这些软件，提供所有我需要的功能：
+实际玩了发现 WebDAV/SMB 都不太适合用来给我的 windows 当存储硬盘用，steam 下载游戏时，一个分配磁盘动作就得等到天荒地老了（WebDAV/SMB 不是裸磁盘，分配磁盘这个动作貌似真的会全量写入...）。
+跟折腾群群友聊了后，发现用 Windows Server 跑 ISCSI 可能是最符合我需求的，稳定、传输速度高，非常适合给 steam 存游戏用。
 
-- WebDAV 服务器
-  - [sftpgo](https://github.com/drakkan/sftpgo): 一个文件共享服务器，支持 sftp、webdav、ftp/s 等协议，支持本地存储，或者使用 AWS/GCP/Azure 的对象存储。
-  - [dufs](https://github.com/sigoden/dufs): 一个 rust 写的轻量级文件服务器，支持文件上传/下载/搜索/WebDAV...
-    - 第一行代码提交于 2022/5/22，非常年轻所以请谨慎选用
+所以我现在的方案是，使用一台单独的 Windows Server 虚拟机，作为游戏 ISCSI 存储机器。
+
+再使用一台 Linux 机器，通过 docker-compose 跑下面这些软件，提供我需要的其他存储功能：
+
+- ~~WebDAV 服务器~~
+  - ~~[sftpgo](https://github.com/drakkan/sftpgo): 一个文件共享服务器，支持 sftp、webdav、ftp/s 等协议，支持本地存储，或者使用 AWS/GCP/Azure 的对象存储~~。
+  - ~~[dufs](https://github.com/sigoden/dufs): 一个 rust 写的轻量级文件服务器，支持文件上传/下载/搜索/WebDAV~~...
+    - ~~第一行代码提交于 2022/5/22，非常年轻所以请谨慎选用~~
 - 数据同步与备份
   - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
     - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
