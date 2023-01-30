@@ -11,7 +11,7 @@
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 高性能、低功耗节点，常驻 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能实验节点，平常维持低功耗运行 |
 | ~~Raspberry Pi 4B 2GB~~  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | ~~超低功耗 ARM64 主机~~，目前拿去玩电子了 |
-| Rock Pi 5A  | RK 3588S | 16G | 128G TF Card | - | 高性能 ARM64 主机，用于做些 ARM 相关的实验。主机预计 2023/Q2 出货... |
+| Rock Pi 5A  | RK 3588S | 4G | 128G TF Card | - | 高性能 ARM64 主机，用于做些 ARM 相关的实验。4G 内存的版本，优惠后比 orange pi 5 香很多。主机预计 2023/Q2 出货... |
 
 
 ## 网络拓扑
