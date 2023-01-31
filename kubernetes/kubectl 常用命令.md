@@ -28,6 +28,12 @@ kubectl -n prod get deploy -o jsonpath="{range .items[*]}'{.metadata.name}': {'\
 kubectl -n staging get deploy -o jsonpath="{range .items[*]}'{.metadata.name}': {.spec.template.spec.containers[0].image}{'\n'}{end}" > deployment_images.yaml
 ```
 
+查询所有 api 资源:
+
+```
+kubectl api-resources --verbs=list
+```
+
 ## 回滚 deployment/daemonset/statefulset
 
 注意 configmap/secrets/rolebinding 等其他配置是没有历史版本管理的！回滚 pod 配置前请先确认是否有用到这些配置，否则可能会导致问题。
