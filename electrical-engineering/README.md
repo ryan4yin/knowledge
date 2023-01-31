@@ -10,35 +10,7 @@
 
 ## 我的学习计划
 
-### 1. Linux 与嵌入式
-
-我自身已经有一定 Linux 基础，最近正在学《Linux/Unix 系统编程手册》，也有丰富的 Linux 运维经验，因此基于我自身的条件，我打算这么学嵌入式：
-
-- 从零开始为树莓派 4B 开发一个操作系统：https://github.com/isometimes/rpi4-osdev
-- 《Linux/Unix 系统编程手册》
-- [Linux Device Drivers (LDD3) ](https://github.com/d0u9/Linux-Device-Driver): Linux 驱动开发经典书籍
-- 《深入理解 Linux 内核》
-- 《Linux 内核设计与实现》
-
-我可能的发烧路线图：51 MCU　=> ESP32 MCU => STM32 MCU => FPGA
-
-目前感兴趣的板子：
-
-- Orange Pi 5: 高性能 SBC，支持　8K 视频解码，不过据说 GPU/NPU 的软件栈还需要至少半年迭代（当前 2022/12/21）
-- Vision Five 2: 赛昉科技的 RISC-V 开发板，对 RISC-V 有些兴趣，不过没想好买它干啥...
-
-### 2. 电子电路
-
-边玩边学习相关知识是最有意思的，先玩到一定阶段后，再补一补基础知识如《模拟和数字电子电路基础》，并结合仿真软件同步学习。
-
-仿真软件：
-
-- Multisim（元器件仿真）、Proteus（单片机仿真）软件，不过基本都仅支持 windows，不是我的菜。
-- EDA 电路板原理图、PCB 设计工具
-  - 立创 EDA: 国产 EDA，全平台支持，也提供 Web 版
-  - KiCAD: 开源电路板设计工具，功能强大，支持插件，社区资源多。
-
-打算研究下 KiCAD
+参见我的博客文章 [EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/) 文末
 
 ## 当前我很想玩的项目
 
@@ -50,9 +22,6 @@
 
 - [android-usb-gadget](https://github.com/tejado/android-usb-gadget)
 - [DIY 一个运维神器 Open IP-KVM](https://zhuanlan.zhihu.com/p/578602475)
-- PD充电器诱骗
-  - [自制QC2.0诱骗器](https://yuanze.wang/posts/qc2-0-adapter/)
-  - 也可以使用成熟的芯片方案，关键词为「PD/QC 取电芯片」
 
 ## 相关资料
 
