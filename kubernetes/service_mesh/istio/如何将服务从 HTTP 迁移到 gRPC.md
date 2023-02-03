@@ -8,6 +8,8 @@ Istio Sidecar 暴露出的 `istio_requests_total` 同时提供 HTTP/gRPC 监控�
 
 监控这里需要注意的，应该是 gRPC 使用了自定义的状态码，而不是 HTTP 的 200/4xx/5xx. 需要重新考虑如何计算可用率，哪些状态码跟基础设施有关（在 HTTP 中这通常是 502/503/504）、哪些状态码跟业务服务有关。
 
+另外还需要注意指标是 source 侧的还是 destination 侧的，在 destination 侧不健康的情况下，destination 的指标会直接降到 0，但是按可用率计算仍然是 100%. 如果监控没有 source 侧的指标告警或者 QPS 剧烈波动的告警，可能会因为外层服务触发了 fallback 机制返回了旧数据，导致告警系统完全检测不到问题！
+
 监控配置详见 [Istio 监控指标](./Istio%20监控指标.md)
 
 ### 2. 负载均衡能力
