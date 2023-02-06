@@ -203,7 +203,7 @@ tailscale ping <hostname-or-ip>
 | :---:                              | :---:  | :---:   | :---:   | :---:      | :---: |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W    | 10W     | 10W     |            |按平时功耗算 10W * 24h * 30day = 7.2 KWh |
 | Minisfroum UM560 (AMD R5 5625U)    | 6W     | 15W     | 15W     | -          | 按平时功耗算 15W * 24h * 30day = 10.8 KWh |
-| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W     | 60W     |            | 明明买的是低压 U，为什么满载功耗这么高...懵了 |
+| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W     | 60W     |            | 这颗 CPU 被默认超频了，给到了 35w - 40w，加上风扇散热功率，就这么高了... |
 | Beelink GTR5 (AMD R9 5900HX)       | 6W     | 35W     | 50W     |            | 按平时功耗算 35W * 24h * 30day = 25.2 KWh |
 | 双盘位硬盘盒 + 4T * 2                | (休眠)  | 12W     | 12W     | -          | 按平时功耗算 12W * 24h * 30day = 8.64 KWh |
 | 小米 AX1800（已闲置）                | 6W     | 6W      | 6W      | -          | 按平时功耗算 6W * 24h * 30day = 4.32 KWh |
