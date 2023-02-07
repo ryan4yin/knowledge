@@ -54,23 +54,9 @@ graph TD
 - Minisfroum UM560
   - OS: Proxmox VE
   - VMs
-    - tailscale-gateway 1C/1G 32G
-      - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
     - OpenWRT: 1C/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
       - 安装 openclash、广告拦截插件
-    - k3s-main single master 2C/4G 32G
-      - 家庭网络，单 master 就够用了，省点性能开销
-      - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
-    - k3s-data-1 single master 2C/4G 32G
-      - 数据面集群 1，跑些常见任务
-    - k3s-data-2 single master 2C/4G 32G
-      - 数据面集群 2，跑些常见任务
-    - k3s-data-1 worker node 4C/8G 32G
-      - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
-      - 跑各种其他 k8s 实验负载
-    - k3s-data-2 worker node 4C/8G 32G
-      - 跑各种其他 k8s 实验负载
     - docker-compose server 4C/8G 32G
       - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 WebDAV 协议与 HTTP File Server.
       - 目前跑了这些服务
@@ -84,27 +70,36 @@ graph TD
         - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
         - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
         - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-    - Home Assistant 2C/2G 32G
-      - 干一些自动化的活，比如我到家后自动播放歌曲？？？
-    - Edge Gateway 边缘网关 1C/1G 32G: 跟 envoy 网关不同的是，这台机器会直接面向公网提供服务，所以对安全会有更高的要求。
-      - DMZ 风险比较高，暂时还是打算通过端口映射的方式提供公网服务。
-      - 所有面向公网的服务都需要经过这个网关，这样网关层也能提供一层额外的数据审计功能。
-      - 还没想好用啥，可能 nginx/caddy/envoy 三选一吧。
+    - windows server 2022 2c/8G
+    - k3s-main single master 2C/4G 20G
+      - 家庭网络，单 master 就够用了，省点性能开销
+      - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
+    - k3s-data-1 single master 2C/4G 20G
+      - 数据面集群 1，跑些常见任务
+    - k8s-data-2 single master 2C/4G 20G
+      - 数据面集群 2，跑些常见任务
+    - k3s-data-1 worker node 4C/8G 32G
+      - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
+      - 跑各种其他 k8s 实验负载
 - MoreFine S500+
+  - OS: Proxmox VE
+  - VMs
+    - tailscale-gateway 1C/1G 20G
+      - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
+    - Home Assistant 2C/2G 20G
+      - 干一些自动化的活，比如我到家后自动播放歌曲？？？
+    - k3s-data-1 worker node 4C/16G 100G
+      - 跑各种其他 k8s 实验负载
+    - k8s-data-2 worker node 4C/16G 100G
+      - 跑各种其他 k8s 实验负载
+- Beelink GTR5
   - OS: Proxmox VE
   - VMs
     - k3s-data-1 worker node * 3
       - 4C/16G 100G
-      - 跑各种其他 k8s 实验负载
+      - 作为 k3s 高性能实验节点
     - ubuntu test server * 1
       - 2C/8G 32G
-- Beelink GTR5
-  - OS: Proxmox VE
-  - VMs
-    - k3s-data-2 worker node * 3
-      - 4C/16G 100G
-      - 作为 k3s 高性能实验节点
-    - 跑其他测试负载
 - OrangePi Pi 5
   - OS: Debian
   - APPs
