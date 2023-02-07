@@ -8,6 +8,7 @@
 然而 TDP 仅表示 CPU 的默认功耗，并不能完全代表真实情况。
 现在的 CPU 多带有频率自动调节的功能，这意味着它的功耗是在一定范围内浮动的。Intel 的睿频 Boost 与 AMD 的 SmartShift 技术，都能使实际功耗远高于标称的 TDP.
 
+<<<<<<< HEAD
 ## 主机的功耗组成
 
 电脑耗电的几个主要部件：CPU、GPU、主板、内存条、硬盘、显示器，以及其他外设。
@@ -22,6 +23,8 @@ CPU 是功耗大头，会在后面详细说明其功耗计算与调节方法，G
 
 那么就只剩下主板了，那我的 GTR6/S500+/UM560 三台 MINI 主机，压测时其主板功耗能有多少呢？网上查了说普通 PC 主板的峰值功耗大概在 20W 左右，MINI 主机是否也是如此，暂时存疑。
 
+=======
+>>>>>>> fc3a87e (feat: /homelab power)
 ## AMD/Intel CPU 的功耗调节机制
 
 AMD和intel的CPU在功耗限制上是完全不同的机制，intel在笔记本上用的叫DPTF，通过PL1/PL2和turbo time来控制瞬时和长时发热。
@@ -105,6 +108,7 @@ PM Table Version: 400005
 | PPT VALUE APU       |     3.565 |                    |
 ```
 
+<<<<<<< HEAD
 最后是我的 Minisfroum UM560 5625U，它的压测功耗为 45W，默认功耗限制：
 
 ```shell
@@ -141,15 +145,38 @@ PM Table Version: 400005
 | SlowPPTTimeConst | 5                      | 5                    | 5                   | slow-time 单位秒                  |
 | PPT LIMIT APU    | 25                     | 25                   | 54                  | apu-slow-limit                 |
 | PPT VALUE APU    | 2.508                  | 3.565                | 9.861               |                                |
+=======
+得到如下表格：
+
+| Name             | MoreFine S500+ 5825U | Beelink GTR5 5900HX | Paramter       |
+| ---------------- | -------------------- | ------------------- | -------------- |
+| STAPM LIMIT      | 37.501               | 35                  | Sustained Power Limit（长时间运行状态）    |
+| STAPM VALUE      | 3.554                | 10.188              |                |
+| PPT LIMIT FAST   | 40                   | 35                  | 短时间高速运行     |
+| PPT VALUE FAST   | 12.907               | 15.373              |                |
+| PPT LIMIT SLOW   | 37.501               | 35                  | 高速运行，时间略长于 Fast PPT Limit     |
+| PPT VALUE SLOW   | 3.565                | 9.861               |                |
+| StapmTimeConst   | 275                  | 300                 | stapm-time 单位秒 |
+| SlowPPTTimeConst | 5                    | 5                   | slow-time 单位秒  |
+| PPT LIMIT APU    | 25                   | 54                  | apu-slow-limit |
+| PPT VALUE APU    | 3.565                | 9.861               |                |
+>>>>>>> fc3a87e (feat: /homelab power)
 
 根据 AMD 官方资料，5900HX 这颗核心的默认 TDP 为 45W+，而且在 35W - 45W 之间可调。
 再结合我们的数据，显然 GTR6 的这颗 CPU 的功耗上限被设置成了 35W。
 
+<<<<<<< HEAD
 而 5825U 这颗核心官方资料显示默认 TDP 为 15W，而且超频是不保修的，可我们查出的数据显示它的 TDP 上限竟然在 37W - 40W，这显然是超频了，超频时主板功耗估计会上升，散热压力大风扇也会满载运行，这就难怪它的压测功耗有 60W 了。
 
 5900HX 的最低功耗就是 35W 已经无法下调，但是对于 5625U 跟 5825U，我们可以在 BIOS - advanced - AMD CBS - NBIO Common Options - Smartshift control 中将上述三个值都下调至 15W（即设置为 15000），这样就能显著降低高负载下的功耗。
 
 等到啥时候发现 15W 性能实在不行，再考虑上调功耗限制吧。
+=======
+而 5825U 这颗核心官方资料显示默认 TDP 为 15W，而且超频是不保修的，可我们查出的数据显示它的 TDP 上限竟然在 37W - 40W，这显然是超频了，超频时散热压力大风扇也会满载运行，这就难怪它的压测功耗有 60W 了。
+
+5900HX 的最低功耗就是 35W 已经无法下调，但是对于  5825U，我们可以在 BIOS - advanced - AMD CBS - NBIO Common Options - Smartshift control 中将上述三个值都下调至 15W（即设置为 15000），这样就能显著降低高负载下的功耗。
+
+>>>>>>> fc3a87e (feat: /homelab power)
 
 # 参考
 
