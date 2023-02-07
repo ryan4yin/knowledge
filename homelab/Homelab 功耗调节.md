@@ -8,6 +8,20 @@
 然而 TDP 仅表示 CPU 的默认功耗，并不能完全代表真实情况。
 现在的 CPU 多带有频率自动调节的功能，这意味着它的功耗是在一定范围内浮动的。Intel 的睿频 Boost 与 AMD 的 SmartShift 技术，都能使实际功耗远高于标称的 TDP.
 
+## 主机的功耗组成
+
+电脑耗电的几个主要部件：CPU、GPU、主板、内存条、硬盘、显示器，以及其他外设。
+
+对我的 Homelab 而言，1.2V DDR4 内存、SSD 硬盘的功耗都很小，一台机器的内存 + SSD 即使峰值功耗，应该也在 5W 以内。
+
+比如我的西数 WD Blue SN570 1T NVMe SSD，根据官方规格书 [WD Blue SN570 NVMe SSD](https://documents.westerndigital.com/content/dam/doc-library/zh_cn/assets/public/western-digital/product/internal-drives/wd-blue-nvme-ssd/product-brief-wd-blue-sn570-nvme-ssd.pdf)，其峰值功耗为 4.5W，平均功率仅 90mW.
+
+机械硬盘在工作状态下，功耗会高一点，一块 3.5 寸硬盘正常运行时的功率大概 6W.
+
+CPU 是功耗大头，会在后面详细说明其功耗计算与调节方法，GPU 我 Homelab 暂时没有外置的，先忽略。
+
+那么就只剩下主板了，那我的 GTR6/S500+/UM560 三台 MINI 主机，压测时其主板功耗能有多少呢？网上查了说普通 PC 主板的峰值功耗大概在 20W 左右，MINI 主机是否也是如此，暂时存疑。
+
 ## AMD/Intel CPU 的功耗调节机制
 
 AMD和intel的CPU在功耗限制上是完全不同的机制，intel在笔记本上用的叫DPTF，通过PL1/PL2和turbo time来控制瞬时和长时发热。
@@ -109,7 +123,7 @@ PM Table Version: 400005
 根据 AMD 官方资料，5900HX 这颗核心的默认 TDP 为 45W+，而且在 35W - 45W 之间可调。
 再结合我们的数据，显然 GTR6 的这颗 CPU 的功耗上限被设置成了 35W。
 
-而 5825U 这颗核心官方资料显示默认 TDP 为 15W，而且超频是不保修的，可我们查出的数据显示它的 TDP 上限竟然在 37W - 40W，这显然是超频了，超频时散热压力大风扇也会满载运行，这就难怪它的压测功耗有 60W 了。
+而 5825U 这颗核心官方资料显示默认 TDP 为 15W，而且超频是不保修的，可我们查出的数据显示它的 TDP 上限竟然在 37W - 40W，这显然是超频了，超频时主板功耗估计会上升，散热压力大风扇也会满载运行，这就难怪它的压测功耗有 60W 了。
 
 5900HX 的最低功耗就是 35W 已经无法下调，但是对于  5825U，我们可以在 BIOS - advanced - AMD CBS - NBIO Common Options - Smartshift control 中将上述三个值都下调至 15W（即设置为 15000），这样就能显著降低高负载下的功耗。
 

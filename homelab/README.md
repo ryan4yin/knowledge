@@ -11,8 +11,8 @@
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 买的是低功耗的 U，但是实际功耗好像有点离谱... |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能实验节点，平常维持低功耗运行 |
 | ~~Raspberry Pi 4B 2GB~~  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | ~~超低功耗 ARM64 主机~~，目前拿去玩电子了 |
-| Orange Pi 5  | RK 3588S | 8G | 128G TF Card | - | 高性能 ARM64 主机，买来给 k8s 跑 ARM 负载的 |
-| Rock Pi 5A  | RK 3588S | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
+| Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 128G TF Card | - | 高性能 ARM64 主机，买来给 k8s 跑 ARM 负载的。（这主机的 NPU/GPU 官方驱动还没更新上，无法利用） |
+| Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
 
 
 ## 网络拓扑
@@ -59,10 +59,17 @@ graph TD
     - OpenWRT: 1C/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
       - 安装 openclash、广告拦截插件
-    - k3s single master 2C/4G 32G
+    - k3s-main single master 2C/4G 32G
       - 家庭网络，单 master 就够用了，省点性能开销
-    - k3s worker node 4C/8G 32G * 2
+      - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
+    - k3s-data-1 single master 2C/4G 32G
+      - 数据面集群 1，跑些常见任务
+    - k3s-data-2 single master 2C/4G 32G
+      - 数据面集群 2，跑些常见任务
+    - k3s-data-1 worker node 4C/8G 32G
       - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
+      - 跑各种其他 k8s 实验负载
+    - k3s-data-2 worker node 4C/8G 32G
       - 跑各种其他 k8s 实验负载
     - docker-compose server 4C/8G 32G
       - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 WebDAV 协议与 HTTP File Server.
@@ -83,10 +90,10 @@ graph TD
       - DMZ 风险比较高，暂时还是打算通过端口映射的方式提供公网服务。
       - 所有面向公网的服务都需要经过这个网关，这样网关层也能提供一层额外的数据审计功能。
       - 还没想好用啥，可能 nginx/caddy/envoy 三选一吧。
-- MoreFine S500+ 
+- MoreFine S500+
   - OS: Proxmox VE
   - VMs
-    - k3s worker node * 3
+    - k3s-data-1 worker node * 3
       - 4C/16G 100G
       - 跑各种其他 k8s 实验负载
     - ubuntu test server * 1
@@ -94,16 +101,16 @@ graph TD
 - Beelink GTR5
   - OS: Proxmox VE
   - VMs
-    - k3s worker node * 3
+    - k3s-data-2 worker node * 3
       - 4C/16G 100G
       - 作为 k3s 高性能实验节点
     - 跑其他测试负载
-- Raspberry Pi 4B
-  - OS: Raspberry Pi OS
+- OrangePi Pi 5
+  - OS: Debian
   - APPs
-    - k3s worker node
+    - k3s-data-1 arm64 worker node
       - 需要添加污点，容忍该污点即可将任务调度到此节点。
-      - 这也是当前 k3s 集群中唯一的 arm 节点，主要用于做一些 ARM 相关的测试
+      - 这也是当前 k3s 集群中唯一的 arm64 节点，主要用于做一些 ARM 相关的测试
 
 k3s 集群里可以跑这些负载：
 
@@ -125,7 +132,7 @@ k3s 集群里可以跑这些负载：
 - 集群安全策略: kyverno
 - 等等
 
-局域网有了总共 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
+局域网有了 x64 架构下 22C44T CPU + 160G RAM，以及 ARM64 架构下 16C CPU + 12G RAM + Mail-G610 GPU * 2 + 16 Tops NPU 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
   - [airbyte](https://github.com/airbytehq/airbyte) 数据管道
@@ -158,9 +165,11 @@ k3s 集群里可以跑这些负载：
 ## 数据备份与同步策略
 
 - PVE 虚拟机备份
-  - 通过定时任务调用 PVE 的接口备份所有重要虚拟机，并使用 rsync 将 `/var/lib/vz/dump` 中的备份文件同步到 HDD
+  - 通过 crontab 定时任务，写脚本调用 PVE 的接口或者命令，备份所有重要虚拟机，并使用 rsync/scp 将 `/var/lib/vz/dump` 中的备份文件同步到 HDD，并且将同步指标上传到 prometheus 监控系统，如果备份功能失效，监控系统将通过短信或邮件告警。
+    - 为了确保监控系统 work，还得做监控系统的交叉验证（是不是有点重了 emmm）。
+  - 已经坏了两次 SSD 了，其中第二次悲惨损坏掉我的 k3s master 与 home assistant 虚拟机，没做备份的结果就是要重搞这俩。万幸主要的 k3s 配置文件与 docker-compose 配置都是 gitops 保存的，不至于丢失。
 - PVE 虚拟机高可用
-  - 对于 k3s master 或者 openwrt 软路由这类要求高可用的虚拟机，可以考虑使用 [PVE 的 High_Availability](https://pve.proxmox.com/wiki/High_Availability) 实现故障自动恢复。
+  - 对于 k3s master/openwrt/tailscale-gateway 这类要求高可用的虚拟机，可以考虑使用 [PVE 的 High_Availability](https://pve.proxmox.com/wiki/High_Availability) 实现故障自动恢复。
 - 手机/电脑数据同步：使用 [Syncthing](https://github.com/syncthing/syncthing) 将手机与电脑的数据同步到 homelab 的 HDD 中
 
 ## 远程访问
@@ -203,8 +212,8 @@ tailscale ping <hostname-or-ip>
 | :---:                              | :---:  | :---:   | :---:   | :---:      | :---: |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W    | 10W     | 10W     |            |按平时功耗算 10W * 24h * 30day = 7.2 KWh |
 | Minisfroum UM560 (AMD R5 5625U)    | 6W     | 15W     | 15W     | -          | 按平时功耗算 15W * 24h * 30day = 10.8 KWh |
-| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W     | 60W     |            | 这颗 CPU 被默认超频了，给到了 35w - 40w，加上风扇散热功率，就这么高了... |
 | Beelink GTR5 (AMD R9 5900HX)       | 6W     | 35W     | 50W     |            | 按平时功耗算 35W * 24h * 30day = 25.2 KWh |
+| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W     | 60W     |            | 这颗 CPU 被默认超频了，给到了 35w - 40w，导致压测时它比 GTR5 还要耗电... |
 | 双盘位硬盘盒 + 4T * 2                | (休眠)  | 12W     | 12W     | -          | 按平时功耗算 12W * 24h * 30day = 8.64 KWh |
 | 小米 AX1800（已闲置）                | 6W     | 6W      | 6W      | -          | 按平时功耗算 6W * 24h * 30day = 4.32 KWh |
 | Raspberry Pi 4B 2GB                | 3W     | -       | -       | 5V x 3A    |  - |
@@ -258,7 +267,7 @@ tailscale ping <hostname-or-ip>
 | 设备名称 | 购入时间 | 翻车时间 | 购入渠道 | 价格 | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: | 
 | 光威 SSD - 弈Pro 1T           | 2021-06-08 | 2022-11-13 | 京东自营    | ￥819 | 之前给 Windows 游戏机用了一年多，然后换到 GTR5 上没跑几天就掉盘了（系统无法启动，显示器报错 `nvme0: Device not ready; aborting reset`），京东售后给办理了 9 折退款（还好没存啥重要数据） |
-| Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 2023-02-03 | 京东自营    | ￥249 | 买到手后一直是 UM560 的存储。跑了刚三个月就出问题了，进入系统后用 `dmesg` 能看到非常多这类报错 `blk_update_request: critical medium error, dev nvme0n1, sector 951741928 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0` |
+| Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 2023-02-03 | 京东自营    | ￥249 | 买到手后一直是 UM560 的存储。跑了刚三个月就出问题了，进入系统后用 `dmesg` 能看到非常多这类报错 `blk_update_request: critical medium error, dev nvme0n1, sector 951741928 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0`。京东售后给换了新，但是丢了一些数据，数据不重要，但是需要花些额外的精力重建环境（充分认识到了 SSD 不稳，必须做定时备份！）。 |
 
 
 最后还有一些没入手，但是觉得很不错的设备：
@@ -270,7 +279,7 @@ tailscale ping <hostname-or-ip>
     - GTR6 相比 UM590 才贵 200 块，从这个角度讲，性价比倒是不错。
 - 中等性能、低功耗小主机
   - 目前只看到我自己买 UM560 确实能稳定在低功耗，性能也不错。
-  - 而买的 MoreFine S500+ (AMD R7 5825U) 虽然是低压 U，但是功耗有点离谱...
+  - MoreFine S500+ (AMD R7 5825U) 虽然是低压 U 但是默认是能超频到 40W 的，要省电的话可以考虑通过修改 BIOS 将功耗限制在 15W.
 
 总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
 跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
