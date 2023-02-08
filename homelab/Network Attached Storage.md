@@ -43,34 +43,58 @@ NAS 存储共享协议主要有这几种：
 
 ## 如何选择 NAS 系统
 
-在折腾了 [OpenMediaVault](https://www.openmediavault.org/)、[TrueNAS](https://github.com/truenas) 以及 Windows Server 后，我发现直接 docker 跑几个小容器提供 WebDAV 网络存储是符合我个人需求的。
+先说下我的需求：
 
-我实际没有 ISCSI/SMB 等协议的需求，而且 OpenMediaVault 的 ISCSI 插件性能还奇差，Windows Server 我也不太感冒，TrueNAS 底层是 freebsd 也玩不明白。
-~~所以直接用 docker 跑几个 Web 文件服务器跟 webdav 服务器，实际就完全 cover 住我的需求了，根本没必要搞啥专用 NAS 系统~~。
+- 将所有游戏都下载到 NAS 中，Windows PC 主机直接通过挂载远程硬盘玩游戏。
+- 通过 SMB/WebDAV 协议，远程挂载 NAS 硬盘，访问其中影音文件，或者共享一些数据。
+- 通过 [filebrowser](https://github.com/filebrowser/filebrowser) 提供 Web 文件浏览器，支持查看、上传、下载
 
-实际玩了发现 WebDAV/SMB 都不太适合用来给我的 windows 当存储硬盘用，steam 下载游戏时，一个分配磁盘动作就得等到天荒地老了（WebDAV/SMB 不是裸磁盘，分配磁盘这个动作貌似真的会全量写入...）。
-跟折腾群群友聊了后，发现用 Windows Server 跑 ISCSI 可能是最符合我需求的，稳定、传输速度高，非常适合给 steam 存游戏用。
+在折腾了 [OpenMediaVault](https://www.openmediavault.org/)、[TrueNAS](https://github.com/truenas) 以及 Windows Server 后，我确定了我应该使用 Windows Server 作为我的 NAS 系统，通过 SMB 协议提供服务。
 
-所以我现在的方案是，使用一台单独的 Windows Server 虚拟机，作为游戏 ISCSI 存储机器。
+原因列举如下：
 
-再使用一台 Linux 机器，通过 docker-compose 跑下面这些软件，提供我需要的其他存储功能：
+- OpenMediaVault
+  - SMB/WebDAV 协议插件性能还行，但是不支持快速文件创建，steam 下载游戏时，一个分配磁盘动作就得等到天荒地老了（它会忠实地将分配的磁盘空间全量传输一遍）...
+  - ISCSI 插件性能奇差（有高手表示这是协议 fallback 导致的性能损失）
+  - 总结：不论是用 SMB/WebDAV 还是 ISCSI 协议，性能都不尽如人意
+- Windows Server 2022 DataCenter
+  - SMB 协议：具有 SMB3.0、RDMA([SMB Direct](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-direct)) 等黑科技，可以快速创建文件，性能非常好。
+  - ISCSI 协议性能也很不错
+  - 总结：在客户端就是 Windows 的情况下，Windows Server 的黑科技能提供很大加成，非常香。
 
-- ~~WebDAV 服务器~~
-  - ~~[sftpgo](https://github.com/drakkan/sftpgo): 一个文件共享服务器，支持 sftp、webdav、ftp/s 等协议，支持本地存储，或者使用 AWS/GCP/Azure 的对象存储~~。
-  - ~~[dufs](https://github.com/sigoden/dufs): 一个 rust 写的轻量级文件服务器，支持文件上传/下载/搜索/WebDAV~~...
-    - ~~第一行代码提交于 2022/5/22，非常年轻所以请谨慎选用~~
-- 数据同步与备份
+所以折腾了一圈后，确定了 NAS 系统就用 Windows Server 提供 SMB 协议作为游戏与其他文件存储。
+
+另外再启动一台 linux 主机，通过 SMB 将远程硬盘挂载到该主机上，再通过 docker-compose 运行如下容器：
+
+- 数据备份与同步
   - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
     - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
   - [rclone](https://github.com/rclone/rclone): 支持将数据 copy 到各类云存储或者 WebDAV/SMB/NFS 服务器中
     - 跟 syncthing 的区别是，它并不在后台做持续性的同步，而是通过一条条命令执行对应的同步动作。
-- Web 文件服务器
+- 数据浏览
   - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
-- 其他影视、文档系统
+- 影音系统
   - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
-  - ...
 
-## Linux 如何自动挂载 USB 硬盘合
+## 如何使用 Windows Server 2022 DataCenter 作为 SMB 服务器
+
+前面已经简述了我为什么打算用 Windows Server 作为 NAS 系统，那么这里就简述下如何用 Windows Server 作为 SMB 服务器，然后测下 steam 游戏下载与运行效果如何（内网网速 2.5G）。
+
+首先是系统安装，这个没啥好说的，网上找找 Windows Server 2022 的 iso 镜像，安装好后使用 GVLK 批量授权密钥授权，再随便找个 KMS 在线激活服务，敲几行命令就激活了。
+
+系统安装、激活并调整好后，再通过「添加角色或功能」，把「远程桌面」功能跟「SMB 文件共享」、「ISCSI 相关」功能添加上，再重启系统。
+
+重启好后，再进「系统设置」勾选「允许远程桌面」，这样就可以通过微软官方的 [remote-desktop-clients](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 来连接到这台主机的远程桌面了（使用默认的 Administrator 账号即可）。这个 client 是全平台支持的，目前所有桌面系统中远程桌面体验最好的就是 Windows 了。
+
+>MacOS 客户端直接在 AppStore 中锁了区，国区无法下载，但是可以在文档中找到 MacOS remote desktop beta 测试版的安装镜像。
+
+SMB 共享文件夹的创建也非常简单，在服务器管理页面的「文件与存储服务」-「共享」中直接点击创建，然后选择「SMB 共享 - 快速」，然后后面应该都不需要描述了，很简单直观的流程就能完成创建。
+
+>ISCSI 存储的创建会稍微复杂一点，暂时用不到就不描述了。
+
+SMB 共享创建好后，直接在客户端 Windows PC 上创建网络驱动器映射把它挂载到本地，就可以把游戏下载到这个网络存储里了~速度应该贼快。
+
+## Linux 如何自动挂载 USB 硬盘盒
 
 网上很多文章会教你使用 `/etc/fstab` 去挂载 USB 硬盘，我得说这是一项非常危险的操作！因为 `/etc/fstab` 出任何问题都将导致系统无法启动，也就是说如果对应的 USB 设备接触不良了，或者被拔掉了，机器可能就启动不了了！（猜测哈，我有时间验证下...）
 

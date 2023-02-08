@@ -58,20 +58,26 @@ graph TD
     - OpenWRT: 1C/1G 2G - host CPU
       - 作为软路由系统，实现网络加速、DDNS 等功能
       - 安装 openclash、广告拦截插件
+    - windows server 2022 2c/8G
+      - 硬盘盒 USB 直通到此虚拟机，作为家庭 NAS 系统，通过 SMB 协议对外提供服务
+      - 使用 windows server 的原因是，它的 smb 协议速度最快，黑科技很多
     - docker-compose server 4C/8G 32G
-      - 硬盘盒 Sata 直通到此虚拟机，作为家庭 NAS 系统，提供 WebDAV 协议与 HTTP File Server.
       - 目前跑了这些服务
-        - [sftpgo](https://github.com/drakkan/sftpgo): 一个文件共享服务器，支持 sftp、webdav、ftp/s 等协议，支持本地存储，或者使用 AWS/GCP/Azure 的对象存储。
-        - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
         - [dashy](https://github.com/lissy93/dashy) HomePage 页
           - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
-        - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
-        - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步。
-        - Envoy Gateway: 作为局域网所有小站点的网关（选择 envoy 单纯是为了熟悉 envoy 的使用）
         - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
         - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
         - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-    - windows server 2022 2c/8G
+        - 其他使用 SMB 远程挂载的容器（将 SMB 远程文件夹挂载到本机使用）
+          - 数据备份与同步
+            - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
+              - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
+            - [rclone](https://github.com/rclone/rclone): 支持将数据 copy 到各类云存储或者 WebDAV/SMB/NFS 服务器中
+              - 跟 syncthing 的区别是，它并不在后台做持续性的同步，而是通过一条条命令执行对应的同步动作。
+          - 数据浏览
+            - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
+          - 影音系统
+            - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
     - k3s-main single master 2C/4G 20G
       - 家庭网络，单 master 就够用了，省点性能开销
       - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
@@ -161,7 +167,7 @@ k3s 集群里可以跑这些负载：
 ## 数据备份与同步策略
 
 - PVE 虚拟机备份
-  - 通过 crontab 定时任务，写脚本调用 PVE 的接口或者命令，备份所有重要虚拟机，并使用 rsync/scp 将 `/var/lib/vz/dump` 中的备份文件同步到 HDD，并且将同步指标上传到 prometheus 监控系统，如果备份功能失效，监控系统将通过短信或邮件告警。
+  - 通过 crontab 定时任务，写脚本调用 PVE 的接口或者命令，备份所有重要虚拟机，并使用 rsync/rclone 等命令将 `/var/lib/vz/dump` 中的备份文件同步到 HDD，并且将同步指标上传到 prometheus 监控系统，如果备份功能失效，监控系统将通过短信或邮件告警。
     - 为了确保监控系统 work，还得做监控系统的交叉验证（是不是有点重了 emmm）。
   - 已经坏了两次 SSD 了，其中第二次悲惨损坏掉我的 k3s master 与 home assistant 虚拟机，没做备份的结果就是要重搞这俩。万幸主要的 k3s 配置文件与 docker-compose 配置都是 gitops 保存的，不至于丢失。
 - PVE 虚拟机高可用
