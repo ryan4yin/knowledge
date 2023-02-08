@@ -2,8 +2,8 @@
 
 ## 服务器架构
 
-<img src="_img/my-homelab.webp" style="width:50%">
-<img src="_img/my-homlab-internal.webp" style="width:50%">
+<img src="_img/my-homelab-2023-02-09.webp" style="width:50%">
+<img src="_img/my-homelab-internal-2022-11-06.webp" style="width:50%">
 
 | 机器名称 | CPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -49,8 +49,8 @@ graph TD
 
 ## 软件架构
 
-![](_img/ryan-pve-console.webp "PVE Web 控制台")
-![](_img/dashy-homepage.webp "Homelab 面板")
+![](_img/ryan-pve-console-2022-11-29.webp "PVE Web 控制台（2022-11-29）")
+![](_img/dashy-homepage-2022-11-29.webp "Homelab 面板（2022-11-29）")
 
 - Minisfroum UM560
   - OS: Proxmox VE
