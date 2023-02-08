@@ -7,12 +7,12 @@
 
 | 机器名称 | CPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力设备，低功耗，常驻 |
-| MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 买的是低功耗的 U，但是实际功耗好像有点离谱... |
-| Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能实验节点，平常维持低功耗运行 |
-| ~~Raspberry Pi 4B 2GB~~  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | ~~超低功耗 ARM64 主机~~，目前拿去玩电子了 |
-| Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 128G TF Card | - | 高性能 ARM64 主机，买来给 k8s 跑 ARM 负载的。（这主机的 NPU/GPU 官方驱动还没更新上，无法利用） |
+| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
+| MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
+| Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
+| Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 128G TF Card | - | 高性能 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码） |
 | Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
+| ~~Raspberry Pi 4B 2GB~~  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | ~~超低功耗 ARM64 主机~~，目前拿去玩电子了 |
 
 
 ## 网络拓扑
@@ -23,10 +23,11 @@ graph TD
 	edge_router <-- 2.5GbE --> PVE-Node2
   edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1
 
-	edge_router <-- 1GbE --> raspberrypi[Raspberry PI 4B - K3s ARM 节点]
+	edge_router <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
   edge_router <-- WiFi6 1800M --> R9000P[联想 R9000P 游戏机]
   edge_router <-- WiFi6 --> android_pad1[小米平板 5 Pro]
   edge_router <-- WiFi5 --> android1[手机 Realme X2 Pro]
+	edge_router <-- WiFi5 --> raspberrypi[Raspberry PI 4B]
 
 	subgraph PVE-node1[Minisfroum UM560 - R5 5625U]
     PVE-Node1[Proxmox VE 集群 - 主力节点1]
@@ -105,7 +106,7 @@ graph TD
   - APPs
     - k3s-data-1 arm64 worker node
       - 需要添加污点，容忍该污点即可将任务调度到此节点。
-      - 这也是当前 k3s 集群中唯一的 arm64 节点，主要用于做一些 ARM 相关的测试
+      - 这也是当前 k3s 集群中唯一的 ARM64/NPU 节点，主要用于做一些 ARM 相关的测试
 
 k3s 集群里可以跑这些负载：
 
@@ -272,9 +273,9 @@ tailscale ping <hostname-or-ip>
   - Minisfroum UM690: 3000 的价格，主要提升在核显上，另外就是接口升级到了 USB 4、内存频率也上升了不少。不搞什么视频流解码，这个核显提升意义不大，所以对我的 homelab 而言它性价比不高。
   - Beelink GTR6: 2789 的价格，比同样是 6900HX 的 UM690 便宜不少，不过它的供电器就大很多了，如果想上 6900HX 的话，就看需求选购吧。
     - GTR6 相比 UM590 才贵 200 块，从这个角度讲，性价比倒是不错。
-- 中等性能、低功耗小主机
-  - 目前只看到我自己买 UM560 确实能稳定在低功耗，性能也不错。
-  - MoreFine S500+ (AMD R7 5825U) 虽然是低压 U 但是默认是能超频到 40W 的，要省电的话可以考虑通过修改 BIOS 将功耗限制在 15W.
+- 中等性能、低功耗小主机（省电）
+  - UM560 (AMD R7 5625U)，打折 1799 还不错
+  - MoreFine S500+ (AMD R7 5825U)，打折 2069
 
 总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
 跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
