@@ -57,26 +57,18 @@ NAS 存储共享协议主要有这几种：
   - SMB/WebDAV 协议插件性能还行，但是不支持快速文件创建，steam 下载游戏时，一个分配磁盘动作就得等到天荒地老了（它会忠实地将分配的磁盘空间全量传输一遍）...
   - ISCSI 插件性能奇差（有高手表示这是协议 fallback 导致的性能损失）
   - 总结：不论是用 SMB/WebDAV 还是 ISCSI 协议，性能都不尽如人意
-- Windows Server 2022 DataCenter
+- Windows Server 2022
   - SMB 协议：具有 SMB3.0、RDMA([SMB Direct](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-direct)) 等黑科技，可以快速创建文件，性能非常好。
   - ISCSI 协议性能也很不错
   - 总结：在客户端就是 Windows 的情况下，Windows Server 的黑科技能提供很大加成，非常香。
 
 所以折腾了一圈后，确定了 NAS 系统就用 Windows Server 提供 SMB 协议作为游戏与其他文件存储。
 
-另外再启动一台 linux 主机，通过 SMB 将远程硬盘挂载到该主机上，再通过 docker-compose 运行如下容器：
+因为我不熟悉 Windows，这台 Windows Server 主机只提供 SMB/ISCSI 存储服务，尽量保持简单。
 
-- 数据备份与同步
-  - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
-    - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
-  - [rclone](https://github.com/rclone/rclone): 支持将数据 copy 到各类云存储或者 WebDAV/SMB/NFS 服务器中
-    - 跟 syncthing 的区别是，它并不在后台做持续性的同步，而是通过一条条命令执行对应的同步动作。
-- 数据浏览
-  - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
-- 影音系统
-  - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+为了实现其他功能，另外再启动一台 linux 主机，通过 SMB 将远程硬盘挂载到该主机上，再通过 docker-compose 运行备份、影音、云盘等容器。
 
-## 如何使用 Windows Server 2022 DataCenter 作为 SMB 服务器
+## 如何使用 Windows Server 2022 作为 SMB 服务器
 
 前面已经简述了我为什么打算用 Windows Server 作为 NAS 系统，那么这里就简述下如何用 Windows Server 作为 SMB 服务器，然后测下 steam 游戏下载与运行效果如何（内网网速 2.5G）。
 
@@ -84,7 +76,9 @@ NAS 存储共享协议主要有这几种：
 
 系统安装、激活并调整好后，再通过「添加角色或功能」，把「远程桌面」功能跟「SMB 文件共享」、「ISCSI 相关」功能添加上，再重启系统。
 
-重启好后，再进「系统设置」勾选「允许远程桌面」，这样就可以通过微软官方的 [remote-desktop-clients](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 来连接到这台主机的远程桌面了（使用默认的 Administrator 账号即可）。这个 client 是全平台支持的，目前所有桌面系统中远程桌面体验最好的就是 Windows 了。
+>注：其实尝试过在里面搞 wsl2 + docker，但是虚拟化的 windows server 里跑这俩玩意儿有点问题...
+
+重启好后，再进「系统设置」勾选「允许远程桌面」，这样就可以通过微软官方的 [remote-desktop-clients](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 来连接到这台主机的远程桌面了（使用默认的 Administrator 账号即可）。这个 client 是全平台支持的，目前所有桌面系统中远程桌面体验最好的就是 Windows 了。开个远程桌面，好处就是排查问题或者改点东西要容易些。
 
 >MacOS 客户端直接在 AppStore 中锁了区，国区无法下载，但是可以在文档中找到 MacOS remote desktop beta 测试版的安装镜像。
 
