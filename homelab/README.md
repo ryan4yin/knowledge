@@ -73,11 +73,15 @@ graph TD
             - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
               - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
             - [rclone](https://github.com/rclone/rclone): 支持将数据 copy 到各类云存储或者 WebDAV/SMB/NFS 服务器中
-              - 跟 syncthing 的区别是，它并不在后台做持续性的同步，而是通过一条条命令执行对应的同步动作。
+            - [restic](https://github.com/restic/restic): 远程增量备份，支持通过 ssh/smb 等协议备份到远程存储中
           - 数据浏览
-            - [filebrowser](https://github.com/filebrowser/filebrowser): 文件浏览器，支持查看、上传、下载
+            - [alist](https://github.com/alist-org/alist): Web 页面，支持文件上传、下载、预览，支持多种协议，还可以接入各种云盘。
           - 影音系统
             - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+          - 直播相关处理工具
+            - [DDTV](https://github.com/CHKZL/DDTV)：直播开播自动录制、转码保存
+            - [BililiveRecorder](https://github.com/BililiveRecorder/BililiveRecorder): 同上
+            - [owncast](https://github.com/owncast/owncast): 自建直播服务器
     - k3s-main single master 2C/4G 20G
       - 家庭网络，单 master 就够用了，省点性能开销
       - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
