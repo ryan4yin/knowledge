@@ -18,3 +18,12 @@
 - Windows: [dism++](https://www.chuyu.me/zh-Hans/)
 - Linux: 建议使用虚拟化系统 ProxmoxVE + 虚拟机模板。
   - 非要定制的话，另行找文档吧，好像也不难。
+
+## 公共 DNS 递归解析器
+
+```conf
+# 腾讯 DNSPod
+119.29.29.29
+# 阿里 DNS
+223.5.5.5
+```
