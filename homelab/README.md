@@ -78,6 +78,7 @@ graph TD
             - [alist](https://github.com/alist-org/alist): Web 页面，支持文件上传、下载、预览，支持多种协议，还可以接入各种云盘。
           - 影音系统
             - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+            - 也在考虑要不要装个 transmission/aria2 用来下载 BT 或 HTTP 文件
           - 直播相关处理工具
             - [DDTV](https://github.com/CHKZL/DDTV)：直播开播自动录制、转码保存
             - [BililiveRecorder](https://github.com/BililiveRecorder/BililiveRecorder): 同上
