@@ -5,6 +5,8 @@
 <img src="_img/my-homelab-2023-02-09.webp" style="width:50%">
 <img src="_img/my-homelab-internal-2022-11-06.webp" style="width:50%">
 
+>听很多人说长期运行的机器用 ECC 内存才稳，不过我暂时没配，做好备份应该顶得住，后面真出问题再考虑吧...
+
 | 机器名称 | CPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
