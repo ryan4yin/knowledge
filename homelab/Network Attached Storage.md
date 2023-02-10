@@ -12,8 +12,8 @@ NAS 存储共享协议主要有这几种：
   - 许多 ISCSI 的协议实现比较拉，导致性能问题。OpenMediaVault 的 tgt 插件就是其中典型。
 - **SMB/CIFS**: 微软研发的一种文件共享协议，对延迟比较敏感，只适合在局域网内使用。
   - 好处是兼容性好，获得了各类操作系统、软件的广泛支持。
-  - Windows 挂载(powershell): `New-SmbGlobalMapping -LocalPath z: -RemotePath \\my-host\myshare -Persistent $true`
-    - 或者直接在「我的电脑」=>「映射网络驱动器」，输入盘号跟 WebDAV/SMB 地址点击连接即可。
+  - Windows 挂载: 直接进「我的电脑」，右键选择「映射网络驱动器」，输入盘号跟 WebDAV/SMB 地址点击连接即可，勾选上「自动连接」后使用起来就跟普通硬盘无异了。
+    - 如果右键菜单无此选项，则需要进入「Settings」=>「System」=>「Nearby Sharing」，选择「My devices only」，然后再回「我的电脑」右键，选项应该就出来了。
   - Linux 挂载:
     - 首先安装 `cifs-utils`，一般直接 apt/yum 安装就行
     - `sudo mount -t cifs //my-host/myshare /mnt -o vers=2.0,guest,uid=0,gid=0,dir_mode=0755,file_mode=0755,mfsymlinks`
