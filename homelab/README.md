@@ -174,6 +174,7 @@ k3s 集群里可以跑这些负载：
 - PVE 虚拟机备份
   - 通过 crontab 定时任务，写脚本调用 PVE 的接口或者命令，备份所有重要虚拟机，并使用 rsync/rclone 等命令将 `/var/lib/vz/dump` 中的备份文件同步到 HDD，并且将同步指标上传到 prometheus 监控系统，如果备份功能失效，监控系统将通过短信或邮件告警。
     - 为了确保监控系统 work，还得做监控系统的交叉验证（是不是有点重了 emmm）。
+  - 不过好像 PVE 官方也提供一个 [proxmox-backup-server](https://www.proxmox.com/en/proxmox-backup-server)，也是开源的，还在研究中
   - 已经坏了两次 SSD 了，其中第二次悲惨损坏掉我的 k3s master 与 home assistant 虚拟机，没做备份的结果就是要重搞这俩。万幸主要的 k3s 配置文件与 docker-compose 配置都是 gitops 保存的，不至于丢失。
 - PVE 虚拟机高可用
   - 对于 k3s master/openwrt/tailscale-gateway 这类要求高可用的虚拟机，可以考虑使用 [PVE 的 High_Availability](https://pve.proxmox.com/wiki/High_Availability) 实现故障自动恢复。
