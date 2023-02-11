@@ -47,7 +47,7 @@ NAS 存储共享协议主要有这几种：
 
 - 将所有游戏都下载到 NAS 中，Windows PC 主机直接通过挂载远程硬盘玩游戏。
 - 通过 SMB/WebDAV 协议，远程挂载 NAS 硬盘，访问其中影音文件，或者共享一些数据。
-- 通过 [filebrowser](https://github.com/filebrowser/filebrowser) 提供 Web 文件浏览器，支持查看、上传、下载
+- 供 Web 文件浏览器，支持查看、上传、下载等功能
 
 在折腾了 [OpenMediaVault](https://www.openmediavault.org/)、[TrueNAS](https://github.com/truenas) 以及 Windows Server 后，我确定了我应该使用 Windows Server 作为我的 NAS 系统，通过 SMB 协议提供服务。
 
