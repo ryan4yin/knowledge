@@ -72,10 +72,7 @@ graph TD
         - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
         - 其他使用 SMB 远程挂载的容器（将 SMB 远程文件夹挂载到本机使用）
           - 数据备份与同步
-            - [syncthing](https://github.com/syncthing/syncthing): 在多台机器之间进行持续性的增量同步，支持多操作系统，包括 Android/IOS，也提供 UI 界面。
-              - 跟我们在 linux 上常用的 rsync 有点类似，不过 rsync 是一个强大的命令行工具
-            - [rclone](https://github.com/rclone/rclone): 支持将数据 copy 到各类云存储或者 WebDAV/SMB/NFS 服务器中
-            - [restic](https://github.com/restic/restic): 远程增量备份，支持通过 ssh/smb 等协议备份到远程存储中
+            - 未来可能打算搞个 synthing 跟 restic
           - 数据浏览
             - [alist](https://github.com/alist-org/alist): Web 页面，支持文件上传、下载、预览，支持多种协议，还可以接入各种云盘。
           - 影音系统
@@ -171,16 +168,10 @@ k3s 集群里可以跑这些负载：
 
 详见 [Network Attached Storage](./Network%20Attached%20Storage.md)
 
-## 数据备份与同步策略
+## 数据备份与同步
 
-- PVE 虚拟机备份
-  - 通过 crontab 定时任务，写脚本调用 PVE 的接口或者命令，备份所有重要虚拟机，并使用 rsync/rclone 等命令将 `/var/lib/vz/dump` 中的备份文件同步到 HDD，并且将同步指标上传到 prometheus 监控系统，如果备份功能失效，监控系统将通过短信或邮件告警。
-    - 为了确保监控系统 work，还得做监控系统的交叉验证（是不是有点重了 emmm）。
-  - 不过好像 PVE 官方也提供一个 [proxmox-backup-server](https://www.proxmox.com/en/proxmox-backup-server)，也是开源的，还在研究中
-  - 已经坏了两次 SSD 了，其中第二次悲惨损坏掉我的 k3s master 与 home assistant 虚拟机，没做备份的结果就是要重搞这俩。万幸主要的 k3s 配置文件与 docker-compose 配置都是 gitops 保存的，不至于丢失。
-- PVE 虚拟机高可用
-  - 对于 k3s master/openwrt/tailscale-gateway 这类要求高可用的虚拟机，可以考虑使用 [PVE 的 High_Availability](https://pve.proxmox.com/wiki/High_Availability) 实现故障自动恢复。
-- 手机/电脑数据同步：使用 [Syncthing](https://github.com/syncthing/syncthing) 将手机与电脑的数据同步到 homelab 的 HDD 中
+详见 [数据备份与同步](./数据备份与同步.md)
+
 
 ## 远程访问
 
