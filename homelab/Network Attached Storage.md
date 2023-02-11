@@ -76,7 +76,7 @@ NAS 存储共享协议主要有这几种：
 
 系统安装、激活并调整好后，再通过「添加角色或功能」，把「远程桌面」功能跟「SMB 文件共享」、「ISCSI 相关」功能添加上，再重启系统。
 
->注：其实尝试过在里面搞 wsl2 + docker，但是虚拟化的 windows server 里跑这俩玩意儿有点问题...
+>注：其实尝试过在里面搞 wsl2 + docker，但是 proxmox 虚拟化的 windows 跑 wsl2 或者说 Hyper-V 看起来有大问题，只要装了 Hyper-V，机器跑几十分钟就会挂，卸载掉就正常了...
 
 重启好后，再进「系统设置」勾选「允许远程桌面」，这样就可以通过微软官方的 [remote-desktop-clients](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 来连接到这台主机的远程桌面了（使用默认的 Administrator 账号即可）。这个 client 是全平台支持的，目前所有桌面系统中远程桌面体验最好的就是 Windows 了。开个远程桌面，好处就是排查问题或者改点东西要容易些。
 
