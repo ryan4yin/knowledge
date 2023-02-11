@@ -125,12 +125,25 @@ sudo systemctl restart xrdp
 
 上面两个仓库虽然是用的 git 仓库，但实际底层内容都仅公开了 `.so`、`.whl`、docker 镜像等二进制安装包，并未开放源码。
 
-此外官方提供的 x64 闭源 docker 镜像太大了，未保存在仓库中，仅在 README 中附带的 百度云盘 分享中提供了该镜像文件。
+此外官方提供的 x64 闭源 docker 镜像太大了，而且还仅通过龟速百度网盘分享，我根据文档自己写了个 `Dockerfile.rknn_toolkit2_1.4.0` 用着正常。
+
+开发测试流程是这样的，首先把容器跑起来，并且把我的工作目录映射进去，同时通过 `--net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw"` 添加了 X11 Forwarding 功能，使容器内的 GUI 程序能直接通过宿主机的 X11 Server 显示出来：
+
+```shell
+docker run --name rknn -d \
+  --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" \
+  -v /home/ryan/Downloads/rk3588s/:/work \
+  rknn-toolki2:1.4.0 \
+  bash -c 'while true; do sleep 1000000; done'
+```
+
+然后直接 vscode 远程进入容器里搞开发~
+
+先整了个视频目标检测的 demo 玩，代码在这里 [yolov5_rknn_toolkit2_demo](./yolov5_rknn_toolkit2_demo/)
 
 ### 在 orangepi 上运行 rknn-toolkit2-lite2 中的官方 demo
 
-首先，我们要安装好 Orange Pi 5 官方提供的 Debian 系统，它已经预装好了 rknpu2。
-接着根据官方文档，首先安装如下依赖：
+安装流程跟 rknn_toolkit2 别无二致：
 
 ```shell
 # 安装 python 基础包
@@ -147,6 +160,10 @@ pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
 # 在用户目录下安装 rknn_toolkit_lite2, debian 11 安装 cpython3.9 的 whl
 pip install --user rknn_toolkit_lite2-1.4.0-cp39-cp39-linux_aarch64.whl
 ```
+
+这样就搞定了，可以开始跑 npu 任务了。
+
+如果你想部署基于 [rknpu2](https://github.com/rockchip-linux/rknpu2) 开发的程序，流程也类似，直接看它仓库里的官方文档吧。
 
 ## GPU 驱动
 
