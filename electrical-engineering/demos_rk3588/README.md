@@ -20,6 +20,91 @@ RK3588/RK3588S 是瑞芯微推出的一款高性能 ARM64 SoC，配置如下：
 5. 当虚拟服务器或 docker，虚拟多台 arm 主机，可装 Android
 6. 当成 proxmox 虚拟机集群的 arm 节点
 
+## 使用远程桌面
+
+为了在 Orange Pi 5 上做些 NPU 调试，经常要查看各种 opencv 输出的图像，所以远程桌面是比较需要的功能。
+
+查了一圈最成熟稳定的方案貌似有两个：
+
+- SSH X11 Forwarding: 这是最简单的方案，在局域网下，而且客户端就是 Linux 时体验非常好，很适合用于偶尔跑些图形任务。
+- [xrdp](https://github.com/neutrinolabs/xrdp): 它是 Windows 远程桌面协议的 Linux 实现，好处是性能不错，而且你还可以使用全平台的 [Microsoft Remote Desktop](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 连接你的 Linux 远程桌面，能够自动做剪切板同步、音频转发、使用客户端 GPU 进行图形渲染加速等，还支持多屏操作，体验很好。
+- VNC: VNC 是 Linux 下非常流行的远程桌面协议，它实现简单但不够安全，而且不支持传输声音，一般仅用于偶尔登录下服务器使用。
+
+经我测试发现，局域网环境下，SSH X11 Forwarding 是最好用的，不需要任何额外配置，直接 `ssh -X user@host` 就能用了！而且仅在运行 GUI 应用时才会开启 GUI 窗口，与使用本机 APP 的体验别无二致。
+
+相比之下 xrdp xrdp 我第一次跑时就黑屏了，一番查找才解决，还是有一定的工作量才能把环境配好的，而且 xrdp 需要在服务端安装完整的桌面环境，要占据服务端更多的存储，渲染时估计也会更吃资源。
+
+### 1. SSH X11 Forwarding
+
+SSH X11 Forwarding 能把 client 当成一台显示器来用，尤其是在客户端就是 Linux 桌面的情况下，局域网使用体验很好。不过它没做啥优化，数据都是全量发送，建议仅在局域网使用.
+
+另外 SSH X11 Forwarding 不需要完整的桌面环境，不需要在 Linux 远程主机上装完整的 xfce/gnome 等环境，这也是一个很大的优势。
+
+先说下前置条件：
+
+- 如果客户端桌面也是 Linux，那不需要改任何东西，直接就能用，体验也是三个桌面中最佳的。
+- 如果客户端是 MacOS，则需要提前安装好 [XQuartz](https://www.xquartz.org/)
+- 如果客户端是 Windows，则需要先安装好 [xming](https://sourceforge.net/projects/xming/)，可能还需要其他配置，我没试过请自行搜索解决。
+
+然后首先修改 Linux 服务器的 ssh 配置 `/etc/ssh/sshd_config`，启用 `X11Forwarding` 功能：
+
+```shell
+# 启用 X11Forwarding
+echo 'X11Forwarding yes' | sudo tee /etc/ssh/sshd_config
+sudo systemctl restart ssh
+```
+
+最简单的用法就是 ssh 直接加个 `-X` 命令：
+
+```shell
+ssh -X user@host
+```
+
+加了 `-X` 后的命令会等待一会儿才进入远程终端，然后就可以直接运行 X11 应用了。
+
+[How to start a GUI software on a remote Linux PC via SSH](https://askubuntu.com/questions/47642/how-to-start-a-gui-software-on-a-remote-linux-pc-via-ssh) 中介绍了多种用法，
+
+>如果你想远程使用更新的 wayland 系统，可以看看 [waypipe](https://gitlab.freedesktop.org/mstoeckl/waypipe)。
+
+### 2. 安装使用 [xrdp](https://github.com/neutrinolabs/xrdp)
+
+xrdp 远程连接得到的是一个完整的图形化桌面，因此需要先在 Orange Pi 5 上安装好桌面环境，服务器场景下建议使用性能最佳的 Xfce（或者直接用窗口管理器 i3wm），安装方式如下：
+
+```shell
+sudo apt update
+sudo apt install xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils
+```
+
+安装完成后最好重启下系统。
+
+```shell
+# 安装 xrdp 与它底层使用的 xorgxrdp
+sudo apt install xrdp xorgxrdp
+
+# Xrdp uses the /etc/ssl/private/ssl-cert-snakeoil.key, give it the permission to access it
+sudo adduser xrdp ssl-cert
+
+sudo systemctl enable xrdp
+sudo systemctl restart xrdp
+sudo systemctl status xrdp
+```
+
+另外还需要注意下 Linux 的防火墙配置，开放 3389 端口。
+
+然后就能使用 Windows 自带的 `remote` 程序，或者跨平台且体验更佳的 [Microsoft Remote Desktop](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients) 来连接主机即可。
+
+如果连接完是黑屏，可以先等待一会儿，说不定就 OK 了...如果超过 10s 一直黑屏，可以使用如下命令改下 xrdp 的启动环境变量，再重新连接试试：
+
+```shell
+cat <<EOF | sudo tee /etc/xrdp/startwm.sh
+unset DBUS_SESSION_BUS_ADDRESS
+unset XDG_RUNTIME_DIR
+EOF
+
+sudo systemctl restart xrdp
+```
+
+要是解决不了，可以看看 Arch Linux WIKI 中的常见问题及解法 [Xrdp - Arch Linux WIKI](https://wiki.archlinux.org/title/xrdp)
 
 ## NPU 使用案例
 
@@ -41,6 +126,27 @@ RK3588/RK3588S 是瑞芯微推出的一款高性能 ARM64 SoC，配置如下：
 上面两个仓库虽然是用的 git 仓库，但实际底层内容都仅公开了 `.so`、`.whl`、docker 镜像等二进制安装包，并未开放源码。
 
 此外官方提供的 x64 闭源 docker 镜像太大了，未保存在仓库中，仅在 README 中附带的 百度云盘 分享中提供了该镜像文件。
+
+### 在 orangepi 上运行 rknn-toolkit2-lite2 中的官方 demo
+
+首先，我们要安装好 Orange Pi 5 官方提供的 Debian 系统，它已经预装好了 rknpu2。
+接着根据官方文档，首先安装如下依赖：
+
+```shell
+# 安装 python 基础包
+sudo apt-get update
+sudo apt-get install -y python3 python3-dev python3-pip gcc
+
+# 安装 rknn-toolkit2-lite2 的依赖项
+sudo apt-get install -y python3-opencv python3-numpy
+
+# cd 进 rknn_toolkit_lite2 包存储位置
+cd rknn_toolkit_lite2/packages
+# 用北外源加速 Python 包下载
+pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple
+# 在用户目录下安装 rknn_toolkit_lite2, debian 11 安装 cpython3.9 的 whl
+pip install --user rknn_toolkit_lite2-1.4.0-cp39-cp39-linux_aarch64.whl
+```
 
 ## GPU 驱动
 
