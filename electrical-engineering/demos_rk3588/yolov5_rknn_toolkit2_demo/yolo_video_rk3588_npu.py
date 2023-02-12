@@ -293,6 +293,7 @@ while(cap.isOpened()):
     duration = dt.datetime.utcnow() - start
     fps = round(10000000 / duration.microseconds)
 
+    # draw process result and fps
     img_1 = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.putText(img_1, f'fps: {fps}',
             (20, 20),
