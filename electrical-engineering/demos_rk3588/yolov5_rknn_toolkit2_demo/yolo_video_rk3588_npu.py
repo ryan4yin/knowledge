@@ -207,10 +207,6 @@ def draw(image, boxes, scores, classes, fps):
                     (top, left - 6),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.6, (0, 0, 255), 2)
-        cv2.putText(image, f'fps: {fps}',
-            (20, 20),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6, (0, 125, 125), 2)
 
 def letterbox(im, new_shape=(640, 640), color=(0, 0, 0)):
     # Resize and pad image while meeting stride-multiple constraints
@@ -298,6 +294,10 @@ while(cap.isOpened()):
     fps = round(10000000 / duration.microseconds)
 
     img_1 = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    cv2.putText(img_1, f'fps: {fps}',
+            (20, 20),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6, (0, 125, 125), 2)
     if boxes is not None:
         draw(img_1, boxes, scores, classes, fps)
 
