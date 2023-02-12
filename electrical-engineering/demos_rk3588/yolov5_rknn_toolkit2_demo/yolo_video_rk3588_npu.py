@@ -248,7 +248,8 @@ ret = rknn.load_rknn(RKNN_MODEL)
 
 # Init runtime environment
 print('--> Init runtime environment')
-ret = rknn.init_runtime(core_mask=RKNNLite.NPU_CORE_0)
+# use NPU core 0 1 2
+ret = rknn.init_runtime(core_mask=RKNNLite.NPU_CORE_0_1_2)
 if ret != 0:
     print('Init runtime environment failed!')
     exit(ret)
