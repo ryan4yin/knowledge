@@ -2,6 +2,11 @@
 
 >内容已迁移至：[EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/)
 
+
+## 相关难点对应的参考资料
+
+ - [傅立叶变换交互式入门](https://www.jezzamon.com/fourier/zh-cn.html)
+
 ## ESPHome 篇
 
 我就是从 ESPHome 开始入门电子电路的。
@@ -29,4 +34,10 @@
 - USB 升压线（USB 5v 输入，DC 12v 输出）
 - microUSB 数据线
 - ESD10-15 镊子一套 6 个
+
+
+## 彩色灯带相关仓库
+
+- [WLED](https://github.com/Aircoookie/WLED): Control WS2812B and many more types of digital RGB LEDs with an ESP8266 or ESP32 over WiFi! 
+- [blinker-library](https://github.com/blinker-iot/blinker-library): 物联网接入方案，可以通过它将彩色灯带接入到小米之家里，用小爱同学控制。
 

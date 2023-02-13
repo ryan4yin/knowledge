@@ -144,3 +144,9 @@ dmesg 报错：
 查了一圈也没找到解决方案，待研究...
 
 TODO
+
+## 拓展 - 命令行如何查询 GPU 使用情况
+
+如果使用 VirGL 这种半虚拟化的 GPU 使用方式，可以在 pve 的 shell 中通过命令行查看 GPU 的使用情况，这个工具可以做到这一点：
+
+- [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA 

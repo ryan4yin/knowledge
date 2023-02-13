@@ -14,6 +14,8 @@
 
 ## 当前我很想玩的项目
 
+### HID 远程键盘
+
 如何将 Android/Linux 设备模拟成键盘，实现使用笔记本自带键盘，或者安卓触摸屏，直接进行我家 homelab 的装机。
 
 补充条件：我不想购买任何额外的硬件，比如 Raspberry Zero 或者 Arduino Leonardo.
@@ -23,9 +25,13 @@
 - [android-usb-gadget](https://github.com/tejado/android-usb-gadget)
 - [DIY 一个运维神器 Open IP-KVM](https://zhuanlan.zhihu.com/p/578602475)
 
-## 相关资料
+### 无人机 DIY
 
-机器人相关：
+- [ESP8266无人机原理图+PCB合集 ](https://mp.weixin.qq.com/s/tiVk7AwMAZAIXXZxJkA0Xg)
+- [GEARdrones - 低成本四旋翼无人机编队控制系统](https://github.com/Excitablecell/GEARdrones)
+
+
+### 进阶 - 机器人相关资料
 
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
 - [gobot](https://github.com/hybridgroup/gobot)
