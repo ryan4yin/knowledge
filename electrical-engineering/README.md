@@ -27,8 +27,11 @@
 
 ### 无人机 DIY
 
-- [ESP8266无人机原理图+PCB合集 ](https://mp.weixin.qq.com/s/tiVk7AwMAZAIXXZxJkA0Xg)
-- [GEARdrones - 低成本四旋翼无人机编队控制系统](https://github.com/Excitablecell/GEARdrones)
+- ESP 系列
+  - [ESP8266无人机原理图+PCB合集](https://mp.weixin.qq.com/s/tiVk7AwMAZAIXXZxJkA0Xg)
+  - [espressif/esp-drone](https://github.com/espressif/esp-drone): ESP 官方的飞行器解决方案
+  - [leeebo/ESP-Drone](https://github.com/leeebo/ESP-Drone): 基于 ESP32 的四旋翼无人机 
+- [GEARdrones](https://github.com/Excitablecell/GEARdrones): 基于 STM32F103 的低成本四旋翼无人机编队控制系统
 
 
 ### 进阶 - 机器人相关资料
