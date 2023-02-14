@@ -12,28 +12,6 @@
 
 参见我的博客文章 [EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/) 文末
 
-## 当前我很想玩的项目
-
-### HID 远程键盘
-
-如何将 Android/Linux 设备模拟成键盘，实现使用笔记本自带键盘，或者安卓触摸屏，直接进行我家 homelab 的装机。
-
-补充条件：我不想购买任何额外的硬件，比如 Raspberry Zero 或者 Arduino Leonardo.
-
-相关资料：
-
-- [android-usb-gadget](https://github.com/tejado/android-usb-gadget)
-- [DIY 一个运维神器 Open IP-KVM](https://zhuanlan.zhihu.com/p/578602475)
-
-### 无人机 DIY
-
-- ESP 系列
-  - [ESP8266无人机原理图+PCB合集](https://mp.weixin.qq.com/s/tiVk7AwMAZAIXXZxJkA0Xg)
-  - [espressif/esp-drone](https://github.com/espressif/esp-drone): ESP 官方的飞行器解决方案
-  - [leeebo/ESP-Drone](https://github.com/leeebo/ESP-Drone): 基于 ESP32 的四旋翼无人机 
-- [GEARdrones](https://github.com/Excitablecell/GEARdrones): 基于 STM32F103 的低成本四旋翼无人机编队控制系统
-
-
 ### 进阶 - 机器人相关资料
 
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
