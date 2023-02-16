@@ -13,8 +13,7 @@
    4. Telemetry：监控（Prometheus+Grafana）、日志（ELK/Loki）、链路追踪
    5. CI/CD：Jenkins/GitLabCI/ArgoWorkflow 等
 2. 编程语言学习笔记：Go/Python/C/Rust
-3. 操作系统
-   1. Linux 系统、KVM 虚拟化等
+3. 操作系统: Linux 系统、KVM 虚拟化等
 4. Homelab: 记录我的 Homelab 玩法
    1. 硬件配置、网络拓扑、购置时间、购置渠道与价格
    2. PVE 集群的玩法
