@@ -12,6 +12,15 @@
 
 参见我的博客文章 [EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/) 文末
 
+## 学习笔记
+
+esp32/raspberrypi/rk3588 的笔记不多，现在就存在这个 README 的文件夹里面。
+
+另外还有两份笔记单独整了个仓库：
+
+- [learn-8051-asm](https://github.com/ryan4yin/learn-8051-asm): 之前玩 8051 汇编的笔记跟代码
+- [learn-stm32f103c8t6](https://github.com/ryan4yin/learn-stm32f103c8t6): 学 stm32 的笔记跟代码
+
 ### 进阶 - 机器人相关资料
 
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
