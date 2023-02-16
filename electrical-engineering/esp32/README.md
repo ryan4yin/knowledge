@@ -21,7 +21,8 @@
 - 乐鑫官方的 [ESP-IDF](https://github.com/espressif/esp-idf)
 - 乐鑫官方的 [Arduino-ESP32](https://github.com/espressif/arduino-esp32) 开发工具包
 - [MicroPython for ESP32](https://docs.micropython.org/en/latest/esp32/quickref.html)
-- [Rust on ESP](https://esp-rs.github.io/book/)
+- [esp-rs](https://github.com/espressif?q=&type=all&language=&sort=stargazers): esp 官方的 rust 支持项目，很活跃
+  - [espressif-trainings](https://github.com/ferrous-systems/espressif-trainings)
 - [TinyGo](https://tinygo.org/docs/reference/microcontrollers/esp32-coreboard-v2/): 它目前（2023/2/15）对 ESP32 的支持还比较鸡肋，WIFI/Bluetooth/PWM/I2C/ADC 都不支持，没啥可玩性。
 
 目前官方最推荐的是 ESP-IDF，但它比较偏底层，而且环境比较复杂，使用了 CMake、Kconfig 等环境配置工具，又搞了 Python 来做测试，对新手而言陌生的东西太多，是个很大的挑战。
@@ -29,5 +30,4 @@
 因此对新手而言，目前更推荐使用 Arduino-ESP32 或者 MicroPython 进行开发。
 
 于我而言，我目前其实更想练手 C 语言，所以打算 ESP-IDF 与 Arduino-ESP32 都尝试一下。
-
 

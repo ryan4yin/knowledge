@@ -33,14 +33,3 @@ TODO
 - [Hovership MHQ - Foldable Mini H-Quadcopter](https://www.thingiverse.com/thing:251002)
 - [Foldable Brushed Microquad](https://www.thingiverse.com/thing:1604440)
 
-
-### ESP 相关
-
-- [ESP-IDF Programming Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
-- [ESP 社区的视频教程](https://www.espressif.com.cn/en/ecosystem/community-engagement/courses)
-
-### Rust Embedded
-
-- [esp-rs](https://github.com/espressif?q=&type=all&language=&sort=stargazers): esp 官方的 rust 支持项目，很活跃
-  - [espressif-trainings](https://github.com/ferrous-systems/espressif-trainings)
-- [stm32-rs](https://github.com/stm32-rs?q=&type=all&language=&sort=stargazers)
