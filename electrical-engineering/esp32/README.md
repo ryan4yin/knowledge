@@ -25,9 +25,19 @@
   - [espressif-trainings](https://github.com/ferrous-systems/espressif-trainings)
 - [TinyGo](https://tinygo.org/docs/reference/microcontrollers/esp32-coreboard-v2/): 它目前（2023/2/15）对 ESP32 的支持还比较鸡肋，WIFI/Bluetooth/PWM/I2C/ADC 都不支持，没啥可玩性。
 
-目前官方最推荐的是 ESP-IDF，但它比较偏底层，而且环境比较复杂，使用了 CMake、Kconfig 等环境配置工具，又搞了 Python 来做测试，对新手而言陌生的东西太多，是个很大的挑战。
+目前官方最推荐的是 ESP-IDF，但它比较偏底层，而且环境比较复杂，使用了 CMake、Kconfig 等环境配置工具，又搞了 Ninja 模板语言、还用 Python 写测试，对新手而言陌生的东西太多，是个很大的挑战。
 
 因此对新手而言，目前更推荐使用 Arduino-ESP32 或者 MicroPython 进行开发。
 
 于我而言，我目前其实更想练手 C 语言，所以打算 ESP-IDF 与 Arduino-ESP32 都尝试一下。
+
+## 使用 VSCode + ESP-IDF 进行程序开发
+
+- 首先参考 esp-idf 官方文档进行配置，copy 一个 example 项目并成功烧录进开发板
+- 然后解决下语法提示的问题，根据 VSCode ESP-IDF 插件文档 [Configuration of c_cpp_properties.json file](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/C_CPP_CONFIGURATION.md)，可通过 Ctrl + Shift + P 组合键打开命令搜索面板，输入 `Add vscode configuration folder` 并回车，就能自动添加好 C/C++ 的库引用配置，这样 VSCode 的语法提示就正常了。
+
+为了更好地使用，最好是再看下 VSCode 插件的官方文档 [ONBOARDING - vscode-esp-idf-extension](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/ONBOARDING.md)
+
+另外 ESP-IDF 的环境依赖较多，配置起来有点复杂，如果你熟悉 Docker，其实前面的官方文档就提供了使用 Docker 进行开发的教程：[Using Docker Container - vscode-esp-idf-extension](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/tutorial/using-docker-container.md)，不过仅针对 Windows 环境，Linux 环境可能还得做点调整（比如需要在 `/etc/udev/rules.d` 中添加 `openocd.rules`）。
+
 
