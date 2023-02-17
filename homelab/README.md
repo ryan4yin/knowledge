@@ -285,6 +285,12 @@ tailscale ping <hostname-or-ip>
   - UM560 (AMD R7 5625U)，打折 1799 还不错
   - MoreFine S500+ (AMD R7 5825U)，打折 2069，默认给的功耗比较高，可以通过 BIOS 下调功耗墙，省钱（详见此文件夹中「Homelab 功耗调节」一文）。
 
+再有就是炼丹设备，去年开始 AI 大火，我也是挺感兴趣的。
+现在闲鱼上 2016 年的 P4/P40 矿卡相当便宜，一张 8G 的 P4 只要 400 多，一张 24G 的 P40 只要 750，整几张搞个主机专门跑 AI，感觉会很有意思。多 GPU 炼丹相关的教程：
+
+- [Deep Learning with Multiple GPUs - run:ai](https://www.run.ai/guides/multi-gpu)
+- [Fundamentals of Deep Learning for Multi-GPUs - Nvidia](https://www.nvidia.com/en-us/training/instructor-led-workshops/fundamentals-of-deep-learning-for-multi-gpus/)
+
 总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
 跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
 配置差别还是有点大的，不过胜在静音 + 低功耗 + 不占空间 + 发热小，对于小租房而言也算是不错的选择。
