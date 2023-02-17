@@ -1,4 +1,4 @@
-# 电子电路
+# 电子工程 Electrical Engineering
 
 小时候同村的一个伙伴买了台遥控赛车，我们羡慕地不行，眼巴巴地希望他能多分一点时间给我玩。但是我从小到大从来没买过任何一台遥控赛车。
 
@@ -11,6 +11,12 @@
 ## 我的学习计划
 
 参见我的博客文章 [EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/) 文末
+
+
+## 相关难点对应的参考资料
+
+ - [傅立叶变换交互式入门](https://www.jezzamon.com/fourier/zh-cn.html)
+
 
 ## 学习笔记
 

@@ -62,3 +62,37 @@
 
 - [Wokwi - Online ESP32 & Arduino Simulator](https://wokwi.com/): ESP32 模拟器，支持 C/Arudino/MicroPython 等多种开发环境。
 - [Rust on Wokwi - Online ESP32 Simulator](https://wokwi.com/rust): Rust 版的 ESP32 在线模拟器
+
+
+## ESPHome 篇
+
+我从 ESPHome 入坑开始慢慢熟悉电子电路，陆续在多个淘宝店买了许多相关组件，罗列如下：
+
+- 各种传感器：光敏、粉尘、空气质量、人体红外感应、红外发射接收、霍尔磁力、光强度、温湿度、液晶显示屏（单色/全彩）、麦克风等等
+  - 注意家里没电烙铁的纯新手（比如我），一定注意买已经焊接好引脚的传感器，否则就得考虑买电烙铁了（要多花百来块钱，如果确定长期玩，可以入手）。
+- ESP32 开发版（ESP-WROOM-32 模组）
+- ESP32-C3 开发版
+  - ESP32-C3-MINI-1 模组，开发版型号为 `esp32-c3-devkitm-1`
+  - 这个板子比较新，引脚也偏少，esphome 生态中一些模块直接用在它上面会报错，需要魔改。
+- ESP8266 开发版（型号 `esp01_1m`）
+- ESP-12F mini D1 开发版
+  - 核心是 ESP8266，不过它只有 16 个引脚，不带 USB 转 TTL 芯片，但是相对小很多。
+- ESP-01S 无线模块 + 2 个 Relay 继电器模块
+  - 核心也是 ESP8266 但是只引出了 8 个针脚，适合用在智能插座等场景
+- ESP32-CAM 开发版 + OV2640 摄像头
+- USB 转 TTL 串口小板 + microUSB 连接线
+- MB-102 830 孔面包板 * 2 + 400 孔面包板 * 4 + 面包板专用电源 * 4
+- 面包线一盒（840 根） + 母对母杜邦线 40P（即 40 根） + 母对公杜邦线 40P + 热缩管一盒
+- 10 格零件盒 + 大号 8 格零件盒
+- 防静电手环（冬天玩电子设备必备）
+  - 液晶屏之类的零件很容易被静电搞坏
+- USB 升压线（USB 5v 输入，DC 12v 输出）
+- ESD10-15 镊子一套 6 个
+
+
+## 彩色灯带相关仓库
+
+- [WLED](https://github.com/Aircoookie/WLED): Control WS2812B and many more types of digital RGB LEDs with an ESP8266 or ESP32 over WiFi! 
+- [blinker-library](https://github.com/blinker-iot/blinker-library): 物联网接入方案，可以通过它将彩色灯带接入到小米之家里，用小爱同学控制。
+
+
