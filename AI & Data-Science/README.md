@@ -48,12 +48,8 @@ Python 分布式运行框架：
 ## 硬件
 
 再有就是炼丹设备，去年开始 AI 大火，我也是挺感兴趣的。
-现在（2023-02-17）闲鱼上 2016 年的 P4/P40 矿卡相当便宜，一张 8G 的 P4 只要 400 多，一张 24G 的 P40 只要 750，整几张搞个主机专门跑 AI，感觉会很有意思。多 GPU 炼丹相关的教程：
 
-- [Deep Learning with Multiple GPUs - run:ai](https://www.run.ai/guides/multi-gpu)
-- [Fundamentals of Deep Learning for Multi-GPUs - Nvidia](https://www.nvidia.com/en-us/training/instructor-led-workshops/fundamentals-of-deep-learning-for-multi-gpus/)
-
-不过我手上一块 RTX3070 MAX-Q 用来跑模型好像也够用了，想了想感觉自己还是冲动了，等有需要再考虑吧（但是这么便宜的二手卡再等几个月可能就卖没了，还是得尽快学学 AI 啊）。
+显卡的选择策略参考 [深度学习中GPU卡的选择](https://zhuanlan.zhihu.com/p/51380356) 一文。
 
 ## 参考
 
