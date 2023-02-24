@@ -4,7 +4,7 @@
 
 - [StableDiffusionBook](https://github.com/sudoskys/StableDiffusionBook): Stable Diffusion 小书，适合入门看。
 - [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui): 应该是目前最火的图片生成工具了，提供了易用的 AI 来与模型进行交互。
-- [stablediffusion](https://github.com/Stability-AI/stablediffusion)
+- [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet): 整合了 controlnet 的 stable-diffusion-webui，controlnet 是 2023-02 的一项突破性进展，使我们能够使用线稿、骨骼结构来控制模型效果。
 
 其他资源站：
 
