@@ -5,6 +5,7 @@
 - [StableDiffusionBook](https://github.com/sudoskys/StableDiffusionBook): Stable Diffusion 小书，适合入门看。
 - [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui): 应该是目前最火的图片生成工具了，提供了易用的 AI 来与模型进行交互。
 - [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet): 整合了 controlnet 的 stable-diffusion-webui，controlnet 是 2023-02 的一项突破性进展，使我们能够使用线稿、骨骼结构来控制模型效果。
+- [stablediffusion](https://github.com/Stability-AI/stablediffusion)
 
 其他资源站：
 
@@ -79,3 +80,21 @@ docker cp chilloutmix_NiPrunedFp32Fix.safetensors sd-webui:/content/stable-diffu
 
 模型弄进去后重启启动 webui，就能在左上角的 checkpoints 那里选用新模型了。
 
+
+## sd-webui-controlnet
+
+按照 [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet) 的 README 操作就行，需要注意的是，ControlNet 模型需要放在 `stable-diffusion-webui/extensions/sd-webui-controlnet/models/ControlNet` 文件夹中才能找到它（而不是 `stable-diffusion-webui/models/ControlNet`）。
+
+插件安装好，模型也放置好后，启动 sd-webui，就能在 txt2img/img2img 的最下方找到默认收起来的 ControlNet 面板，使用流程：
+
+1. 在 ControlNET 中选择好模型，如果模型中未列出选项，说明说明没放对地方
+2. Preprocesser 选择需要跟模型对应：
+   1. canay 边缘检测：用户输入一张动漫图片作为参考，程序会对这个图片预加载出线稿图，之后再由AI对线稿进行精准绘制（细节复原能力强）
+   2. Hed： 相比Canny自由发挥程度更高
+   3. Scribble 模型: 涂鸦成图，比Canny自由发挥程度更高
+   4. Seg模型:区块标注，适合潦草草图上色 
+   5. Mlsd 模型：建筑物线段识别，适合画建筑
+   6. Normal模型：适用于 3 维制图，用于法线贴图，立体效果
+   7. Depth模型：该模型可以较好的掌握图片内的复杂3维结构层次，并将其复现
+3. 在 ControlNet 面板中添加参考图片，插件会使用选择的 preprocesser 先处理图片，再将结果作为 ControlNet 的输入。
+4. 最后就是在前面的正常面板中写提示词、调整生成参数进行生成了（txt2img 模式下）。
