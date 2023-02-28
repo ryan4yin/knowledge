@@ -14,7 +14,11 @@
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
 | Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
-| ~~Raspberry Pi 4B 2GB~~  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | ~~低功耗 ARM64 主机~~，目前拿去玩电子了 |
+| OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用 |
+
+还有目前用来玩电子的几块板子，什么时候玩腻了可能就当服务器用了：
+
+| Raspberry Pi 4B 2GB  | BCM2711 (ARMv8), 4C4T | 2G | 128G TF Card | - | 用来玩智能小车、机械臂啥的 |
 
 
 ## 网络拓扑
@@ -236,6 +240,7 @@ tailscale ping <hostname-or-ip>
 | Beelink GTR5 准系统 (AMD R9 5900HX)       | 2022-11-02 | 京东官方店 | ￥2545 | 双 2.5G 网口，性能高但是功耗也高些，颜值尚可，不过充电器较大 |
 |  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
 |  Orange Pi 5 8G + 5V4A电源     | 2023-02-04 | 淘宝官方店 | ￥749 + 运费 ￥8 | 高性能 Pi，买来给 k8s 跑 ARM 负载的（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
+|  OnePlus 5 6G+64G    | 2023-02-26 | 闲鱼二手 | ￥290 | 二手手机确实挺划算的，比同性能的开发板便宜好多啊 |
 
 
 内存条与硬盘：
@@ -307,7 +312,7 @@ mini 主机领域性价比高的机器，目前主要就是零刻、minisfroum�
 - 老版本的 NUC/零刻
 - 用旧手机当 Linux ARM 服务器，有两个方案：
   - 方案一：在安卓系统上装个 [AidLux](https://github.com/aidlearning/AidLearning-FrameWork) 或者 [ermux/proot-distro](https://github.com/termux/proot-distro)，直接享受完整的 Linux 环境，而且还能无痛使用安卓系统的各种硬件外设，包括 AI 加速器。它的好处是各类安卓手机都能用，因为是跑在官方安卓系统上的，兼容性很好，缺点是性能可能就拉了。
-  - 方案二：直接裸机安装 Linux 系统，主要是 postmarketOS 跟 Ubuntu Touch，可以从 [Devices - postmarketOS](https://wiki.postmarketos.org/wiki/Devices) 跟 [Ubuntu Touch Devices](https://devices.ubuntu-touch.io/) 中找兼容性比较好的机器，性价比最高的貌似是就是一加 6T，骁龙 845 比我手上几个国产派的 RK3588s 弱一点点，但买个有瑕疵的价格大概只要 350。优势是性能好外设多（屏幕之类的外设用处可能也不大...），缺点就是得有时间折腾...没 AidLux 那么开箱即用。
+  - 方案二：直接裸机安装 Linux 系统，主要是 postmarketOS 跟 Ubuntu Touch，可以从 [Devices - postmarketOS](https://wiki.postmarketos.org/wiki/Devices) 跟 [Ubuntu Touch Devices](https://devices.ubuntu-touch.io/) 中找兼容性比较好的机器，性价比最高的貌似是就是一加 6 跟一加 5，骁龙 845 比我手上几个国产派的 RK3588s 弱一点点，但买个有瑕疵的价格大概只要 350。优势是性能好外设多（屏幕之类的外设用处可能也不大...），缺点就是得有时间折腾...没 AidLux 那么开箱即用。
 - 老旧笔记本，这个选项是从苏洋那里了解到的，确实二手笔记本比 NUC 啥的市场存量大很多，价格也很有诱惑力
 
 ## 参考
