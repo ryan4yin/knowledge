@@ -310,9 +310,7 @@ mini 主机领域性价比高的机器，目前主要就是零刻、minisfroum�
 除了前面我买的全新小主机/ARM 开发板，以及提到的二手机架服务器外，其实还有一类设备也很值得考虑，就是闲鱼上的二手货，比如说：
 
 - 老版本的 NUC/零刻
-- 用旧手机当 Linux ARM 服务器，有两个方案：
-  - 方案一：在安卓系统上装个 [AidLux](https://github.com/aidlearning/AidLearning-FrameWork) 或者 [ermux/proot-distro](https://github.com/termux/proot-distro)，直接享受完整的 Linux 环境，而且还能无痛使用安卓系统的各种硬件外设，包括 AI 加速器。它的好处是各类安卓手机都能用，因为是跑在官方安卓系统上的，兼容性很好，缺点是性能可能就拉了。
-  - 方案二：直接裸机安装 Linux 系统，主要是 postmarketOS 跟 Ubuntu Touch，可以从 [Devices - postmarketOS](https://wiki.postmarketos.org/wiki/Devices) 跟 [Ubuntu Touch Devices](https://devices.ubuntu-touch.io/) 中找兼容性比较好的机器，性价比最高的貌似是就是一加 6 跟一加 5，骁龙 845 比我手上几个国产派的 RK3588s 弱一点点，但买个有瑕疵的价格大概只要 350。优势是性能好外设多（屏幕之类的外设用处可能也不大...），缺点就是得有时间折腾...没 AidLux 那么开箱即用。
+- 用旧安卓手机当 Linux ARM 服务器，参考 [Andorid Phone as a Linux Server](./android%20phone/README.md)
 - 老旧笔记本，这个选项是从苏洋那里了解到的，确实二手笔记本比 NUC 啥的市场存量大很多，价格也很有诱惑力
 
 ## 参考
