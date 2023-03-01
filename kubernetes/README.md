@@ -40,7 +40,7 @@ helm uninstall -n xxx vvv
 - [nocalhost](https://github.com/nocalhost/nocalhost): 它比 telepresence 更进一步，只在本地 IDE (JetBrains/VSCode)里编写代码，然后直接同步到 Kubernetes 的容器中运行，容器由项目的 Dockerfile 构建（会自动修改 entrypoint）
 
 - [eclipse/che](https://github.com/eclipse/che): 比 nocalhost 更进一步，直接把 IDE 也整进了 Kubernetes 容器，che 底层使用 theia 作为它的 Web IDE。它可以自动为每个用户按需创建 Workspace，通过 PV 为用户持久化数据。
-  - 但是感觉这玩意搞得有点太复杂了，所以用的人少。
+  - 但是感觉这玩意搞得有点太复杂了，另一个顾虑是在云上开发显然也会导致企业云计算成本上升，所以用的人少。
 
 ## 技术文章收藏
 
