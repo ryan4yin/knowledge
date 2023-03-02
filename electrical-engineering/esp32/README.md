@@ -1,4 +1,4 @@
-# ESP32 系列芯片
+# ESP32 系列芯片学习笔记
 
 我目前手上已有的 ESP 芯片：
 
@@ -45,6 +45,13 @@
 
 另外 ESP-IDF 的环境依赖较多，配置起来有点复杂，如果你熟悉 Docker，其实前面的官方文档就提供了使用 Docker 进行开发的教程：[Using Docker Container - vscode-esp-idf-extension](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/tutorial/using-docker-container.md)，不过仅针对 Windows 环境，Linux 环境可能还得做点调整（比如需要在 `/etc/udev/rules.d` 中添加 `openocd.rules`）。
 
+然后就是开发调试，这几乎全部依赖命令行工具 `idf.py`，有必要熟悉它的各项指令，包括但不限于：
+
+1. `idf.py set-target esp32s3`
+2. `idf.py flash monitor`
+3. 快捷键组合 `ctrl` + `]` 退出 monitor 状态
+4. ...
+
 ## ESP-IDF 学习路线
 
 基本上就是先跟着官方文档的 Quick Start 入个门，然后跟一下官方的 jumpstart 入门教程开发一个完整的 Demo 应用：
@@ -66,6 +73,11 @@
 - [Wokwi - Online ESP32 & Arduino Simulator](https://wokwi.com/): ESP32 模拟器，支持 C/Arudino/MicroPython 等多种开发环境。
 - [Rust on Wokwi - Online ESP32 Simulator](https://wokwi.com/rust): Rust 版的 ESP32 在线模拟器
 
+## 我的学习笔记
+
+1. 使用官方示例 <https://github.com/espressif/esp-idf/tree/master/examples/get-started/blink> 成功使 LED 灯闪烁。
+2. [2_ws2812_led](./2_ws2812_led.md)，控制 WS2812 灯带显示流水灯效果
+3. [3_lcd_display.md](./3_lcd_display.md)，通过 lvgl 控制 TFT 显示屏
 
 ## ESPHome 篇
 
