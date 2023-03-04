@@ -22,7 +22,7 @@
 内容比较通用的论坛社区：
 
 - 第一梯队
-  - [WhyCan Forum(哇酷开发者社区)](https://whycan.com/t_9370.html): 从 Speed 社区发现的一个嵌入式宝藏论坛，很多前辈高人，技术氛围很好。另外虽然 WhyCan 只卖全志芯片，这个社区却不局限于此，各种技术内容都有讨论。
+  - [WhyCan Forum(哇酷开发者社区)](https://whycan.com/t_9370.html): 从 Sipeed 社区发现的一个嵌入式宝藏论坛，很多前辈高人，技术氛围很好。另外虽然 WhyCan 只卖全志芯片，这个社区却不局限于此，各种技术内容都有讨论。
   - [hackster 社区](https://www.hackster.io/projects): 各种硬件 DIY 的分享，非常适合折腾硬件时参考学习。
   - [ARM 官方英文论坛](https://community.arm.com/support-forums/)
   - [Reddit Mmbedded 话题](https://www.reddit.com/r/embedded/)
