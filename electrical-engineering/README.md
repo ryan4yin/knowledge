@@ -24,6 +24,7 @@
 - 第一梯队
   - [WhyCan Forum(哇酷开发者社区)](https://whycan.com/t_9370.html): 从 Sipeed 社区发现的一个嵌入式宝藏论坛，很多前辈高人，技术氛围很好。另外虽然 WhyCan 只卖全志芯片，这个社区却不局限于此，各种技术内容都有讨论。
   - [hackster 社区](https://www.hackster.io/projects): 各种硬件 DIY 的分享，非常适合折腾硬件时参考学习。
+  - [v2ex 硬件话题](https://www.v2ex.com/go/embedded): 也有挺多干货，不过只是偶尔有人活跃下。
   - [ARM 官方英文论坛](https://community.arm.com/support-forums/)
   - [Reddit Mmbedded 话题](https://www.reddit.com/r/embedded/)
     - 此外还有 ESP32 RISC-V 等话题
