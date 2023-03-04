@@ -45,11 +45,16 @@
 
 再有就是各类 QQ/Wechat/Telegram 等交流群了，这个看你自己用啥板子，去对应的官方网站或社区找就行，我常逛的有：
 
-- Orange Pi 5 创客交流群(QQ): [Orange Pi 官网](https://www.orangepi.cn/index.html)页脚就有群地址，中文页面给的是 QQ，英文页给的是 Telegram 
-- RADXA 官方群(QQ): [RADXA 官方 FAQs](https://wiki.radxa.com/Rock5/FAQs) 页有给 QQ/Discord 群地址
-- LicheePi-linux 交流QQ群: 详见 [Sipeed 沟通交流渠道](https://wiki.sipeed.com/community.html)
-- [合宙交流群](https://wiki.luatos.com/pages/supports.html): 合宙主要卖 AIR32/ESP32 以及 LTE 芯片与板子，主要贼便宜而且还有 LuatOS 上手简单，所以很受欢迎。
-- [赛昉科技微信群](https://forum.rvspace.org/t/topic/1033/7): 加群二维码貌似是随缘更新...
+- QQ 群
+  - Orange Pi 5 创客交流群: [Orange Pi 官网](https://www.orangepi.cn/index.html)页脚就有群地址，中文页面给的是 QQ，英文页给的是 Telegram 
+  - RADXA 官方群: [RADXA 官方 FAQs](https://wiki.radxa.com/Rock5/FAQs) 页有给 QQ/Discord 群地址
+  - LicheePi-linux 交流QQ群: 详见 [Sipeed 沟通交流渠道](https://wiki.sipeed.com/community.html)
+  - [合宙交流群](https://wiki.luatos.com/pages/supports.html): 合宙主要卖 AIR32/ESP32 以及 LTE 芯片与板子，主要贼便宜而且还有 LuatOS 上手简单，所以很受欢迎。
+- 微信
+  - [赛昉科技微信群](https://forum.rvspace.org/t/topic/1033/7): 加群二维码貌似是随缘更新...
+- Telegram/Discord
+  - 赛昉 TG 群
+  - Orange Pi TG 群
 
 最后是一些技术大佬的博客：
 
