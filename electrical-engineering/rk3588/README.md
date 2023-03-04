@@ -10,6 +10,14 @@ RK3588/RK3588S 是瑞芯微推出的一款高性能 ARM64 SoC，配置如下：
 
 我目前拥有 Rock 5A 4G（已购，预计 2023Q2 出货）、Orange Pi 5 8G 这两块使用 RK3588S 芯片的开发版。
 
+根据描述 Orange Pi 的文档、生态貌似要比 Rock Pi 更好一些，我体验上 Orange Pi 的文档确实写得可以，很清晰，而且有中英双语。
+而 Rock Pi 的 WIKI 虽然看起来更现代化一点，但是生态貌似被喷得比较多，而且看别人说 Rock 5 的 PD 供电坑很多。
+
+所以目前的感觉是软件生态方面 Raspberry Pi >> Orange Pi > Rock Pi，性价比方面 Orange Pi > Rock PI >> Raspberry Pi。
+
+其他大佬的折腾资料：
+
+- [Rock 5B (RK3588) 开箱体验和踩坑记录（也可以是上手教程）](https://neucrack.com/p/466)
 
 ## RK3588 开发版可以用来干啥
 
