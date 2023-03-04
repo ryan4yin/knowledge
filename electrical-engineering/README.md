@@ -26,7 +26,7 @@
   - [hackster 社区](https://www.hackster.io/projects): 各种硬件 DIY 的分享，非常适合折腾硬件时参考学习。
   - [v2ex 硬件话题](https://www.v2ex.com/go/embedded): 也有挺多干货，不过只是偶尔有人活跃下。
   - [ARM 官方英文论坛](https://community.arm.com/support-forums/)
-  - [Reddit Mmbedded 话题](https://www.reddit.com/r/embedded/)
+  - [Reddit Embedded 话题](https://www.reddit.com/r/embedded/)
     - 此外还有 ESP32 RISC-V 等话题
 - 第二梯队
   - [面包板社区](https://mbb.eet-china.com): 貌似是一个国际杂志 EE Times 旗下的中文社区，内容好像还 OK，待持续观察。
