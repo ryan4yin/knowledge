@@ -43,6 +43,7 @@
 
 - [极术社区 - ARM 中国（安谋科技）旗下平台](https://aijishu.com/): 内容质量很高，不过更偏宏观一点，技术性没那么强，当硬件新闻平台用挺不错。
 - [电子工程专辑](https://www.eet-china.com/): EE Times 旗下中文新闻页，内容也不错。
+- [The Amazing World of Electronics - Only the Cool Stuff :-)](https://elamazing.com/): 电路理论分享，干货满满
 - 还关注了一些微信公众号，偶尔随便看看
   - 嵌入式大杂烩
   - 嵌入式应用研究院
