@@ -77,7 +77,7 @@
 
 1. 使用官方示例 <https://github.com/espressif/esp-idf/tree/master/examples/get-started/blink> 成功使 LED 灯闪烁。
 2. [2_ws2812_led](./2_ws2812_led.md)，控制 WS2812 灯带显示流水灯效果
-3. [3_lcd_display.md](./3_lcd_display.md)，通过 lvgl 控制 TFT 显示屏
+3. [EE 入门（二） - 使用 ESP32 + SPI 画图、显示图片、跑贪吃蛇](https://thiscute.world/posts/ee-basics-esp32-display/)
 
 ## 如何查询开发板的引脚接线方式
 
