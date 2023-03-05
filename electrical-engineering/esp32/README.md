@@ -100,31 +100,21 @@ git fetch
 git stash
 # 切换版本
 git checkout v4.4.4
-```
-
-然后需要删除掉环境变量中 `esp-idf` 的配置，即默认启用任何 esp-idf 环境（话说默认启用的话它会打一堆日志，也挺烦的）。
-
-比如我就是在 `~/.bashrc` 中删除掉如下内容：
-
-```shell
-source /home/ryan/esp/esp-idf-v5.0/export.sh 
-```
-
-删除掉后新建 shell 执行如下命令安装新版本的 esp-idf:
-
-```shell
-# 安装新版本的 esp-idf
+# 新建 bash shell，并且不加载 .bashrc 或 .profile 中的配置
+# 这是为了避免加载 idf.py 的 Python 虚拟环境，它会导致安装失败
+env -i bash -l
+# 安装新版本
 /home/ryan/esp/esp-idf/v4.4.4/install.sh
 ```
 
-完成后就能在终端中通过如下命令激活不同的 esp-idf 版本了：
+
+完成后就能通过修改环境变量中 source 的脚本来切换环境了，比如我的 `~/.bashrc` 脚本：
 
 ```shell
-# v5.0
+# 想用 v5.0 就取消注释这一行
 source /home/ryan/esp/esp-idf-v5.0/export.sh 
-
-# v4.4.4
-source /home/ryan/esp/esp-idf/v4.4.4/export.sh 
+# 想用 v4.4.4 就取消注释这一行
+#source /home/ryan/esp/esp-idf-v4.4.4/export.sh 
 ```
 
 ## ESPHome 篇
