@@ -9,3 +9,9 @@ RISC-V 是纯开源的指令集，在最近几年声名鹊起，被中国等许�
   - 预定了两个，还没到手呢，预计 2023 年 3 月发货。
 
 
+## 相关资料
+
+- [RISC-V Linux 内核兴趣小组招募爱好者-ing](https://tinylab.org/riscv-linux-analyse/): 很硬核的 RISC-V 与 Linux 内核相关资料
+  - 这个站点的硬件虚拟化、Linux 内核、RISC-V 相关资料质量都很高。
+- [南京大学 计算机科学与技术系 计算机系统基础 课程实验 (PA)](https://nju-projectn.github.io/ics-pa-gitbook/): 可选用 RISC-V 做实验
+
