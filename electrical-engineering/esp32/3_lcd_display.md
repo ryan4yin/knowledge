@@ -57,8 +57,8 @@ build_flags =
   -DTFT_CS=15
   -DTFT_DC=4
   -DTFT_RST=2
-  # 背光
-  -DTFT_BL=27
+  # 背光暂时直接接在 3V3 上
+  ; -DTFT_BL=27
   # 触摸，暂时不用
   ;-DTOUCH_CS=22
   -DLOAD_GLCD=1
