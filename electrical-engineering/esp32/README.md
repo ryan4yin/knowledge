@@ -90,17 +90,32 @@ esp-idf 更新比较快，而且只有新版本才支持新硬件。
 
 ```shell
 cd /home/ryan/esp
-# 将旧环境重命名一下，并复制一份新环境
-mv esp-idf esp-idf-v5.0
+# 1. 将旧环境重命名一下，并复制一份新环境
+mv esp-idf esp-idf-v5.0.0
 
-# 安装其他版本的 esp-idf，保险起见还是单独 clone 一份
+# 2. 安装其他版本的 esp-idf，有两种方法：
+## 方法一：直接 checkout，不过 git 子模块不好用，环境不一定能整好...
+cp esp-idf-v5.0.0 esp-idf-v4.4.4
+cd esp-idf-v4.4.4/
+### 旧环境中可能有多余的文件，需要首先清理一波
+git clean -fxd && git stash
+# 切换分支
+git checkout v4.4.4
+### 重置并切换子模块的 commit
+### 等同于在所有子模块文件夹中先跑 git init 再跑 git update，用于重置子模块内容
+git submodule update --init --recursive
+## 方法二：直接 clone 一份，速度慢但是环境干净
 git clone -b v4.4.4 --recursive https://github.com/espressif/esp-idf.git esp-idf-v4.4.4
 cd esp-idf-v4.4.4/
+
+# 3. 安装新版本
 # 新建 bash shell，并且不加载 .bashrc 或 .profile 中的配置
+mv ~/.bashrc ~/.bashrc-bak
 # 这是为了避免加载 idf.py 的 Python 虚拟环境，它会导致安装失败
 env -i bash -l
-# 安装新版本
 ./install.sh
+# 安装完成后再还原 bashrc
+mv ~/.bashrc-bak ~/.bashrc
 ```
 
 
