@@ -295,6 +295,15 @@ $ git status
 
 子模块在 Github 上会显示为一个类似引用的文件夹，它链接到对应的 git 地址。
 
+其他常用的子模块命令：
+
+```shell
+# 等同于在所有子模块文件夹中先跑 git init 再跑 git update
+git submodule update --init --recursive
+# 在每个子模块文件夹中执行一段 shell 脚本，这里的命令是用于重置子模块状态
+git submodule foreach 'git fetch origin; git checkout $(git rev-parse --abbrev-ref HEAD); git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); git submodule update --recursive; git clean -dfx'
+```
+
 详见 [子模块](https://git-scm.com/book/zh/v1/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97)
 
 ## 十一、Git Hooks

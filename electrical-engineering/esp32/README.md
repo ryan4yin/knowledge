@@ -92,19 +92,15 @@ esp-idf 更新比较快，而且只有新版本才支持新硬件。
 cd /home/ryan/esp
 # 将旧环境重命名一下，并复制一份新环境
 mv esp-idf esp-idf-v5.0
-cp -r esp-idf-v5.0 esp-idf-v4.4.4
-cd esp-idf-v4.4.4
-# 拉新配置
-git fetch
-# 清理旧配置
-git stash
-# 切换版本
-git checkout v4.4.4
+
+# 安装其他版本的 esp-idf，保险起见还是单独 clone 一份
+git clone -b v4.4.4 --recursive https://github.com/espressif/esp-idf.git esp-idf-v4.4.4
+cd esp-idf-v4.4.4/
 # 新建 bash shell，并且不加载 .bashrc 或 .profile 中的配置
 # 这是为了避免加载 idf.py 的 Python 虚拟环境，它会导致安装失败
 env -i bash -l
 # 安装新版本
-/home/ryan/esp/esp-idf/v4.4.4/install.sh
+./install.sh
 ```
 
 
@@ -112,7 +108,7 @@ env -i bash -l
 
 ```shell
 # 想用 v5.0 就取消注释这一行
-source /home/ryan/esp/esp-idf-v5.0/export.sh 
+source /home/ryan/esp/esp-idf-v5.0.0/export.sh 
 # 想用 v4.4.4 就取消注释这一行
 #source /home/ryan/esp/esp-idf-v4.4.4/export.sh 
 ```
