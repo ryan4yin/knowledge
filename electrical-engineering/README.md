@@ -78,6 +78,9 @@
 
 都分文件夹存在这个 README 的文件夹里了。
 
+- [Makefile 学习笔记](https://github.com/ryan4yin/video2ascii-c/blob/master/Makefile)
+- [CMake 学习笔记](./CMake-Usage.md)
+
 ### 进阶 - 机器人相关资料
 
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)

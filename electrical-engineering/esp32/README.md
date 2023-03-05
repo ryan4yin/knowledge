@@ -79,6 +79,54 @@
 2. [2_ws2812_led](./2_ws2812_led.md)，控制 WS2812 灯带显示流水灯效果
 3. [3_lcd_display.md](./3_lcd_display.md)，通过 lvgl 控制 TFT 显示屏
 
+## 如何在各 esp-idf 版本之间切换
+
+esp-idf 更新比较快，而且只有新版本才支持新硬件。
+但另一方面很多第三方库又只支持较老版本的 esp-idf，这就产生了多版本切换的需求。
+
+解决方法也简单，首先找到你用的 esp-idf 安装位置，直接敲 `idf.py` 回车就能看到相关提示。
+
+比如我的 esp-idf 安装位置是 `/home/ryan/esp/esp-idf`，那么就通过如下命令进行版本切换：
+
+```shell
+cd /home/ryan/esp
+# 将旧环境重命名一下，并复制一份新环境
+mv esp-idf esp-idf-v5.0
+cp -r esp-idf-v5.0 esp-idf-v4.4.4
+cd esp-idf-v4.4.4
+# 拉新配置
+git fetch
+# 清理旧配置
+git stash
+# 切换版本
+git checkout v4.4.4
+```
+
+然后需要删除掉环境变量中 `esp-idf` 的配置，即默认启用任何 esp-idf 环境（话说默认启用的话它会打一堆日志，也挺烦的）。
+
+比如我就是在 `~/.bashrc` 中删除掉如下内容：
+
+```shell
+source /home/ryan/esp/esp-idf-v5.0/export.sh 
+```
+
+删除掉后新建 shell 执行如下命令安装新版本的 esp-idf:
+
+```shell
+# 安装新版本的 esp-idf
+/home/ryan/esp/esp-idf/v4.4.4/install.sh
+```
+
+完成后就能在终端中通过如下命令激活不同的 esp-idf 版本了：
+
+```shell
+# v5.0
+source /home/ryan/esp/esp-idf-v5.0/export.sh 
+
+# v4.4.4
+source /home/ryan/esp/esp-idf/v4.4.4/export.sh 
+```
+
 ## ESPHome 篇
 
 我从 ESPHome 入坑开始慢慢熟悉电子电路，陆续在多个淘宝店买了许多相关组件，罗列如下：
