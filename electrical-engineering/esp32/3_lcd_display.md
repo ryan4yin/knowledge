@@ -15,6 +15,8 @@
 
 ## 程序
 
+>这里发现我的两块 2.8 寸屏有怪毛病，如果选用它标明的 ILI9341 驱动，怎么改 width/height，下面一部分图像都是个乱的，只有一个正方形区域能正常刷新...而如果改成 ILI9488 驱动，反而整个屏幕都能正常刷新了，但是颜色显示不对...
+
 以 [Bodmer/TFT_eSPI](https://github.com/Bodmer/TFT_eSPI) 为例，我们将其与 platformio + arduino 框架一起使用，根据其官方文档 [Bodmer/TFT_eSPI/docs/PlatformIO](https://github.com/Bodmer/TFT_eSPI/tree/master/docs/PlatformIO)，首先在项目中添加配置文件：
 
 首先点击 PlatformIO 侧栏的 `PlatformIO Core CLI` 进入 shell 执行如下命令创建项目：
@@ -84,7 +86,70 @@ build_flags =
 
 - [Bodmer/TFT_eSPI - examples/480x320](https://github.com/Bodmer/TFT_eSPI/blob/master/examples/480%20x%20320)
 
+>可以直接从 libdeps 中 copy exmaples 代码过来测试：`cp .pio/libdeps/esp32dev/TFT_eSPI/examples/480\ x\ 320/TFT_Meters/TFT_Meters.ino src/main.ino`
+
 示例：
 
 ![](_img/tft_esp32_meters_demo_2.webp)
 ![](_img/tft_esp32_sin_cosin_chart_2.webp)
+
+
+## 显示图片、文字
+
+这需要首先将图片/文字转换成 bitmap 格式的 C 代码，可使用在线工具 [javl/image2cpp](https://github.com/javl/image2cpp) 进行转换，简单演示下：
+
+![](_img/how-to-use-image2cpp.webp)
+
+注意高度与宽度调整为与屏幕大小一致，设置放缩模式，然后色彩改为 RGB565，最后上传图片、生成代码。
+
+将生成好的代码贴到 `src/test_img.h` 中：
+
+```c
+// We need this header file to use FLASH as storage with PROGMEM directive:
+
+// Icon width and height
+const uint16_t imgWidth = 480;
+const uint16_t imgHeight = 320;
+
+// 'evt_source', 480x320px
+const uint16_t epd_bitmap_evt_source [] PROGMEM = {
+  // 这里省略掉图片内容......
+}
+```
+
+然后写个主程序 `src/main.ino` 显示图像：
+
+```c
+#include <TFT_eSPI.h>       // Hardware-specific library
+
+TFT_eSPI tft = TFT_eSPI();  // Invoke custom library
+
+// Include the header files that contain the icons
+#include "test_img.h"
+
+long count = 0; // Loop count
+
+void setup()
+{
+  Serial.begin(115200);
+  tft.begin();
+  tft.setRotation(1);	// landscape
+
+  tft.fillScreen(TFT_BLACK);
+  // Swap the colour byte order when rendering
+  tft.setSwapBytes(true);
+
+  // 显示图片
+  tft.pushImage(0, 0, imgWidth, imgHeight, epd_bitmap_evt_source);
+
+  // Pause here to admire the icons!
+  delay(2000);
+}
+
+void loop() {}
+```
+
+
+编译上传，效果如下：
+
+![](_img/tft_esp32_show_image-2.webp)
