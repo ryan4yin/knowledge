@@ -8,14 +8,16 @@ Sipeed 专门做各种开发版、模组、解决方案，主打 AloT，比较�
 
 ## Maix AI 系列
 
+>加粗的是我比较感兴趣的模组或者板子
+
 1. Maix Zero: 小巧、低功耗的 AloT 单片机，对标 ESP32，这个系列 2023 年才刚刚上架，目前软件生态比较拉，基本只有博流智能的官方 SDK 可用，属于战未来系列
    1. M0：开发版价格 29，使用博流智能科技的 BL702 芯片，32bits RISC-V, 132KB RAM，只支持蓝牙
-   2. M0s: 开发版价格 26.9 - 5，升级到了 BL616 芯片，480KB SRAM + 4MB Flash，支持蓝牙跟 WiFi6，硬件配置可以跟 ESP32-S3 拼，但是软件生态...战未来吧
+   2. **M0s**: 开发版价格 26.9 - 5，升级到了 BL616 芯片，480KB SRAM + 4MB Flash，支持蓝牙跟 WiFi6，硬件配置可以跟 ESP32-S3 拼，但是软件生态...战未来吧
 2. Maix I: 高性价比的 AI 单片机，能跑阉割版 Linux
    1. M1W/M1N: 开发版价格 120+，基于嘉楠科技 K210 芯片，64bits RISC-V 双核，8MB SRAM，有 KPU 0.23TOPS 算力（但是不是 NPU，好像这有啥限制在），通过内置的 ESP8285 提供 WiFi 与蓝牙功能。
       1. Sipeed 的 MaixPy 框架（已经停止开发）就是专门适配这款芯片的，在 Github 上有 1k stars，说明还是挺受欢迎的。不过也只支持 Python 开发套件。
       2. 淘宝上架挺久了，看 Maixpy 仓库时间线 19 年就发布了 0.1 版本，比较成熟。
-   2. M1s: 单开发板价格 69，使用博流智能科技的 BL808 芯片，RISC-V 三核异构（平头哥开源内核），100GOPS AI 算力(0.1TOPS)，768KB SRAM + 64MB UHS PSRAM，还有专用的 H264 编解码模块、WiFi 蓝牙都支持。总的来说比 K210 还要强一点点。
+   2. **M1s**: 单开发板价格 69，使用博流智能科技的 BL808 芯片，RISC-V 三核异构（平头哥开源内核），100GOPS AI 算力(0.1TOPS)，768KB SRAM + 64MB UHS PSRAM，还有专用的 H264 编解码模块、WiFi 蓝牙都支持。总的来说比 K210 还要强一点点。
       1. 2023 年 2 月上架的产品，目前软件生态跟成熟的 K210 没法比，貌似只能用博流智能官方的 C SDK 玩。
       2. 能跑基础的 Linux 系统，不过据说 Linux 目前还用不了 WiFi
 3. Maix II: 能跑 Linux 的入门级 AI 板子，都是全志 ARM 芯片，貌似发布于 2021/6
@@ -26,11 +28,13 @@ Sipeed 专门做各种开发版、模组、解决方案，主打 AloT，比较�
    3. Maix-II-Sense: 开发版卖 329（带显示屏、摄像头），基于全志 R329 芯片，双核 Cortex-A53，0.256 TOPS AI 算力（周易™Z1 AIPU），DDR3 256MB，支持处理 720P 视频、还支持 5 路音频输入或两路音频输出
       1. 支持 armbian 操作系统
 4. Maix III: 高性能 Linux AI 板子
-   1. MAIX-III AXera-Pi: 基于「爱芯元智」的 AX620A 芯片，四核 Cortex A7，3.6TOPS 算力，2GB RAM，卖 419 大洋，看文档写得热情洋溢，内容很丰富，看起来是现在的主打产品。
+   1. **MAIX-III AXera-Pi**: 基于「爱芯元智」的 AX620A 芯片，四核 Cortex A7，3.6TOPS 算力，2GB RAM，卖 419 大洋，看文档写得热情洋溢，内容很丰富，看起来是现在的主打产品。
       1. 实际芯片包含了 NPU 和 ISP 部分， 在 AX620A 上两个平分算力，即 1.8TOPS@INT8
       2. 2022 年底上架，软件生态跟社区活跃度，看宣传还不错。
 
 ## LicheePi Linux 开发版系列
+
+>感觉 M1s 可以替换掉这里的荔枝派 Zero/Nano，性能虽然差点但是有 NPU。
 
 1. Lichee Pi Zero: 低成本，小体积，高性能，易使用，多扩展。
    1. 芯片为 Allwinner V3s (ARM Cortex-A7 CPU, 1.2GHz, 64MB DDR2 integrated)
@@ -38,7 +42,6 @@ Sipeed 专门做各种开发版、模组、解决方案，主打 AloT，比较�
 2. Lichee Pi Nano: 
    1. 芯片为 Allwinner F1C100s @ 408Mhz, SIP 32MB DDR1
    2. 2018 年发布，单核心板 58 块钱，WiFi 拓展板卖 12 块。
-   3. 这块板子现在（2023 年）貌似卖得比较好。
 1. Lichee Pi Zero Plus: 改成了核心板，金手指引出引脚，需要底板共同工作
    1. 基于全志 ARM® Cortex™-A7 @1.2GHz, 128MB DDR3
    2. 2019 年发布，官网都没找到这块板子，未知原因下架了...
