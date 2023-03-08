@@ -8,6 +8,28 @@
 更进一步，我能否做一些更有意思的东西呢？比如说机器人！
 
 
+## 串口打开 TTY 界面
+
+最简单的是直接使用 Linux 自带的 screen 界面：
+
+```shell
+# 让 screen 使用 256 全彩终端
+export TERM=xterm-256color
+
+# 登录到 /dev/ttyUSB0 这个串口的 TTY 页面，波特率设为 115200
+screen /dev/ttyUSB0 15200
+
+# 临时离开当前会话：先按 ctrl+a，然后再按 d 键
+# 杀死当前会话并退出：c-a k
+# 更多快捷键请 man screen 查看文档
+
+# 显示后台运行的终端会话
+screen -ls
+
+# 重新进入某个终端会话（xxx 为会话 id）
+screen -r xxx
+```
+
 ## 我的学习计划
 
 参见我的博客文章 [EE 入门 - 电子电路基础知识](https://thiscute.world/posts/electrical-engineering-circuits-basics-1/) 文末
