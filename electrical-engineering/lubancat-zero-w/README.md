@@ -6,7 +6,9 @@
 
 >官方文档：[系统镜像烧录 - LubanCat-RK系列板卡快速使用手册](https://doc.embedfire.com/linux/rk356x/quick_start/zh/latest/quick_start/flash_img/flash_img.html)
 
-首先需要下载好镜像，下载地址参见上面提供的官方文档（目前官方仅提供了百度云盘地址）。
+首先需要下载好镜像，下载地址参见上面提供的官方文档。
+
+>目前官方仅提供了百度云盘地址，百度云盘的电脑客户端不行，但是**手机端可以看 40 秒广告就获得 30s 的加速时间，加上家里千兆宽带的话能跑到近 85M/s**，很快就下好了。
 
 我下载的是「通用镜像(extboot)-适用于所有板卡」，镜像名称为 `rk356x-lubancat-rk_series-debian10-lite-20230103_update.7z`，解压后得到 .img 文件。
 
@@ -83,3 +85,11 @@ ip route ls
 libgpiod 是内核的标准模块，负责向上层提供标准的 gpio api
 
 
+
+## Linux 镜像构建
+
+在网络良好的情况下，使用我的 GTR5 5900HX 进行全量构建大约要 30 mins。
+
+不要用容器构建，因为容器中内核版本会有差异，而且 QEMU 可能会出问题。
+
+最稳妥的方法仍然是开一台 Ubuntu 18.04 虚拟机干这个活。
