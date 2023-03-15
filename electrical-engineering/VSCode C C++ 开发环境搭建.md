@@ -77,19 +77,6 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
        -I<directory>
               Add the specified directory to the search path for include files.
 
-       -F<directory>
-              Add the specified directory to the search path for framework include files.
-
-       -nostdinc
-              Do not search the standard system directories or compiler builtin directories for include files.
-
-       -nostdlibinc
-              Do not search the standard system directories for include files, but do search compiler builtin include directories.
-
-       -nobuiltininc
-              Do not search clang's builtin directory for include files.
-
-
 # 文件夹选项
    Options for Directory Search
        These options specify directories to search for header files, for
@@ -138,35 +125,6 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
            should not use this option to add directories that contain
            vendor-supplied system header files; use -isystem for that.
 
-           The -isystem and -idirafter options also mark the directory
-           as a system directory, so that it gets the same special
-           treatment that is applied to the standard system directories.
-
-           If a standard system include directory, or a directory
-           specified with -isystem, is also specified with -I, the -I
-           option is ignored.  The directory is still searched but as a
-           system directory at its normal position in the system include
-           chain.  This is to ensure that GCC's procedure to fix buggy
-           system headers and the ordering for the "#include_next"
-           directive are not inadvertently changed.  If you really need
-           to change the search order for system directories, use the
-           -nostdinc and/or -isystem options.
-
-       -I- Split the include path.  This option has been deprecated.
-           Please use -iquote instead for -I directories before the -I-
-           and remove the -I- option.
-
-           Any directories specified with -I options before -I- are
-           searched only for headers requested with "#include "file"";
-           they are not searched for "#include <file>".  If additional
-           directories are specified with -I options after the -I-,
-           those directories are searched for all #include directives.
-
-           In addition, -I- inhibits the use of the directory of the
-           current file directory as the first search directory for
-           "#include "file"".  There is no way to override this effect
-           of -I-.
-
        -Ldir
            Add directory dir to the list of directories to be searched
            for -l.
@@ -189,7 +147,6 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
        -S
        -E  If any of these options is used, then the linker is not run,
            and object file names should not be used as arguments.
-
 
        -llibrary
        -l library
