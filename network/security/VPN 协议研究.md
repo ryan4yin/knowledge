@@ -55,8 +55,10 @@ IPsec中IKE协议采用UDP 500端口发起和响应协商，因此为了使IKE�
 
 OpenVPN 官方宣称 SSL VPN 的特点是：
 
-1. 基于成熟可靠的 SSL/TLS 协议，而且运行在用户空间而不是内核空间
-2. 
+1. 基于被充分测试过的、成熟可靠的 SSL/TLS 协议，而且此协议实现起来比 IPsec 容易许多
+2. 使用 TUN/TAP 虚拟网卡技术，运行在用户空间而不是内核空间，对 OS 安全没有影响
+3. 而且跟 OS 自带的 IPsec VPN 功能没有冲突，很容易安装
+4. 
 
 
 ### [OpenVPN and the SSL VPN Revolution] 阅读笔记
