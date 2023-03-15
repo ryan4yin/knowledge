@@ -257,8 +257,9 @@ make -C $(KERNEL_SOURCE_DIR) M=$(pwd) modules
 
 - `-C $(KERNEL_SOURCE_DIR)`: 这是 Makefile 的递归用法，等同于 `cd $(KERNEL_SOURCE_DIR) && make`
   - 详见 [Recursive Use of make](https://www.gnu.org/software/make/manual/make.html#Recursion)
-- `M=$(pwd)`: TODO
-- `modules`: 这个指令来自内核 Makefile 的定义，TODO
+- `M=$(pwd)`: 一个传参，在 Makefile 中可以通过 `$(M)` 使用这个参数。
+  - Linux 根目录的 Makefile 会检测这个参数是否存在，并将其赋值给 `KBUILD_EXTMOD` 参数，表示构建此外部模块。
+- `modules`: 同样是来自内核 Makefile 的定义，表示仅构建模块部分。
 
 ### IDE 支持
 
