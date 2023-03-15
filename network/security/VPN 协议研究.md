@@ -12,11 +12,51 @@
 
 而 GRE、PPTP 跟 L2TP/IPSec 基本没见到有用的，大概因为某些原因被淘汰了吧。
 
+
+## IPsec/IKEv2 协议
+
+排第二，有些厂家推荐优先选择它，有问题再回退到 OpenVPN.
+
+IPsec 是 1995 年 IETF 标准化的一个点对点的隧道协议，通过 IPsec VPN 可以在主机和主机之间、主机和网络安全网关之间或网络安全网关（如路由器、防火墙）之间建立安全的隧道连接。其协议主要工作在IP层，在IP层对数据包进行加密和验证。
+
+IPsec 工作在 L3 网络层，比 OpenVPN 低好几个层级（SSL 比 L4 传输层还要高一个级别，可以认为是一个 L7 协议），因此效率会高很多，而且它还运行在内核空间，这又进一步提升了性能。
+
+更准确地说，IPsec 是用于创建点对点安全隧道的一系列必要协议的集合，其主要工作流程如下：
+
+- 识别「感兴趣流」：首先，通过 IPsec 策略匹配到本地需要通过 IPsec 隧道传输的数据包
+- 建立隧道：执行 IKEv2 握手协议，与 TLS 协议类似，它也是使用非对称密钥进行相互认证与密钥交换，然后再切换到对称密钥加密通信
+  - IKE 是基于 UDP 的密钥交换协议，目前主要应用的是 IKEv2
+  - 其 v2 版本修复了多处密码学方面的安全漏洞，提高了安全性能，同时简化了协商过程，提升了协商效率，协议定义参见 [rfc5996](https://www.rfc-editor.org/rfc/rfc5996)。
+- 进行数据传输
+  - 其中会使用 AH 提供数据源认证与完整性校验（HMAC），或者使用 ESP 协议进行数据的加密认证。
+
+IPsec 这种架构带来的问题是：
+
+1. 参数众多，协议复杂，配置非常麻烦。
+2. 正因为配置众多，每个供应商都选择了各自不同的参数，这导致客户端不能通用，只有供应商自家的 VPN 客户端才能连接上它家的 IPsec 通道。
+3. 运行在内核空间，带来安全隐患。
+
+### IPsec使用的端口
+
+IPsec中IKE协议采用UDP 500端口发起和响应协商，因此为了使IKE协商报文顺利通过网关设备，通常要在网关设备上配置安全策略放开UDP 500端口。另外，在IPsec NAT穿越场景下，还需要放开UDP 4500端口。
+
+而AH和ESP属于网络层协议，不涉及端口。为了使IPsec隧道能正常建立，通常还要在网关设备上配置安全策略放开AH（IP协议号是51）和ESP（IP协议号是50）服务。
+
+- [什么是IPsec？ - 华为](https://info.support.huawei.com/info-finder/encyclopedia/zh/IPsec.html)
+- [什么是 IPsec？| IPsec VPN 如何运作 - Cloudflare](https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-ipsec/)
+- [wiki/IPsec](https://en.wikipedia.org/wiki/IPsec)
+
+
 ## OpenVPN 协议
 
-一种开源的 SSL VPN 协议，也是应用最广泛的 VPN 协议，其官方有开源的的 [OpenVPN Community Edition](https://community.openvpn.net/openvpn)，因此协议也完全开源。
+一种开源的 SSL VPN 协议，发布于 2001 年，也是应用最广泛的 VPN 协议，其官方有开源的的 [OpenVPN Community Edition](https://community.openvpn.net/openvpn)，因此协议也完全开源。
 
 协议的官方文档：[OpenVPN's network protocol](https://build.openvpn.net/doxygen/network_protocol.html)
+
+OpenVPN 官方宣称 SSL VPN 的特点是：
+
+1. 基于成熟可靠的 SSL/TLS 协议，而且运行在用户空间而不是内核空间
+2. 
 
 
 ### [OpenVPN and the SSL VPN Revolution] 阅读笔记
@@ -28,17 +68,6 @@ IPsec 包含了太多可选参数，导致非专业人员很难正确地配置�
 而 OpenVPN 是比 IPsec 更便宜、更简单、更安全的一种隧道协议，它使用 TLS 协议与密码学库取代了 IPsec 复杂的配置，还提供了更强大的功能。此外 OpenVPN 运行在用户空间，因此它更安全、更稳定（注：这也导致了巨大的性能开销——数据需要在内核空间与用户空间之间交互）。
 
 
-## IPsec/IKEv2 协议
-
-排第二，有些厂家推荐优先选择它，有问题再回退到 OpenVPN.
-
-IKE 是基于 UDP 的密钥交换协议，其 v2 版本修复了多处密码学方面的安全漏洞，提高了安全性能，同时简化了协商过程，提升了协商效率，协议定义参见 [rfc5996](https://www.rfc-editor.org/rfc/rfc5996)。
-
-- [什么是IPsec？ - 华为](https://info.support.huawei.com/info-finder/encyclopedia/zh/IPsec.html)
-- [什么是 IPsec？| IPsec VPN 如何运作 - Cloudflare](https://www.cloudflare.com/zh-cn/learning/network-layer/what-is-ipsec/)
-- [wiki/IPsec](https://en.wikipedia.org/wiki/IPsec)
-
-TODO
 
 ## WireGuard 协议
 
