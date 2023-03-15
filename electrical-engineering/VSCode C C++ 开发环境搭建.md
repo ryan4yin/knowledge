@@ -21,9 +21,7 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
 2. 对于使用 cmake 的项目就更简单了，cmake 原生就支持，只需要在根目录的配置文件中添加 `set(CMAKE_EXPORT_COMPILE_COMMANDS True)`
 3. 其他工具的配置方法请自行搜索。
 
-对于自定义程度较高的大型项目就得具体情况具体分析了，比如 Linux 内核其实本身就提供了生成 `compile_commands.json` 的脚本：[scripts/clang-tools/gen_compile_commands.py](https://github.com/torvalds/linux/blob/master/scripts/clang-tools/gen_compile_commands.py)
-
-## GCC / Clang 常见参数解释
+## 一、GCC / Clang 常见参数解释
 
 主要摘抄自 [man gcc](https://man7.org/linux/man-pages/man1/gcc.1.html)，用做日常参考:
 
@@ -63,8 +61,21 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
            described in C++ Dialect Options and Objective-C and
            Objective-C++ Dialect Options.
 
-# 预处理选项：
-   Preprocessor Options
+# 预处理器选项
+   Options Controlling the Preprocessor
+       These options control the C preprocessor, which is run on each C
+       source file before actual compilation.
+
+       If you use the -E option, nothing is done except preprocessing.
+       Some of these options make sense only together with -E because
+       they cause the preprocessor output to be unsuitable for actual
+       compilation.
+
+       In addition to the options listed here, there are a number of
+       options to control search paths for include files documented in
+       Directory Options.  Options to control preprocessor diagnostics
+       are listed in Warning Options.
+
        -D<macroname>=<value>
               Adds an implicit #define into the predefines buffer which is read before the source file is preprocessed.
 
@@ -74,6 +85,9 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
        -include <filename>
               Adds an implicit #include into the predefines buffer which is read before the source file is preprocessed.
 
+              If multiple -include options are given, the files are
+              included in the order they appear on the command line.
+        
        -I<directory>
               Add the specified directory to the search path for include files.
 
@@ -84,7 +98,7 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
 
        -I dir
        -iquote dir
-       -isystem dir
+       -isystem dir     # 内核模块需要用这个参数导入
        -idirafter dir
            Add the directory dir to the list of directories to be
            searched for header files during preprocessing.  If dir
@@ -124,6 +138,20 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
            the standard system header file directories.  However, you
            should not use this option to add directories that contain
            vendor-supplied system header files; use -isystem for that.
+
+           The -isystem and -idirafter options also mark the directory
+           as a system directory, so that it gets the same special
+           treatment that is applied to the standard system directories.
+
+           If a standard system include directory, or a directory
+           specified with -isystem, is also specified with -I, the -I
+           option is ignored.  The directory is still searched but as a
+           system directory at its normal position in the system include
+           chain.  This is to ensure that GCC's procedure to fix buggy
+           system headers and the ordering for the "#include_next"
+           directive are not inadvertently changed.  If you really need
+           to change the search order for system directories, use the
+           -nostdinc and/or -isystem options.
 
        -Ldir
            Add directory dir to the list of directories to be searched
@@ -191,6 +219,51 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
            same set of options used for compilation (-fpic, -fPIC, or
            model suboptions) when you specify this linker option.[1]
 ```
+
+## 二、Makefile 的基础用法
+
+Make 是一个通用的项目构建工具，被广泛应用在 C/C++ 项目构建领域，但是它足够通用的特性使部分 Go/Python 等项目中也有它的身影。
+
+官方文档：[GNU make Docs](https://www.gnu.org/software/make/manual/make.html#Introduction)
+
+以及之前写过的一点点练手 Makefile 与详细注释：[video2ascii-c/Makefile](https://github.com/ryan4yin/video2ascii-c/blob/master/Makefile)
+
+TODO
+
+## 三、CMake 用法
+
+CMake 是一个生成 Makefile 的工具，它的目标是简化 Makefile 的编写，并提升编译配置的可移植性。
+
+CMake 是 C/C++ 生态里最好用的构建工具之一了（虽然也被很多人疯狂吐槽），大量现代一点的项目都使用了 CMake 作为编译构建工具，比如乐鑫的 ESP-IDF。
+
+官方入门教程：[CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
+
+TODO
+
+## 四、构建 Linux 内核
+
+### 编译指令
+
+有两种方法，最直观的解法可参考 [The Linux Kernel Module Programming Guide](https://tldp.org/LDP/lkmpg/2.4/html/x208.htm)
+
+而最简单的方法则是使用内核源码目录中的 `Makefile` 进行编译，命令演示如下：
+
+```shell
+KERNEL_SOURCE_DIR=/lib/modules/$(uname -r)/build
+make -C $(KERNEL_SOURCE_DIR) M=$(pwd) modules
+```
+
+其中几个参数解释如下：
+
+- `-C $(KERNEL_SOURCE_DIR)`: 这是 Makefile 的递归用法，等同于 `cd $(KERNEL_SOURCE_DIR) && make`
+  - 详见 [Recursive Use of make](https://www.gnu.org/software/make/manual/make.html#Recursion)
+- `M=$(pwd)`: TODO
+- `modules`: 这个指令来自内核 Makefile 的定义，TODO
+
+### IDE 支持
+
+对于使用 clangd 进行语法补全、定义跳转等功能，Linux 内核其实本身就提供了生成 `compile_commands.json` 的脚本：[scripts/clang-tools/gen_compile_commands.py](https://github.com/torvalds/linux/blob/master/scripts/clang-tools/gen_compile_commands.py)
+
 
 ## 参考
 
