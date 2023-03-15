@@ -12,8 +12,9 @@
 
 而 GRE、PPTP 跟 L2TP/IPSec 基本没见到有用的，大概因为某些原因被淘汰了吧。
 
+>这里仅考虑最通用的 VPN 协议，不考虑带流量伪装功能（加密混淆）的 VPN 协议。
 
-## IPsec/IKEv2 协议
+## 一、IPsec/IKEv2 协议
 
 排第二，有些厂家推荐优先选择它，有问题再回退到 OpenVPN.
 
@@ -29,10 +30,11 @@ IPsec 工作在 L3 网络层，比 OpenVPN 低好几个层级（SSL 比 L4 传�
   - 其 v2 版本修复了多处密码学方面的安全漏洞，提高了安全性能，同时简化了协商过程，提升了协商效率，协议定义参见 [rfc5996](https://www.rfc-editor.org/rfc/rfc5996)。
 - 进行数据传输
   - 其中会使用 AH 提供数据源认证与完整性校验（HMAC），或者使用 ESP 协议进行数据的加密认证。
+  - 其中 AH 协议会校验数据包的源 IP 地址，这导致它几乎无法穿越任何 NAT 网关。要穿越 NAT 只能用 ESP
 
 IPsec 这种架构带来的问题是：
 
-1. 参数众多，协议复杂，配置非常麻烦。
+1. 参数众多且复杂，存在大量的可选参数（使用 tunnel 模式还是 transport 模式？使用 AH 还是 ESP，或者都用？），而且其中很多选项都是不安全的。这就导致 IPsec 的配置变得非常麻烦，而且很容易导致安全隐患。
 2. 正因为配置众多，每个供应商都选择了各自不同的参数，这导致客户端不能通用，只有供应商自家的 VPN 客户端才能连接上它家的 IPsec 通道。
 3. 运行在内核空间，带来安全隐患。
 
@@ -47,18 +49,11 @@ IPsec中IKE协议采用UDP 500端口发起和响应协商，因此为了使IKE�
 - [wiki/IPsec](https://en.wikipedia.org/wiki/IPsec)
 
 
-## OpenVPN 协议
+## 二、OpenVPN 协议
 
 一种开源的 SSL VPN 协议，发布于 2001 年，也是应用最广泛的 VPN 协议，其官方有开源的的 [OpenVPN Community Edition](https://community.openvpn.net/openvpn)，因此协议也完全开源。
 
 协议的官方文档：[OpenVPN's network protocol](https://build.openvpn.net/doxygen/network_protocol.html)
-
-OpenVPN 官方宣称 SSL VPN 的特点是：
-
-1. 基于被充分测试过的、成熟可靠的 SSL/TLS 协议，而且此协议实现起来比 IPsec 容易许多
-2. 使用 TUN/TAP 虚拟网卡技术，运行在用户空间而不是内核空间，对 OS 安全没有影响
-3. 而且跟 OS 自带的 IPsec VPN 功能没有冲突，很容易安装
-4. 
 
 
 ### [OpenVPN and the SSL VPN Revolution] 阅读笔记
@@ -69,9 +64,17 @@ IPsec 包含了太多可选参数，导致非专业人员很难正确地配置�
 
 而 OpenVPN 是比 IPsec 更便宜、更简单、更安全的一种隧道协议，它使用 TLS 协议与密码学库取代了 IPsec 复杂的配置，还提供了更强大的功能。此外 OpenVPN 运行在用户空间，因此它更安全、更稳定（注：这也导致了巨大的性能开销——数据需要在内核空间与用户空间之间交互）。
 
+OpenVPN 官方宣称 SSL VPN 的特点是：
+
+1. 基于被充分测试过的、成熟可靠的 SSL/TLS 协议，而且此协议实现起来比 IPsec 容易许多
+2. 使用 TUN/TAP 虚拟网卡技术，运行在用户空间而不是内核空间，对 OS 安全没有影响
+3. 而且跟 OS 自带的 IPsec VPN 功能没有冲突，很容易安装
+4. 从 OpenVPN 2.0 开始，只需要单个 UDP 端口、一份配置文件、一个 TUN/TAP 虚拟网口，即可正常工作。
+
+协议的握手与数据传输过程与 mTLS + PFS 别无二致。
 
 
-## WireGuard 协议
+## 三、WireGuard 协议
 
 最潮的新宠协议 [wireguard protocol](https://www.wireguard.com/protocol/)，很牛逼。
 
@@ -156,5 +159,41 @@ WireGuard 的路由表设计中，每个（peer）都可以预先配置好一个
 同时每一个 peer 也能为其他 peer 提供数据中继服务——如果两个 peer 无法直连的话，可以通过修改路由表，就简单地通过某个中继 peer 使他们之间能正常通信。（猜的啊，还不确认）
 
 #### 协议与密码学
+
+
+TODO
+
+
+## 四、部署 VPN Server
+
+Github 的 [vpn](https://github.com/topics/vpn) Topic 下有众多 VPN 项目，WireGuard/IPsec/OpenVPN 相关的解决方案如下：
+
+- [trailofbits/algo](https://github.com/trailofbits/algo): 在云上部署安全的 WireGuard/IPsec VPN
+- [hwdsl2/setup-ipsec-vpn](https://github.com/hwdsl2/setup-ipsec-vpn): 一套 shell 脚本，可快速部署 IPsec VPN
+  - 此作者的 wireguard/openvpn 安装脚本同样很受欢迎
+- [SoftEtherVPN](https://github.com/SoftEtherVPN/SoftEtherVPN): 一个多协议 VPN 解决方案，支持几乎所有流行的 VPN 协议（不支持 IKEv2，仅 master 版本支持 WireGuard）
+
+
+由于 WireGuard 的流行，这里再列一下 [wireguard](https://github.com/topics/wireguard) Topic 下的相关项目：
+
+- [headscale](https://github.com/juanfont/headscale): tailscale 控制服务器的开源实现，tailscale 是一套傻瓜式的 WireGuard VPN 私有网络解决方案。
+- [netbird](https://github.com/netbirdio/netbird): 又一个基于 WireGuard 的 VPN 平台
+- [firezone](https://github.com/firezone/firezone): 同上，不过是使用 Elixir 写的，而且完全容器化，支持通过 OIDC 登录。
+- 官方与社区的 wireguard 用户空间实现，主要用在非 Linux 平台的 WireGuard 客户端中。
+  - [boringtun](https://github.com/cloudflare/boringtun)
+  - [wireguard-go](https://github.com/WireGuard/wireguard-go)
+- WireGuard 的 Web UI / Web API 封装，能帮助我们理解如何去对用户进行增删查改
+  - [subspace](https://github.com/subspacecloud/subspace): 一个 WireGuard VPN 服务器的 Web UI，可实现用户的增删改查。
+  - [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)
+  - [wg-ui](https://github.com/EmbarkStudios/wg-ui)
+  - [wg-gen-web](https://github.com/vx3r/wg-gen-web)
+
+
+
+我的需求主要是：
+
+1. 能动态添加、删除用户
+2. 能通过简单地设置，隔离所有用户之间的通信。
+   1. 因为主要目的是给用户提供隐私网络，而不是提供多设备通过虚拟网络互联的功能。
 
 
