@@ -192,10 +192,3 @@ Github 的 [vpn](https://github.com/topics/vpn) Topic 下有众多 VPN 项目，
   - [wireguard-manager-and-api](https://github.com/Mawthuq-Software/wireguard-manager-and-api)
 
 
-我的需求主要是：
-
-1. 能动态添加、删除用户
-2. 能通过简单地设置，隔离所有用户之间的通信。
-   1. 因为主要目的是给用户提供隐私网络，而不是提供多设备通过虚拟网络互联的功能。
-
-
