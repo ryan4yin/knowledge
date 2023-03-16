@@ -174,20 +174,22 @@ Github 的 [vpn](https://github.com/topics/vpn) Topic 下有众多 VPN 项目，
 - [SoftEtherVPN](https://github.com/SoftEtherVPN/SoftEtherVPN): 一个多协议 VPN 解决方案，支持几乎所有流行的 VPN 协议（不支持 IKEv2，仅 master 版本支持 WireGuard）
 
 
-由于 WireGuard 的流行，这里再列一下 [wireguard](https://github.com/topics/wireguard) Topic 下的相关项目：
+由于 WireGuard 的流行，这里再列一下 [awesome-wireguard](https://github.com/cedrickchee/awesome-wireguard) Topic 下的相关项目：
 
-- [headscale](https://github.com/juanfont/headscale): tailscale 控制服务器的开源实现，tailscale 是一套傻瓜式的 WireGuard VPN 私有网络解决方案。
-- [netbird](https://github.com/netbirdio/netbird): 又一个基于 WireGuard 的 VPN 平台
-- [firezone](https://github.com/firezone/firezone): 同上，不过是使用 Elixir 写的，而且完全容器化，支持通过 OIDC 登录。
+- Mesh 网络
+  - [headscale](https://github.com/juanfont/headscale): tailscale 控制服务器的开源实现，tailscale 是一套傻瓜式的 WireGuard VPN 私有网络解决方案。
+  - [netbird](https://github.com/netbirdio/netbird): 又一个基于 WireGuard 的 VPN 平台
+  - [firezone](https://github.com/firezone/firezone): 同上，不过是使用 Elixir 写的，而且完全容器化，支持通过 OIDC 登录。
 - 官方与社区的 wireguard 用户空间实现，主要用在非 Linux 平台的 WireGuard 客户端中。
-  - [boringtun](https://github.com/cloudflare/boringtun)
-  - [wireguard-go](https://github.com/WireGuard/wireguard-go)
-- WireGuard 的 Web UI / Web API 封装，能帮助我们理解如何去对用户进行增删查改
-  - [subspace](https://github.com/subspacecloud/subspace): 一个 WireGuard VPN 服务器的 Web UI，可实现用户的增删改查。
-  - [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)
-  - [wg-ui](https://github.com/EmbarkStudios/wg-ui)
-  - [wg-gen-web](https://github.com/vx3r/wg-gen-web)
-
+  - [boringtun](https://github.com/cloudflare/boringtun): CloudFalre 用 Rust 实现的用户空间 wireguard
+  - [wireguard-go](https://github.com/WireGuard/wireguard-go): WireGuard 官方的用户空间实现，使用 Go
+  - [wireguard-lwip](https://github.com/smartalock/wireguard-lwip): 为嵌入式设备实现的 WireGuard 协议
+  - [WireGuard-ESP32-Arduino](https://github.com/ciniml/WireGuard-ESP32-Arduino): 在 ESP32 上跑 WireGuard 协议
+- WireGuard 的 Web UI / Web API 封装
+  - [wgctrl-go](https://github.com/WireGuard/wgctrl-go): 一个用于控制 WireGuard 虚拟接口的 Go 语言库。
+  - [jamescun/wg-api](https://github.com/jamescun/wg-api)
+  - [suquant/wgrest](https://github.com/suquant/wgrest)
+  - [wireguard-manager-and-api](https://github.com/Mawthuq-Software/wireguard-manager-and-api)
 
 
 我的需求主要是：
