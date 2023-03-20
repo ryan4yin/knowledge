@@ -21,6 +21,13 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
 2. 对于使用 cmake 的项目就更简单了，cmake 原生就支持，只需要在根目录的配置文件中添加 `set(CMAKE_EXPORT_COMPILE_COMMANDS True)`
 3. 其他工具的配置方法请自行搜索。
 
+生成好 `compile_commands.json` 后，最简单的配置方法是，在项目根目录为其添加一个软链接，clangd 就能正确识别到它了。
+假设你的配置文件生成在了 `build` 文件夹中，那么在项目根目录执行如下命令即可：
+
+```shell
+ln -s build/compile_commands.json .
+```
+
 ## 一、GCC / Clang 常见参数解释
 
 主要摘抄自 [man gcc](https://man7.org/linux/man-pages/man1/gcc.1.html)，用做日常参考:
