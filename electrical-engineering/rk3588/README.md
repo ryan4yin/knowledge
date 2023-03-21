@@ -19,7 +19,7 @@ RK3588/RK3588S 是瑞芯微推出的一款高性能 ARM64 SoC，配置如下：
 
 而其他的 RK3588 或者其他 ARM Soc 的板子，要么就是价格贼高，要么就是性能不太行，反正目前看国产派就是 Orange Pi 跟 Rock Pi 性价比高一点，而且好折腾。
 
->还有啥友善之臂，听这名字就...而且一搜那官网就是几百年没更新了，论坛也没啥活人，看设计还主要是搞软路由的，我直接避坑。
+>还有[Friendly ELEC](https://wiki.friendlyelec.com/wiki/index.php/Main_Page)（以前叫 Friendly Arm，翻译成 友善之臂...）现在也出了 RK3588 与 RK3588s 的产品，不过它家的东西主要适配 OpenWRT，设计都是走软路由方向的，我暂时没啥兴趣。另外搞嵌入式教育出身的野火也打算出 RK3588s 的板子（鲁班猫系列），看这个系列价格倒还 OK，但是不知道啥时候上架。
 
 其他大佬的折腾资料：
 
@@ -295,9 +295,13 @@ echo 2000 > /sys/kernel/debug/rknpu/delayms
 
 ## GPU 驱动
 
-orange pi 5 用 armbian wayland 可以用 GPU 硬解 8K 视频，基本不占用 CPU：
+orange pi 5 官方对 GPU 驱动的跟进比较慢，2023/3 之前只能用社区的 armbian wayland 系统，才能用 GPU 硬解 8K 视频。
+
+不过现在 orange pi 5 官方的 ubuntu 22.04 镜像已经自带 GPU 驱动了。
 
 >armbian 跟 orangepi5/rock5 官方提供的 ubuntu/debian 等系统相比会更有开源氛围，社区更活跃，ARM 相关的驱动更新更快，而且在各种 ARM 板子上体验都一致。
+
+armbian GPU 驱动相关文档：
 
 - [视频加速驱动](https://forum.armbian.com/topic/26450-accelerated-video-options-for-installing-and-running/#comment-159265)
 - [带有 GPU 硬件加速和 HDMI 音频的 Orange Pi 5 上的 Kodi](https://forum.armbian.com/topic/25957-guide-kodi-on-orange-pi-5-with-gpu-hardware-acceleration-and-hdmi-audio/#comment-157913)
