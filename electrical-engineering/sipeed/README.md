@@ -12,7 +12,7 @@ Sipeed 专门做各种开发版、模组、解决方案，主打 AloT，比较�
 
 1. Maix Zero: 小巧、低功耗的 AloT 单片机，对标 ESP32，这个系列 2023 年才刚刚上架，目前软件生态比较拉，基本只有博流智能的官方 SDK 可用，属于战未来系列
    1. M0：开发版价格 29，使用博流智能科技的 BL702 芯片，32bits RISC-V, 132KB RAM，只支持蓝牙
-   2. **M0s**: 开发版价格 26.9 - 5，升级到了 BL616 芯片，480KB SRAM + 4MB Flash，支持蓝牙跟 WiFi6，硬件配置可以跟 ESP32-S3 拼，但是软件生态...战未来吧
+   2. **M0s**: 开发版价格 26.9 - 5，升级到了 BL616 芯片，480KB SRAM + 4MB Flash，支持蓝牙跟 WiFi6，硬件配置可以跟 ESP32-S3 拼，得用博流智能官方的 C/C++ SDK 进行开发
 2. Maix I: 高性价比的 AI 单片机，能跑阉割版 Linux
    1. M1W/M1N: 开发版价格 120+，基于嘉楠科技 K210 芯片，64bits RISC-V 双核，8MB SRAM，有 KPU 0.23TOPS 算力（但是不是 NPU，好像这有啥限制在），通过内置的 ESP8285 提供 WiFi 与蓝牙功能。
       1. Sipeed 的 MaixPy 框架（已经停止开发）就是专门适配这款芯片的，在 Github 上有 1k stars，说明还是挺受欢迎的。不过也只支持 Python 开发套件。
@@ -31,6 +31,9 @@ Sipeed 专门做各种开发版、模组、解决方案，主打 AloT，比较�
    1. **MAIX-III AXera-Pi**: 基于「爱芯元智」的 AX620A 芯片，四核 Cortex A7，3.6TOPS 算力，2GB RAM，卖 419 大洋（不得不说这还是有点贵了），看文档写得热情洋溢，内容很丰富，看起来是现在的主打产品。
       1. 实际芯片包含了 NPU 和 ISP 部分， 在 AX620A 上两个平分算力，即 1.8TOPS@INT8
       2. 2022 年底上架，软件生态跟社区活跃度，看宣传还不错。
+   2. 某未发售的产品，基于「爱芯元智」的 AX650N 芯片，八核 Cortex A55，10.8TOPs@INT8 AI 算力
+      1. 根据官方 twitter 暗示，跑 chatgpt 类似的模型，速度大概有 10tokens/second(1 token ~ 3/4 word)
+      2. 作为对比，LicheePi4A (TH1520, 4xC910@2.0G) 官方测试跑 llama.cpp 的速度大概为 6s/token
 
 ## LicheePi Linux 开发版系列
 
