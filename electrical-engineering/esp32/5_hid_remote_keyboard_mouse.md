@@ -3,7 +3,7 @@
 ip-kvm 目前已经有许多成熟的方案了，比如 [pikvm](https://github.com/pikvm/pikvm) 跟 [Nihiue/open-ip-kvm](https://github.com/Nihiue/open-ip-kvm)，但是它们的成本都比较高，pikvm 用到的树莓派现在价格高得离谱，而 open-ip-kvm 也需要淘早就倒闭的某讯 N1 盒子，价格太高。
 
 但实际上 IP-KVM 需要的就是一个 USB HID 设备模拟键盘鼠标，然后通过 HDMI 视频采集卡采集图像内容，再通过网络实现完全的远程控制。
-而 ESP32S3 能连接Wifi，然后也支持 USB-OTG，当成远程键鼠用肯定是没问题的，然后通过 MIPI 也能支持
+而 ESP32S3 本身就支持 USB-OTG，
 
 
 ## USB 基础概念
