@@ -78,6 +78,11 @@ OpenVPN 官方宣称 SSL VPN 的特点是：
 
 最潮的新宠协议 [wireguard protocol](https://www.wireguard.com/protocol/)，很牛逼。
 
+其他参考资料：
+
+- [WireGuard到底好在哪？](https://zhuanlan.zhihu.com/p/404402933): 比较深入浅出的随想，值得一读。
+- [WireGuard 基础教程：wg-quick 路由策略解读 - 米开朗基扬](https://icloudnative.io/posts/linux-routing-of-wireguard/)
+
 ### WireGuard 白皮书阅读记要
 
 #### 对比 IPsec/IKEv2
@@ -162,6 +167,83 @@ WireGuard 的路由表设计中，每个（peer）都可以预先配置好一个
 
 
 TODO
+
+
+### WireGuard 协议实测
+
+首先通过如下 docker-compose 配置启动一个 WireGuard 服务端：
+
+```yaml
+---
+version: "2.1"
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERURL=192.168.5.198
+      - SERVERPORT=51820 #optional
+      - PEERS=1 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - PERSISTENTKEEPALIVE_PEERS= #optional
+      - LOG_CONFS=true #optional
+    volumes:
+      - /etc/wireguard:/config
+      - /lib/modules:/lib/modules #optional
+    restart: unless-stopped
+  wg-json-api:
+    image: james/wg-api:latest
+    container_name: wg-json-api
+    restart: unless-stopped
+    depends_on:
+      - wireguard
+    cap_add:
+      - NET_ADMIN
+    network_mode: "host"
+    command: wg-api --device wg0 --listen 0.0.0.0:8182
+```
+
+现在从宿主机 `/etc/wireguard/peer1` 文件夹中找到 `peer1.conf`，它是客户端配置文件。
+
+在另一台机器上使用如下命令启动一台 WireGuard 客户端：
+
+```bash
+sudo apt install wireguard resolvconf
+
+# 从服务端拷贝配置文件到客户端的 /etc/wireguard/peer1.conf
+
+# 启动 WireGuard
+sudo wg-quick up peer1
+```
+
+我启动时的日志如下：
+
+```bash
+$ sudo wg-quick up peer1
+[#] ip link add peer1 type wireguard
+[#] wg setconf peer1 /dev/fd/63
+[#] ip -4 address add 10.13.13.2 dev peer1
+[#] ip link set mtu 1420 up dev peer1
+[#] resolvconf -a tun.peer1 -m 0 -x
+[#] wg set peer1 fwmark 51820
+[#] ip -4 route add 0.0.0.0/0 dev peer1 table 51820
+[#] ip -4 rule add not fwmark 51820 table 51820
+[#] ip -4 rule add table main suppress_prefixlength 0
+[#] sysctl -q net.ipv4.conf.all.src_valid_mark=1
+[#] nft -f /dev/fd/63
+```
+
+使用的都是很标准的 Linux 命令，解释如下：
+
 
 
 ## 四、部署 VPN Server

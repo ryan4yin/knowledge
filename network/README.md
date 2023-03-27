@@ -18,7 +18,7 @@
 学习网络，最重要的是使用 Chrome/Firefox 及 Wireshark 的抓包去实践。
 
 - [计算机网络 - 自顶向下方法](https://book.douban.com/subject/26176870/)
-
+- [优化网络传输性能](https://www.zhihu.com/column/c_1539243008150597632): 目前在字节的网络大佬，包含巨多 TCP 干货内容
 
 ## 网络模拟
 
