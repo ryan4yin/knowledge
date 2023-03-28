@@ -234,27 +234,121 @@ sudo apt install wireguard resolvconf
 sudo wg-quick up peer1
 ```
 
-我启动时的日志如下：
+我启动时的日志如下，打印出了 wg-quick 执行的所有指令（我添加了详细的注释）：
 
 ```bash
 $ sudo wg-quick up peer1
-[#] ip link add peer1 type wireguard
-[#] wg setconf peer1 /dev/fd/63
-[#] ip -4 address add 10.13.13.2 dev peer1
-[#] ip link set mtu 1420 up dev peer1
-[#] resolvconf -a tun.peer1 -m 0 -x
-[#] wg set peer1 fwmark 51820
-[#] ip -4 route add 0.0.0.0/0 dev peer1 table 51820
-[#] ip -4 rule add not fwmark 51820 table 51820
-[#] ip -4 rule add table main suppress_prefixlength 0
-[#] sysctl -q net.ipv4.conf.all.src_valid_mark=1
-[#] nft -f /dev/fd/63
+[#] ip link add peer1 type wireguard             # 创建一个名为 peer1 的 WireGuard 设备
+[#] wg setconf peer1 /dev/fd/63                  # 设置 peer1 设备的配置
+[#] ip -4 address add 10.13.13.2 dev peer1       # 设置 peer1 设备的 IP 地址
+[#] ip link set mtu 1420 up dev peer1            # 设置 peer1 设备的 MTU
+[#] resolvconf -a tun.peer1 -m 0 -x              # 设置 peer1 设备的 DNS，确保 DNS 能够正常工作
+[#] wg set peer1 fwmark 51820                    # 将 peer1 设备的防火墙标记设为 51820，用于标记 WireGuard 出网流量
+                                                 # 该标记是一个 32bits 整数，后面 nft 表会用它追踪连接
+[#] ip -4 route add 0.0.0.0/0 dev peer1 table 51820     # 创建单独的路由表 51820，默认将所有流量转发到 peer1 接口
+[#] ip -4 rule add not fwmark 51820 table 51820         # 所有不带 51820 标记的流量（普通流量），都转发到前面新建的路由表 51820
+                                                        # 也就是所有普通流量都转发到 peer1 接口
+[#] ip -4 rule add table main suppress_prefixlength 0   # 流量全都走 main 路由表（即默认路由表），但是排除掉前缀长度（掩码） <= 0 的流量
+                                                        # 掩码 <= 0 的只有 0.0.0.0/0，即默认路由。所以意思是所有非默认路由的流量都走 main 路由表（其实就是 wireguard 自己的出网流量）
+[#] sysctl -q net.ipv4.conf.all.src_valid_mark=1        # 启用源地址有效性检查，用于防止伪造源地址
+[#] nft -f /dev/fd/63                                   # 配置 nftables 规则，用于确保 WireGuard 流量能正确路由，并防止恶意数据包进入网络
 ```
 
-使用的都是很标准的 Linux 命令，解释如下：
+跑完后我们现在确认下状态，应该是能正常走 WireGuard 访问相关网络了。
 
+那么现在再检查下系统的网络状态，首先检查下默认路由表（main），应该是没任何变化：
 
-TODO
+```shell
+# 如下命令等同于 ip route ls table main
+ryan@ubuntu-2004-builder:~$ ip route ls
+default via 192.168.5.201 dev eth0 proto static 
+192.168.5.0/24 dev eth0 proto kernel scope link src 192.168.5.197 
+```
+
+但是我们的 WireGuard 隧道已经生效了，这就说明并不是所有流量都走默认路由表的，而是走了 WireGuard 的路由表。
+前面的日志显示 WireGuard 的路由表名为 51820，我们来检查下这个表：
+
+```shell
+ryan@ubuntu-2004-builder:~$ ip route ls table 51820
+default dev peer1 scope link
+```
+
+就能看到这个表确实是走到 WireGuard 的 peer1 接口了。
+
+系统的流量是如何被转发到这个路由表的呢？实际这是由 Linux 路由策略数据库负责的，Linux 从 2.2 开始支持多路由表，并通过路由策略数据库来为每个数据包选择正确的路由表。我们来看下系统当前的路由策略：
+
+```shell
+ryan@ubuntu-2004-builder:~$ ip rule show
+0:      from all lookup local                         # 0 是最高优先级，`all` 表示所有流量，`lookup local` 表示查找 local 路由表。
+                                                      # local 是一个特殊路由表，包含对本地和广播地址的优先级控制路由。
+32764:  from all lookup main suppress_prefixlength 0  # 32764 目前是第二优先级，将所有流量路由到　main 路由表，但是排除掉默认路由（前缀/掩码 <= 0）
+                                                      # 这条规则前面实际解释过了，它是 wg-quick 在启动隧道时添加的规则。
+32765:  not from all fwmark 0xca6c lookup 51820       # 所有不带 0xca6c 标记（51820 的 16 进制格式）的流量（普通流量），都走 51820 路由表
+                                                      # 也就是都转发到 WireGuard peer1 接口。
+                                                      # 这条规则是前面的 `ip -4 rule add not fwmark 51820 table 51820` 命令添加的。
+                                                      # 而它所匹配的防火墙标记则是由前面的 `wg set peer1 fwmark 51820` 命令设置的。
+32766:  from all lookup main                          # 所有流量都走 main 路由表，当前是不生效状态，因为前面的规则优先级更高。
+                                                      # main 是系统的默认路由表，通常我们使用 ip route 命令都是在这个表上操作。
+32767:  from all lookup default                       # 所有流量都走 default 路由表，当前同样是不生效状态。
+                                                      # default 是一个系统生成的兜底路由表，默认不包含任何路由规则，可用于自定义路由策略，也可删除。
+```
+
+那么现在路由规则就理清楚了，那么 wg-quick 日志的最后一行 `nft -f /dev/fd/63` 到底做了什么呢？
+它实际是设置了一些 nftables 规则，我们查看下它的规则内容：
+
+```shell
+ryan@ubuntu-2004-builder:~$ sudo nft list ruleset
+table ip wg-quick-peer1 {
+        chain preraw {
+                type filter hook prerouting priority raw; policy accept;
+                iifname != "peer1" ip daddr 10.13.13.2 fib saddr type != local drop
+        }
+
+        chain premangle {
+                type filter hook prerouting priority mangle; policy accept;
+                meta l4proto udp meta mark set ct mark
+        }
+
+        chain postmangle {
+                type filter hook postrouting priority mangle; policy accept;
+                meta l4proto udp meta mark 0x0000ca6c ct mark set meta mark
+        }
+}
+```
+
+可以看到 wg-quick 添加了一个 `wg-quick-peer1` 表，通过该表在 netfilter 上设置了如下规则：
+
+>注意：nftables 的这个 chain 名称是完全自定义的，没啥特殊意义
+
+1. `preraw` 链：此链用于防止恶意数据包进入网络。
+   1. type 开头的一行是规则的类型，这里是 `filter`，仅匹配了 `raw` 链的 `prerouting` 表。
+   2. 它丢弃掉所有来源接口不是 peer1、目的地址是 10.13.13.2、且源地址不是本地地址的数据包。
+   3. 总结下就是只允许本地地址或者 peer1 直接访问 10.13.13.2 这个地址。
+2. `premangle` 链：此链用于确保所有 UDP 数据包都能被正确从 WireGuard 接口入站。
+   1. 它将所有 UDP 数据包的标记设置为连接跟踪标记（没搞懂这个标记是如何生效的....）。
+3. `postmangle` 链：此链用于确保所有 UDP 数据包都能被正确从 WireGuard 接口出站。
+   1. 它将所有 UDP 数据包的标记设置为 0xca6c（51820 的 16 进制格式）（同样没理解这个标记是如何生效的...）。
+
+这些规则都是 wg-quick 在启动隧道时自动添加的，我们可以通过 `wg-quick down peer1` 命令来删除它们，这样网络就恢复了。
+
+最后看下 WireGuard 的状态，它是前面 `wg setconf peer1 /dev/fd/63` 设置的：
+
+```shell
+ryan@ubuntu-2004-builder:~$ sudo wg show 
+interface: peer1
+  public key: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
+  private key: (hidden)
+  listening port: 51820
+  fwmark: 0xca6c
+
+peer: t95vF4b11RLCId3ArVVIJoC5Ih9CNbI0VTNuDuEzZyw=
+  preshared key: (hidden)
+  endpoint: 192.168.5.198:51820
+  allowed ips: 0.0.0.0/0
+  latest handshake: 18 minutes, 59 seconds ago
+  transfer: 124 B received, 324 B sent
+```
+
 
 #### 2. 服务端网络分析
 
@@ -345,6 +439,7 @@ peer: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
 ```
 
 这样就能实现动态增删改查 wireguard peer 了。
+
 
 ## 四、部署 VPN Server
 
