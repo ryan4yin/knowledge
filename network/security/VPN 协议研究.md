@@ -180,7 +180,12 @@ services:
   wireguard:
     image: lscr.io/linuxserver/wireguard:latest
     container_name: wireguard
-    network_mode: "host"
+    ports:
+      - 51820:51820/udp
+      # 8182 是下面 wg-json-api 服务的端口，因为加到了同一个网络中，所以在这边添加端口映射
+      - 8182:8182
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -200,17 +205,21 @@ services:
       - /etc/wireguard:/config
       - /lib/modules:/lib/modules #optional
     restart: unless-stopped
-  wg-json-api:
+  wg-api:
     image: james/wg-api:latest
-    container_name: wg-json-api
+    container_name: wg-api
     restart: unless-stopped
+    # 加入到 wireguard 服务的名字空间中
+    network_mode: service:wireguard
     depends_on:
       - wireguard
     cap_add:
       - NET_ADMIN
-    network_mode: "host"
+    # 必须在同一名字空间内，才能直接访问到 wg0 设备
     command: wg-api --device wg0 --listen 0.0.0.0:8182
 ```
+
+#### 1. 客户端网络分析
 
 现在从宿主机 `/etc/wireguard/peer1` 文件夹中找到 `peer1.conf`，它是客户端配置文件。
 
@@ -245,6 +254,97 @@ $ sudo wg-quick up peer1
 使用的都是很标准的 Linux 命令，解释如下：
 
 
+TODO
+
+#### 2. 服务端网络分析
+
+首先查看下 wireguard 服务端容器的日志：
+
+```bash
+# ...
+.:53                                    # 这几行日志是启动 CoreDNS，为虚拟网络提供默认的 DNS 服务
+CoreDNS-1.10.1                          # 实际上 CoreDNS 不是必须的，客户端可以改用其他 DNS 服务器
+linux/amd64, go1.20, 055b2c3
+[#] ip link add wg0 type wireguard         # 创建一个 wireguard 设备
+[#] wg setconf wg0 /dev/fd/63              # 设置 wireguard 设备的配置
+[#] ip -4 address add 10.13.13.1 dev wg0   # 为 wireguard 设备添加一个 ip 地址
+[#] ip link set mtu 1420 up dev wg0        # 设置 wireguard 设备的 mtu
+[#] ip -4 route add 10.13.13.2/32 dev wg0  # 为 wireguard peer1 添加路由
+[#] iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth+ -j MASQUERADE
+                                          # 为 wireguard 设备添加 iptables 规则
+[ls.io-init] done.
+```
+
+能看到服务端的配置跟客户端有些不同，它没有添加额外的路由表跟路由表选择策略，是直接在默认路由表中添加了路由规则。
+
+此外为了让 wireguard 设备可以访问外网，它添加了一些 iptables 规则，简单解释下：
+
+- `iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT;`：允许进出 wg0 设备的数据包通过 netfilter 的 FORWARD 链（默认规则是 DROP，即默认是不允许通过的）
+- `iptables -t nat -A POSTROUTING -o eth+ -j MASQUERADE`：在 eth+ 网卡上添加 MASQUERADE 规则，即将数据包的源地址伪装成 eth+ 网卡的地址，目的是为了允许 wireguard 的数据包通过 NAT 访问外部网络。
+  - 而回来的流量会被 NAT 的 conntrack 链接追踪规则自动允许通过，不过 conntrack 表有自动清理机制，这就是为什么 wireguard 服务端需要添加 `PersistentKeepalive = 25` 的配置项，通过心跳包来保持 NAT 表的连接追踪。
+
+#### 3. 动态修改 WireGuard 配置
+
+首先登录到 wireguard 服务端容器中，确认当前状态：
+
+```bash
+root@5dcfebb0755d:/# wg
+interface: wg0
+  public key: t95vF4b11RLCId3ArVVIJoC5Ih9CNbI0VTNuDuEzZyw=
+  private key: (hidden)
+  listening port: 51820
+
+peer: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
+  preshared key: (hidden)
+  allowed ips: 10.13.13.2/32
+```
+
+现在调用下 wiregard-api 容器的接口，添加一个新的 peer：
+
+```bash
+# https://github.com/jamescun/wg-api
+curl http://localhost:8182 -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "AddPeer", "params": {"public_key": "xoY2MZZ1UmbEakFBPyqryHwTaMi6ae4myP+vuILmJUY=","allowed_ips": [ "10.1.1.0/24" ]}}'
+```
+
+再 check 下状态：
+
+```shell
+root@5dcfebb0755d:/# wg
+interface: wg0
+  public key: t95vF4b11RLCId3ArVVIJoC5Ih9CNbI0VTNuDuEzZyw=
+  private key: (hidden)
+  listening port: 51820
+
+peer: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
+  preshared key: (hidden)
+  allowed ips: 10.13.13.2/32
+
+peer: xoY2MZZ1UmbEakFBPyqryHwTaMi6ae4myP+vuILmJUY=
+  allowed ips: 10.1.1.0/24
+```
+
+可以看到 wireguard 服务端已经动态添加了一个新的 peer，现在再调个 API 动态删除该 peer:
+
+```shell
+curl 192.168.5.198:8182 -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "RemovePeer", "params": {"public_key": "xoY2MZZ1UmbEakFBPyqryHwTaMi6ae4myP+vuILmJUY=","allowed_ips": [ "10.1.1.0/24" ]}}'
+{"jsonrpc":"2.0","result":{"ok":true},"id":null}
+```
+
+配置就还原了：
+
+```shell
+root@5dcfebb0755d:/# wg
+interface: wg0
+  public key: t95vF4b11RLCId3ArVVIJoC5Ih9CNbI0VTNuDuEzZyw=
+  private key: (hidden)
+  listening port: 51820
+
+peer: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
+  preshared key: (hidden)
+  allowed ips: 10.13.13.2/32
+```
+
+这样就能实现动态增删改查 wireguard peer 了。
 
 ## 四、部署 VPN Server
 
