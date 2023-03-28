@@ -112,6 +112,12 @@ ctr image export calico-node-v3.11.2.tar docker.io/calico/node:v3.11.2
 
 # 导入镜像供 k8s 使用（必须加上 -n=k8s.io）
 ctr -n=k8s.io images import calico-node-v3.11.2.tar
+
+# 或者也可以用命令行工具 skopeo，命令中的 containers-storage 是 cri-o 的存储驱动
+# Saving
+skopeo copy containers-storage:docker.io/weaveworks/weave-npc:2.8.1 dir:image-output-dir
+# Loading
+skopeo copy dir:image-output-dir containers-storage:docker.io/weaveworks/weave-npc:2.8.1
 ```
 
 ### [nerdctl](https://github.com/containerd/nerdctl)

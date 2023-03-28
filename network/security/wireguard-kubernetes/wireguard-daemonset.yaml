@@ -1,0 +1,200 @@
+# 目标运行环境：2c/1G 虚拟机
+# 总共可分配资源           1930m / 1000Mi
+##      - wireguard       1000m-1800m   400Mi-800Mi
+##      - wg-api          100m-200m     100Mi-200Mi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wireguard-agent
+  namespace: wireguard
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: wireguard-agent-v1
+  namespace: wireguard
+  labels:
+    app: wireguard-agent
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      app: wireguard-agent
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: wireguard-agent
+        version: v1
+    spec:
+      # 通过这个改，需要修改每个节点的 kubectl 参数添加 --allowed-unsafe-sysctls 才行，这需要修改虚拟机启动脚本
+      # 这里改用了 init-containers + 特权模式进行修改，绕过了这个安全限制。
+      # securityContext:
+      #   sysctls:
+      #   - name: net.ipv4.conf.all.src_valid_mark
+      #     value: "1"
+      # hostNetwork: true  # 使用宿主机网络，会导致将 wg-api 暴露到外部网络，注意 wg-api 的保护。
+      terminationGracePeriodSeconds: 30
+      nodeSelector:
+        app.kubernetes.io/component: wireguard-dataplane
+      tolerations:
+      - key: "xxx.example.com/wireguard-agents"
+        operator: "Exists"
+        effect: "NoSchedule"
+      volumes:
+        # - name: wg-api-config
+        #   configMap:
+        #     name: wg-api-config
+        # - name: xxx
+        #   emptyDir: {}
+        - name: modules
+          hostPath:
+            path: /lib/modules
+            type: Directory
+        - name: wireguard-config
+          hostPath:
+            path: /etc/wireguard
+            type: DirectoryOrCreate  # auto create directory
+      restartPolicy: Always
+      serviceAccountName: wireguard-agent
+      initContainers:
+      - name: "init-sysctl"
+        image: "busybox:latest"
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "10m"
+            memory: "8Mi"
+          requests:
+            cpu: "10m"
+            memory: "8Mi"
+        securityContext:
+          privileged: true
+        command:
+          - "/bin/sh"
+          - "-c"
+          - |
+            set -o errexit
+            set -o xtrace
+
+            echo "
+            net.ipv4.conf.all.src_valid_mark=1
+            " >> /etc/init-sysctl.conf
+
+            # apply sysctl config
+            for i in $(seq 1 3); do
+                sysctl -p /etc/init-sysctl.conf
+                echo "sysctl exit with code $?, wait for 3s and then rerun the command..."
+                sleep 3
+            done 
+            echo "finished sysctl adjustment..."
+      containers:
+        - name: wireguard
+          image: lscr.io/linuxserver/wireguard:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+            allowPrivilegeEscalation: true
+            capabilities:
+              add: ["NET_ADMIN", "SYS_MODULE"]
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+            - name: SERVERURL
+              value: "auto"
+            - name: SERVERPORT
+              value: "51820"
+            - name: PEERS
+              value: "0"
+            - name: PEERDNS
+              value: "auto"
+            - name: INTERNAL_SUBNET
+              value: "172.40.5.0/24"   # 注意网段别冲突了
+            - name: ALLOWEDIPS
+              value: "0.0.0.0/0"
+            - name: PERSISTENTKEEPALIVE_PEERS
+              value: "all"
+            - name: LOG_CONFS
+              value: "true"
+          ports:
+            - name: wireguard
+              containerPort: 51820
+              # 直接将 wireguard 端口开放到主机外部
+              # hostPort: 51820
+              protocol: UDP
+          lifecycle:
+            # 启动后先等 15s，再启动下一个容器，用于控制启动顺序
+            postStart:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - "sleep 15"
+            # 在这里实现节点注销，或者通过 node deletion events 实现节点注销
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - "sleep 15"
+          volumeMounts:
+            - mountPath: /lib/modules
+              name: modules
+            - mountPath: /config
+              name: wireguard-config
+          resources:
+            limits:
+              cpu: "1800m"
+              memory: "800Mi"
+            requests:
+              cpu: "1000m"
+              memory: "400Mi"
+        - name: wireguard-api
+          image: james/wg-api:latest
+          # 安全起见，仅允许 localhost 访问
+          command: ["wg-api", "--device", "wg0", "--listen", "localhost:8182"]
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+            allowPrivilegeEscalation: true
+            capabilities:
+              add: ["NET_ADMIN"]
+          ports:
+            - name: http
+              containerPort: 8182
+              protocol: TCP
+            # - name: prometheus  # 监控指标
+            #   containerPort: 9091
+            #   protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8182
+            timeoutSeconds: 1
+          lifecycle:
+            # 在这里实现节点注销，或者通过 node deletion events 实现节点注销
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - "sleep 15"
+          # volumeMounts:
+          #   - mountPath: /app/wg-api-config.yaml
+          #     name: wg-api-config
+          #     subPath: config.yaml
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi

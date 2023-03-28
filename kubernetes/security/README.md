@@ -15,7 +15,8 @@ kubernetes 自带的 secrets 用的也必要多。
 
 
 如下两点的内容参见 [Kubernetes 最佳实践 - Pod 安全](../Kubernetes%20最佳实践.md#security)
-1. [Pod SecurityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)2. seccomp: security compute mode
+1. [Pod SecurityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+1. seccomp: security compute mode
 
 
 ### 3. 集群全局的 Pod 安全策略

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wireguard-tester
+  namespace: wireguard
+  labels:
+    app: wireguard-tester
+spec:
+
+  selector:
+    matchLabels:
+      app: wireguard-tester
+  template:
+    metadata:
+      labels:
+        app: wireguard-tester
+    spec:
+      containers:
+        - name: wireguard
+          image: lscr.io/linuxserver/wireguard:latest
+          imagePullPolicy: IfNotPresent
+          command:
+          - /bin/bash
+          - -c
+          - 'while true; do sleep 100000; done'
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "100Mi"

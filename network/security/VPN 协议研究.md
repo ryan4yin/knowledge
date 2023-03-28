@@ -440,6 +440,8 @@ peer: HR8Kp3xWIt2rNdS3aaCk+Ss7yQqC9cn6h3WS6UK3WE0=
 
 这样就能实现动态增删改查 wireguard peer 了。
 
+>但是 [wg-api 目前不支持保存配置，重启会导致所有配置丢失](https://github.com/jamescun/wg-api/issues/7)，一个简单的方案是改下它的代码，每次跑完都再跑下 `wg-quick save wg0` 指令。
+
 
 ## 四、部署 VPN Server
 
