@@ -4,7 +4,7 @@ PCIe 作为 PC 的高速数据总线已经 20 多年了，最近迭代越来越�
 
 
 
-| PCIe ® Rev    | 发布时间  | Total Channel Insertion Loss Budget | Root Package | CEM Connector | Add-in Card (AIC) | Remaining System Base Board Budget |
+| PCIe ® 版本    | 发布时间  | Total Channel Insertion Loss Budget | Root Package | CEM Connector | Add-in Card (AIC) | Remaining System Base Board Budget |
 | ------------- | -------- | ----------------------------------- | ------------ | ------------- | ----------------- | ---------------------------------- |
 | 3.0 (8 GT/s)  | November 10, 2010 | 22 dB                               | 3.5 dB       | 1.7 dB        | 6.5 dB            | 10.3 dB                            |
 | 4.0 (16 GT/s) | October 5, 2017  | 28 dB                               | 5.0 dB       | 1.5 dB        | 8.0 dB            | 13.5 dB                            |
