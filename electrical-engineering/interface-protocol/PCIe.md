@@ -27,3 +27,4 @@ PCIe诞生于2003年，在2017年以前发展速度都相对较慢，三、四�
 - [三军未动粮草先行，浅谈Z690主板上的PCIe5.0](https://diy.pconline.com.cn/1471/14718724_all.html)
 - [PCI-SIG® 2020 Update](https://pcisig.com/sites/default/files/files/PCI-SIG%202020%20Annual%20Press%20Conference_final.pdf)
 - [PCIe 6.0 正式发布，有史以来变化最大一次，x16 带宽增至 256GB/s，对此作何评价？](https://www.zhihu.com/question/511127411/answer/2456877396)
+- [Announcing the PCIe® 7.0 Specification: Doubling the Data Rate to 128 GT/s for the Next Generation of Computing](https://pcisig.com/blog/announcing-pcie%C2%AE-70-specification-doubling-data-rate-128-gts-next-generation-computing)
