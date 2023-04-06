@@ -12,7 +12,7 @@ PCIe 作为 PC 的高速数据总线已经 20 多年了，最近迭代越来越�
 | 6.0 (64 GT/s) | January 11, 2022  | -    | -      | -       | -        | -                       |
 | 7.0 (128 GT/s) | 预计 2025 发布  | -    | -      | -       | -        | -                       |
 
-![](./_img/PCI-SIG_Law_Graphic_FINAL.jpg)
+![](./_img/PCI-SIG_Law_Graphic_FINAL.webp)
 
 PCIe诞生于2003年，在2017年以前发展速度都相对较慢，三、四年更新一次标准。PCIe 3.0发布后甚至等了七年才推出PCIe 4.0。而自此之后，PCIe标准几乎每两年就更新一次。
 
