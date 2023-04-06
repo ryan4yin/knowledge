@@ -144,3 +144,6 @@ ESP32 的 USB 控制器是 EHCI，所以我们需要使用一个 USB Type-C 接�
 
 VBUS 跟 GND 给 4V 供电，D+、D- 连接到 ESP32 的 GPIO19、GPIO20 即可。
 
+### 2. 代码逻辑
+
+
