@@ -289,8 +289,7 @@ tailscale ping <hostname-or-ip>
   - UM560 (AMD R7 5625U)，打折 1799 还不错
   - MoreFine S500+ (AMD R7 5825U)，打折 2069，默认给的功耗比较高，可以通过 BIOS 下调功耗墙，省钱（详见此文件夹中「Homelab 功耗调节」一文）。
 
-再有就是炼丹设备，去年开始 AI 大火，我也是挺感兴趣的。
-现在闲鱼上 2016 年的 P4/P40 矿卡相当便宜，一张 8G 的 P4 只要 400 多，一张 24G 的 P40 只要 750，整几张搞个主机专门跑 AI，感觉会很有意思。多 GPU 炼丹相关的教程：
+再有就是炼丹设备，去年开始 AI 大火，整几张便宜的换代 GPU（比如当下的 P100/V100/T4）搞个主机专门跑 AI，感觉会很有意思。多 GPU 炼丹相关的教程：
 
 - [Deep Learning with Multiple GPUs - run:ai](https://www.run.ai/guides/multi-gpu)
 - [Fundamentals of Deep Learning for Multi-GPUs - Nvidia](https://www.nvidia.com/en-us/training/instructor-led-workshops/fundamentals-of-deep-learning-for-multi-gpus/)
