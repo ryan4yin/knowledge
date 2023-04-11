@@ -1,24 +1,34 @@
+# 由 ChatGPT 4 生成，我修改了个别错误
 from scapy.all import *
+from scapy.layers.tls.all import *
+import sys
 
-load_layer("tls")
+def extract_sni(packet):
+    if packet.haslayer(TLSClientHello):
+        client_hello = packet[TLSClientHello]
+        for extension in client_hello.ext:
+            if isinstance(extension, TLS_Ext_ServerName):
+                for server_name in extension.servernames:
+                    yield server_name.servername.decode('utf-8')
 
-infliestr = "/path/to/mytest.pcap"
 
-pkts = sniff(offline=infliestr)
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python read_sni_from_pcap.py <pcap_file>")
+        sys.exit(1)
+    pcap_file = sys.argv[1]
 
-# 过滤出所有的 SNI 信息
-
-all_servernames = set()
-
-for i, pkt in enumerate(pkts):
-    if not pkt.haslayer("TLS"):
-        continue
-    if 'Client Hello' not in pkt.summary():
-        continue
     try:
-        pkt_servernames = (it.servername.decode() for it in pkt['TLS']['TLS Handshake - Client Hello']['TLS Extension - Server Name'].servernames)
-        all_servernames.update(pkt_servernames)
-    except Exception as e:
-        continue
+        packets = rdpcap(pcap_file)
+    except Scapy_Exception as e:
+        print(f"Error reading pcap file: {e}")
+        sys.exit(1)
 
-print(all_servernames)
+    sni_set = set()
+    for packet in packets:
+        sni_set.update(extract_sni(packet))
+
+    print(sni_set)
+
+if __name__ == "__main__":
+    main()
