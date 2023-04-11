@@ -98,3 +98,4 @@ docker cp chilloutmix_NiPrunedFp32Fix.safetensors sd-webui:/content/stable-diffu
    7. Depth模型：该模型可以较好的掌握图片内的复杂3维结构层次，并将其复现
 3. 在 ControlNet 面板中添加参考图片，插件会使用选择的 preprocesser 先处理图片，再将结果作为 ControlNet 的输入。
 4. 最后就是在前面的正常面板中写提示词、调整生成参数进行生成了（txt2img 模式下）。
+

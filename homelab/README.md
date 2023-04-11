@@ -7,9 +7,10 @@
 
 >听很多人说长期运行的机器用 ECC 内存才稳，不过我暂时没配，做好备份应该顶得住，后面真出问题再考虑吧...
 
-| 机器名称 | CPU | MEM | SSD | HDD | 说明 |
+| 机器名称 | CPU/GPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 16G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
+| 联想拯救者 R9000P RTX3070 2021 款 | AMD R7 5800H 45W, 6C12T; RTX3070 8G | 16G * 2 | 512G SSD | 4T * 2 HDD | 日常用的笔记本，一般也常驻 |
+| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗，用了笔记本上拆下来的 8G 内存条 |
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
@@ -29,7 +30,7 @@ graph TD
   edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1
 
 	edge_router <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
-  edge_router <-- WiFi6 1800M --> R9000P[联想 R9000P 游戏机]
+  edge_router <-- WiFi6 1800M --> R9000P[联想 R9000P 笔记本]
   edge_router <-- WiFi6 --> android_pad1[小米平板 5 Pro]
   edge_router <-- WiFi5 --> android1[手机 Realme X2 Pro]
 	edge_router <-- WiFi5 --> raspberrypi[Raspberry PI 4B]
@@ -212,19 +213,20 @@ tailscale ping <hostname-or-ip>
 
 >Linux 主机满载功耗测试命令为 `sysbench cpu --threads=16 --time=30 run`，其中 threads 值为 cpu 超线程数。
 
+>带 GPU 的主机同时使用了前面的 `sysbench cpu` 命令和 pytorch AI 运算，分别跑满 CPU 与 GPU，测得满载功耗。
+
 | 设备名称                            | 空载功耗 | 低负载功耗 | 满载功耗 | 电源最大功率 | 每月用电量 |
-| :---:                              | :---:  | :---:   | :---:   | :---:      | :---: |
-| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W    | 10W     | 10W     |            |按低负载功耗算 10W * 24h * 30day = 7.2 KWh |
-| Minisfroum UM560 (AMD R5 5625U)    | 6W     | 15W  | 45W (CPU 被超频到了 30w) | -  | 按低负载功耗算 15W * 24h * 30day = 10.8 KWh |
-| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W  | 60W (CPU 被超频到了 40W)  |   | 低负载功耗跟 UM560 基本一致 |
-| Beelink GTR5 (AMD R9 5900HX)       | 6W     | 35W     | 50W     |            | 按低负载功耗算 35W * 24h * 30day = 25.2 KWh |
-| 双盘位硬盘盒 + 4T * 2                | (休眠)  | 12W     | 12W     | -          | 按低负载功耗算 12W * 24h * 30day = 8.64 KWh |
-| 小米 AX1800（已闲置）                | 6W     | 6W      | 6W      | -          | 按低负载功耗算 6W * 24h * 30day = 4.32 KWh |
-| Raspberry Pi 4B 2GB                | 3W     | -       | -       | 5V x 3A    |  - |
+| :---:                              | :---:   | :---:    | :---:   | :---:      | :---: |
+| 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W     | 10W      | 10W     |            |按低负载功耗算 10W * 24h * 30day = 7.2 KWh |
+| 联想拯救者 R9000P RTX3070 2021 款    | 20W    |  -       | 190W    |   300W     | 按低负载功耗算 20W * 24h * 30day = 14.4 KWh    |
+| Minisfroum UM560 (AMD R5 5625U)    | 6W     | 15W      | 45W (CPU 被超频到了 30w) | -  | 按低负载功耗算 15W * 24h * 30day = 10.8 KWh |
+| MoreFine S500+(AMD R7 5825U)       | 6W     | 16W      | 60W (CPU 被超频到了 40W)  |   | 低负载功耗跟 UM560 基本一致 |
+| Beelink GTR5 (AMD R9 5900HX)       | 6W     | 35W      | 50W     |            | 按低负载功耗算 35W * 24h * 30day = 25.2 KWh |
+| 双盘位硬盘盒 + 4T * 2                | (休眠)  | 12W      | 12W     | -          | 按低负载功耗算 12W * 24h * 30day = 8.64 KWh |
+| 小米 AX1800（已闲置）                | 6W     | 6W       | 6W      | -          | 按低负载功耗算 6W * 24h * 30day = 4.32 KWh |
+| Raspberry Pi 4B 2GB                | 3W     | -        | -       | 5V x 3A    |  - |
 
-如果再乘上深圳这边租房的电价，基本都是 ￥1.5/KWh，费用还是有点高的...
-
-这样算的话 GTR5 真的不适合当作常驻的机器用，低负载下电费也太贵了，homelab 的主力机必须是低压的，15W 比较稳。
+如果再乘上深圳这边租房的电价，基本都是 ￥1.5/KWh，费用还是有点高的，目前整个 Homelab 一个月用电量大概 60KWh，也就是 90 大洋...这还是我尽量选用了低功耗设备，日常负载也不高，不然就更夸张了...
 
 ## 价格与购入时间
 
@@ -233,6 +235,7 @@ tailscale ping <hostname-or-ip>
 | 设备名称 | 购入时间 | 购入渠道 | 价格 |  说明 |
 | :---: | :---: | :---: | :---: |  :---: | 
 | 小米 AX1800                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，目前已闲置 |
+| 联想 R9000P 2021 款, 16G RAM + 512G SSD + RTX3070    | 2021-06-01 | 京东自营 | ￥9699 | Endeavour 系统，换了 32G RAM + 512G SSD * 2。日用笔记本，偶尔拿来打打游戏，跑跑 AI |
 | Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
 | Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，氮化镓充电器也很小巧，不过只有 6C12T，内存最高只支持 16G * 2 |
@@ -240,6 +243,8 @@ tailscale ping <hostname-or-ip>
 |  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
 |  Orange Pi 5 8G + 5V4A电源     | 2023-02-04 | 淘宝官方店 | ￥749 + 运费 ￥8 | 高性能 Pi，买来给 k8s 跑 ARM 负载的（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
 |  OnePlus 5 6G+64G    | 2023-02-26 | 闲鱼二手 | ￥290 | 二手手机确实挺划算的，比同性能的开发板便宜好多啊 |
+
+>目前 Minisfroum/Beelink 新出的 UM690/UM773/GTR6 等基于第 6 代 AMD CPU 的 mini 主机打折的时候跟我买的上一代基本上一个价，而且还支持了自带 ECC 的 DDR5，还提供 40Gbps 速度的 USB 4.0，此外 6900HX/7773HS 的核显重大升级，性能堪比 GTX1050（桌面主机党狂喜）。还是挺香的，如果我是今年买的话，肯定会在打折的时候买这些新款。只能说时间没碰上了。
 
 
 内存条与硬盘：
@@ -278,21 +283,21 @@ tailscale ping <hostname-or-ip>
 | Asgard SSD - AN3.0 512G NVMe-M.2/80 (TLC, 长江存储)  | 2022-11-02 | 2023-02-03 | 京东自营    | ￥249 | 买到手后一直是 UM560 的存储。跑了刚三个月就出问题了，进入系统后用 `dmesg` 能看到非常多这类报错 `blk_update_request: critical medium error, dev nvme0n1, sector 951741928 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0`。京东售后给换了新，但是丢了一些数据，数据不重要，但是需要花些额外的精力重建环境（充分认识到了 SSD 不稳，必须做定时备份！）。 |
 
 
-最后还有一些没入手，但是觉得很不错的设备：
+最后再列下 Homelab 的主机可选项：
 
-- 高性能小主机（注意我没特别做过压测，实际性能释放不明哈）
-  - Minisfroum UM590: 我之前买的时候卖 3000，现在 UM690 出来后，降价到了 2589（粉丝价）。还是氮化镓充电器，颜值也在线，感觉比 Beelink GTR5 更香了。
-  - Minisfroum UM690: 3000 的价格，主要提升在核显上，另外就是接口升级到了 USB 4、内存频率也上升了不少。不搞什么视频流解码，这个核显提升意义不大，所以对我的 homelab 而言它性价比不高。
-  - Beelink GTR6: 2789 的价格，比同样是 6900HX 的 UM690 便宜不少，不过它的供电器就大很多了，如果想上 6900HX 的话，就看需求选购吧。
-    - GTR6 相比 UM590 才贵 200 块，从这个角度讲，性价比倒是不错。
-- 中等性能、低功耗小主机（省电）
-  - UM560 (AMD R7 5625U)，打折 1799 还不错
-  - MoreFine S500+ (AMD R7 5825U)，打折 2069，默认给的功耗比较高，可以通过 BIOS 下调功耗墙，省钱（详见此文件夹中「Homelab 功耗调节」一文）。
-
-再有就是炼丹设备，去年开始 AI 大火，整几张便宜的换代 GPU（比如当下的 P100/V100/T4）搞个主机专门跑 AI，感觉会很有意思。多 GPU 炼丹相关的教程：
-
-- [Deep Learning with Multiple GPUs - run:ai](https://www.run.ai/guides/multi-gpu)
-- [Fundamentals of Deep Learning for Multi-GPUs - Nvidia](https://www.nvidia.com/en-us/training/instructor-led-workshops/fundamentals-of-deep-learning-for-multi-gpus/)
+- Mini 主机，主要是 Minisfroum、Beelink、MoreFine 三家的 AMD 主机，性价比不错，而且够小巧。除了买全新设备，也可以考虑在闲鱼上收别人的二手主机，更便宜。
+  - 优点
+    - 小巧便携
+    - 移动 CPU，功耗低
+  - 缺点
+    - 小主机性能差一点，而且 CPU 不能升级、也插不了独立 GPU，没啥 DIY 空间。
+    - 如果当作桌面主机用的话，高负载时风扇会有些声音，就跟游戏本一样啦。不过我是当 Homelab 用的，离我比较远，基本听不到风扇声。
+- 自组 ITX/MATX 主机：好处就是可以自己 DIY，包括CPU/主板/机箱在内的所有组件都可按需求更换，如果选用现在很流行的海景房机葙（就是玻璃橱窗机箱），再放上一两个手办，放在桌面上也很养眼。
+  - 最近有在想自组一台主机，主要是想玩玩 AI，我笔记本的 RTX3070 显存太小只能玩些小模型。
+  - 然后看到各种漂亮的海景房（玻璃橱窗）机葙，也好想整一个...
+  - 现在（2023 年）闲鱼上一些数据中心淘汰的计算卡很便宜，一张 24G 内存的 P40/P100（发布于 2016 年）只要 800，整两张搞个主机专门跑 AI，感觉会很有意思。
+  - 不过旧显卡难当大任而且能效比低，也可以考虑直接上最强的 RTX4090 24G，虽然即使是 RTX4090 也只能跑跑小模型（毕竟 int4 量化后的 chatglm-130b 都要 4 张 3090 才跑得动）...
+- 机架服务器：有些朋友玩这个，我以前也接触过，好处就是便宜大碗，缺点是电老虎 + 发热巨大 + 风扇贼吵，我选择放弃。
 
 总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
 跟朋友对比了下，如果花差不多的钱买机架服务器，可以买到这个配置：`48C96T(2696v3 * 2) + 512G(32g * 16) + 9.6T(1.2T * 8)`
