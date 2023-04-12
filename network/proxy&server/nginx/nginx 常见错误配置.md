@@ -69,6 +69,7 @@ Nginx 的 upstream 地址只会在启动时被解析一次，后续如果 upstre
 参考文章：
 
 - [运维遇坑记录(3)-Nginx缓存了DNS解析造成后端不通](https://segmentfault.com/a/1190000022365954)
+- [How to force nginx to resolve DNS (of a dynamic hostname) everytime when doing proxy_pass?](https://serverfault.com/questions/240476/how-to-force-nginx-to-resolve-dns-of-a-dynamic-hostname-everytime-when-doing-p)
 
 解决方案：
 
