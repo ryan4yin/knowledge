@@ -316,6 +316,7 @@ mini 主机领域性价比高的机器，目前主要就是零刻、minisfroum�
 - 老版本的 NUC/零刻
 - 用旧安卓手机当 Linux ARM 服务器，参考 [Andorid Phone as a Linux Server](./android%20phone/README.md)
 - 老旧笔记本，这个选项是从苏洋那里了解到的，确实二手笔记本比 NUC 啥的市场存量大很多，价格也很有诱惑力
+- 显卡方面也有些 P40/P100 之类的便宜二手服务器显卡。
 
 ## 参考
 
