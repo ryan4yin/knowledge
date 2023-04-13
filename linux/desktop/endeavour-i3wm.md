@@ -75,7 +75,15 @@ endeavour i3wm 自带的 GUI 程序 Advanced Network Configuration 自带了最�
 
 ## 四、显示器调节
 
-### 最佳方案 - 使用 xrandr/arandr
+### 显示器缩放调节
+
+在使用 2K/4K 显示器时，我们需要调节显示器的缩放比例，否则显示的内容会很小，很难看清。
+
+可以直接在 `~/.Xresources` 文件末尾添加 `Xft.dpi 192`，然后重新登录即可实现缩放调节，这是 X11 窗口系统的一个配置，它会影响所有使用 X11 窗口系统的程序，比如 i3wm、Firefox、VSCode 等。`Xft.dpi` 的值越大，显示的内容越大。
+
+对于 2K 显示器，我一般设置为 `Xft.dpi: 144`，对于 4K 显示器，我一般设置为 `Xft.dpi: 192`。
+
+### 使用 xrandr/arandr 调节显示器亮度、分辨率、多显示器拓扑等
 
 >endeavour i3wm 官方文档也建议使用此方案 [Display setup with arandr - endeavouros-i3wm-setup](https://github.com/endeavouros-team/endeavouros-i3wm-setup#display-setup-with-arandr)
 
@@ -115,13 +123,7 @@ exec_always bash $HOME/.screenlayout/external-4k.sh
 
 现在就可以重启系统或者重新登录 i3wm，看看亮度是否生效了。
 
-### 其他方法
-
->发现 Linux 亮度调节也是个坑，这么多方案...
-
-
-
-#### 1. 临时通过 /sys/class/backlight 调整亮度
+#### 临时通过 /sys/class/backlight 调整亮度
 
 >目前测试发现，此方法仅适用于笔记本内置显示器，不适用于通过 HDMI/DP 接入的外接显示器
 
@@ -156,7 +158,7 @@ echo 50 > /sys/class/backlight/nvidia_0/brightness
 
 不出意外应该能发现亮度改成功了。
 
-#### 2. 使用 ddcutil
+####  使用 ddcutil 调整显示器
 
 对于外接显示器，还可通过 ddcutil 来调节亮度，不过我没搞定这个...
 
