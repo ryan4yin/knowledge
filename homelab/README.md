@@ -9,19 +9,18 @@
 
 | 机器名称 | CPU/GPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| 联想拯救者 R9000P RTX3070 2021 款 | AMD R7 5800H 45W, 6C12T; RTX3070 8G | 16G * 2 | 512G SSD | 4T * 2 HDD | 日常用的笔记本，一般也常驻 |
+| 海景房组装 PC | i3-13600kf 125W, 14C20T; RTX4090 24G | 16G * 2 | 2T SSD * 2 | - | 当前的主力电脑，主要用 Endeavour-i3wm 系统，不过当然装了 Windows 用来打游戏 |
 | Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗，用了笔记本上拆下来的 8G 内存条 |
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
 | Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
-| OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用 |
-
-还有目前用来玩电子的几块板子，什么时候玩腻了可能就当服务器用了：
-
+| OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用，不过电池长充电是隐患，还没想好怎么解决 |
 
 
 ## 网络拓扑
+
+>2023-04-12 买了台 2.5G 交换机，已经改为星型结构，设备都尽量往交换机上接，下图待更新。
 
 ```mermaid
 graph TD
@@ -66,7 +65,10 @@ graph TD
       - 安装 openclash、广告拦截插件
     - windows server 2022 2c/8G
       - 硬盘盒 USB 直通到此虚拟机，作为家庭 NAS 系统，通过 SMB 协议对外提供服务
-      - 使用 windows server 的原因是，它的 smb 协议速度最快，黑科技很多
+      - 使用 windows server 的原因是，它的 smb 协议速度最快，比开源的 OMV 强很多
+    - Home Assistant 6C/2G 20G
+      - 干一些自动化的活，比如我到家后自动播放歌曲？？？
+      - CPU 给得多是因为跑了 esphome，它编译固件还是要吃点 cpu 的。
     - docker-compose server 4C/8G 32G
       - 目前跑了这些服务
         - [dashy](https://github.com/lissy93/dashy) HomePage 页
@@ -101,20 +103,16 @@ graph TD
   - VMs
     - tailscale-gateway 1C/1G 20G
       - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
-    - Home Assistant 2C/2G 20G
-      - 干一些自动化的活，比如我到家后自动播放歌曲？？？
-    - k3s-data-1 worker node 4C/16G 100G
+    - k3s-data-1 worker node 4C/16G 100G * 2
       - 跑各种其他 k8s 实验负载
-    - k8s-data-2 worker node 4C/16G 100G
+    - k8s-data-2 worker node 4C/16G 100G * 2
       - 跑各种其他 k8s 实验负载
 - Beelink GTR5
   - OS: Proxmox VE
   - VMs
-    - k3s-data-1 worker node * 3
-      - 4C/16G 100G
-      - 作为 k3s 高性能实验节点
-    - ubuntu test server * 1
-      - 2C/8G 32G
+    - ubuntu test server * 4
+      - 16C/60G 150G
+      - GTR5 目前主要被我当成实验机用，vscode 连上来跑各种 Linux 系统的开发编译。
 - OrangePi Pi 5
   - OS: Debian
   - APPs
@@ -142,7 +140,7 @@ k3s 集群里可以跑这些负载：
 - 集群安全策略: kyverno
 - 等等
 
-局域网有了 x64 架构下 22C44T CPU + 160G RAM，以及 ARM64 架构下 16C CPU + 12G RAM + Mail-G610 GPU * 2 + 16 Tops NPU 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 8C16T CPU + 16G RAM +  Nvidia RTX 3070 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
+局域网有了 x64 架构下 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 14C20T CPU + 32G RAM +  Nvidia RTX 4090 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
   - [airbyte](https://github.com/airbytehq/airbyte) 数据管道
@@ -159,7 +157,9 @@ k3s 集群里可以跑这些负载：
   - [superset](https://github.com/apache/superset) 数据可视化平台
 - 区块链
   - 自建区块链集群
-
+- AI 任务，比如 chatglm/stable-diffusion/wispher/...
+  - 这个还是得在我 PC 上跑，毕竟有 RTX 4090
+  - 缺点是待机功耗贼高，不太适合常驻。
 
 除了上面这些，还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 跟 [CNCF Landscape](https://landscape.cncf.io/) 翻翻有没有自己感兴趣的项目。
 
@@ -234,8 +234,8 @@ tailscale ping <hostname-or-ip>
 
 | 设备名称 | 购入时间 | 购入渠道 | 价格 |  说明 |
 | :---: | :---: | :---: | :---: |  :---: | 
-| 小米 AX1800                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，目前已闲置 |
-| 联想 R9000P 2021 款, 16G RAM + 512G SSD + RTX3070    | 2021-06-01 | 京东自营 | ￥9699 | Endeavour 系统，换了 32G RAM + 512G SSD * 2。日用笔记本，偶尔拿来打打游戏，跑跑 AI |
+| ~~小米 AX1800~~                | 2020-07-10 | 拼多多    | ￥265 | 最早的 WiFi6 产品，我曾经的主路由，打算寄回老家用 |
+| ~~联想 R9000P 2021 款, 16G RAM + 512G SSD + RTX3070~~    | 2021-06-01 | 京东自营 | ￥9699 | 用了两年的主力机，打算寄回家给我妹用 |
 | Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
 | Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，氮化镓充电器也很小巧，不过只有 6C12T，内存最高只支持 16G * 2 |
@@ -243,6 +243,7 @@ tailscale ping <hostname-or-ip>
 |  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
 |  Orange Pi 5 8G + 5V4A电源     | 2023-02-04 | 淘宝官方店 | ￥749 + 运费 ￥8 | 高性能 Pi，买来给 k8s 跑 ARM 负载的（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
 |  OnePlus 5 6G+64G    | 2023-02-26 | 闲鱼二手 | ￥290 | 二手手机确实挺划算的，比同性能的开发板便宜好多啊 |
+|  爱快 IK-S3009MT 8 口 2.5G 交换机    | 2023-04-11 | 京东 | ￥459 | 路由器 2.5G 口不够用，终于还是买了台交换机 |
 
 >目前 Minisfroum/Beelink 新出的 UM690/UM773/GTR6 等基于第 6 代 AMD CPU 的 mini 主机打折的时候跟我买的上一代基本上一个价，而且还支持了自带 ECC 的 DDR5，还提供 40Gbps 速度的 USB 4.0，此外 6900HX/7773HS 的核显重大升级，性能堪比 GTX1050（桌面主机党狂喜）。还是挺香的，如果我是今年买的话，肯定会在打折的时候买这些新款。只能说时间没碰上了。
 
