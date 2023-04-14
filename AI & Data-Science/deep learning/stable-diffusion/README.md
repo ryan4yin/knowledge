@@ -6,6 +6,7 @@
 - [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui): 应该是目前最火的图片生成工具了，提供了易用的 AI 来与模型进行交互。
 - [sd-webui-controlnet](https://github.com/Mikubill/sd-webui-controlnet): 整合了 controlnet 的 stable-diffusion-webui，controlnet 是 2023-02 的一项突破性进展，使我们能够使用线稿、骨骼结构来控制模型效果。
 - [stablediffusion](https://github.com/Stability-AI/stablediffusion)
+- [huggingface 博客](https://huggingface.co/blog/zh): 干货很多
 
 其他资源站：
 
@@ -24,7 +25,7 @@
 
 首先为了方便环境搭建，我选择使用 Docker 来跑深度学习环境。
 
-我的系统是 Arch，显卡是 RTX 3070 Max-Q，找到 Nvidia Docker 的安装方法 [Run GPU accelerated Docker containers with NVIDIA GPUs](https://wiki.archlinux.org/title/Docker#Run_GPU_accelerated_Docker_containers_with_NVIDIA_GPUs：
+我的系统是 Arch，显卡是 RTX 3070 Max-Q，找到 Nvidia Docker 的安装方法 [Run GPU accelerated Docker containers with NVIDIA GPUs](https://wiki.archlinux.org/title/Docker#Run_GPU_accelerated_Docker_containers_with_NVIDIA_GPUs)：
 
 1. 首先 `yay -S docker` 安装好 docker
 2. 确认本机安装了 nvidia 驱动，可通过本机运行 `nvidia-smi` 查看输出，如果各驱动版本号输出正常，也有输出你的显卡型号、功率、内存大小、利用率等参数，就说明没问题。
@@ -40,10 +41,10 @@ docker run --rm --gpus all nvidia/cuda:11.7.1-base-ubuntu22.04 nvidia-smi
 
 注意 cuda 容器比较大，建议直接拉取你打算使用的版本来进行测试，这样后面就不需要拉取第二次镜像。
 
-比如我打算跑的 [stable-diffusion-webui-docker](https://github.com/camenduru/stable-diffusion-webui-docker/blob/main/Dockerfile) 的基础镜像是 `nvidia/cuda:11.7.1-base-ubuntu22.04`，那我就直接拉了这个镜像来测试，后面就不需要拉第二次了。
+比如我打算跑的 [stable-diffusion-webui-docker](https://github.com/camenduru/stable-diffusion-webui-docker) 的基础镜像是 `nvidia/cuda:11.7.1-base-ubuntu22.04`，那我就直接拉了这个镜像来测试，后面就不需要拉第二次了。
 
 
-前面的流程跑通后，就可以跑我们的容器了，首先进入 [stable-diffusion-webui-docker](https://github.com/camenduru/stable-diffusion-webui-docker/blob/main/Dockerfile) 构建好容器：
+前面的流程跑通后，就可以跑我们的容器了，首先进入 [stable-diffusion-webui-docker](https://github.com/camenduru/stable-diffusion-webui-docker) 构建好容器：
 
 ```shell
 docker build -t sd-webui .
@@ -98,4 +99,12 @@ docker cp chilloutmix_NiPrunedFp32Fix.safetensors sd-webui:/content/stable-diffu
    7. Depth模型：该模型可以较好的掌握图片内的复杂3维结构层次，并将其复现
 3. 在 ControlNet 面板中添加参考图片，插件会使用选择的 preprocesser 先处理图片，再将结果作为 ControlNet 的输入。
 4. 最后就是在前面的正常面板中写提示词、调整生成参数进行生成了（txt2img 模式下）。
+
+
+## 模型微调技术
+
+- [LoRa](https://huggingface.co/blog/zh/lora): 最初是为了大语言模型微调设计的技术，它通过冻结预训练模型的权重并在每个 Transformer 块中注入可训练层 (秩-分解矩阵)，极大地减少了需要训练的参数数量，并显著降低了对内存的需求。
+- [LoCon](https://github.com/KohakuBlueleaf/LyCORIS): LoRa 的优化版，据说效果更好些，但是相对跑得更慢。
+
+
 
