@@ -70,7 +70,6 @@ minicom 是更强大的串口终端工具，还支持文件的上传下载，不
 都分文件夹存在这个 README 的文件夹里了。
 
 - [Makefile 学习笔记](https://github.com/ryan4yin/video2ascii-c/blob/master/Makefile)
-- [CMake 学习笔记](./CMake-Usage.md)
 
 ## 进阶 - 机器人相关资料
 

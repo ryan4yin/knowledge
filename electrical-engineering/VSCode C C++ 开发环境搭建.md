@@ -277,4 +277,4 @@ make -C $(KERNEL_SOURCE_DIR) M=$(pwd) modules
 
 - [几乎无痛的VSCode+clangd+lldb+cmake配置C/C++开发环境指南](https://zhuanlan.zhihu.com/p/566365173)
 - [使用Clangd提升C++代码编写体验](https://zhuanlan.zhihu.com/p/566506467)
-
+- [modern-cmake-by-example](https://github.com/richardchien/modern-cmake-by-example)
