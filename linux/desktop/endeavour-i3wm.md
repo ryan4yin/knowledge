@@ -165,3 +165,16 @@ echo 50 > /sys/class/backlight/nvidia_0/brightness
 通过 HDMI 接入了我的 4K 显示器，但一直报错 /dev/i2c 设备不存在...
 
 其他方案参见文档 [Backlight - Arch Linux WiKi](https://wiki.archlinux.org/title/backlight)
+
+
+## 五、i3wm 配置自定义与备份
+
+i3wm 的配置文件在 `~/.config/i3/config`，可以直接编辑，用于实现各种自定义功能，比如说：
+
+- 自定义桌面壁纸
+- 自定义 terminal 主题
+- 在启动时执行 `~/.screenlayout/monitor.sh` 脚本，配置外接显示器的参数
+- 自定义快捷键、底部 dock 布局
+- 等等
+
+
