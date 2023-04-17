@@ -1,5 +1,7 @@
 # [Traefik](https://github.com/containous/traefik/) 配置
 
+traefik 也是 nginx 的替代品，不过跟 caddy 不同的是，它专注于 API 网关领域，不支持静态文件服务，在 K8s 等领域应用广泛。
+
 我接触过的三种用法：
 
 1. Docker 单机方式：代理本机 Docker 上其他容器的流量，官方 sample 第一个就是。
