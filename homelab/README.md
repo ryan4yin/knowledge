@@ -10,12 +10,12 @@
 | 机器名称 | CPU/GPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 海景房组装 PC | i3-13600kf 125W, 14C20T; RTX4090 24G | 16G * 2 | 2T SSD * 2 | - | 当前的主力电脑，主要用 Endeavour-i3wm 系统，不过当然装了 Windows 用来打游戏 |
-| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G * 2 |512G SSD | 4T * 2 HDD | 主力节点，低功耗，用了笔记本上拆下来的 8G 内存条 |
+| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G + 16G |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
-| Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/Q2 出货... |
-| OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用，不过电池长充电是隐患，还没想好怎么解决 |
+| Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/4 出货... |
+| OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用，不过电池长期充电是隐患，还没想好怎么解决 |
 
 
 ## 网络拓扑
@@ -163,6 +163,24 @@ k3s 集群里可以跑这些负载：
 
 除了上面这些，还可以去 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) 跟 [CNCF Landscape](https://landscape.cncf.io/) 翻翻有没有自己感兴趣的项目。
 
+## 来电开机
+
+偶尔家里会断电，如果来电后未自动开机，那家里的 Homelab 就没法远程用了。
+
+上电开机需要主板支持，根据零刻官方文档 [Set Auto Power On of GK Mini](https://www.bee-link.com/cms/support/kldetail?id=82)，有两种方法：
+
+1. 方法一：依次选择 Chipset => "South Cluster Configuration" => "State After G3" => "S0 State"，保存后重启电脑即可。
+2. 方法二：依次选择 Boot => "Auto Power On" => "Power on"，保存重启即可。
+
+## 远程开机
+
+来电开机只适合意外断电的情况，不适用于另一个我需要的场景：我的 PC 主机功耗较大，平常不用的时候会关机，有需要的时候我希望能远程开机。
+
+我看有些人会使用「网络唤醒」功能，或者小米智能插座配合「来电开机」功能。不过对我而言，我有个更有意思的解决方案：使用 ESP8266/ESP32C3 控制 reset/poweron 两个引脚的通断 来实现远程开机。
+
+再提供个极简 Web 界面，两个按钮就行，一个 power，一个 reset，肯定会很有意思~
+
+TODO 方案待实施
 
 ## 服务器虚拟化
 
@@ -294,10 +312,6 @@ tailscale ping <hostname-or-ip>
     - 小主机性能差一点，而且 CPU 不能升级、也插不了独立 GPU，没啥 DIY 空间。
     - 如果当作桌面主机用的话，高负载时风扇会有些声音，就跟游戏本一样啦。不过我是当 Homelab 用的，离我比较远，基本听不到风扇声。
 - 自组 ITX/MATX 主机：好处就是可以自己 DIY，包括CPU/主板/机箱在内的所有组件都可按需求更换，如果选用现在很流行的海景房机葙（就是玻璃橱窗机箱），再放上一两个手办，放在桌面上也很养眼。
-  - 最近有在想自组一台主机，主要是想玩玩 AI，我笔记本的 RTX3070 显存太小只能玩些小模型。
-  - 然后看到各种漂亮的海景房（玻璃橱窗）机葙，也好想整一个...
-  - 现在（2023 年）闲鱼上一些数据中心淘汰的计算卡很便宜，一张 24G 内存的 P40/P100（发布于 2016 年）只要 800，整两张搞个主机专门跑 AI，感觉会很有意思。
-  - 不过旧显卡难当大任而且能效比低，也可以考虑直接上最强的 RTX4090 24G，虽然即使是 RTX4090 也只能跑跑小模型（毕竟 int4 量化后的 chatglm-130b 都要 4 张 3090 才跑得动）...
 - 机架服务器：有些朋友玩这个，我以前也接触过，好处就是便宜大碗，缺点是电老虎 + 发热巨大 + 风扇贼吵，我选择放弃。
 
 总的来说，目前 Homelab 三台 mini 主机算上固态内存，花了接近 1W。
