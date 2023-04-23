@@ -37,6 +37,7 @@ graph LR
   
   switch <-- 2.5GbE --> RTX4090[海景房主机 - RTX4090]
 	switch <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
+	switch <-- 1GbE --> backup[铺设到桌面的备用网线 - 用于调试嵌入式设备]
 
   switch <-- 2.5GbE --> UM560
 	switch <-- 2.5GbE --> PVE-S500Plus
