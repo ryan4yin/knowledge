@@ -20,36 +20,41 @@
 
 ## 网络拓扑
 
->2023-04-12 买了台 2.5G 交换机，已经改为星型结构，设备都尽量往交换机上接，下图待更新。
+当前的网络拓扑以 2.5G 交换机与路由器为中心，路由器负责拨号上网以及 WiFi，而交换机负责连接所有使用有线网络的设备：
 
 ```mermaid
-graph TD
-  WAN[WAN - 电信 1000M 宽带] <-- 1GbE / 端口受限型 NAT -->edge_router
-	edge_router <-- 2.5GbE --> PVE-Node2
-  edge_router[ZTE AX5400Pro+] <-- 2.5GbE --> PVE-Node1
-
-	edge_router <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
-  edge_router <-- WiFi6 1800M --> R9000P[联想 R9000P 笔记本]
+graph LR
+  WAN[WAN - 电信 1000M 宽带 - 光猫桥接]
+  edge_router[ZTE AX5400Pro+ - 拨号上网]
+  WAN <-- 1GbE / 端口受限型 NAT --> edge_router
+  
+  edge_router <-- WiFi6 --> android1[手机 Realme ]
   edge_router <-- WiFi6 --> android_pad1[小米平板 5 Pro]
-  edge_router <-- WiFi5 --> android1[手机 Realme X2 Pro]
 	edge_router <-- WiFi5 --> raspberrypi[Raspberry PI 4B]
+	edge_router <-- WiFi5 --> SmartHomeDevices[饮水机/插座/灯带/音箱/ESPHome等智能家居设备]
 
-	subgraph PVE-node1[Minisfroum UM560 - R5 5625U]
-    PVE-Node1[Proxmox VE 集群 - 主力节点1]
-    PVE-Node1 <-- USB3 --> USB-NIC1[USB3 2.5G 网卡 1]
+  edge_router <-- 2.5GbE --> switch[爱快 IK-S3009MT 8 口 2.5G 交换机]
+  
+  switch <-- 2.5GbE --> RTX4090[海景房主机 - RTX4090]
+	switch <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
+
+  switch <-- 2.5GbE --> UM560
+	switch <-- 2.5GbE --> PVE-S500Plus
+	switch <-- 2.5G --> GTR5
+
+	subgraph S500Plus[MoreFine S500+ - R7 5825U]
+    PVE-S500Plus[Proxmox VE 集群节点 - PVE-S500Plus]
+	end
+
+	subgraph GTR5[Beelink GTR5 R9 5900HX]
+    PVE-GTR5[Proxmox VE 集群 - PVE-GTR5]
+	end
+
+	subgraph UM560[Minisfroum UM560 - R5 5625U]
+    PVE-UM560[Proxmox VE 集群节点 - PVE-UM560]
 	end
   
-  PVE-Node1 <-- USB3 --> USB-Storage1[USB 硬盘盒 4T * 2]
-	USB-NIC1 <-- 2.5G --> PVE-Node3
-	
-	subgraph PVE-node2[MoreFine S500+ - R7 5825U]
-    PVE-Node2[Proxmox VE 集群 - 主力节点2]
-	end
-
-	subgraph PVE-node3[Beelink GTR5 R9 5900HX]
-    PVE-Node3[Proxmox VE 集群 - 高性能节点]
-	end
-
+  UM560 <-- USB3 --> USB-Storage1[USB 硬盘盒 4T * 2]
 ```
 
 ## 软件架构
