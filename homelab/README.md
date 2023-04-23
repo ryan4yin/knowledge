@@ -35,27 +35,29 @@ graph LR
 
   edge_router <-- 2.5GbE --> switch[爱快 IK-S3009MT 8 口 2.5G 交换机]
   
-  switch <-- 2.5GbE --> RTX4090[海景房主机 - RTX4090]
-	switch <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
-	switch <-- 1GbE --> backup[铺设到桌面的备用网线 - 用于调试嵌入式设备]
-
   switch <-- 2.5GbE --> UM560
 	switch <-- 2.5GbE --> PVE-S500Plus
 	switch <-- 2.5G --> GTR5
 
-	subgraph S500Plus[MoreFine S500+ - R7 5825U]
-    PVE-S500Plus[Proxmox VE 集群节点 - PVE-S500Plus]
-	end
+  subgraph PVE-Cluster[Proxmox VE  集群]
+    subgraph UM560[Minisfroum UM560 - R5 5625U]
+      PVE-UM560[集群节点 - PVE-UM560]
+    end
 
-	subgraph GTR5[Beelink GTR5 R9 5900HX]
-    PVE-GTR5[Proxmox VE 集群 - PVE-GTR5]
-	end
+    subgraph S500Plus[MoreFine S500+ - R7 5825U]
+      PVE-S500Plus[集群节点 - PVE-S500Plus]
+    end
 
-	subgraph UM560[Minisfroum UM560 - R5 5625U]
-    PVE-UM560[Proxmox VE 集群节点 - PVE-UM560]
-	end
-  
+    subgraph GTR5[Beelink GTR5 R9 5900HX]
+      PVE-GTR5[Proxmox VE 集群 - PVE-GTR5]
+    end
+  end
   UM560 <-- USB3 --> USB-Storage1[USB 硬盘盒 4T * 2]
+
+	switch <-- 1GbE --> orangepi5[Orange PI 5 - K3s ARM 节点]
+  switch <-- 2.5GbE --> RTX4090[海景房主机 - RTX4090]
+	switch <-- 1GbE --> backup[铺设到桌面的备用网线 - 用于调试嵌入式设备]
+
 ```
 
 ## 软件架构
