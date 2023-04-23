@@ -24,14 +24,14 @@
 
 ```mermaid
 graph LR
-  WAN[WAN - 电信 1000M 宽带 - 光猫桥接]
+  WAN[电信千兆宽带 - 光猫桥接]
   edge_router[ZTE AX5400Pro+ - 拨号上网]
-  WAN <-- 1GbE / 端口受限型 NAT --> edge_router
+  WAN <-- 1GbE / 拨号上网 --> edge_router
   
   edge_router <-- WiFi6 --> android1[手机 Realme ]
   edge_router <-- WiFi6 --> android_pad1[小米平板 5 Pro]
 	edge_router <-- WiFi5 --> raspberrypi[Raspberry PI 4B]
-	edge_router <-- WiFi5 --> SmartHomeDevices[饮水机/插座/灯带/音箱/ESPHome等智能家居设备]
+	edge_router <-- WiFi5 --> SmartHomeDevices[音箱/插座/灯带/ESPHome等智能家居设备]
 
   edge_router <-- 2.5GbE --> switch[爱快 IK-S3009MT 8 口 2.5G 交换机]
   
