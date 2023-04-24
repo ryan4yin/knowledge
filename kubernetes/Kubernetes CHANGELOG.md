@@ -129,3 +129,16 @@
 - Ephemeral Containers GA
 - cgroups v2 的支持 GA
 
+
+## [1.26](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.26.md#changelog-since-v1250)
+
+- autoscaling/v2beta2 被移除，HorizontalPodAutoscaler 需要改用 autoscaling/v2
+  - 但是 kubectl 仍然默认使用 autoscaling/v2beta2，所以需要手动指定版本号 `kubectl get hpa.v2.autoscaling` 才能看到正确的 HPA 的信息
+- flowcontrol.apiserver.k8s.io/v1beta1 被移除，需要改用 flowcontrol.apiserver.k8s.io/v1beta3
+
+## [1.27](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.27.md#changelog-since-v1260)
+
+
+- 彻底移除注解 `seccomp.security.alpha.kubernetes.io/pod` 与 `container.seccomp.security.alpha.kubernetes.io`，需要改用 `securityContext.seccompProfile`
+- 废弃 `SecurityContextDeny`
+- kubectl 默认使用 `autoscaling/v2`
