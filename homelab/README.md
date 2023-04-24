@@ -9,7 +9,7 @@
 
 | 机器名称 | CPU/GPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
-| 海景房组装 PC | i3-13600kf 125W, 14C20T; RTX4090 24G | 16G * 2 | 2T SSD * 2 | - | 当前的主力电脑，主要用 Endeavour-i3wm 系统，不过当然装了 Windows 用来打游戏 |
+| 海景房组装 PC | i3-13600kf 125W, 14C20T; RTX4090 24G | 16G * 2 | 2T SSD * 2 | - | 当前的主力电脑，主要用 Endeavour-i3wm 系统，不过当然也装了 Windows 用来打游戏 |
 | Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G + 16G |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
