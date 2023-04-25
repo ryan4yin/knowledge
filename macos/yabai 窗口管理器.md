@@ -125,8 +125,7 @@ echo "yabai configuration loaded.."
 # ================================ 打开终端 ================================
 # 启动终端
 cmd - return : open -a iTerm
-# 关闭当前桌面
-cmd - q : yabai -m space --destroy
+# 关闭当前窗口，这个不需要加，macOS 默认是 cmd + q，我 Linux 也这么设置的
 # ================================ 窗口设置 ================================
 # =============== 为了避免快捷键冲突改用了 ctrl 作为 modifier =================
 # ctrl + e 切换为平铺模式
@@ -137,8 +136,8 @@ ctrl - s : yabai -m space --layout stack
 ctrl - f : yabai -m window --toggle float
 
 # ================================ 多桌面配置  ================================
-# 创建一个新桌面，并把当前活动的窗口发送到新桌面，并且自动跳转到新桌面 需要jq支持 brew install jq
-shift + cmd - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq '.| length')" && yabai -m window --space "${index}" && yabai -m space --focus "${index}"
+# 创建一个新桌面，并把当前活动的窗口发送到新桌面，并且自动跳转到新桌面. 需要 jq 支持 brew install jq
+shift + cmd - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq '.| length')" && yabai -m window --space "${index}" && yabai -m space --focus "${index}" && yabai -m space --layout bsp
 
 # 在 stack 模式下通过方向键切换窗口
 ctrl - down : yabai -m window --focus stack.next || yabai -m window --focus south
