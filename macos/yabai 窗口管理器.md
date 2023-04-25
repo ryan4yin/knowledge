@@ -43,8 +43,11 @@ chmod +x ~/.skhdrc
 
 # 之后在 ~/.yabairc 中添加以下命令
 cat <<EOF > ~/.yabairc
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+#!/usr/bin/env sh
+
+# wiki 要求在配置最前面加这个，看起来是跟 sudo 权限相关的东西
 sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 EOF
 ```
 
@@ -130,11 +133,6 @@ cmd - q : yabai -m space --destroy
 ctrl - e : yabai -m space --layout bsp
 # ctrl + s 切换为堆叠模式
 ctrl - s : yabai -m space --layout stack
-# focus window : 激活窗口快捷键  h: 左  j: 下  k: 右 l: 上 
-ctrl - h : yabai -m window --focus west
-ctrl - j : yabai -m window --focus south
-ctrl - k : yabai -m window --focus north
-ctrl - l : yabai -m window --focus east 
 # 浮动/不浮动窗口 float
 ctrl - f : yabai -m window --toggle float
 
@@ -142,11 +140,12 @@ ctrl - f : yabai -m window --toggle float
 # 创建一个新桌面，并把当前活动的窗口发送到新桌面，并且自动跳转到新桌面 需要jq支持 brew install jq
 shift + cmd - n : yabai -m space --create && index="$(yabai -m query --spaces --display | jq '.| length')" && yabai -m window --space "${index}" && yabai -m space --focus "${index}"
 
-# TODO 待补充注释
+# 在 stack 模式下通过方向键切换窗口
 ctrl - down : yabai -m window --focus stack.next || yabai -m window --focus south
 ctrl - up : yabai -m window --focus stack.prev || yabai -m window --focus north
-ctrl + alt - left : yabai -m window --focus west
-ctrl + alt - right : yabai -m window --focus east
+# 在 bsp 模式下通过方向键切换窗口
+cmd - left : yabai -m window --focus west
+cmd - right : yabai -m window --focus east
 
 # 在 9 个桌面之间切换
 ctrl - 1 : yabai -m space --focus 1
