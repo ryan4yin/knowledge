@@ -1,5 +1,7 @@
 # IOS 自动化构建
 
+>本文写于 2020-03-03，其中内容可能已经失效，请谨慎参考。
+
 为了实现自动化构建，需要安装 Python3 环境（ macOS 自带）、OpenJDK8+(给 jenkins-agent 需要)。
 
 此外构建 IOS 程序需要安装 Xcode、cocopods 等工具。详见参考。。。
