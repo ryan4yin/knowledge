@@ -20,11 +20,13 @@ Composite:    +52.9°C  (low  = -273.1°C, high = +89.8°C)
 Sensor 1:     +52.9°C  (low  = -273.1°C, high = +65261.8°C)
 Sensor 2:     +40.9°C  (low  = -273.1°C, high = +65261.8°C)
 
+# cpu socket 接口旁边传感器的温度，这个温度意义不大，除非它很高
 acpitz-acpi-0
 Adapter: ACPI interface
 temp1:        +27.8°C  (crit = +105.0°C)
 
-# cpu 温度
+# intel cpu 温度
+## 如果是 amdcpu，这个一般是叫 k10temp-pci-00c3
 coretemp-isa-0000
 Adapter: ISA adapter
 Package id 0:  +41.0°C  (high = +80.0°C, crit = +100.0°C)
