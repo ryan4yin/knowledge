@@ -9,7 +9,7 @@ services:
     - 3306:3306
     volumes:
     # 容器启动后会自动调用下述文件夹中的 shell/sql 脚本，可用于自动化建库建表。
-    - create-databases.sql:/docker-entrypoint-initdb.d/create-databases.sql
+    - ./create-databases.sql:/docker-entrypoint-initdb.d/create-databases.sql
     # 保存 mysql 数据
     - ./mysql:/var/lib/mysql
     environment:
