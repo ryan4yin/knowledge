@@ -134,3 +134,7 @@ sysbench fileio --file-test-mode=seqwr --time=300 --max-requests=0 run
 ## 然后进行测试
 sysbench fileio cleanup
 ```
+
+## 命令行 GPU 监控
+
+- [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA 
