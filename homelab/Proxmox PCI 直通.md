@@ -141,7 +141,7 @@ IOMMU 组是直通的最小单位，被直通 IOMMU 组中的任何其它设备�
 cat <<EOF | tee /usr/local/bin/vfio-pci-override.sh
 #!/bin/sh
 
-DEVS="0000:04:00.0"
+DEVS="0000:04:00.0 0000:04:00.1 0000:04:00.2 0000:04:00.3 0000:04:00.4 0000:04:00.5 0000:04:00.6 0000:04:00.7"
 
 if [ ! -z "$(ls -A /sys/class/iommu)" ]; then
     for DEV in $DEVS; do
