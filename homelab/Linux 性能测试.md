@@ -135,6 +135,48 @@ sysbench fileio --file-test-mode=seqwr --time=300 --max-requests=0 run
 sysbench fileio cleanup
 ```
 
+### 检测 USB 设备的协议版本
+
+```shell
+lsusb -vvv |grep -i -B5 -A2 bcdUSB
+```
+
+lsusb 列出信息中的 bcdUSB 即为协议版本，如下所示：
+
+```
+Bus 003 Device 002: ID 0e8d:0608 MediaTek Inc. Wireless_Device
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.10
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2 
+--
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            9 Hub
+  bDeviceSubClass         0 
+--
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               3.10
+  bDeviceClass            9 Hub
+  bDeviceSubClass         0 
+```
+
+可以通过查看块设备的符号链接来确认 USB/NVMe 设备对应的 PCI 地址：
+
+```shell
+ls -la /sys/dev/block/ | grep -Ev "loop|dm"
+```
+
+至于速度测试，可以直接使用上一节提到的 `sysbench fileio` 来做。
+
 ## 命令行 GPU 监控
 
 - [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA 
