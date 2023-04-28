@@ -26,6 +26,16 @@ QEMU/KVM 的 PCI(e) 直通功能可以让虚拟机**独占**指定的 PCI(e) 设
   - [PCI(e) Passthrough - Proxmox WIKI](https://pve.proxmox.com/wiki/PCI(e)_Passthrough).
   - [GPU OVMF PCI Passthrough (recommended) - Proxmox WIKI](https://pve.proxmox.com/wiki/Pci_passthrough#GPU_OVMF_PCI_Passthrough_.28recommended.29)
 
+PCIe 直通是比较复杂的功能，兼容性不是很好，为了利用上最新的内核以避免旧内核的硬件兼容性问题，建议首先将内核升级到最新版本。
+根据 [Proxmox VE Kernel](https://pve.proxmox.com/wiki/Proxmox_VE_Kernel) 中的说明，PVE 7.4 当前最新的内核版本为 6.2，可使用如下命令升级内核：
+
+```shell
+apt update
+apt install -y pve-kernel-6.2
+```
+
+装完重启系统，内核就升级好了。
+
 ### 2. AMD 的 USB 控制器直通
 
 那么为了解决上面提到的 USB IO 性能问题，我首先尝试直通 USB 控制器给我的 NAS 虚拟机。
