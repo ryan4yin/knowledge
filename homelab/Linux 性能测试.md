@@ -177,6 +177,17 @@ ls -la /sys/dev/block/ | grep -Ev "loop|dm"
 
 至于速度测试，可以直接使用上一节提到的 `sysbench fileio` 来做。
 
+
+## 硬盘性能问题排查
+
+如果是机械硬盘，速度慢的可能原因有：
+
+1. 使用的是 Windows 中常用的 NTFS/FAT 文件系统，长期使用可能会导致磁盘碎片严重，需要进行磁盘碎片整理
+2. 磁盘使用不当，坏道较多，需要进行磁盘检查
+
+关于 Linux 中磁盘碎片的问题，详见 [如何在 Linux 中整理磁盘碎片 ](https://linux.cn/article-6295-1.html)
+
 ## 命令行 GPU 监控
 
 - [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA 
+
