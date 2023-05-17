@@ -127,9 +127,11 @@ kubectl label namespace default istio-injection=enabled
 
 ```yaml
 metadata:
-  annotations:
+  labels:
     sidecar.istio.io/inject: "false"
 ```
+
+>旧的 `sidecar.istio.io/inject` 是添加在 `annotations` 中的，但是已被 `labels` 中的同名标签取代，旧标签已废弃。
 
 ### 3. 监控：istioctl + prometheus-operator
 
