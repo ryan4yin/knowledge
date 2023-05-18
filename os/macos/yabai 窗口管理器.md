@@ -2,6 +2,23 @@
 
 在 Linux 上用了一段时间 i3wm 后，我就有点忍受不了工作电脑的桌面环境了，公司给配的是 Macbook，一番查找发现 yabai 比较符合我的需求，这里记录下 yabai 的安装与配置过程。
 
+## 使用体验总结
+
+我从 2023-04-25 开始使用 yabai，到现在（2023-05-18）有三周了，刚刚把 yabai 卸载掉，这里总结下使用体验。
+
+一句话总结：还不太成熟，Bug 比较多，而且感觉有点吃性能，电脑感觉比安装 yabai 之前更卡了。
+
+快捷键自动分屏的体验还是很舒服的，劝退我的主要是如下这些问题：
+
+1. 对有些软件，比如企业微信、微信、QQ，自动分屏功能不太行，会出现窗口错位。
+2. 如下这两个问题贼坑
+   1. 全屏下 Chrome 搜索框下方的提示栏被会 Chrome 本身遮挡，必须退出全屏功能才能看到。
+   2. Chrome 页面中的输入框「自动填充」功能在非全屏下会被 Chrome 遮挡，必须进入全屏模式下才能看到。
+3. 在右键修改 Firefox Bookmark 中标签时，弹出的修改菜单会被 Bookmark 收藏夹本身的弹窗遮挡，导致有些选项无法点击到。
+4. 开始使用 yabai 后，感觉系统的卡顿频率明显比之前高了很多，感觉有点吃性能。
+
+主要就是这么几个问题劝退了我。
+
 ## 安装流程
 
 参考官方 Wiki，首先参考这篇文章 [Disabling System Integrity Protection](https://github.com/koekeishiya/yabai/wiki/Disabling-System-Integrity-Protection) 关闭 SIP，然后参照如下流程安装 yabai 与 skhd。
