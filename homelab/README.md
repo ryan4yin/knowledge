@@ -14,7 +14,8 @@
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
-| Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，内存小一点。还没到手，主机预计 2023/4 出货... |
+| Orange Pi 5 Plus | RK 3588, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 16G | 1T SSD | - | SoC 比 3588 的 IO 性能更强，m2 支持 PCIe 3.0x4，双 2.5G 网口，其他外设也全面强化了。 |
+| Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，尺寸跟树莓派一致，不过内存只 4G。 |
 | OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用，不过电池长期充电是隐患，还没想好怎么解决 |
 
 
@@ -270,6 +271,10 @@ tailscale ping <hostname-or-ip>
 |  Orange Pi 5 8G + 5V4A电源     | 2023-02-04 | 淘宝官方店 | ￥749 + 运费 ￥8 | 高性能 Pi，买来给 k8s 跑 ARM 负载的（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
 |  OnePlus 5 6G+64G    | 2023-02-26 | 闲鱼二手 | ￥290 | 二手手机确实挺划算的，比同性能的开发板便宜好多啊 |
 |  爱快 IK-S3009MT 8 口 2.5G 交换机    | 2023-04-11 | 京东 | ￥459 | 路由器 2.5G 口不够用，终于还是买了台交换机 |
+|  Orange Pi 5 Plus 16G     | 2023-05-21 | 淘宝官方店 | ￥949 + 运费 ￥8 | 高性能 Pi，IO 比 3588s 强很多 |
+|  Rock 5A 4G 带 WiFi    | 2023-05-21 | 淘宝官方店 | ￥498 + WiFi 模块 ￥72 + 运费 ￥13 | 之前买的预售优惠券便宜 ￥200，终于发货了 |
+|  LicheePi 4A 内测板 8+8G    | 2023-05-05 | 淘宝官方店 | ￥799 - 预售券便宜 ￥50 | 目前市面上性能最高的 RISC-V 开发版，性能跟树莓派 4B 差不多，主要用来玩 RISC-V 架构的 |
+
 
 >目前 Minisfroum/Beelink 新出的 UM690/UM773/GTR6 等基于第 6 代 AMD CPU 的 mini 主机打折的时候跟我买的上一代基本上一个价，而且还支持了自带 ECC 的 DDR5，还提供 40Gbps 速度的 USB 4.0，此外 6900HX/7773HS 的核显重大升级，性能堪比 GTX1050（桌面主机党狂喜）。还是挺香的，如果我是今年买的话，肯定会在打折的时候买这些新款。只能说时间没碰上了。
 
