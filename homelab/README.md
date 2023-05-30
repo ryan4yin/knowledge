@@ -14,7 +14,7 @@
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
-| Orange Pi 5 Plus | RK 3588, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 16G | 1T SSD | - | SoC 比 3588 的 IO 性能更强，m2 支持 PCIe 3.0x4，双 2.5G 网口，其他外设也全面强化了。 |
+| Orange Pi 5 Plus | RK 3588, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 16G | 1T SSD | - | SoC 比 3588s 的 IO 性能更强，m2 支持 PCIe 3.0x4，双 2.5G 网口，其他外设也全面强化了。 |
 | Rock Pi 5A  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops) | 4G | 128G TF Card | - | 配置与 Orange Pi 5 一致，尺寸跟树莓派一致，不过内存只 4G。 |
 | OnePlus 5 6G+64G  | Snapdragon 835 (4x2.45 GHz Kryo & 4x1.9 GHz Kryo) | 6G | 64G | - | 低功耗 ARM64 手机，装了 [Ubuntu Touch](https://devices.ubuntu-touch.io/device/cheeseburger) 系统当 Linux ARM 服务器用，不过电池长期充电是隐患，还没想好怎么解决 |
 
