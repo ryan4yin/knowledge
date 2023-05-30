@@ -149,7 +149,7 @@ k3s 集群里可以跑这些负载：
 - 集群安全策略: kyverno
 - 等等
 
-局域网有了 x64 架构下 22C44T CPU + 160G RAM 的算力后（必要时还能把我的联想笔记本也加入到集群， 再补充 14C20T CPU + 32G RAM +  Nvidia RTX 4090 GPU），已经可以直接在局域网玩一些需要高算力的任务了，比如说：
+局域网有了 x64 架构下 22C44T CPU + 160G RAM 的算力后，已经可以直接在局域网玩一些需要高算力的任务了，比如说：
 
 - 大数据
   - [airbyte](https://github.com/airbytehq/airbyte) 数据管道
