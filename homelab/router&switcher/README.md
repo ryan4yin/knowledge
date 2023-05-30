@@ -36,6 +36,8 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
 只需要上面三行命令就能将一台 Linux 主机改造成路由器，不过它只是临时生效，重启后需要重新设置。
 
+如果需要更复杂的路由规则，可以通过 `ip route` 来修改。
+
 ## 相关知识点
 
 - MASQUERADE：即 IP 伪装技术，所有 NAT 网关都需要启用此功能与 nf_conntrack 连接跟踪，用于实现 NAT 的 IP 地址翻译
