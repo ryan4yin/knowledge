@@ -28,11 +28,13 @@
 ```shell
 # 1. 修改内核参数，打开 ip 转发功能
 sysctl -w net.ipv4.ip_forward=1
-# 2. 允许 ip 地址不匹配的数据包通过
+# 2. 允许所有 ip 地址不匹配的数据包通过
 sudo iptables -A FORWARD -i eth0 -j ACCEPT
 # 3. 使用 iptables 命令配置 MASQUERADE 规则
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
+
+>上述指令可别在公网接口上使用，存在安全隐患，仅适用于内网网络接口。
 
 只需要上面三行命令就能将一台 Linux 主机改造成路由器，不过它只是临时生效，重启后需要重新设置。
 
