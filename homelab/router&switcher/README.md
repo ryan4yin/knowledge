@@ -23,6 +23,18 @@
 - 使用 openwrt 等路由器专用系统的好处是，有大量现成的插件生态可用，也提供久经考验的 Web 面板，对会友好很多
 - 使用 Ubuntu/Debian 等其他发行版的主要原因可能是，用户对这些系统要更熟悉，而且熟知 iptables/netfilter 的各项功能与命令
 
+其实还有最简单的配置方法，几行命令就能将一台 Linux 主机改成路由器（仅 ipv4）：
+
+```shell
+# 1. 修改内核参数，打开 ip 转发功能
+sysctl -w net.ipv4.ip_forward=1
+# 2. 允许 ip 地址不匹配的数据包通过
+sudo iptables -A FORWARD -i eth0 -j ACCEPT
+# 3. 使用 iptables 命令配置 MASQUERADE 规则
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```
+
+只需要上面三行命令就能将一台 Linux 主机改造成路由器，不过它只是临时生效，重启后需要重新设置。
 
 ## 相关知识点
 
