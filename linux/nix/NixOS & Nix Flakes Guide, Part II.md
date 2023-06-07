@@ -187,3 +187,5 @@ so the best way to protect your data is to encrypt the disk all the time, you ca
 https://gist.github.com/ladinu/bfebdd90a5afd45dec811296016b2a3f
 
 https://www.reddit.com/r/NixOS/comments/xrgszw/nixos_full_disk_encryption_with_tpm_and_secure/
+
+https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration/luks-file-systems.section.md
