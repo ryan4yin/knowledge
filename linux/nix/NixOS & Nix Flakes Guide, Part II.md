@@ -173,6 +173,8 @@ nix-repl> ubootTools
 
 [cachix/devenv](https://github.com/cachix/devenv) has rich documentation, and the project is very active, so I decided to give it a try.
 
+[dev-templates](https://github.com/the-nix-way/dev-templates) a collection of Nix templates for development environments, may be more intuitive than cachix/devenv for experienced Nix users.
+
 ## other useful tools
 
 - https://github.com/nixpak/nixpak
