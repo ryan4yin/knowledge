@@ -3,7 +3,6 @@
 1. 每个 VPC 可以添加一个唯一的 IGW，相当于一个公网路由器
 1. NAT 网关：为私有子网提供访问公网的能力，需要收 NAT 费用
 
-
 ### 路由表
 
 每个 VPC 里面都可以创建很多个路由表，每个路由表可以关联 VPC 中的多个 subnet，只有关联上 subnet，路由表中的规则才会生效。
@@ -14,17 +13,14 @@
 
 如果路由表没有添加和公网相关的东西，那就是它就是一个**私网路由表**。
 
-
 ### 子网 - Subnet
 
 首先，一开始创建的所有 subnet 都是私网的，无法访问外网的。
 
 1. **公有子网**：如果子网绑定的路由表的默认路由规则是到 IGW ，那它就是一个**公有子网**，服务器就能直连外网，外网也能直接通过服务器的公网 IP 访问你。
-2. 私有子网： 如果子网的默认路由规则不是到 IGW，那它就是一个私有子网，其中的设备无法直接被外部访问。
-   2. 私有子网的默认路由规则 `0.0.0.0/0`，可以设置为到公有子网的 NAT 网关，这样就它就能通过 NAT 访问公网。
+2. 私有子网： 如果子网的默认路由规则不是到 IGW，那它就是一个私有子网，其中的设备无法直接被外部访问。 2. 私有子网的默认路由规则 `0.0.0.0/0`，可以设置为到公有子网的 NAT 网关，这样就它就能通过 NAT 访问公网。
    1. 私有子网也可以启用自动分配公网 IP，但是因为和 IGW 之间没有路由，公网 IP 实际上是没用的。
-4. 推荐 VPC 使用 16 位掩码，公网 subnet 设为 24 位，私有 subnet 通常服务更多，可以设为 23 位，比公网刚好大一倍。
-
+3. 推荐 VPC 使用 16 位掩码，公网 subnet 设为 24 位，私有 subnet 通常服务更多，可以设为 23 位，比公网刚好大一倍。
 
 ### ENI 和 EIP
 
@@ -32,7 +28,6 @@
 
 - 弹性 IP: 收费，IP 固定（不用要收钱，但是在使用状态时，EC2 的费用已经包含了 IP 费用，所以反而不收 EIP 的费用），而且可以跨可用区使用
 - ENI 弹性网卡：只要买了，不管用不用，都会一直收钱。IP/mac 地址都固定，但是不能跨可用区使用。
-
 
 这里其实还有些疑问。
 
@@ -44,12 +39,11 @@
 
 使用方法：安全组是很灵活的，在创建 EC2 等资源时，可以按需绑定安全组，只有你绑定的 SG，它的规则才会生效。
 
-
 安全组的建议设计方案，建议分成三类：
+
 - web 层安全组，直接对外
 - 应用程序安全组，仅 web 层可以访问它
 - 数据库安全组，仅应用程序层可以访问它
-
 
 #### 2. ACL 访问控制列表（subnet 级别的）
 
@@ -58,7 +52,6 @@
 使用方法：ACL 是 subnet 全局一定会生效的，所有此 subnet 中的流量都必须遵守这个 ACL 规则。
 
 ACL 和安全组的配合方式：建议外松内紧，就是 ACL 设松一点，里面的安全组设紧一点。
-
 
 ### 对等连接 Peer Connection
 
@@ -78,14 +71,13 @@ ACL 和安全组的配合方式：建议外松内紧，就是 ACL 设松一点�
 1. 使用 VPN 连接私有云和 AWS VPC，走 Internet，最大 1.25G
 2. 建立物理专线 AWS Direct Connect，带宽有 1G 到 10G，也可以聚合四条专线达到 40G 的速率。
 
-
 ### VPC endpoints
 
 AWS 资源之间的访问，默认都是走外网的，从 VPC 内请求会走 NAT 网关，速度会更慢，而且还会收 NAT 费用与流量传输费用。
 
 可以通过 VPC endpoints 让这些请求都直接走 VPC 内部，避免 NAT 费用与流量传输费用。
 
->作为对比我们看下阿里云，它所有资源都直接提供内网与公网两个 endpoints，使用内网 endpoints 请求就会走内网，不需要额外创建 VPC endpoints.
+> 作为对比我们看下阿里云，它所有资源都直接提供内网与公网两个 endpoints，使用内网 endpoints 请求就会走内网，不需要额外创建 VPC endpoints.
 
 VPC endpoints 有两种类型：
 
@@ -120,14 +112,20 @@ AWS 托管版的 NAT 网关按流量收费，其价格为 $.045 per GB，在流�
 建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按小时分区保存到 S3，然后通过 Athena 查询分析。
 可用于按 IP 段分析跨区流量、NAT 网关流量，从而进行深度优化，或者实施某些流量控制策略。
 
->https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log
+> https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log
+
+> https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/flow-logs-s3.html#flow-logs-s3-create-flow-log
 
 示例：
 
 ```hcl
 resource "aws_flow_log" "example" {
+  # 有三种类型：
+  #   Accepted（已接受）– 仅记录接受的流量。
+  #   Rejected（已拒绝）– 仅记录拒绝的流量。
+  #   All（所有流量）– 记录接受的和拒绝的流量。
   traffic_type         = "ALL"
-  
+
   # vpc/subnet/eni 三选一
   # vpc_id               = aws_vpc.example.id
   # subnet_id = "xxx"
@@ -140,7 +138,7 @@ resource "aws_flow_log" "example" {
   log_format = "$${version} $${interface-id} $${vpc-id} $${subnet-id} $${az-id} $${flow-direction} $${srcaddr} $${dstaddr} $${srcport} $${dstport} $${protocol} $${bytes} $${packets} $${start} $${end} $${action} $${log-status}"
 
 
-  # bucket_ARN/folder_name/ 
+  # bucket_ARN/folder_name/
   log_destination      = "${aws_s3_bucket.example.arn}/nat-xxx/"
   log_destination_type = "s3"
   destination_options {
@@ -184,7 +182,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "example" {
     expiration {
       days = 3
     }
-  
+
     # Choose when Amazon S3 permanently deletes specified noncurrent versions of objects.
     noncurrent_version_expiration {
       noncurrent_days = 3
@@ -197,62 +195,62 @@ resource "aws_s3_bucket_lifecycle_configuration" "example" {
 
 然后使用 Athena 建表分析，
 
->https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html
+> https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html
 
 建表：
 
 ```sql
 CREATE EXTERNAL TABLE IF NOT EXISTS vpc_flow_logs_parquet (
-  `version` int, 
-  `account_id` string, 
-  `interface_id` string, 
-  `srcaddr` string, 
-  `dstaddr` string, 
-  `srcport` int, 
-  `dstport` int, 
-  `protocol` bigint, 
-  `packets` bigint, 
-  `bytes` bigint, 
-  `start` bigint, 
-  `end` bigint, 
-  `action` string, 
-  `log_status` string, 
-  `vpc_id` string, 
-  `subnet_id` string, 
-  `instance_id` string, 
-  `tcp_flags` int, 
-  `type` string, 
-  `pkt_srcaddr` string, 
-  `pkt_dstaddr` string, 
-  `region` string, 
-  `az_id` string, 
-  `sublocation_type` string, 
-  `sublocation_id` string, 
-  `pkt_src_aws_service` string, 
-  `pkt_dst_aws_service` string, 
-  `flow_direction` string, 
+  `version` int,
+  `account_id` string,
+  `interface_id` string,
+  `srcaddr` string,
+  `dstaddr` string,
+  `srcport` int,
+  `dstport` int,
+  `protocol` bigint,
+  `packets` bigint,
+  `bytes` bigint,
+  `start` bigint,
+  `end` bigint,
+  `action` string,
+  `log_status` string,
+  `vpc_id` string,
+  `subnet_id` string,
+  `instance_id` string,
+  `tcp_flags` int,
+  `type` string,
+  `pkt_srcaddr` string,
+  `pkt_dstaddr` string,
+  `region` string,
+  `az_id` string,
+  `sublocation_type` string,
+  `sublocation_id` string,
+  `pkt_src_aws_service` string,
+  `pkt_dst_aws_service` string,
+  `flow_direction` string,
   `traffic_path` int
 )
 PARTITIONED BY (
   `aws-account-id` string,
   `aws-service` string,
   `aws-region` string,
-  `year` string, 
-  `month` string, 
+  `year` string,
+  `month` string,
   `day` string,
   `hour` string
 )
-ROW FORMAT SERDE 
+ROW FORMAT SERDE
   'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
-STORED AS INPUTFORMAT 
-  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' 
-OUTPUTFORMAT 
+STORED AS INPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat'
+OUTPUTFORMAT
   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat'
 LOCATION
   --- 需要手动替换下面 <xxx> 占位符为实际的值
   's3://<DOC-EXAMPLE-BUCKET>/<prefix>/AWSLogs/'
 TBLPROPERTIES (
-  'EXTERNAL'='true', 
+  'EXTERNAL'='true',
   'skip.header.line.count'='1'
   )
 ```
