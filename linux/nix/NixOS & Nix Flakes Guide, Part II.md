@@ -134,6 +134,9 @@ nix-repl> lib.mkDefault
 
 可以在该代码中进一步定位到使用 `_type` 的值进行处理的逻辑： https://github.com/NixOS/nixpkgs/blob/nixos-23.05/lib/modules.nix#L346
 
+那么总结下，mkOptionDefault/mkDefault/mkForce 等几个函数，都是用于定义不同优先级的属性值的。
+当多个 Module 都定义了同一个属性的值并且值不同时，优先级高的会覆盖优先级低，优先级相同的会报错。
+
 ## 自定义 Linux 内核
 
 > https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration/linux-kernel.chapter.md?plain=1#L122
