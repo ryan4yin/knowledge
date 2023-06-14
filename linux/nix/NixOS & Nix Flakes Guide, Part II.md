@@ -168,7 +168,9 @@ nix-repl> ubootTools
 
 这样就定位到了实际的代码逻辑： https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/kernel/generic.nix
 
-同理现在看看 linuxManualConfig 的定义：发现它居然是 ``
+同理现在看看 linuxManualConfig 的定义：发现它居然是 `mkOverride` 函数，直接断了线索。最后来是全局搜索 + 肉眼跟踪，定位到它实际定义在:
+
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/kernel/manual-config.nix#L19
 
 ## devenv
 
