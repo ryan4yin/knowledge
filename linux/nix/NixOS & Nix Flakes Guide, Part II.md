@@ -180,6 +180,8 @@ https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/kernel/manua
 
 [dev-templates](https://github.com/the-nix-way/dev-templates) a collection of Nix templates for development environments, may be more intuitive than cachix/devenv for experienced Nix users.
 
+看了一圈三个项目，感觉 dev-templates 最符合我的需求，另外两个项目感觉不到啥优势。
+
 ## other useful tools
 
 - https://github.com/nixpak/nixpak
