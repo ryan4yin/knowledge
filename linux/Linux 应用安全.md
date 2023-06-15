@@ -102,6 +102,28 @@ Kubernetes 也提供了对 AppArmor 的支持，但是从 Kubernetes 1.4 开始�
 
 如 QEMU/KVM、VirtualBox 等
 
+## Linux PAM
+
+> https://wiki.archlinuxcn.org/wiki/PAM
+
+Linux PAM (Pluggable Authentication Modules) 是一个系统级用户认证框架。
+
+PAM 将程序开发与认证方式进行分离，程序在运行时调用附加的“认证”模块完成自己的工作。本地系统管理员通过配置选择要使用哪些认证模块。
+
+Linux 世界中有许多 Linux PAM 认证模块，常见的有：
+
+1. 密码认证模块：pam_unix.so
+2. 两步认证模块：pam_google_authenticator.so
+3. 通过远端 LDAP 服务器认证：pam_ldap.so
+4. 指纹认证模块：pam_fprintd.so
+5. 通过 USB 加密狗认证：pam_usb.so
+
+此外还有一些安全限制模块，如：
+
+1. 强制密码认证：pam_cracklib.so
+
+PAM 可插拔认证模块在 macOS 中也同样存在，可以通过简单的配置文件修改，使 macOS 支持通过指纹来进行 sudo 指令认证，免去输入密码的麻烦。
+
 ## 参考
 
 - [Introduction To Firejail, AppArmor, and SELinux - Youtube](https://www.youtube.com/watch?v=JFjXvIwAeVI)
