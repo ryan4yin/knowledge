@@ -41,6 +41,8 @@ The following commands are available:
 
 ### 模块系统的特殊参数
 
+> https://github.com/NixOS/nixpkgs/blob/nixos-unstable/doc/module-system/module-system.chapter.md
+
 ```nix
 
 _module.args: https://github.com/NixOS/nixpkgs/blob/nixos-23.05/lib/modules.nix#L123
@@ -172,6 +174,33 @@ nix-repl> ubootTools
 
 https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/kernel/manual-config.nix#L19
 
+## stdenv 构建介绍
+
+> https://github.com/NixOS/nixpkgs/tree/nixos-unstable/doc/stdenv
+
+TODO
+
+### 自定义 GCC/Clang
+
+1. https://nixos.wiki/wiki/Using_Clang_instead_of_GCC
+   1. `localSystem` 跟 `crossSystem` 还有个 `useLLVM` 属性可以设定为 true，不过不知道 work 不 work
+   2. https://github.com/NixOS/nixpkgs/issues/225074
+2. https://nixos.wiki/wiki/C#Use_a_different_compiler_version
+
+> need convert to the flake style
+
+```nix
+(import <nixpkgs> { overlays = [(self: super: { gcc = self.gcc10; })]; }).stdenv.cc
+```
+
+```nix
+(mkShell.override { stdenv = gcc10Stdenv; }) {
+  …
+}
+```
+
+检查了下发现 pkgs 中确实存在 `gcc10Stdenv` `gcc11Stdenv` `gcc12Stdenv` `gcc13Stdenv` 这几个，分别指向不同的 derivation.
+
 ## devenv
 
 [numtide/devshell](https://github.com/numtide/devshell) seems to be a personal project, and not documented well.
@@ -181,6 +210,12 @@ https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/kernel/manua
 [dev-templates](https://github.com/the-nix-way/dev-templates) a collection of Nix templates for development environments, may be more intuitive than cachix/devenv for experienced Nix users.
 
 看了一圈三个项目，感觉 dev-templates 最符合我的需求，另外两个项目感觉不到啥优势。
+
+## many language specific frameworks
+
+> https://github.com/NixOS/nixpkgs/tree/nixos-unstable/doc/languages-frameworks
+
+TODO
 
 ## other useful tools
 
