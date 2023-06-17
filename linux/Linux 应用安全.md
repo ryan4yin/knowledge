@@ -124,6 +124,28 @@ Linux 世界中有许多 Linux PAM 认证模块，常见的有：
 
 PAM 可插拔认证模块在 macOS 中也同样存在，可以通过简单的配置文件修改，使 macOS 支持通过指纹来进行 sudo 指令认证，免去输入密码的麻烦。
 
+## DAC 中的 EXT2 拓展文件属性
+
+目前基本所有主流 Linux 发行版都允许为文件和目录设置各种各样的 i-node flags，但这是一种非标准的功能，在 Linux 系统之外的系统上可能无法使用，比如 macOS 就没这功能，现代 BSD 支持类似的功能但是略有区别。
+
+因为这种 i-node flags 最初被 EXT2 文件系统引入，所以通常被称为 EXT2 拓展文件属性。不过现在 btrfs/ext3/ext4/reiserfs 等主流文件系统都支持这种功能，可以认为在 Linux 系统中普遍可用。
+
+Linux 主要提供两个相关的命令来操作这些 i-node flags，`lstattr` 用于查看，`chattr` 用于修改。
+
+在程序中，可以通过 `ioctl()` 系统调用来查询和修改 i-node flags，具体的操作可以参考 `man 2 ioctl`。
+
+EXT2 拓展文件属性是 Linux 系统中 DAC 的一部分，但属于 rwx 权限位之外的拓展，所以如果你发现你有写某文件的权限，但是却无法写入，那么除了系统有额外的 MAC 规则外，也可能是因为这个文件被设置了某种 i-node flag 导致了这个现象。
+
+比如某些用户可能会有这些需求：
+
+1. 某个目录下的文件不允许被删除，只允许在尾部追加内容。这时可以使用 `chattr +a` 来设置 `append-only` flag。
+   1. 设置此 flag 需要 CAP_LINUX_IMMUTABLE 特权，所以一般只有 root 用户才能设置。
+2. 将某个目录下的文件设置为不可变更。这时可以使用 `chattr +i` 来设置 `immutable` flag。
+   1. 设置此 flag 也需要 CAP_LINUX_IMMUTABLE 特权，所以一般只有 root 用户才能设置。
+   2. 一旦设置了此 flag，那么即使是特权用户也无法修改此文件的内容或元数据（不能 link/unlink/rmdir/write/...，但是可以删除），只有先将此 flag 取消后才能修改。
+
+主要就介绍这俩，其他的请自行查找资料。
+
 ## 参考
 
 - [Introduction To Firejail, AppArmor, and SELinux - Youtube](https://www.youtube.com/watch?v=JFjXvIwAeVI)
