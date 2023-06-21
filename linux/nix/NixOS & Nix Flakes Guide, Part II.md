@@ -233,3 +233,12 @@ https://gist.github.com/ladinu/bfebdd90a5afd45dec811296016b2a3f
 https://www.reddit.com/r/NixOS/comments/xrgszw/nixos_full_disk_encryption_with_tpm_and_secure/
 
 https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration/luks-file-systems.section.md
+
+## RISC-V/ARM64 building
+
+这种构建场景下，官方的缓存经常会因为 gcc / kernel 等版本不匹配而失效，所以需要自己本地构建。
+
+加速方法：
+
+1. 搭建自己的缓存库
+2. 分布式构建
