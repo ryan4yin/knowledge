@@ -201,7 +201,7 @@ TODO
 
 检查了下发现 pkgs 中确实存在 `gcc10Stdenv` `gcc11Stdenv` `gcc12Stdenv` `gcc13Stdenv` 这几个，分别指向不同的 derivation.
 
-## devenv
+## devshell
 
 [numtide/devshell](https://github.com/numtide/devshell) seems to be a personal project, and not documented well.
 
@@ -210,6 +210,10 @@ TODO
 [dev-templates](https://github.com/the-nix-way/dev-templates) a collection of Nix templates for development environments, may be more intuitive than cachix/devenv for experienced Nix users.
 
 看了一圈三个项目，感觉 dev-templates 最符合我的需求，另外两个项目感觉不到啥优势。
+
+分析下 lib.mkShell 的实现，首先 `nix repl -f '<nixpkgs>'` 然后输入 `:e pkgs.mkShell`:
+
+TODO
 
 ## many language specific frameworks
 
@@ -242,3 +246,13 @@ https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration
 
 1. 搭建自己的缓存库
 2. 分布式构建
+
+
+## NixOS generator 介绍
+
+TODO
+
+
+## 远程部署介绍
+
+TODO
