@@ -92,3 +92,105 @@ https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration
 
 1. 搭建自己的缓存库
 2. 分布式构建
+
+## 将 gcc 工具链替换为 T-Head 官方的
+
+最近遇到的各种问题，很多都是因为使用了 NixOS 的标准工具链导致的，到目前也没解决。
+
+通过 devShell 创建了一个 FHS 环境，用 T-Head 提供的工具链编译，发现完全不报错，但切换回 NixOS 的工具链就会有错误。
+
+所以还是决定直接使用 T-Head 提供的工具链，这样也能保证与官方的开发环境一致。
+
+那么现在的问题就是，如何替换掉 nixpkgs 中的交叉编译工具链？
+
+这里找到个配置 https://github.com/tattvam/nix-polarfire/blob/master/icicle-kit/default.nix
+
+```nix
+with import <nixpkgs> {
+  crossSystem = {
+    config = "riscv64-unknown-linux-gnu";
+  };
+  overlays = [ (self: super: { gcc = self.gcc11; }) ];
+};
+rec {
+
+  uboot-polarfire-icicle-kit = callPackage ./uboot { defconfig = "microchip_mpfs_icicle"; };
+  linux-polarfire-icicle-kit = callPackage ./linux { };
+}
+```
+
+通过 `nix repl` 验证了确实是 work 的：
+
+```shell
+› nix repl -f '<nixpkgs>'
+Welcome to Nix 2.13.3. Type :? for help.
+
+Loading installable ''...
+Added 17755 variables.
+
+# 通过 overlays 替换掉 gcc
+nix-repl> a = import <nixpkgs> {   crossSystem = {     config = "riscv64-unknown-linux-gnu";   };   overlays = [ (self: super: { gcc = self.gcc12; }) ]; }
+
+# 查看下 gcc 版本，确实改成 12.2 了
+nix-repl> a.pkgsCross.riscv64.stdenv.cc
+«derivation /nix/store/jjvvwnf3hzk71p65x1n8bah3hrs08bpf-riscv64-unknown-linux-gnu-stage-final-gcc-wrapper-12.2.0.drv»
+
+# 再看下未修改的 gcc 版本，还是 11.3
+nix-repl> pkgs.pkgsCross.riscv64.stdenv.cc
+«derivation /nix/store/pq3g0wq3yfc4hqrikr03ixmhqxbh35q7-riscv64-unknown-linux-gnu-stage-final-gcc-wrapper-11.3.0.drv»
+```
+
+那么如果我们要将 T-Head 的工具链使用上述 overlays 方式替换进来，现在得考虑下如何将 T-Head 工具链打包成一个 derivation。
+
+T-Head 的工具链用的是 gcc 10，查看下 gcc 10 的 derivation：
+
+https://github.com/NixOS/nixpkgs/blob/22.11/pkgs/development/compilers/gcc/10/default.nix
+
+以及 T-Head 开源的修改版 GCC 10::
+
+https://github.com/T-head-Semi/gcc/tree/xuantie-gcc-10.4.0
+
+刚好两个连版本号都一样，那么直接 override 掉 src 跟 version 咋样？看看效果：
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
+
+    # https://github.com/T-head-Semi/gcc/tree/xuantie-gcc-10.4.0
+    thead-gcc = {
+      url = "github:T-head-Semi/gcc/xuantie-gcc-10.4.0";
+      flake = false;
+    };
+  };
+
+  outputs = inputs@{ self, nixpkgs, thead-gcc, ... }:
+  let
+    pkgsKernel = import nixpkgs {
+      localSystem = "x86_64-linux";
+      crossSystem = {
+        config = "riscv64-unknown-linux-gnu";
+      };
+      overlays = [
+        (self: super: {
+          # NixOS 22.11 uses gcc 10.4.0, the same as thead-gcc, see:
+          #   https://github.com/NixOS/nixpkgs/blob/nixos-22.11/pkgs/development/compilers/gcc/10/default.nix
+          gcc = super.gcc10.overrideAttrs  (finalAttrs: previousAttrs: {
+            version = "10.4.0";
+            src = thead-gcc;
+          });
+        })
+      ];
+    };
+  in
+  {
+    # cross-build
+    nixosConfigurations.lp4a = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      # skip many contents here
+      # ......
+    };
+}
+```
+
+测试仍在进行中，目前还不清楚效果如何。
