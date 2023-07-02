@@ -60,6 +60,22 @@ export OPENSBI=</path/to/fw_dynamic.bin>
 CROSS_COMPILE=riscv64-buildroot-linux-gnu- make
 ```
 
+## vmlinux vmlinuz Image zImage 等都有何关系
+
+> https://www.baeldung.com/linux/kernel-images
+
+按生成顺序依次介绍如下：
+
+- vmlinux：Linux 内核编译出来的原始的内核文件，elf 格式，未做压缩处理。
+  - 该映像可用于定位内核问题，但不能直接引导 Linux 系统启动。
+- Image：Linux 内核编译时，使用 objcopy 处理 vmlinux 后生成的二进制内核映像。
+  - 该映像未压缩，可直接引导 Linux 系统启动。
+- zImage：一种 Linux 内核映像，专为 X86 架构的系统设计，它使用 LZ77 压缩算法。
+- bzImage: 一种可启动的二进制压缩内核映像
+  - `bz` 是 big zipped 的缩写。通常使用 gzip 压缩算法，但是也可以用别的算法。
+  - 包含 boot loader header + gzip 压缩后的 vmlinux 映像
+- vmlinuz: 它跟 bzImage 一样都是指压缩后的内核映像，两个名称基本可以互换。
+
 ## References
 
 - [An Introduction to RISC-V Boot flow: Overview, Blob vs Blobfree standards](https://crvf2019.github.io/pdf/43.pdf)
