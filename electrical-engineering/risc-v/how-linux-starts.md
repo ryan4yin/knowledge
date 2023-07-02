@@ -76,8 +76,25 @@ CROSS_COMPILE=riscv64-buildroot-linux-gnu- make
   - 包含 boot loader header + gzip 压缩后的 vmlinux 映像
 - vmlinuz: 它跟 bzImage 一样都是指压缩后的内核映像，两个名称基本可以互换。
 
+## initrd 与 initramfs
+
+> https://www.zhihu.com/question/22045825
+
+### initrd
+
+在早期的 linux 系统中，一般只有硬盘或者软盘被用来作为 linux 根文件系统的存储设备，因此也就很容易把这些设备的驱动程序集成到内核中。但是现在的嵌入式系统中可能将根文件系统保存到各种存储设备上，包括 scsi、sata，u-disk 等等。因此把这些设备的驱动代码全部编译到内核中显然就不是很方便。
+
+为了解决这一矛盾，于是出现了 initrd，它的英文含义是 boot loader iniTIalized RAM disk，就是由 boot loader 初始化的内存盘。在 linux 内核启动前， boot loader 会将存储介质中的 initrd 文件加载到内存，内核启动时会在访问真正的文件系统前先访问该内存中的 initrd 文件系统。
+在 boot loader 配置了 initrd 在这情况下，内核启动被分成了两个阶段，第一阶段内核会解压缩 initrd 文件，将解压后的 initrd 挂载为根目录；第二阶段才执行根目录中的 /linuxrc 脚本（cpio 格式的 initrd 为 /init,而 image 格式的 initrd<也称老式块设备的 initrd 或传统的文件镜像格式的 initrd>为 /initrc）。
+在 /init 程序中，我们可以加载 realfs（真实文件系统）的驱动程序，并在/dev 目录下建立必要的设备节点，接着就可以 mount 并 chroot 到真正的根目录，完成整个 rootfs 的加载。
+
+### initramfs
+
+在 linux2.5 中出现了 initramfs，它的作用和 initrd 类似，只是和内核编译成一个文件(该 initramfs 是经过 gzip 压缩后的 cpio 格式的数据文件)，该 cpio 格式的文件被链接进了内核中特殊的数据段.init.ramfs 上，其中全局变量**initramfs_start 和**initramfs_end 分别指向这个数据段的起始地址和结束地址。内核启动时会对.init.ramfs 段中的数据进行解压，然后使用它作为临时的根文件系统。
+
 ## References
 
 - [An Introduction to RISC-V Boot flow: Overview, Blob vs Blobfree standards](https://crvf2019.github.io/pdf/43.pdf)
 - [ARMv8 架构 u-boot 启动流程详细分析(一)](https://bbs.huaweicloud.com/blogs/363735)
 - [聊聊 SOC 启动（五） uboot 启动流程一](https://zhuanlan.zhihu.com/p/520060653)
+- [基于 qemu-riscv 从 0 开始构建嵌入式 linux 系统 ch5-1. 什么是多级 BootLoader 与 opensbi(上)¶](https://quard-star-tutorial.readthedocs.io/zh_CN/latest/ch5-1.html)
