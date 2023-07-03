@@ -250,6 +250,102 @@ iotop
 
 将监控值与前述测试得到的基准值进行对比，低很多的话，基本就可以确认磁盘没问题。
 
+看一个磁盘 IO 被打满的例子：
+
+```
+$ iostat -xd 1 /dev/nvme0n1
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     1.15  112.48    5.98  5469.20    91.62    93.88     3.73   33.30   34.07   18.72   1.70  20.16
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     0.00  107.00    4.00  1456.00    51.00    27.15    18.79  171.42  168.37  253.00   9.01 100.00
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     0.00  120.00    0.00  3424.00     0.00    57.07     7.68   76.83   76.83    0.00   8.33 100.00
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     0.00  109.00    2.00  1516.00    22.00    27.71    22.32  179.89  180.07  170.00   9.01 100.00
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     0.00  113.00    0.00  1848.00     0.00    32.71    39.23  360.11  360.11    0.00   8.85 100.00
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+nvme0n1           0.00     0.00  108.00    0.00  1584.00     0.00    29.33    30.57  245.96  245.96    0.00   9.26 100.00
+......
+```
+
+其中参数的详细解释（`man iostat`）：
+
+```
+rrqm/s
+    The number of read requests merged per second that were queued to the device.
+    当系统调用需要读取数据的时候，VFS 将请求发到各个 FS，如果 FS 发现不同的读取请求读取的是相同 Block 的数据，FS 会将这个请求合并Merge
+
+wrqm/s
+    The number of write requests merged per second that were queued to the device.
+
+r/s
+    The number (after merges) of read requests completed per second for the device.
+
+w/s
+    The number (after merges) of write requests completed per second for the device.
+
+rsec/s (rkB/s, rMB/s)
+    The number of sectors (kilobytes, megabytes) read from the device per second.
+
+wsec/s (wkB/s, wMB/s)
+    The number of sectors (kilobytes, megabytes) written to the device per second.
+
+avgrq-sz
+    The average size (in sectors) of the requests that were issued to the device.
+    平均请求扇区的大小
+
+avgqu-sz
+    The average queue length of the requests that were issued to the device.
+    是平均请求队列的长度。毫无疑问，队列长度越短越好
+
+await
+    The  average  time  (in  milliseconds) for I/O requests issued to the device to be served. This includes the time spent by the requests in queue and the
+    time spent servicing them.
+    每一个IO请求的处理的平均时间（单位是微秒毫秒）。一般地 IO 请求处理时间应该低于 5ms，如果大于 10ms 就比较大了。
+    这个时间包括了队列时间和服务时间，也就是说，一般情况下，await 大于 svctm，它们的差值越小，则说明队列时间越短，反之差值越大，队列时间越长，说明系统出了问题。
+
+r_await
+    The average time (in milliseconds) for read requests issued to the device to be served. This includes the time spent by the requests in  queue  and  the
+    time spent servicing them.
+
+w_await
+    The  average  time (in milliseconds) for write requests issued to the device to be served. This includes the time spent by the requests in queue and the
+    time spent servicing them.
+
+svctm
+    The average service time (in milliseconds) for I/O requests that were issued to the device. Warning! Do not trust this field any more.  This field  will
+    be removed in a future sysstat version.
+    表示平均每次设备I/O操作的服务时间（以毫秒为单位）。
+    如果svctm的值与await很接近，表示几乎没有I/O等待，磁盘性能很好，如果await的值远高于svctm的值，则表示I/O队列等待太长，系统上运行的应用程序将变慢。
+
+%util
+    Percentage  of  elapsed  time  during which I/O requests were issued to the device (bandwidth utilization for the device). Device saturation occurs when
+    this value is close to 100%.
+    在统计时间内所有处理IO时间，除以总共统计时间。
+    例如，如果统计间隔1秒，该设备有0.8秒在处理IO，而0.2秒闲置，那么该设备的%util = 0.8/1 = 80%，所以该参数暗示了设备的繁忙程度。
+    一般地，如果该参数是100%表示设备已经接近满负荷运行了（当然如果是多磁盘，即使%util是100%，因为磁盘的并发能力，所以磁盘使用未必就到了瓶颈）。
+```
+
+能看到前面的示例中，await 平均超过 150ms，utils 使用率已经稳定在 100%，说明磁盘 IO 已经非常非常繁忙了。
+
+再举个例子：
+
+```shell
+$ iostat -d -x -k 1
+Device:    rrqm/s wrqm/s   r/s   w/s  rsec/s  wsec/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  %util
+sda          1.56  28.31  7.84 31.50   43.65    3.16    21.82     1.58     1.19     0.03    0.80   2.61  10.29
+sda          1.98  24.75 419.80  6.93 13465.35  253.47  6732.67   126.73    32.15     2.00    4.70   2.00  85.25
+sda          3.06  41.84 444.90 54.08 14204.08 2048.98  7102.04  1024.49    32.57     2.10    4.21   1.85  92.24
+```
+
+可以看到磁盘的平均响应时间<5ms，磁盘使用率>80。磁盘数据的处理时间还算正常，但是已经很繁忙了，再继续加负载就要撑不住了。
+
 ## 四、Network 网络指标
 
 和 IO 指标类似，网络指标主要有：
