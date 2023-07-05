@@ -15,6 +15,8 @@ M1s 启动后默认进入的就是烧录模式，模式切换方法：
 
 ## 固件烧录
 
+> 说实话有点离谱，还非得搞 GUI 程序烧录...整个 CLI 又好用又方便，多好啊...
+
 烧录这里，直接根据官方文档下载 `Bouffalo Lab Dev Cube` 使用即可，我在 Arch Linux 上实测可以正常使用其中的 `BLDevCube-ubuntu` 程序，不过需要通过 `sudo` 提供访问 USB 设备的权限。
 
 另外一点是 partition table 不能使用 `Bouffalo Lab Dev Cube` 内置的分区表文件，会导致程序无法正常运行！**必须下载并使用 [M1s_Dock/7_Firmware/partition - Sipeed](https://dl.sipeed.com/shareURL/MAIX/M1s/M1s_Dock/7_Firmware/partition)** 中提供的分区表才能正常工作。
