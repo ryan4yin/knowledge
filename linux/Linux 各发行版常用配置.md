@@ -1,7 +1,7 @@
-
 ## 镜像源
 
 请选择对应 OS 的镜像源设置命令：
+
 ```shell
 # alpine
 cp /etc/apk/repositories /etc/apk/repositories.bak
@@ -19,6 +19,7 @@ sed -i "s@http://@https://@g" /etc/apt/sources.list
 ```
 
 Linux 各发行版及相关配置
+
 ## 网络设置
 
 对物理机，可以编写通用脚本设置静态 IP、DNS 等。
@@ -28,21 +29,23 @@ Linux 各发行版及相关配置
 1. CentOS7: 配置文件是 `/etc/sysconfig/network-scripts/ifcfg-<interface-name>`
 
 Ubuntu netplan 配置，修改后通过命令 `sudo netplan apply` 使配置生效：
+
 ```yaml
 # cat /etc/netplan/50-cloud-init.yaml
 network:
-    ethernets:
-        ens33:  # 网卡名称
-            addresses:  # 静态 IP 和网段
-            - 192.168.1.111/24
-            gateway4: 192.168.1.1  # ipv4 默认网关
-            nameservers:  # DNS 服务器
-                addresses:
-                - 114.114.114.114
-    version: 2
+  ethernets:
+    ens33: # 网卡名称
+      addresses: # 静态 IP 和网段
+        - 192.168.1.111/24
+      gateway4: 192.168.1.1 # ipv4 默认网关
+      nameservers: # DNS 服务器
+        addresses:
+          - 114.114.114.114
+  version: 2
 ```
 
 CentOS7 网络配置，修改后通过命令 `systemctl restart network` 使配置生效：
+
 ```conf
 #  cat /etc/sysconfig/network-scripts/ifcfg-ens33
 TYPE=Ethernet
@@ -76,7 +79,6 @@ DNS1=114.114.114.114  # DNS 服务器
 
 - [Linux Server Swap 分区设置](https://www.cnblogs.com/kirito-c/p/12058159.html)
 
-
 ## 其他常用设置
 
 ```
@@ -96,5 +98,3 @@ ubuntu 1804 开始自带 cloud-init，这个工具默认情况下会使我们修
 但是 kubernetes 的节点必须具有不同的主机名，而且用主机名表示该机器的用途也能方便管理。
 
 我们需要修改 cloud-init 的配置文件 /etc/cloud/cloud.cfg 文件，将里面的 `preserve_hostname` 改成 false，这样才能修改主机名称。
-
-

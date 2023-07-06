@@ -86,7 +86,7 @@ CROSS_COMPILE=riscv64-buildroot-linux-gnu- make
 
 为了解决这一矛盾，于是出现了 initrd，它的英文含义是 boot loader iniTIalized RAM disk，就是由 boot loader 初始化的内存盘。在 linux 内核启动前， boot loader 会将存储介质中的 initrd 文件加载到内存，内核启动时会在访问真正的文件系统前先访问该内存中的 initrd 文件系统。
 在 boot loader 配置了 initrd 在这情况下，内核启动被分成了两个阶段，第一阶段内核会解压缩 initrd 文件，将解压后的 initrd 挂载为根目录；第二阶段才执行根目录中的 /linuxrc 脚本（cpio 格式的 initrd 为 /init,而 image 格式的 initrd<也称老式块设备的 initrd 或传统的文件镜像格式的 initrd>为 /initrc）。
-在 /init 程序中，我们可以加载 realfs（真实文件系统）的驱动程序，并在/dev 目录下建立必要的设备节点，接着就可以 mount 并 chroot 到真正的根目录，完成整个 rootfs 的加载。
+在 `/init` 通常是一个 bash 脚本，我们可以通过它加载 realfs（真实文件系统）的驱动程序，并挂载好 /dev /proc /sys 等文件夹，接着就可以 mount 并 chroot 到真正的根目录，完成整个 rootfs 的加载。
 
 ### initramfs
 
