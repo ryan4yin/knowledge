@@ -39,6 +39,8 @@ note: If you believe this is a mistake, please contact your Python installation 
 hint: See PEP 668 for the detailed specification.
 ```
 
+根据错误信息，`pip install` 直接被 NixOS 禁用掉了，而且即使改用 `pip install --user` 也同样不行。
+
 但是很多项目的安装脚本都是基于 pip 的，这导致这些脚本都不能直接使用。
 
 解决方案之一是改用 `venv` 虚拟环境：
@@ -47,3 +49,5 @@ hint: See PEP 668 for the detailed specification.
 python -m venv ./env
 source ./env/bin/activate
 ```
+
+不过在 NixOS 上，更好的方案当然是使用 `nix develop` 跟 mkShell，在它创建的虚拟环境中，`pip install` 是能正常使用的。
