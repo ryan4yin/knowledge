@@ -57,6 +57,8 @@ python -m venv ./env
 source ./env/bin/activate
 ```
 
+或者使用第三方工具 `virtualenv`，缺点是这个需要额外安装。
+
 这样用 python 直接创建的 venv，对一些人而言可能还是没有安全感，仍然希望将这个虚拟环境也弄进 `/nix/store` 里使其不可变，通过 nix 直接安装 `requirements.txt` 或者 `poetry.toml` 中的依赖项。
 这当然是可行的，有现成的 Nix 封装工具帮我们干这个活：
 
