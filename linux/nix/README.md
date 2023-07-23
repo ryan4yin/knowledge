@@ -29,3 +29,12 @@ https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration
     2. 比较好的解决方案仍然是容器化，但是容器化的话，就跟 devcontainer 差不多了。虽然也比纯 devcontainer 可复现性更强，但原生的开发体验就没了。
 
 
+## 软件打包
+
+1. nativeBuildInputs: 本地环境（编译环境）的构建依赖，仅在编译期需要，软件架构也与构建平台一致
+3. buildInputs: 运行环境的运行依赖，软件架构与目标运行环境一致
+
+### Python 应用
+
+
+TODO
