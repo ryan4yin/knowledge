@@ -40,4 +40,9 @@ consumer.assign([TopicPartition('foobar', 0)])
 ```
 
 
+## 其他
+
+1. kafka 限流（确保 kafka 性能，避免被无限制 write/read 导致集群崩溃，在线上集群是非常重要的功能）
+    1. producer 限流
+    2. consumer 限流
 
