@@ -46,6 +46,10 @@ consumer.assign([TopicPartition('foobar', 0)])
     1. producer 限流
     2. consumer 限流
 
+## 故障处理流程
+
+1. 故障节点的快速替换
+2. kafka 节点 cpu 扩容：提升云服务器实例类型的同时，需要调整 kafka 的 threads 参数
 
 ## 进阶
 
