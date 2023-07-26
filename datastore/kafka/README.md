@@ -45,6 +45,8 @@ consumer.assign([TopicPartition('foobar', 0)])
 1. kafka 限流（确保 kafka 性能，避免被无限制 write/read 导致集群崩溃，在线上集群是非常重要的功能）
     1. producer 限流
     2. consumer 限流
+2. 重平衡限流
+    1. 避免节点故障后的重平衡导致集群性能剧烈下降
 
 ## 故障处理流程
 
