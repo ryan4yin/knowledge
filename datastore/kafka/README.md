@@ -46,3 +46,8 @@ consumer.assign([TopicPartition('foobar', 0)])
     1. producer 限流
     2. consumer 限流
 
+
+## 进阶
+
+- 使用 Pulsar 替换 kafka（好处是存算分离，扩容简单，云原生）
+
