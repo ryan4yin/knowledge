@@ -38,3 +38,12 @@ https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/doc/manual/configuration
 
 
 TODO
+
+## 在 NixOS 上运行高可用 Kubernetes 集群
+
+https://github.com/NixOS/nixpkgs/tree/nixos-23.05/nixos/modules/services/cluster/kubernetes
+
+https://nixos.org/manual/nixos/stable/index.html#sec-kubernetes
+
+https://nixos.wiki/wiki/Kubernetes
+
