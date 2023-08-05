@@ -21,4 +21,6 @@ https://github.com/ryan4yin/milkv-duo-buildroot-sdk
 
 ## Milk-V Mars
 
-TODO 还没发货，等发货呢
+仓库内容跟 StarFive 的上游仓库没任何区别，看着或许直接刷 StarFive 的镜像也完全没毛病，待尝试。
+
+https://github.com/milkv-mars/mars-buildroot-sdk
