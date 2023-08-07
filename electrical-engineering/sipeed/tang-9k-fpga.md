@@ -48,3 +48,11 @@ openFPGALoader -b tangnano9k ./impl/pnr/tang-9k-led.fs
 openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
 ```
 
+## 在 NixOS 上进行开发
+
+NixOS 上安装高云 IDE 会很麻烦，所以建议直接使用开源工具：
+
+- [YosysHQ/apicula](https://github.com/YosysHQ/apicula)
+
+这个还没试用过，有空玩玩。
+
