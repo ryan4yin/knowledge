@@ -8,18 +8,21 @@ RK3588/RK3588S 是瑞芯微推出的一款高性能 ARM64 SoC，配置如下：
 
 其中 RK3588 多一些外部模块，支持更多接口，RK3588S 则没有这些模块，但是价格更低一点。
 
-## 开发板对比
+## 我的板子
 
-我目前拥有 Rock 5A 4G（已购，预计 2023Q2 出货）、Orange Pi 5 8G 这两块使用 RK3588S 芯片的开发版。
+1. Orange Pi 5 8G (RK3588S)
+1. Rock 5A 4G (RK3588S)
+2. Orange Pi 5 Plus 16G (RK3588)
 
 根据描述 Orange Pi 的文档、生态貌似要比 Rock Pi 更好一些，我体验上 Orange Pi 的文档确实写得可以，很清晰，而且有中英双语。
 而 Rock Pi 的 WIKI 虽然看起来更现代化一点，但是生态貌似被喷得比较多，而且看别人说 Rock 5 的 PD 供电坑很多。
 
-所以目前的感觉是软件生态方面 Raspberry Pi >> Orange Pi > Rock Pi，性价比方面 Orange Pi > Rock PI >> Raspberry Pi。
+所以目前的感觉是软件生态方面 Raspberry Pi >> Orange Pi > Rock Pi，性价比方面 Orange Pi > Rock PI >> Raspberry Pi（目前树莓派价格下来后差距没这么显著了）。
 
 而其他的 RK3588 或者其他 ARM Soc 的板子，要么就是价格贼高，要么就是性能不太行，反正目前看国产派就是 Orange Pi 跟 Rock Pi 性价比高一点，而且好折腾。
 
->还有[Friendly ELEC](https://wiki.friendlyelec.com/wiki/index.php/Main_Page)（以前叫 Friendly Arm，翻译成 友善之臂...）现在也出了 RK3588 与 RK3588s 的产品，不过它家的东西主要适配 OpenWRT，设计都是走软路由方向的，我暂时没啥兴趣。另外搞嵌入式教育出身的野火也打算出 RK3588s 的板子（鲁班猫系列），看这个系列价格倒还 OK，但是不知道啥时候上架。
+> 还有[Friendly ELEC](https://wiki.friendlyelec.com/wiki/index.php/Main_Page)（以前叫 Friendly Arm，翻译成 友善之臂...）现在也出了 RK3588 与 RK3588s 的产品，不过它家的东西貌似主要适配 OpenWRT，设计都是走软路由方向的，我暂时没啥兴趣。
+> 另外搞嵌入式教育出身的野火也打算出 RK3588s 的板子（鲁班猫系列），看这个系列价格倒还 OK，吹风到 2023/8/8 终于上架了，不过我的 RK3588s 板子已经够多了，暂时不考虑入手。
 
 其他大佬的折腾资料：
 
