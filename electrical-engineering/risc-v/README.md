@@ -5,11 +5,11 @@ RISC-V 是纯开源的指令集，在最近几年声名鹊起，被中国等许�
 我目前拥有的 RISC-V 开发板有：
 
 - ESP32-C3: 乐鑫家的 RISC-V 芯片，便宜好用
-- Lichee Pi 4A: 用的阿里平头哥曳影 1520 芯片，理论性能比 Raspberry Pi 4B 还要强一截。
-  - 预定了两个，已到手一个内测评估板，还没开始玩。另一个券打算出正式板再用。
-- Milk-V Duo: 两块
-- Milk-V Mars: 一块，未到货
+- Lichee Pi 4A: 两块
+  - 用的阿里平头哥曳影 1520 芯片，理论性能比 Raspberry Pi 4B 还要强一截。
+- Milk-V Mars: 一块
 - Sipeed M0s + M1s:
+- 以及 milk-v 家的产品，详见 [Milk-V](./milkv.md)
 
 ## 相关资料
 

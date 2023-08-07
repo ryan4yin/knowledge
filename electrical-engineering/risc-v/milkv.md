@@ -12,7 +12,6 @@ Milk-V （深圳市群星闪耀科技股份有限公司）是家才成立没多�
     - M1s 的 Linux SDK 上次更新还是 2022 年，说明基本也没推进。
 - Milk-V Mars
   - 用的 StarFive 家的 JH7110 芯片，但是比赛昉的板子便宜很多，还是白色的 SBC，很 milky.
-  - 买了一块，还没发货。
 
 
 ## Milk-V Duo
