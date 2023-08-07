@@ -21,6 +21,21 @@ https://github.com/ryan4yin/milkv-duo-buildroot-sdk
 
 ## Milk-V Mars
 
-仓库内容跟 StarFive 的上游仓库没任何区别，看着或许直接刷 StarFive 的镜像也完全没毛病，待尝试。
+只提供了一个 buildroot 构建仓库，其内容跟 StarFive 的上游仓库没任何区别。
 
 https://github.com/milkv-mars/mars-buildroot-sdk
+
+官方仅提供了一个 Debian 镜像，文档匮乏，这个镜像是如何生成的也不太清楚。
+
+我尝试直接将 StarFive 2 的 NixOS 镜像烧录到 Mars 上，但是无法启动，已经在社区提了个帖子，希望能得到解答：
+
+https://community.milkv.io/t/nixos-mars/412
+
+它的 pinout 也没文档，不过看板型跟 Raspberry Pi 4B 是完全一致的，试了下 pinout 也确实一致，所以可以直接参考 Pi 4B 的 pinout：
+
+https://linuxhint.com/gpio-pinout-raspberry-pi/
+
+用串口线连接到 Mars 的 UART0 接口，波特率 115200，可以看到启动信息。
+
+
+
