@@ -10,7 +10,7 @@
 | 机器名称 | CPU/GPU | MEM | SSD | HDD | 说明 |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 海景房组装 PC | i3-13600kf 125W, 14C20T; RTX4090 24G | 16G * 2 | 2T SSD * 2 | - | 当前的主力电脑，主要用 [NixOS](https://github.com/ryan4yin/nixos-and-flakes-book) 系统，不过当然也装了 Windows 专门用来打游戏 |
-| Minisfroum UM560     | AMD R5 5625U, 15W, 6C12T | 8G + 16G |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
+| Minisforum UM560     | AMD R5 5625U, 15W, 6C12T | 8G + 16G |512G SSD | 4T * 2 HDD | 主力节点，低功耗 |
 | MoreFine S500+       | AMD R7 5825U,  15W, 8C16T | 32G * 2 | 1T SSD | - | 主力设备，低功耗 |
 | Beelink GTR5         | AMD R9 5900HX, 45W, 8C16T | 32G * 2 | 1T SSD | - | 高性能节点，日常维持低功耗运行 |
 | Orange Pi 5  | RK 3588S, 8C(A76*4 + A55*4), GPU(4Cores, Mail-G610), NPU(6Tops@int8) | 8G | 256G SSD | - | 低功耗 ARM64 主机，买来给 k8s 跑 ARM 负载的。（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
@@ -41,7 +41,7 @@ graph LR
 	switch <-- 2.5G --> GTR5
 
   subgraph PVE-Cluster[Proxmox VE  集群]
-    subgraph UM560[Minisfroum UM560 - R5 5625U]
+    subgraph UM560[Minisforum UM560 - R5 5625U]
       PVE-UM560[集群节点 - PVE-UM560]
     end
 
@@ -66,7 +66,7 @@ graph LR
 ![](_img/ryan-pve-console-2023-05-30.webp "PVE Web 控制台（2023-05-30）")
 ![](_img/dashy-homepage-2022-11-29.webp "Homelab 面板（2022-11-29）")
 
-- Minisfroum UM560
+- Minisforum UM560
   - OS: Proxmox VE
   - VMs
     - OpenWRT: 2C/1G + 2G DISK - host CPU
@@ -254,7 +254,7 @@ tailscale ping <hostname-or-ip>
 | :---:                              | :---:   | :---:    | :---:   | :---:      | :---: |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 10W     | 10W      | 10W     |            |按低负载功耗算 10W * 24h * 30day = 7.2 KWh |
 | 联想拯救者 R9000P RTX3070 2021 款    | 20W    |  -       | 190W    |   300W     | 按低负载功耗算 20W * 24h * 30day = 14.4 KWh    |
-| Minisfroum UM560 (AMD R5 5625U)    | 6W     | 15W      | 45W (CPU 被超频到了 30w) | -  | 按低负载功耗算 15W * 24h * 30day = 10.8 KWh |
+| Minisforum UM560 (AMD R5 5625U)    | 6W     | 15W      | 45W (CPU 被超频到了 30w) | -  | 按低负载功耗算 15W * 24h * 30day = 10.8 KWh |
 | MoreFine S500+(AMD R7 5825U)       | 6W     | 16W      | 60W (CPU 被超频到了 40W)  |   | 低负载功耗跟 UM560 基本一致 |
 | Beelink GTR5 (AMD R9 5900HX)       | 6W     | 35W      | 50W     |            | 按低负载功耗算 35W * 24h * 30day = 25.2 KWh |
 | 双盘位硬盘盒 + 4T * 2                | (休眠)  | 12W      | 12W     | -          | 按低负载功耗算 12W * 24h * 30day = 8.64 KWh |
@@ -273,7 +273,7 @@ tailscale ping <hostname-or-ip>
 | ~~联想 R9000P 2021 款, 16G RAM + 512G SSD + RTX3070~~    | 2021-06-01 | 京东自营 | ￥9699 | 用了两年的主力机，打算寄回家给我妹用 |
 | Raspberry Pi 4B 2GB                | 2020-07-11 | 从同事手中购入 | ￥180 | 曾经拿来玩过 NAS，目前暂时作为 k3s 节点使用 |
 | 中兴 ZTE AX5400OPro+（双 2.5G 网口） | 2022-11-02 | 京东自营   | ￥649 | 当前的主路由 |
-| Minisfroum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，氮化镓充电器也很小巧，不过只有 6C12T，内存最高只支持 16G * 2 |
+| Minisforum UM560 准系统 (AMD R5 5625U)    | 2022-11-02 | 京东官方店 | ￥1799 | 当前三台机器中颜值最高的机器，氮化镓充电器也很小巧，不过只有 6C12T，内存最高只支持 16G * 2 |
 | Beelink GTR5 准系统 (AMD R9 5900HX)       | 2022-11-02 | 京东官方店 | ￥2545 | 双 2.5G 网口，性能高但是功耗也高些，颜值尚可，不过充电器较大 |
 |  MoreFine S500+ (AMD R7 5825U) 准系统     | 2022-11-19 | 淘宝官方店 | ￥2069 | 就比 UM560 贵 ￥270，升级到 8C16T 且功耗不变，缺点是机箱颜值要差些，而且出风口在底部。 |
 |  Orange Pi 5 8G + 5V4A电源     | 2023-02-04 | 淘宝官方店 | ￥749 + 运费 ￥8 | 高性能 Pi，买来给 k8s 跑 ARM 负载的（它的 NPU/GPU 也很强悍，可以拿来跑推理、视频转码、直播推流） |
@@ -286,7 +286,7 @@ tailscale ping <hostname-or-ip>
 |  Milk-V Mars    | 2023-07-25 | Milk-V 官方平台（小鹅通） | ￥369 | 目前手上性价比最高的高性能 RISC-V 开发板  |
 
 
->目前 Minisfroum/Beelink 新出的 UM690/UM773/GTR6 等基于第 6 代 AMD CPU 的 mini 主机打折的时候跟我买的上一代基本上一个价，而且还支持了自带 ECC 的 DDR5，还提供 40Gbps 速度的 USB 4.0，此外 6900HX/7773HS 的核显重大升级，性能堪比 GTX1050（桌面主机党狂喜）。还是挺香的，如果我是今年买的话，肯定会在打折的时候买这些新款。只能说时间没碰上了。
+>目前 Minisforum/Beelink 新出的 UM690/UM773/GTR6 等基于第 6 代 AMD CPU 的 mini 主机打折的时候跟我买的上一代基本上一个价，而且还支持了自带 ECC 的 DDR5，还提供 40Gbps 速度的 USB 4.0，此外 6900HX/7773HS 的核显重大升级，性能堪比 GTX1050（桌面主机党狂喜）。还是挺香的，如果我是今年买的话，肯定会在打折的时候买这些新款。只能说时间没碰上了。
 
 
 内存条与硬盘：
@@ -327,7 +327,7 @@ tailscale ping <hostname-or-ip>
 
 最后再列下 Homelab 的主机可选项：
 
-- Mini 主机，主要是 Minisfroum、Beelink、MoreFine 三家的 AMD 主机，性价比不错，而且够小巧。除了买全新设备，也可以考虑在闲鱼上收别人的二手主机，更便宜。
+- Mini 主机，主要是 Minisforum、Beelink、MoreFine 三家的 AMD 主机，性价比不错，而且够小巧。除了买全新设备，也可以考虑在闲鱼上收别人的二手主机，更便宜。
   - 优点
     - 小巧便携
     - 移动 CPU，功耗低
