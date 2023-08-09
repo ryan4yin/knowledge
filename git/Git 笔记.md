@@ -345,7 +345,7 @@ git push origin --delete <branch-name>
 git branch --merged
 
 # 删除所有已经合并到当前 HEAD 主线分支的其他分支（master 和 dev 分支除外）
-git branch --merged | grep -v "(^\*|master|dev)" | xargs git branch -d
+git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d
 
 # 列出所有没有合并到当前 HEAD 主线分支的其他分支
 git branch --no-merged
