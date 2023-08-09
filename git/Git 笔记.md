@@ -197,6 +197,8 @@ git pull origin master  # 将远程仓库 origin 的 mater 分支 **merge** 到�
 
 ## 核武器级提交历史改写工具 - filter-branch
 
+> 以及一个辅助工具： https://github.com/rtyley/bfg-repo-cleaner
+
 它可以修改历史中的大量 commits，包括 commit 的文件、提交者、提交信息！危险且强大。
 
 最好只在个人分支上干这件事，否则你的合作者尝试提交时，会出现大量的冲突。。。
@@ -315,6 +317,59 @@ git submodule foreach 'git fetch origin; git checkout $(git rev-parse --abbrev-r
 
 详见 [Git 钩子](https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90)
 
+## 十二、Git 旧分支清理
+
+在日常使用时，我们可能会创建很多分支，而且有些分支可能已经不再使用了。
+
+对于较少的分支，我们可以直接使用如下命令来删除：
+
+```bash
+# 查询有哪些本地分支
+git branch
+# 删除本地已合并到当前 HEAD 的分支
+git branch -d <branch-name>
+# 删除本地未合并到当前 HEAD 的分支
+git branch -D <branch-name>
+
+# 查询有哪些远程分支
+git branch -r
+
+# 删除远程分支
+git push origin --delete <branch-name>
+```
+
+而如果本地或者远程已经有了很多遗留分支，就需要查询分析下哪些分支是可以删除的。
+
+```bash
+# 列出所有已经合并到当前 HEAD 主线分支的其他分支
+git branch --merged
+
+# 删除所有已经合并到当前 HEAD 主线分支的其他分支（master 和 dev 分支除外）
+git branch --merged | grep -v "(^\*|master|dev)" | xargs git branch -d
+
+# 列出所有没有合并到当前 HEAD 主线分支的其他分支
+git branch --no-merged
+
+# 未合并的分支直接删除有风险，建议一个个手动删除
+git branch -D <branch-name>
+```
+
+以及一些跟踪远程分支的本地分支处理：
+
+```bash
+# 列出所有对应的远程分支已经不存在的本地分支（也可将 origin 换成别的 remote 名称）
+git remote prune origin --dry-run
+
+# 去掉 --dry-run 参数，真正删除对应的本地分支
+git remote prune origin
+```
+
+再有是一些远程分支的处理（这个也可以直接在 GitLab/GitHub 提供的 Web 页面上做）：
+
+```bash
+# 删除掉远程已经被合并到当前 HEAD 主线分支的其他分支（master 和 dev 分支除外）
+git branch -r --merged | egrep -v "(^\*|master|dev)" | sed 's/origin\///' | xargs -n 1 git push origin --delete
+```
 
 ## 其他可能用到的 Git 命令
 
