@@ -26,9 +26,9 @@ https://github.com/milkv-mars/mars-buildroot-sdk
 
 官方仅提供了一个 Debian 镜像，文档匮乏，这个镜像是如何生成的也不太清楚。
 
-我尝试直接将 StarFive 2 的 NixOS 镜像烧录到 Mars 上，但是无法启动，已经在社区提了个帖子，希望能得到解答：
+测试了可以直接使用 NickCao 给 StarFive 2 制作的镜像，系统能正常启动：
 
-https://community.milkv.io/t/nixos-mars/412
+https://github.com/NickCao/nixos-riscv
 
 它的 pinout 也没文档，不过看板型跟 Raspberry Pi 4B 是完全一致的，试了下 pinout 也确实一致，所以可以直接参考 Pi 4B 的 pinout：
 
