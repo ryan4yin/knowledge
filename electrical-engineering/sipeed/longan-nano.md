@@ -1,6 +1,8 @@
 # Loggan Nano
 
-## 进入烧录模式：
+一块能播放 Bad Apple 的 RISCV MCU 开发板
+
+## 进入烧录模式
 
 上电后，先按住 BOOT 键，再点击 RESET 键，最后放开 BOOT 键，这样就能切换到烧录模式
 
