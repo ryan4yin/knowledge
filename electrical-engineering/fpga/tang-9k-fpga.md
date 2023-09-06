@@ -58,5 +58,8 @@ NixOS 上安装高云 IDE 会很麻烦，所以建议直接使用开源工具：
 
 - [YosysHQ/apicula](https://github.com/YosysHQ/apicula)
 
-这个还没试用过，有空玩玩。
+代码可以直接用 vscode / neovim 等编辑器编写，然后使用 apicula 进行综合、布局布线、生成固件。
+
+使用如下 flake 管理环境：[./flake.nix](./flake.nix)
+
 
