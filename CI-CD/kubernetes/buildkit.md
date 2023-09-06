@@ -38,7 +38,7 @@ docker run \
         --local context=/tmp/work \
         --local dockerfile=/tmp/work \
         --output type=image,name=${IMAGE}:v1,push=true \
-        --export-cache type=registry,image-manifest=true,ref=${IMAGE}:buildcache \
+        --export-cache type=registry,mode=max,image-manifest=true,ref=${IMAGE}:buildcache \
         --import-cache type=registry,ref=${IMAGE}:buildcache
 ```
 
