@@ -62,4 +62,31 @@ NixOS 上安装高云 IDE 会很麻烦，所以建议直接使用开源工具：
 
 使用如下 flake 管理环境：[./flake.nix](./flake.nix)
 
+首先，我们需要两个源文件：
+
+1. `blinky.v`：点灯实验的 verilog 源文件
+2. `tang-9k-led.cst`：荔枝糖 Tang 9K 的约束文件
+
+```bash
+# 进入 nix 开发环境
+nix develop
+
+CST='tang-9k-led.cst'
+
+# 1. 使用 yosys 进行综合
+yosys -D LEDS_NR=8 -p "read_verilog blinky.v; synth_gowin -json blinky.json"
+
+# 2. 使用 nextpnr 布局布线
+nextpnr-gowin --json blinky.json --write pnrblinky.json --family GW1N-9C --device 'GW1NR-LV9QN88PC6/I5' --cst $CST
+
+# 3. 使用 apicula 生成固件 fs 文件
+gowin_pack -d GW1N-9C -o pack.fs pnrblinky.json
+
+# 4. 使用 openFPGALoader 烧录固件
+openFPGALoader -b tangnano9k -f pack.fs
+```
+
+但缺点是，此方法中只能写代码，物理约束文件 `tang-9k-led.cst` 无法编辑，这就很麻烦了。
+
+还是得把高云 IDE 移植到 NixOS 上，这样才能方便地进行开发。
 
