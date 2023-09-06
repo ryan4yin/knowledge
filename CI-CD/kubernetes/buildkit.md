@@ -21,6 +21,8 @@ RUN wget -O docker-credential-ecr-login https://amazon-ecr-credential-helper-rel
 # auth for aws ecr
 echo '{ "credsStore": "ecr-login" }' > docker_config.json
 # build by buildkit in docker
+# note we need to use `image-manifest=true` to make it work, otherwise it will fail with 400 bad request
+# cause it will try to push a manifest list to ecr, but ecr doesn't support manifest ordered list
 docker run \
     --privileged \
     -v ${IMAGE_CONTEXT}:/tmp/work \
@@ -36,7 +38,7 @@ docker run \
         --local context=/tmp/work \
         --local dockerfile=/tmp/work \
         --output type=image,name=${IMAGE}:v1,push=true \
-        --export-cache type=registry,ref=${IMAGE}:buildcache \
+        --export-cache type=registry,image-manifest=true,ref=${IMAGE}:buildcache \
         --import-cache type=registry,ref=${IMAGE}:buildcache
 ```
 
