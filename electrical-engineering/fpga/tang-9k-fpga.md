@@ -1,5 +1,9 @@
 # 荔枝糖 Tang 9K
 
+## 高云 FPGA 开发环境介绍
+
+1. 支持 VHDL、Verilog HDL 和 System Verilog 语言
+
 ##  1. 完成一个入门级的点灯实验
 
 首先当然是根据官方文档 [Tang Nano 9K - Sipeed Wiki](https://wiki.sipeed.com/hardware/zh/tang/Tang-Nano-9K/Nano-9K.html) 完成一个点灯实验。
