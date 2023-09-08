@@ -54,23 +54,33 @@ openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
 
 ## 在 NixOS 上进行开发
 
-NixOS 上安装高云 IDE 会很麻烦，所以建议直接使用开源工具：
+### 使用高云 IDE 进行开发
 
-- [YosysHQ/apicula](https://github.com/YosysHQ/apicula)
+NixOS 上可用我打好的 [高云教育版 IDE](https://github.com/ryan4yin/nur-packages/tree/main/pkgs/gowin-eda-edu-ide)，烧录器则建议使用 openfpgaloader.
+
+跑完综合跟布局布线后，会在项目根目录下生成一个 `impl` 文件夹，里面有 `pnr` 文件夹，里面有 `tang-9k-led.fs` 文件，这个就是生成的固件。
+
+直接使用 openfpgaloader 烧录即可：
+
+```shell
+openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
+```
+
+### 使用开源工具链进行开发
 
 代码可以直接用 vscode / neovim 等编辑器编写，然后使用 apicula 进行综合、布局布线、生成固件。
 
-使用如下 flake 管理环境：[./flake.nix](./flake.nix)
+- [YosysHQ/apicula](https://github.com/YosysHQ/apicula)
+
 
 首先，我们需要两个源文件：
 
 1. `blinky.v`：点灯实验的 verilog 源文件
 2. `tang-9k-led.cst`：荔枝糖 Tang 9K 的约束文件
 
-```bash
-# 进入 nix 开发环境
-nix develop
+纯命令行操作方法如下（其中的 CST 文件不好编辑，建议先用 Gowin IDE 生成好）：
 
+```bash
 CST='tang-9k-led.cst'
 
 # 1. 使用 yosys 进行综合
@@ -86,7 +96,4 @@ gowin_pack -d GW1N-9C -o pack.fs pnrblinky.json
 openFPGALoader -b tangnano9k -f pack.fs
 ```
 
-但缺点是，此方法中只能写代码，物理约束文件 `tang-9k-led.cst` 无法编辑，这就很麻烦了。
-
-还是得把高云 IDE 移植到 NixOS 上，这样才能方便地进行开发。
 
