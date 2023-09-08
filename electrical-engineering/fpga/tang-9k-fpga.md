@@ -58,12 +58,12 @@ openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
 
 NixOS 上可用我打好的 [高云教育版 IDE](https://github.com/ryan4yin/nur-packages/tree/main/pkgs/gowin-eda-edu-ide)，烧录器则建议使用 openfpgaloader.
 
-跑完综合跟布局布线后，会在项目根目录下生成一个 `impl` 文件夹，里面有 `pnr` 文件夹，里面有 `tang-9k-led.fs` 文件，这个就是生成的固件。
+跑完综合跟布局布线后，会在项目根目录下生成一个 `impl` 文件夹，里面有 `pnr` 文件夹，里面有 `xxx.fs` 文件，这个就是生成的固件。
 
 直接使用 openfpgaloader 烧录即可：
 
 ```shell
-openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
+openFPGALoader -b tangnano9k -f ./impl/pnr/*.fs
 ```
 
 ### 使用开源工具链进行开发
