@@ -73,6 +73,6 @@ minicom 是更强大的串口终端工具，还支持文件的上传下载，不
 
 ## 进阶 - 机器人相关资料
 
+- [Modern Robotics: Mechanics, Planning, and Control Specialization](https://www.coursera.org/specializations/modernrobotics)
+    - prerequisites: freshman-level physics, linear algebra, calculus, linear ordinary differential equations
 - [how-to-learn-robotics](https://github.com/qqfly/how-to-learn-robotics)
-- [gobot](https://github.com/hybridgroup/gobot)
-
