@@ -48,6 +48,14 @@ endmodule
 
 ### 行为级描述
 
+行为级描述有这几个关键字：
+
+1. `always`: always 语句会在其条件满足时被重复执行，其条件可以是时间，也可以是信号。
+2. `initial`: initial 语句从 0 时刻开始执行，只执行一次，多个 initial 块之间是相互独立的。
+3. `generate`: generate 语句用于生成多个实例，你可以使用 generate 语句来生成 100 个实例。
+
+#### 1. always 语句
+
 `always` 关键字之后的代码块就是行为级描述，其内部的语法跟 C 语言类似，跟上面的数据流描述的代码就完全不同了。
 
 always 既可用于定义组合逻辑，也可用于定义时序逻辑。
@@ -79,6 +87,49 @@ always @(*) out2 = a & b | c ^ d;
 而组合逻辑，其输出信号的变化不存在这样跟时序相关的延迟，也就是说，当输入信号发生变化时，输出信号会立即发生变化。
 
 > 上面说的是理想情况，实际电路中组合逻辑的信号传播也是有延迟的，所以高频电路中，还需要考虑总线导线的长度，长度不一致会导致信号到达时间不一致，从而导致问题。
+
+#### 2. initial 语句
+
+TODO
+
+#### 3. generate 语句
+
+可以使用在 generate 语句中的类型主要有：
+
+- module（模块）
+- UDP（用户自定义原语）
+- 门级原语
+- 连续赋值语句
+- initial或always语句
+
+比如这里使用 generate 语句生成了 3 个 bcdadd 实例：
+
+```verilog
+module top_module ( 
+    input [15:0] a, b,
+    input cin,
+    output cout,
+    output [15:0] sum );
+    
+    wire [3:0] c;
+
+    // 第一个全加器实例
+    bcd_fadd b1(a[3:0], b[3:0], cin, c[0], sum[3:0]);
+    // 定义 i 作为 generate 中的循环变量
+    genvar i;
+        generate
+            // generate 循环语句，该语句块必须使用 begin end 定义，并带有唯一的名字（标签）
+            for(i=1; i < 4; i += 1) begin: bcdadd
+                    //实例化 3 次全加器
+                    bcd_fadd inst2_fadd(
+                        a[i * 4 + 3 -:4], b[i * 4 + 3 -:4], c[i-1], 
+                        c[i], sum[i * 4 + 3 -: 4]
+                    );
+                end
+        endgenerate
+    assign cout = c[3];
+endmodule
+```
 
 ### 避免编写出锁存器（latches）
 
