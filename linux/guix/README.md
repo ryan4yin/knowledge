@@ -17,4 +17,5 @@
 - https://github.com/kitnil/dotfiles
 - https://github.com/aartaka/guix-config
 - https://github.com/migalmoreno/guix-config
+- https://github.com/rsauex/dotfiles
 
