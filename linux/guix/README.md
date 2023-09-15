@@ -18,4 +18,5 @@
 - https://github.com/aartaka/guix-config
 - https://github.com/migalmoreno/guix-config
 - https://github.com/rsauex/dotfiles
+- https://github.com/hiecaq/guix-config
 
