@@ -37,7 +37,7 @@ guix system init /mnt/etc/config.scm /mnt
 # 更新 channel
 guix pull
 
-# 更新系统
+# 更新系统，当然配置文件也可以移动到其他位置
 sudo guix system reconfigure /etc/config.scm
 ```
 
@@ -54,11 +54,12 @@ guix environment --ad-hoc <package>
 
 参考配置（dotfiles）：
 
+- https://github.com/rakino/Testament/tree/trunk
+    - 这个配置结构是我比较喜欢的，一目了然。
 - https://github.com/Tass0sm/dotfiles
 - https://github.com/engstrand-config/guix-dotfiles
 - https://github.com/podiki/dot.me
 - https://github.com/abcdw/rde
-- https://github.com/rakino/Testament/tree/trunk
 - https://github.com/Millak/guix-config
 - https://github.com/kitnil/dotfiles
 - https://github.com/aartaka/guix-config
