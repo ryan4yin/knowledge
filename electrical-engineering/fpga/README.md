@@ -1,8 +1,5 @@
 # FPGA 玩耍之旅
 
-TODO
-
-## FPGA 学习路线
 
 第一步是入门：
 
@@ -12,6 +9,10 @@ TODO
 那么入门阶段，基本靠 HDLBits 就能完全搞定了，它既是一本超入门的教材，也是一个在线的练习平台： https://hdlbits.01xz.net/
 
 入门后，可以做一些有趣的练习： https://www.fpga4fun.com/
+
+其他入门资料：
+
+- [List of useful links for beginners and veterans - Reddit r/FPGA](https://www.reddit.com/r/FPGA/comments/omrnrk/list_of_useful_links_for_beginners_and_veterans/)
 
 书籍（z-library 上能下载到 pdf）：
 
