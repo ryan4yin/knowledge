@@ -47,6 +47,21 @@ $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --write-out="json" get 
 $ etcdctl --cacert ca.crt --cert peer.crt --key peer.key del /registry/namespaces/monitoring
 ```
 
+## 密码验证
+
+> https://etcd.io/docs/v3.5/op-guide/authentication/rbac/#enabling-authentication
+
+etcd 支持启用密码验证，在启用之前必须先创建 root 用户，该用户将拥有所有权限。
+
+```shell
+# 创建 root 用户
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key user add root
+Password of root:
+
+# 启用访问认证功能
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key auth enable
+```
+
 ## Etcd 集群运维需知
 
 1. Etcd 集群的节点数量越多，写入速度越慢。因为 raft 协议要求超过 1/2 的节点写入成功，才算是一次成功的写操作。
