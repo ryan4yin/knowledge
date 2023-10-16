@@ -83,7 +83,8 @@ WantedBy=multi-user.target
 然后在三个节点上分别运行如下指令，即可启动一个 etcd 集群：
 
 ```shell
-ln -s /data/etcd.service /usr/lib/systemd/system/etcd.service
+# 注意这里不能用 `ln -s`，会导致系统重启后 systemd 无法识别，报很奇怪的错误！
+cp /data/etcd.service /usr/lib/systemd/system/etcd.service
 systemctl daemon-reload
 systemctl enable etcd
 systemctl start etcd
