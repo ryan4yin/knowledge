@@ -34,11 +34,12 @@ etcdctl --write-out=table snapshot status snapshot.db
 
 而如果数据丢失，节点就必须以新的 member 身份加入，请严格按照如下操作：
 
-- 移除failure节点：使用 `member remove` 命令剔除错误节点。保证当前集群的健康状况
-- 彻底清理数据目录：错误节点必须停止，然后删除data dir。保证 `member` 信息被清理干净，清空 `member` 目录
-- 集群添加新 member：使用 `member add` 命令添加步骤1的错误节点
+- 移除failure节点：连接集群所有剩余节点，使用 `member remove` 命令剔除错误节点。保证当前集群的健康状况
+- 彻底清理数据目录：错误节点必须停止，然后删除错误节点的 data 文件夹，以及清空 `member` 目录
+- 集群添加新 member：连接集群所有剩余节点，使用 `member add` 命令重新添加前面处理的错误节点（此时该错误节点已完成清理，但还未启动）
 - 启动 etcd 服务：确保节点的 `/data/etcd.env` `/data/etcd.service` 以及 etcd/etcdctl 均配置完成，使用 systemd 启动 etcd 服务
 
+> 注意，当单节点集群添加第二个节点时，在第二个节点未启动前，集群将进入不可用状态！因为集群在线节点数低于 (N-1)/2 了！
 
 ```shell
 export ETCDCTL_API=3
@@ -52,7 +53,8 @@ etcdctl --endpoints $ENDPOINT member remove <id>
 # 如果你是将原节点重新加入集群，还需要清理干净数据目录
 sudo rm -rf /data/etcd.data
 
-# 现在将该节点加入到 etcd 集群，加入成功后，会打印出一系列新节点需要设置的参数
+# 现在将该节点加入到 etcd 集群
+# 加入成功后，会打印出一系列新节点需要设置的参数
 etcdctl --endpoints=$ENDPOINT member add node1 --peer-urls="http://node1:2380"
 ```
 
