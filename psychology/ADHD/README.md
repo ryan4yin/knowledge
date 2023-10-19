@@ -33,5 +33,6 @@
 ## 我读过的相关资料
 
 - 《分心不是我的错》
+- [The ADHD Statistics You Need To Know](https://www.theminiadhdcoach.com/adhd-awareness/adhd-statistics)
 
 
