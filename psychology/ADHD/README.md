@@ -35,6 +35,6 @@
 
 - 《分心不是我的错》
 - [The ADHD Statistics You Need To Know](https://www.theminiadhdcoach.com/adhd-awareness/adhd-statistics)
-- [中国成人注意缺陷多动障碍诊断和治疗专家共识（2023版](https://rs.yiigle.com/CN112137202328/1467089.htm)
+- [中国成人注意缺陷多动障碍诊断和治疗专家共识（2023版](https://rs.yiigle.com/cmaid/1467089#T1)
 
 
