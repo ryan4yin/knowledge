@@ -85,6 +85,8 @@ version = 2
 
 ### crictl
 
+> kubernetes 节点通常自带此工具
+
 其命令行参数和 `docker-cli` 基本一致，但是:
 
 1. 只提供和容器/镜像相关的命令，并添加了 pod 相关命令
@@ -121,6 +123,8 @@ skopeo copy dir:image-output-dir containers-storage:docker.io/weaveworks/weave-n
 ```
 
 ### [nerdctl](https://github.com/containerd/nerdctl)
+
+> kubernetes 节点一般没有此工具，需要自行安装
 
 nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`） 及其中的大部分参数。
 
