@@ -126,7 +126,32 @@ nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml
 
 注意点：
 - nerdctl 对网络的支持不如 docker
-- nerdctl 与 kubernetes 的容器、镜像是隔离的，使用 nerdctl 查看不了 kubernetes 的容器与镜像，反之亦然。
+
+#### 使用 nerdctl 查看 k8s 镜像与容器
+
+> https://github.com/containerd/nerdctl#debugging-kubernetes
+
+
+
+nerdctl 与 kubernetes 的容器、镜像是隔离的，需要切换到 k8s 的 namespace 才能看到。
+
+```shell
+# 查看 k8s 的 namespace 下的容器
+nerdctl --namespace k8s.io ps -a
+
+# To load an image archive (docker save format or OCI format) into local Kubernetes:
+nerdctl --namespace k8s.io load < /path/to/image.tar
+
+# read pod contaienr logs
+## 1. get the container ID
+nerdctl --namespace k8s.io ps -a
+## 2. read logs
+nerdctl --namespace=k8s.io logs -f e8793b8cca8b
+```
+
+
+
+
 
 
 
