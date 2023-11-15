@@ -61,7 +61,7 @@ SSD 的性能受两方面的影响：
 
 首先我们已经通过 node-exporter 对应的 grafana 监控面板，确定了当前磁盘 IO 利用率一直 100%、IOPS 与读写速率都很低，一开始读的 wait 显然非常高，能确认是卡在了读上面。
 
-进一步可用 `iotop` 定位到消耗 IO 的进程，然后用 `strace -f -p $pid -T -tt -e read` 与 `lsof -p $pid` 定位到导致 IO 高的文件。
+进一步可用 `iotop` 定位到消耗 IO 的进程，然后用 `strace -f -T -tt -e read -p $pid` 与 `lsof -p $pid` 定位到导致 IO 高的文件。
 
 #### 4. 解决思路
 
