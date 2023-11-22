@@ -16,7 +16,7 @@
 
 参考：
 
-1. https://pytorch.org/TensorRT/tutorials/notebooks.html
+4. [Saving/Loading models compiled with Torch-TensorRT](https://pytorch.org/TensorRT/user_guide/saving_models.html)
 2. [Torch-TensorRT -  Compile Stable Diffusion and Inference](https://pytorch.org/TensorRT/tutorials/_rendered_examples/dynamo/torch_compile_stable_diffusion.html)
-3. [Compile a Torch Model(.pt) into Torch-TensorRT(xxx_trt.ts)](https://pytorch.org/TensorRT/cli/torchtrtc.html)
+3. [Compile a Torch Model(.pt) into Torch-TensorRT(xxx_trt.ts) via CLI](https://pytorch.org/TensorRT/cli/torchtrtc.html)
 
