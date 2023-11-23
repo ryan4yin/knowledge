@@ -20,6 +20,11 @@
 2. [Torch-TensorRT -  Compile Stable Diffusion and Inference](https://pytorch.org/TensorRT/tutorials/_rendered_examples/dynamo/torch_compile_stable_diffusion.html)
 3. [Compile a Torch Model(.pt) into Torch-TensorRT(xxx_trt.ts) via CLI](https://pytorch.org/TensorRT/cli/torchtrtc.html)
 
+### 2. TF32 精度
+
+1. https://pytorch.org/docs/stable/notes/cuda.html#tensorfloat-32-tf32-on-ampere-devices
+2. https://blogs.nvidia.com/blog/tensorfloat-32-precision-format/
+
 ## Nvidia GPU 架构、CUDA 版本、Nvidia 驱动版本、PyTorch 版本之间的兼容性
 
 > https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
