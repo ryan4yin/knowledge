@@ -4,6 +4,8 @@
 
 > https://github.com/NVIDIA/dcgm-exporter
 
+> https://catalog.ngc.nvidia.com/orgs/nvidia/teams/k8s/containers/dcgm-exporter
+
 ## 利用 CUDA 加速计算
 
 > https://developer.nvidia.cn/gpu-accelerated-libraries
