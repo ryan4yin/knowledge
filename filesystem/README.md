@@ -4,7 +4,7 @@
 
 目前主流的三大操作系统，主流的文件系统都不同。
 
-1. Linux: 主流是 ext4/xfs/zfs 
+1. Linux: 主流是 ext4/xfs/zfs/btrfs
     1. 内存存储使用 tmpfs
 1. Windows: 主要是 NTFS。以前是 FAT32，单个文件最大能到 4G。
 1. MacOS: HFS 和新出的 AFS
