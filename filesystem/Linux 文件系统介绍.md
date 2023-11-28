@@ -85,7 +85,7 @@ ZFS 的设计理念很先进，其主要特点有：
 FreeBSD 对 ZFS 的支持比 Linux 更好，因此一些基于 ZFS 的 NAS 系统选择 FreeBSD 作为底层操作系统。
 
 
-### 三、下一代文件系统 - BcacheFS
+## 三、下一代文件系统 - BcacheFS
 
 > https://bcachefs.org/
 
@@ -93,5 +93,13 @@ FreeBSD 对 ZFS 的支持比 Linux 更好，因此一些基于 ZFS 的 NAS 系�
 
 Bcachefs 的目标是在一个干净的 codebase 上，是 Btrfs / ZFS 的诸多新特性，同时提供更高的性能与更好的稳定性。
 
+
+
+## 四、该选用哪个文件系统？
+
+
+个人使用：建议 Btrfs
+
+企业使用：一般选用最稳定的 ext4/xfs，对于数据安全性要求不高，但希望性能更好的场景（比如无状态的 K8s 集群节点？），可以尝试 Btrfs.
 
 
