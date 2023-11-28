@@ -100,6 +100,9 @@ mount /dev/disk/by-uuid/<UUID> /mnt
 btrfs subvolume create /mnt/@snapshots
 ```
 
+## Auto backup
 
+1. [btrbk](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/backup/btrbk.nix): take snapshots and backup them to other instances via SSH.
+2. [snapper](https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/services/misc/snapper.nix): similar to btrbk, but it do not support backup remotely.
 
 
