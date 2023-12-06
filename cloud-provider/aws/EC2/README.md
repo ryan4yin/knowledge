@@ -175,3 +175,13 @@ cloudinit: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html#us
 
 EKS 的 AMI 对各机型的支持可以参考 [amazon-eks-ami/files/eni-max-pods.txt](https://github.com/awslabs/amazon-eks-ami/blob/v20211109/files/eni-max-pods.txt) 与仓库 tag.
 
+## EC2 启动速度研究
+
+2023 年最新的非官方启动速度测试： https://www.martysweet.co.uk/ec2-launch-times/
+
+总结中的几个点：
+
+1. EBS encryption currently increases the time spent in the pending state for freshly launched instances.
+2. Unencrypted gp2, gp3 or io1 result in the lowest time spent in the pending instance state for freshly launched instances.
+3. Use Amazon Linux 2023 or Amazon Linux 2 EKS for the fastest general-purpose AMI to boot for launches and stop/starts.
+
