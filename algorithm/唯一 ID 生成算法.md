@@ -150,7 +150,7 @@ It packs features some may find excessive, but for giants like Twitter, it’s r
 
 https://github.com/knifecake/python-id-benchmarks
 
-测试结果（时间单位为 ns）：
+测试结果（时间单位为 ns，中间 Mean 为平均值，StdDev 为标准差）：
 
 ```
 ----------------- benchmark 'test_generate': 7 tests -----------------
