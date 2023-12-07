@@ -80,6 +80,67 @@ Cons
 
 * NanoID is newer and might not be as widely supported as UUID.
 
+
+网上查的各种文章都说 NanoID 比 UUID 快 40% / 60%，但我直接看它 README 的 benchmark，明显说明 NanoID 比 UUID v4 慢很多很多！这使我相当迷惑，花了很长时间研究，最终确认了是版本问题...
+
+我一开始看到的数据（nanoid 最新版本）：
+
+> https://github.com/ai/nanoid/tree/5.0.4#benchmark
+
+```
+$ node ./test/benchmark.js
+crypto.randomUUID         21,119,429 ops/sec
+uuid v4                   20,368,447 ops/sec
+@napi-rs/uuid             11,493,890 ops/sec
+uid/secure                 8,409,962 ops/sec
+@lukeed/uuid               6,871,405 ops/sec
+nanoid                     5,652,148 ops/sec
+customAlphabet             3,565,656 ops/sec
+secure-random-string         394,201 ops/sec
+uid-safe.sync                393,176 ops/sec
+shortid                       49,916 ops/sec
+
+Non-secure:
+uid                       58,860,241 ops/sec
+nanoid/non-secure          2,744,615 ops/sec
+rndm                       2,718,063 ops/sec
+```
+
+这个数据中，NanoID 每秒生成的 ID 数（ops/sec）为 5,652,148，而 uuid-v4 为 20,368,447，**uuid-v4 反而比 NanoID 快了 3.6 倍**！
+
+而旧的 v3 最新版本的 benchmark 结果如下：
+
+> https://github.com/ai/nanoid/tree/3.3.7#benchmark
+
+```
+$ node ./test/benchmark.js
+crypto.randomUUID         25,603,857 ops/sec
+@napi-rs/uuid              9,973,819 ops/sec
+uid/secure                 8,234,798 ops/sec
+@lukeed/uuid               7,464,706 ops/sec
+nanoid                     5,616,592 ops/sec
+customAlphabet             3,115,207 ops/sec
+uuid v4                    1,535,753 ops/sec
+secure-random-string         388,226 ops/sec
+uid-safe.sync                363,489 ops/sec
+cuid                         187,343 ops/sec
+shortid                       45,758 ops/sec
+
+Async:
+nanoid/async                  96,094 ops/sec
+async customAlphabet          97,184 ops/sec
+async secure-random-string    92,794 ops/sec
+uid-safe                      90,684 ops/sec
+
+Non-secure:
+uid                       67,376,692 ops/sec
+nanoid/non-secure          2,849,639 ops/sec
+rndm                       2,674,806 ops/sec
+```
+
+这个旧的 v3 版本的 README 显示，NanoID 每秒生成的 ID 数（ops/sec）为 5,616,592，而 uuid-v4 为 1,535,753，**nanoid 比 uuid-v4 快了 3.6 倍**！
+
+
 ## 3. ObjectID(MongoDB 96Bits)
 
 ObjectID is MongoDB’s answer to a unique document ID, this 12-byte identifier typically resides in the “_id” field of a document, and if you’re not setting it yourself, MongoDB steps in to do it for you.
