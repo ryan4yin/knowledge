@@ -141,6 +141,11 @@ rndm                       2,674,806 ops/sec
 这个旧的 v3 版本的 README 显示，NanoID 每秒生成的 ID 数（ops/sec）为 5,616,592，而 uuid-v4 为 1,535,753，**nanoid 比 uuid-v4 快了 3.6 倍**！
 
 
+进一步定位到这个数据出现巨大变化的 commit：
+
+<https://github.com/ai/nanoid/commit/a3dfd785bb310de5344b83593d84fd455bc7d927#diff-2ac91f0d448682a4ee22048932c725b504f5269c96580dadbda9ba5c9d856d6e>
+
+
 ## 3. ObjectID(MongoDB 96Bits)
 
 ObjectID is MongoDB’s answer to a unique document ID, this 12-byte identifier typically resides in the “_id” field of a document, and if you’re not setting it yourself, MongoDB steps in to do it for you.
