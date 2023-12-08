@@ -7,7 +7,12 @@
 
 ```shell
 # 连上所有节点，就一定可以找到 leader
-export ENDPOINTS=http://node1:2379,http://node2:2379,http://node3:2379
+HOST_1=xxx
+HOST_2=xxx
+HOST_3=xxx
+export ETCDCTL_API=3
+export ENDPOINT=http://$HOST_1:2379
+export ENDPOINTS=http://$HOST_1:2379,http://$HOST_2:2379,http://$HOST_3:2379
 etcdctl --endpoints $ENDPOINTS endpoint status --write-out=table
 ```
 
@@ -55,11 +60,19 @@ etcd 支持启用密码验证，在启用之前必须先创建 root 用户，该
 
 ```shell
 # 创建 root 用户
-$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key user add root
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --endpoints $ENDPOINTS user add root
 Password of root:
 
+# The root user must have the root role and is allowed to change anything inside etcd.
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --endpoints $ENDPOINTS user grant-role root root
+
 # 启用访问认证功能
-$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key auth enable
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --endpoints $ENDPOINTS auth enable
+
+
+# 后续的所有操作都需要使用用户名和密码
+$ etcdctl --cacert ca.crt --cert peer.crt --key peer.key --endpoints $ENDPOINTS --user root user list
+Password of root:
 ```
 
 ## Etcd 集群运维需知
