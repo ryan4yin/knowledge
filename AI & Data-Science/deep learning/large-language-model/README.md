@@ -26,6 +26,14 @@ chatglm 可以用 [chatglm-web](https:cc//github.com/NCZkevin/chatglm-web) 来�
 
 https://github.com/baichuan-inc/Baichuan2
 
+### 3. Yi-34B
+
+李开复团队开源的中文 LLM 模型，目前最大的版本是 34B，通过 llama.cpp 可以在 CPU 上运行，也可借助常见消费级显卡（RTX4060 - RTX4090 都可）加速推理。
+
+效果很好，性能堪比 Llama2-70B 与阿里的 Qwen-70B！目前 Huggingface 榜单靠前的模型中，Yi-34B 及其变体占据了相当多的名额。
+
+在借助 llama.cpp + 整型量化的前提下，能 self-hosted 的中英双语模型中，Yi-34B 应该是目前最好的选择。
+
 ## 2023-11 目前最好的英文 LLM 模型 - LLAMA2
 
 > 2023/07 发布了 LLAMA2 开源模型： <https://github.com/facebookresearch/llama.git>
