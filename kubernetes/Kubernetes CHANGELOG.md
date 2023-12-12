@@ -142,3 +142,27 @@
 - 彻底移除注解 `seccomp.security.alpha.kubernetes.io/pod` 与 `container.seccomp.security.alpha.kubernetes.io`，需要改用 `securityContext.seccompProfile`
 - 废弃 `SecurityContextDeny`
 - kubectl 默认使用 `autoscaling/v2`
+
+## [1.28](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.28.md#changelog-since-v1270)
+
+- 支持从非优雅的节点关闭中恢复
+- 在 Linux 上支持交换空间（Beta）
+- 新特性 `SidecarContainers` 进入 Alpha
+- [PodFailurePolicy](https://kubernetes.io/docs/tasks/job/pod-failure-policy/) 进入 Beta
+
+
+## [1.29](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md#changelog-since-v1280)
+
+> 预计于 1023-12-13 release
+
+- `SidecarContainers` 进入 Beta 并默认启用
+- 以及其他一堆特性完全进入 GA，删除相关的 feature gate
+  - CSIMigrationvSphere
+  - ProbeTerminationGracePeriod
+  - TopologyManager
+  - CronJobTimeZone
+  - DownwardAPIHugePages
+  - GRPCContainerProbe
+  - ReadWriteOncePod
+  - ...
+
