@@ -101,6 +101,23 @@ docker cp chilloutmix_NiPrunedFp32Fix.safetensors sd-webui:/content/stable-diffu
 4. 最后就是在前面的正常面板中写提示词、调整生成参数进行生成了（txt2img 模式下）。
 
 
+## 通过 SD 生成视频
+
+核心原理就是将视频转换成一个个关键帧，然后通过 SD + ControlNet 插件生成关键帧，最后再将关键帧合成视频。
+
+其中的关键问题则是不同帧之间的关联，如果直接将一个个关键帧都独立生成，最后生成的帧之间的风格、内容都会有较大差异，导致最后合成的视频效果很差（太多 Flickers）。
+
+目前效果最好的是这个 automatic1111 插件：
+
+- [TemporalKit](https://github.com/CiaraStrawberry/TemporalKit): 
+
+其他相关插件：
+
+- [SD-CN-Animation](https://github.com/volotat/SD-CN-Animation)
+- [sd-webui-mov2mov](https://github.com/Scholar01/sd-webui-mov2mov)
+
+这些插件的简单使用，网上都有教程，能搜到。
+
 ## 模型微调技术
 
 - [LoRa](https://huggingface.co/blog/zh/lora): 最初是为了大语言模型微调设计的技术，它通过冻结预训练模型的权重并在每个 Transformer 块中注入可训练层 (秩-分解矩阵)，极大地减少了需要训练的参数数量，并显著降低了对内存的需求。
