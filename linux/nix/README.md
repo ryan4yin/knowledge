@@ -28,8 +28,34 @@
 
 ### Python 应用
 
-
 TODO
+
+
+## Linux 内核选择
+
+1. https://wiki.archlinux.org/title/kernel
+1. https://nixos.wiki/wiki/Linux_kernel
+2. https://nixos.org/manual/nixpkgs/stable/#sec-linux-kernel
+
+Nixpkgs 的内核都在这里声明： <https://github.com/NixOS/nixpkgs/blob/nixos-23.11/pkgs/top-level/linux-kernels.nix>
+
+内核的种类有：
+
+1. 默认内核：即标准的 Linux 官方内核，它稳定、可靠且经过广泛测试，兼容性最佳，但并不总是针对特定用例提供最佳性能。
+    1. 最稳定可靠的选择
+1. Hardened Linux Kernel: A security-focused Linux kernel applying a set of hardening patches to mitigate kernel and userspace exploits. It also enables more upstream kernel hardening features than linux.
+    1. 最安全的选择，但牺牲了性能，某些程序甚至可能无法在此内核上正常运行。适用于安全性优先的关键应用程序，不太适合普通用户。
+1. [XanMod kernel](https://xanmod.org/): 对高性能工作站、游戏主机、媒体服务器等场景做了针对性的调优，响应更灵敏、更流畅。
+    1. **是 Linux 社区中久负盛名的第三方定制内核**
+    1. This kernel uses the MuQSS or Task Type scheduler, BFQ I/O scheduler, UKSM realtime memory data deduplication, **TCP BBR** congestion control, x86_64 advanced instruction set support, and other default changes.
+    1. 普通桌面建议使用其标准版，而对竞技游戏、音视频直播等场景则可尝试使用其实时版本。
+1. [Zen Kernel](https://github.com/zen-kernel/zen-kernel/wiki/FAQ): Zen Kernel is a fork of Linux that applies out-of-tree features, early backports, and fixes, that impact desktop usage of Linux.
+1. [Liquorix Kernel](https://github.com/zen-kernel/zen-kernel/wiki/FAQ): Zen Kernel 的一个 distribution，以功耗为代价换取了更极致的性能。是比较老牌针对媒体、音乐和游戏优化的内核，**和 Xanmod 对比，互有胜负**。
+1. [Libre Kernel](https://www.fsfla.org/ikiwiki/selibre/linux-libre/): 去掉了 Linux 中所有非自由代码的精简内核，GNU/GUIX 目前的默认内核。
+    1. 最狂热的开源爱好者可以选择它。
+1. 其他 RaspberryPi 等嵌入式设备的专用 Kernel
+
+所以总的来看，个人用户可以选择尝试：默认内核、XanMod 内核以及 Liquorix 内核这三个版本，看看哪用得更舒服。
 
 ## 在 NixOS 上运行高可用 Kubernetes 集群
 
