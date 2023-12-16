@@ -57,6 +57,10 @@ Nixpkgs 的内核都在这里声明： <https://github.com/NixOS/nixpkgs/blob/ni
 
 所以总的来看，个人用户可以选择尝试：默认内核、XanMod 内核以及 Liquorix 内核这三个版本，看看哪用得更舒服。
 
+## Linux 内核更新记录
+
+- https://9to5linux.com/category/news/kernel
+
 ## 在 NixOS 上运行高可用 Kubernetes 集群
 
 https://github.com/NixOS/nixpkgs/tree/nixos-23.05/nixos/modules/services/cluster/kubernetes
