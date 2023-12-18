@@ -84,3 +84,101 @@ Password of root:
 
 官方运维文档：[etcd 3.4 - operations guide](https://etcd.io/docs/v3.4.0/op-guide)
 
+
+prometheus 告警规则（参考 [Etcd Monitoring - platform9](https://platform9.com/docs/kubernetes/etcd-monitoring)）:
+
+```yaml
+groups:
+  - name: etcd
+    rules:
+      - alert: EtcdBackupJobFailed
+        expr: kube_job_status_failed{job_name=~"etcd-backup.*"} offset 5m > 0
+        for: 0m
+        labels:
+          severity: high
+          type: etcd
+        annotations:
+          summary: Etcd Backup Job failed for cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd Backup Job {{$labels.namespace}}/{{$labels.job_name}} failed to complete reason: {{$labels.reason}}"
+
+      - alert: EtcdDown
+        expr: up{job="etcd"} offset 5m == 0
+        for: 10m
+        labels:
+          severity: critical
+          type: etcd
+        annotations:
+          description: Etcd container down on cluster {{ $labels.cluster }}
+          summary: "Cluster {{ $labels.cluster }}: Etcd container down on host {{ $labels.host }}"
+
+      - alert: EtcdInsufficientMembers
+        expr: count(etcd_server_id) by (cluster) % 2 == 0
+        for: 1m
+        labels:
+          severity: critical
+          type: etcd
+        annotations:
+          summary: Etcd insufficient members on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd cluster should have an odd number of members\n  VALUE = {{ $value }}"
+
+      - alert: EtcdNoLeader
+        expr: etcd_server_has_leader == 0
+        for: 1m
+        labels:
+          severity: critical
+          type: etcd
+        annotations:
+          summary: Etcd no Leader on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd cluster have no leader\n  VALUE = {{ $value }}"
+
+      - alert: EtcdHighNumberOfLeaderChanges
+        expr: increase(etcd_server_leader_changes_seen_total[10m] offset 5m) > 2
+        for: 0m
+        labels:
+          severity: high
+          type: etcd
+        annotations:
+          summary: Etcd high number of leader changes on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd leader changed more than 2 times during 10 minutes\n  VALUE = {{ $value }}"
+
+      - alert: EtcdHighNumberOfFailedGrpcRequests
+        expr: sum(rate(grpc_server_handled_total{grpc_code!="OK"}[1m] offset 5m )) BY (grpc_service, grpc_method, cluster, host) / sum(rate(grpc_server_handled_total[1m] offset 5m )) BY (grpc_service, grpc_method, cluster, host) > 0.01
+        for: 2m
+        labels:
+          severity: warning
+          type: etcd
+        annotations:
+          summary: Etcd high number of failed GRPC requests on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: More than 1% GRPC request failure detected on Etcd host {{ $labels.host }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: EtcdHighNumberOfFailedProposals
+        expr: increase(etcd_server_proposals_failed_total[1h]) > 5
+        for: 2m
+        labels:
+          severity: warning
+          type: etcd
+        annotations:
+          summary: Etcd high number of failed proposals on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd server got more than 5 failed proposals past hour\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: EtcdHighFsyncDurations
+        expr: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[1m] offset 5m )) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          type: etcd
+        annotations:
+          summary: Etcd high fsync durations on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd WAL fsync duration increasing, 99th percentile is over 0.5s on Etcd host {{ $labels.host }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: EtcdHighCommitDurations
+        expr: histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[1m] offset 5m )) > 0.25
+        for: 2m
+        labels:
+          severity: warning
+          type: etcd
+        annotations:
+          summary: Etcd high commit durations on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Etcd commit duration increasing, 99th percentile is over 0.25s on Etcd host {{ $labels.host }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+```
