@@ -51,6 +51,26 @@ $ cat /proc/sys/net/netfilter/nf_conntrack_count
 
 - [[踩坑总结] nf_conntrack: table full, dropping packet](http://keithmo.me/post/2018/08/25/conntrack-tuning/)
 
+
+我仅截取其中最重要的结论：
+
+1. Linux 常见发行版设置的默认 nf_conntrack 相关参数太保守了，远远不够网关这类场景使用。
+1. 扩容 `nf_conntrack_max` 跟 `nf_conntrack_buckets` 参数，可以解决此问题，而代价则是：
+    1. 增加内核的物理内存占用（内核态不能使用 swap 空间，而且 swap 太慢了也不建议用在这种核心场景）
+    1. 64 位系统的虚拟内存地址空间有 256TB，内核态能用其中一半，可以说是基本没有任何限制。所以这几个值要扩多大，主要取决于你的机器有多少空闲的物理内存可供使用。
+1. 内存占用与 `nf_conntrack_max` 和 `nf_conntrack_buckets` 的关系如下：
+    ```
+    size_of_mem_used_by_conntrack (in bytes) = CONNTRACK_MAX * sizeof(struct ip_conntrack) + HASHSIZE * sizeof(struct list_head)
+    ```
+1. 其中 ip_conntrack 的内存占用受 CPU 架构、内核版本、编译选项等影响，这里按 352 字节算。而 list_head 的内存占用为 2 * size_of_a_pointer，64 位系统的指针大小为 8 字节，得到 16 bytes.
+1. 于是得到实际的内存占用计算公式：
+    ```
+    size_of_mem_used_by_conntrack (in bytes) = CONNTRACK_MAX * 352 + HASHSIZE * 16
+    ```
+1. 对网关服务器而言，显然是在资源够用的前提下，一定要把 nf_conntrack_count 保持在 nf_conntrack_max 的 20% 以下，确保服务器性能以及避免跟踪表满了导致丢包、连接超时。
+    1. 常见设置一：`CONNTRACK_MAX` 为 1048576，`HASHSIZE` 为 262144 ：`1048576 * 352 + 262144 * 8 = 371195904`（354 MB）
+    1. 对我这遇到的一个特殊上报网关而言，可能是客户端 SDK 的行为存在问题导致连接泄漏，在普通网关上同等 QPS 情况下完全够用的 nf_conntrack 值，在这套系统上远远不够，对 2c/4G 的机器（大部分请求使用 https，机器上还有其他总的 cpu 使用率 0.2 核左右的一些 agent），需要将连接跟踪表的内存占用扩大到 1.4G，才能把 nf_conntrack_count 的值压到 nf_conntrack_max 的 20% 左右。
+
 为防文章失踪，做个备份在下面：
 
 \[踩坑总结\] nf\_conntrack: table full, dropping packet
