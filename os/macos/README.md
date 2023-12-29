@@ -1,50 +1,18 @@
 # MacOS X 开发环境配置
 
+> 如下内容已经完全废弃，仅留祚参考。
+> 我的新配置方法（高度自动化）： https://github.com/ryan4yin/nix-darwin-kickstarter
+
+
 ## 一、[Homebrew](https://github.com/Homebrew/install)
+
+> https://brew.sh/
 
 homebrew 是 MacOS X 的包管理工具，对 CLI 爱好者而言，它基本可以取代 App Store.
 
 ### 1. 安装 Homebrew
 
-Homebrew 的官方安装命令为：`/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-
-
-如果有代理，可以直接使用代理加速 git 仓库拉取：
-`export http_proxy="socks5://127.0.0.1:1080"`
-`export https_proxy="socks5://127.0.0.1:1080"`
-
->说实话，这年头没个代理，真的寸步难行。。还是建议买个代理，别委屈了自己。。。
-
-安装脚本的 URL 在国内经常是被墙的，为了解决被墙的问题，就需要手动到 `https://github.com/Homebrew/install/blob/master/install` 中将将脚本内容复制下来，保存为可执行脚本 `install-brew`
-
-脚本保存完后，先将脚本中两个 Git 仓库修改为国内源，再运行此安装脚本，以加速安装：
-
-```
-# BREW_REPO = "https://github.com/Homebrew/brew".freeze
-BREW_REPO = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git".freeze
-# CORE_TAP_REPO = "https://github.com/Homebrew/homebrew-core".freeze
-CORE_TAP_REPO = "https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git".freeze
-```
-
-现在运行脚本：`chmod +x insall-brew && install-brew` 进行安装。
-
-
-```
-# brew 程序本身，Homebrew/Linuxbrew 相同
-git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
-
-# 以下针对 mac OS 系统上的 Homebrew
-git -C "$(brew --repo homebrew/core)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
-git -C "$(brew --repo homebrew/cask)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git
-git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask-fonts.git
-git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask-drivers.git
-
-# 更换后测试工作是否正常
-brew update
-
-echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles' >> ~/.bash_profile
-source ~/.bash_profile
-```
+使用国内镜像的安装方法，参见：<https://mirrors.bfsu.edu.cn/help/homebrew/>
 
 ### 2. hombrew 常用命令
 
