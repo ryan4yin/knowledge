@@ -13,6 +13,8 @@
 
 ## 快速下载 huggingface 模型
 
+>国内的 https://www.modelscope.cn/ 也提供了许多模型的下载，可以先从这里下载模型，然后再跟 huggingface 对比下，更新下其他文件。
+
 使用 [huggingface-cli](https://huggingface.co/docs/huggingface_hub/guides/cli) 要比直接使用 `git clone` 方便很多，可以直接下载模型，而不用下载整个仓库，而且重点是能断点续传！
 
 ```

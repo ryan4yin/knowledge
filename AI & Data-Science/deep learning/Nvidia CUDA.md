@@ -50,6 +50,11 @@
 3. pytorch: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch
     1. such as `nvcr.io/nvidia/pytorch:23.10-py3`
 
+## 其他通用的加速库
+
+- xFormers
+- 
+
 
 ## 常见问题
 
@@ -57,4 +62,6 @@
 
 解决方法：通过 `lsof /dev/nvidia*` 查看哪些进程占用了 `/dev/nvidia*`，然后通过 `ps -ef | grep $pid` 查看对应的进程，然后 kill 掉这些进程。
 将进程全部 kill 掉后，再重新安装驱动即可。
+
+
 
