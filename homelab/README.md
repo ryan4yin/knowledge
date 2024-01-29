@@ -66,6 +66,9 @@ graph LR
 ![](_img/ryan-pve-console-2023-05-30.webp "PVE Web 控制台（2023-05-30）")
 ![](_img/dashy-homepage-2022-11-29.webp "Homelab 面板（2022-11-29）")
 
+> 2024-01-29 更新：2023 年解锁了 NixOS 后我对它是越来越喜欢了，目前正在尝试 All in NixOS，第一步是将所有 VM 尽量都换成 NixOS，第二步考虑把 PVE 也替换掉。
+> 另外因为对安全跟加密方面的认识越来越深入，我也在考虑数据全部使用 restic/rclone 加密备份，内网的各种密码全部更新成随机的，使用 pass 存储与多端同步。
+
 - Minisforum UM560
   - OS: Proxmox VE
   - VMs
@@ -85,6 +88,7 @@ graph LR
   - VMs
     - tailscale-gateway 1C/1G 20G
       - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
+      - 通过我的 Nix 配置 [ryan4yin/nix-config/homelab_tailscale_gw](https://github.com/ryan4yin/nix-config/tree/main/hosts/homelab_tailscale_gw) 声明式管理部署。
     - docker-compose server 4C/8G 32G
       - 目前跑了这些服务
         - [dashy](https://github.com/lissy93/dashy) HomePage 页
