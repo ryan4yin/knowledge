@@ -72,10 +72,14 @@ graph LR
 - Minisforum UM560
   - OS: Proxmox VE
   - VMs
-    - OpenWRT: 2C/1G + 2G DISK - host CPU
-      - 作为软路由系统，实现网络加速、DDNS 等功能
-      - 安装 openclash、广告拦截插件
-    - windows server 2022 2c/8G
+    - NixOS Router: 1C/1G + 6G DISK - host CPU
+      - 旁路由，通过 dae 实现网络加速、分流、广告过滤等。
+      - 通过我的 Nix 配置 [ryan4yin/nix-config/idols_aquamarine](https://github.com/ryan4yin/nix-config/tree/main/hosts/idols_aquamarine) 声明式管理部署。
+    - Tailscale Gateway 1C/1G 11G
+      - Tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
+      - dae 不提供 http/socks5 代理，所以我在这台极其上跑了个 v2ray 提供 http/socks5 代理服务，代理的流量会直接走 defaultGateway 到 NixOS Router 去实现网络加速、分流、广告过滤等。
+      - 通过我的 Nix 配置 [ryan4yin/nix-config/homelab_tailscale_gw](https://github.com/ryan4yin/nix-config/tree/main/hosts/homelab_tailscale_gw) 声明式管理部署。
+    - Windows Server 2022 2c/8G
       - 硬盘盒 USB 直通到此虚拟机，作为家庭 NAS 系统，通过 SMB 协议对外提供服务
       - 使用 windows server 的原因是，它的 smb 协议速度最快，比开源的 OMV 强很多
     - k3s-data-1 worker node 4C/8G 32G
@@ -86,9 +90,6 @@ graph LR
 - MoreFine S500+
   - OS: Proxmox VE
   - VMs
-    - tailscale-gateway 1C/1G 20G
-      - tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
-      - 通过我的 Nix 配置 [ryan4yin/nix-config/homelab_tailscale_gw](https://github.com/ryan4yin/nix-config/tree/main/hosts/homelab_tailscale_gw) 声明式管理部署。
     - docker-compose server 4C/8G 32G
       - 目前跑了这些服务
         - [dashy](https://github.com/lissy93/dashy) HomePage 页
