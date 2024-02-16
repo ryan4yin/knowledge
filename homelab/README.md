@@ -82,12 +82,14 @@ graph LR
     - Windows Server 2022 2c/8G
       - 硬盘盒 USB 直通到此虚拟机，作为家庭 NAS 系统，通过 SMB 协议对外提供服务
       - 使用 windows server 的原因是，它的 smb 协议速度最快，比开源的 OMV 强很多
-    - k3s-data-1 worker node 4C/8G 32G
-      - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
-      - 跑各种其他 k8s 实验负载
-    - k3s-data-2 worker node 4C/8G 32G
-      - 跑各种其他 k8s 实验负载
-- MoreFine S500+
+    - k3s-main single master 2C/4G 20G
+      - 家庭网络，单 master 就够用了，省点性能开销
+      - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
+    - k3s-data-1 single master 2C/4G 20G
+      - 数据面集群 1，跑些常见任务
+    - k8s-data-2 single master 2C/4G 20G
+      - 数据面集群 2，跑些常见任务
+- Beelink GTR5
   - OS: Proxmox VE
   - VMs
     - docker-compose server 4C/8G 32G
@@ -112,28 +114,26 @@ graph LR
     - Home Assistant 6C/2G 20G
       - 干一些自动化的活，比如我到家后自动播放歌曲？？？
       - CPU 给得多是因为跑了 esphome，它编译固件还是要吃点 cpu 的。
-    - k3s-main single master 2C/4G 20G
-      - 家庭网络，单 master 就够用了，省点性能开销
-      - 主要用做控制面集群，用来跑些 istio/karmada 的控制面
-    - k3s-data-1 single master 2C/4G 20G
-      - 数据面集群 1，跑些常见任务
-    - k8s-data-2 single master 2C/4G 20G
-      - 数据面集群 2，跑些常见任务
-    - k3s-data-1 worker node 4C/16G 100G \* 2
-      - 跑各种其他 k8s 实验负载
-    - k8s-data-2 worker node 4C/16G 100G \* 2
-      - 跑各种其他 k8s 实验负载
-- Beelink GTR5
-  - OS: Proxmox VE
-  - VMs
     - ubuntu test server \* 3
       - 16C/60G 150G
       - 三台机器分别为 ubuntu 18.04 20.04 跟 22.04，以满足各种程序的编译运行环境要求
       - GTR5 目前主要被我当成实验机用，vscode 连上来跑各种 Linux 系统的开发编译。
     - windows 11 6C/16G + 64G
       - 装一些常用的、NixOS 上兼容性不好的软件，通过 rdp 远程使用，比如企业微信、Windows for Android 等等
+    - k3s-data-1 worker node 6C/16G 32G
+      - 跑监控、eclipse-che 云 IDE、eBPF 监测工具等
+      - 跑各种其他 k8s 实验负载
+    - k3s-data-2 worker node 6C/16G 32G
+      - 跑各种其他 k8s 实验负载
+- MoreFine S500+（它内存不太稳定，最长的记录也只稳定运行了两个多月...）
+  - OS: Proxmox VE
+  - VMs
     - NixOS test server
       - 用于测试各种 NixOS 配置
+    - k3s-data-1 worker node 4C/16G 100G \* 2
+      - 跑各种其他 k8s 实验负载
+    - k8s-data-2 worker node 4C/16G 100G \* 2
+      - 跑各种其他 k8s 实验负载
 - OrangePi Pi 5
   - OS: Debian
   - APPs
