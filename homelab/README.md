@@ -72,9 +72,32 @@ graph LR
 - Minisforum UM560
   - OS: Proxmox VE
   - VMs
-    - NixOS Router: 1C/1G + 6G DISK - host CPU
+    - aquamarine: 1C/1G + 6G DISK - host CPU
       - 旁路由，通过 dae 实现网络加速、分流、广告过滤等。
       - 通过我的 Nix 配置 [ryan4yin/nix-config/idols_aquamarine](https://github.com/ryan4yin/nix-config/tree/main/hosts/idols_aquamarine) 声明式管理部署。
+    - ruby - 8/16G
+      - 运行了各种运维相关组件，比如备份(restic)、监控告警(prometheus+grafana+alertmanager)、日志(loki)等
+      - 通过我的 Nix 配置 [ryan4yin/nix-config/idols_ruby](https://github.com/ryan4yin/nix-config/tree/main/hosts/idols_ruby) 声明式管理部署。
+    - kana - 4c/8G
+      - 运行了我 Homelab 中使用的各种服务，比如 dashy、uptime-kuma、transmission 等
+      - 通过我的 Nix 配置 [ryan4yin/nix-config/idols_kana](https://github.com/ryan4yin/nix-config/tree/main/hosts/idols_kana) 声明式管理部署。
+      - 已添加或考虑添加的服务：
+        - [dashy](https://github.com/lissy93/dashy) HomePage 页
+          - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
+        - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
+        - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
+        - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
+        - 其他使用 SMB 远程挂载的容器（将 SMB 远程文件夹挂载到本机使用）
+          - 数据备份与同步: synthing 跟 restic
+          - 数据浏览
+            - [alist](https://github.com/alist-org/alist): Web 页面，支持文件上传、下载、预览，支持多种协议，还可以接入各种云盘。
+          - 影音系统
+            - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
+            - 也在考虑要不要装个 transmission/aria2 用来下载 BT 或 HTTP 文件
+          - 直播相关处理工具
+            - [DDTV](https://github.com/CHKZL/DDTV)：直播开播自动录制、转码保存
+            - [BililiveRecorder](https://github.com/BililiveRecorder/BililiveRecorder): 同上
+            - [owncast](https://github.com/owncast/owncast): 自建直播服务器
     - Tailscale Gateway 1C/1G 11G
       - Tailscale 在家里的路由节点，以 `Subnet router` 模式运行，这样就能在任意 tailscale 节点上访问家里的 homelab 跟 NAS 啦~
       - dae 不提供 http/socks5 代理，所以我在这台极其上跑了个 v2ray 提供 http/socks5 代理服务，代理的流量会直接走 defaultGateway 到 NixOS Router 去实现网络加速、分流、广告过滤等。
@@ -92,25 +115,6 @@ graph LR
 - Beelink GTR5
   - OS: Proxmox VE
   - VMs
-    - docker-compose server 4C/8G 32G
-      - 目前跑了这些服务
-        - [dashy](https://github.com/lissy93/dashy) HomePage 页
-          - 在安装了如此多的自托管服务后，一个用于索引所有服务的 Homepage 就显得非常有必要了
-        - [uptime-kuma](https://github.com/louislam/uptime-kuma): 站点可访问性检测
-        - [actionsflow](https://github.com/actionsflow/actionsflow): 完全兼容 Github Action 的自托管 workflow 服务
-        - [excalidraw](https://github.com/excalidraw/excalidraw): 自托管白板项目
-        - 其他使用 SMB 远程挂载的容器（将 SMB 远程文件夹挂载到本机使用）
-          - 数据备份与同步
-            - 未来可能打算搞个 synthing 跟 restic
-          - 数据浏览
-            - [alist](https://github.com/alist-org/alist): Web 页面，支持文件上传、下载、预览，支持多种协议，还可以接入各种云盘。
-          - 影音系统
-            - [jellyfin](https://github.com/jellyfin/jellyfin): 影音系统
-            - 也在考虑要不要装个 transmission/aria2 用来下载 BT 或 HTTP 文件
-          - 直播相关处理工具
-            - [DDTV](https://github.com/CHKZL/DDTV)：直播开播自动录制、转码保存
-            - [BililiveRecorder](https://github.com/BililiveRecorder/BililiveRecorder): 同上
-            - [owncast](https://github.com/owncast/owncast): 自建直播服务器
     - Home Assistant 6C/2G 20G
       - 干一些自动化的活，比如我到家后自动播放歌曲？？？
       - CPU 给得多是因为跑了 esphome，它编译固件还是要吃点 cpu 的。
@@ -130,9 +134,9 @@ graph LR
   - VMs
     - NixOS test server
       - 用于测试各种 NixOS 配置
-    - k3s-data-1 worker node 4C/16G 100G \* 2
+    - k3s-data-1 worker node 8C/16G 50G \* 2
       - 跑各种其他 k8s 实验负载
-    - k8s-data-2 worker node 4C/16G 100G \* 2
+    - k8s-data-2 worker node 8C/16G 50G \* 2
       - 跑各种其他 k8s 实验负载
 - OrangePi Pi 5
   - OS: Debian
@@ -145,8 +149,8 @@ k3s 集群里可以跑这些负载：
 
 - 数据库：etcd/mysql/postgresql/minio/redis
 - 可观测性：
-  - 监控：vectoriametrics + grafana
-  - 日志：loki + promtail + grafana
+  - 监控：vectoriametrics
+  - 日志：loki + promtail
 - 证书管理：cert-manager
 - 集群网咯：cilium
 - 服务网格：istio
