@@ -1,5 +1,8 @@
 # 我的 Homelab
 
+> 2024-02-20 更新：近期我整个 Homelab 基本都已经替换成了 NixOS 系统，所有配置都在 [ryan4yin/nix-config](https://github.com/ryan4yin/nix-config) 中，为了统一维护系统配置与这份文档，我正在将本文件夹内的相关信息迁移过去。
+> 届时这边只会保留些不成体系的零散笔记。
+
 ## 服务器架构
 
 <img src="_img/my-homelab-2023-02-09.webp" style="width:50%">
