@@ -1,6 +1,22 @@
 # EKS
 
 
+## MISC
+
+获取 Kubeconfig:
+
+```
+aws eks update-kubeconfig --region us-east-1 --name $CLUSTER_NAME
+```
+
+切换 PROFILE:
+
+```
+export AWS_PROFILE=profile-name
+aws xxx xxx
+```
+
+
 ## IAM 与 ServiceAccount 的角色绑定
 
 - [Creating an IAM role and policy for your service account](https://docs.aws.amazon.com/eks/latest/userguide/create-service-account-iam-policy-and-role.html)
