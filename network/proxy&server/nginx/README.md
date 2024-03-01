@@ -44,3 +44,15 @@ openresty:
     1. [关于 Nginx upstream keepalive 的说明](https://www.cnblogs.com/kabi/p/7123354.html)
 
 
+## HTTPS 比 HTTP 多用多少资源？
+
+答案：
+
+1. 不使用专用的硬件加速的情况下，HTTPS 新建连接的 CPU 消耗是 HTTP 的接近 100 倍。
+1. 运行连接复用跟连接池的情况下，HTTPS 的资源消耗会缩小到 HTTP 的 5-6 倍左右。
+
+相关资料：
+
+- [HTTPS 要比 HTTP 多用多少服务器资源？](https://www.zhihu.com/question/21518760/answer/32384258)
+- [Testing the Performance of NGINX and NGINX Plus Web Servers](https://www.nginx.com/blog/testing-the-performance-of-nginx-and-nginx-plus-web-servers/)
+
