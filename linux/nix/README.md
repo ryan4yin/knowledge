@@ -4,9 +4,14 @@
 
 我的 nix 配置：[ryan4yin/nix-config](https://github.com/ryan4yin/nix-config)
 
-## disk encryption
+## 实用
 
-<https://github.com/ryan4yin/nix-config/tree/nixos-install>
+查询为什么某个包被安装，当前环境中的谁依赖了它:
+
+1. ` nix-store --gc --print-roots | rg -v '/proc/' | rg -Po '(?<= -> ).*' | xargs -o nix-tree`
+1. `/<package-name>` 以查找到你想查询的包
+1. 输入 `w`，看看谁依赖了它（`why depends on this`）
+
 
 ## devbox 调研
 
