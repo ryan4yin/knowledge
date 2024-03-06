@@ -19,28 +19,34 @@
      - `sd-image.nix` 是构建 SD 卡镜像的基础脚本，它使用了 `make-ext4-fs.nix` 来构建 ext4 文件系统映像。
 1. 虚拟化镜像构建（AWS/QEMU/virtualbox/oci-container/proxmox/...）：<https://github.com/NixOS/nixpkgs/tree/nixos-23.11/nixos/modules/virtualisation>
    - 同样，这里面的脚本也是借助磁盘映像构建的脚本来构建的，基本都是使用的 `make-disk-image.nix` 这个脚本。
+   - nixos-generators 的大多数 formats 也是使用的 `make-disk-image.nix` 这个脚本构建。
 
 那么这里的核心脚本其实是这几个：
 
-1. `make-disk-image.nix`: 最通用的磁盘映像构建脚本，被大多数镜像构建脚本使用。
+1. `make-disk-image.nix`: 貌似用于几乎所有虚拟化镜像的构建
+    1. 同时 nixos-generators 的 raw/raw-efi 两个给物理机使用的格式也是使用的这个脚本。
     1. 支持 BIOS/UEFI，但不清楚是否支持 U-BOOT extlinux 这种嵌入式环境常用的引导方式。
     1. 默认使用 ext4 文件系统，可以通过参数指定其他文件系统。
-    1. 默认会启动一个 QEMU 虚拟机来完成构建。
-1. `make-iso9660-image.nix`: TODO
-1. `make-ext4-fs.nix`: TODO
+    1. **默认会启动一个 QEMU 虚拟机，在虚拟机中使用 `nixos-install` 命令安装好环境，再关机导出镜像，完成构建**。
+1. `make-iso9660-image.nix`: 使用 `xorriso` 生成 ISO 镜像。
+1. `make-ext4-fs.nix`: 传入一个 `storepaths`，此脚本会将其中数据放在镜像的 `/nix/store` 目录下，然后运行给出的 root/boot 分区脚本，最后使用 fakeroot 等工具打包成 ext4 文件系统映像。
+
+能看到最大的区别是，`make-disk-image.nix` 是在 QEMU 虚拟机里使用标准的 `nixos-install` 安装系统，而 `make-iso9660-image.nix` 和 `make-ext4-fs.nix` 则是直接将文件系统映像打包成镜像，BOOT 分区也完全是它们自己处理生成的。
+
+### 我在编译 Aarch64 镜像时遇到的问题
 
 测试 ISO 镜像跟 SD 卡都能正常使用交叉编译工具链，或者模拟工具链完成构建，也能在 Orange Pi 5 上正常启动。
 
-我在测试使用 `make-disk-image.nix` 构建使用 EDK2(UEFI) 启动的 NixOS 镜像时遇到了问题：
+但在测试使用 `make-disk-image.nix` 构建使用 EDK2(UEFI) 启动的 NixOS 镜像时遇到了问题：
 
 1. 如果将交叉编译工具链（pkgsCross）作为 `make-disk-image.nix` 的参数传入，那么：
     1. 会导致 offical cache 失效，`mkae-disk-image.nix` 会尝试从源码构建它的所有依赖，尤其是 QEMU！这非常费时间，而且常常失败。
 1. 如果使用本地工具链（x86_64-linux）来运行 `make-disk-image.nix`，流程很顺畅，但在 `chroot` 阶段会报错，目前怀疑是无法在 `x86_64-linux` 的系统上 `chroot` 到 `aarch64-linux` 的 rootfs.
 1. 如果使用模拟工具链（即在 qemu-aarch64）来运行 `make-disk-image.nix`，那么：
     1. 会导致在运行时疯狂报错 ` Cannot allocate memory`，即使给 `make-disk-image.nix` 传递的参数设置了 8G 内存，还是同样的错误。
-
-
-TODO
+    1. 我在想，这里是不是虚拟化了两层，模拟工具链本身会使用 qemu-aarch64 跑个虚拟环境，而该虚拟环境中的 `make-disk-image.nix` 也会使用它原生的 QEMU 再跑一个虚拟环境，但我传递的内存参数只能给到里面嵌套的这个环境，没给到外面这个 qemu-aarch64，从而导致内存不够用。
+    1. 所以解决方法是，我要看看怎么给我本机（NixOS）的 aarch64 模拟工具链设置 QEMU 环境默认的内存大小。
+    1. TODO 进行中。
 
 ## devbox 调研
 
