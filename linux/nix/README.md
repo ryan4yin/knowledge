@@ -5,6 +5,40 @@
 我的 nix 配置：[ryan4yin/nix-config](https://github.com/ryan4yin/nix-config)
 
 
+## NixOS 镜像构建
+
+相关源码：
+
+1. 磁盘映像构建：<https://github.com/NixOS/nixpkgs/blob/nixos-23.11/nixos/lib/>
+1. 安装器构建（ISO/SD 卡等）：<https://github.com/NixOS/nixpkgs/tree/nixos-23.11/nixos/modules/installer>
+   - 这里面的脚本基本都是借助磁盘映像构建的脚本来构建的，会引用其中的脚本
+   - CD-DVD
+     - 使用了镜像构建脚本中的 `make-iso9660-image.nix` 来构建 ISO 镜像。
+   - SD 卡
+     - 再额外补充一些 extlinux/u-boot 相关的固件、BOOT 分区修改逻辑。
+     - `sd-image.nix` 是构建 SD 卡镜像的基础脚本，它使用了 `make-ext4-fs.nix` 来构建 ext4 文件系统映像。
+1. 虚拟化镜像构建（AWS/QEMU/virtualbox/oci-container/proxmox/...）：<https://github.com/NixOS/nixpkgs/tree/nixos-23.11/nixos/modules/virtualisation>
+   - 同样，这里面的脚本也是借助磁盘映像构建的脚本来构建的，基本都是使用的 `make-disk-image.nix` 这个脚本。
+
+那么这里的核心脚本其实是这几个：
+
+1. `make-disk-image.nix`: 最通用的磁盘映像构建脚本，被大多数镜像构建脚本使用。
+    1. 支持 BIOS/UEFI，但不清楚是否支持 U-BOOT extlinux 这种嵌入式环境常用的引导方式。
+    1. 默认使用 ext4 文件系统，可以通过参数指定其他文件系统。
+    1. 默认会启动一个 QEMU 虚拟机来完成构建。
+1. `make-iso9660-image.nix`: TODO
+1. `make-ext4-fs.nix`: TODO
+
+我在测试使用 `make-disk-image.nix` 构建使用 EDK2(UEFI) 启动的 NixOS 镜像时遇到了问题：
+
+1. 如果将交叉编译工具链（pkgsCross）作为 `make-disk-image.nix` 的参数传入，那么：
+    1. 会导致 offical cache 失效，`mkae-disk-image.nix` 会尝试从源码构建它的所有依赖，尤其是 QEMU！这非常费时间，而且常常失败。
+1. 如果使用本地工具链（x86_64-linux）来运行 `make-disk-image.nix`，流程很顺畅，但在 `chroot` 阶段会报错，目前怀疑是无法在 `x86_64-linux` 的系统上 `chroot` 到 `aarch64-linux` 的 rootfs.
+1. 如果使用模拟工具链（即在 qemu-aarch64）来运行 `make-disk-image.nix`，那么：
+    1. 会导致在运行时疯狂报错 ` Cannot allocate memory`，即使给 `make-disk-image.nix` 传递的参数设置了 8G 内存，还是同样的错误。
+
+TODO
+
 ## devbox 调研
 
 优点：基本等同于 Nix 的优点，外加的一条是它多了一层抽象，使得普通用户不需要理解底层 Nix 的细节。
