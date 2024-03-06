@@ -1,5 +1,7 @@
 # [Flux v1](https://github.com/fluxcd/flux)
 
+> 已过期！
+
 >Flux 基本没有可视化，目前提供的唯一 UI 还需要用到 grafana，不是很方便。
 而且只支持单仓库单集群，可以说是很简陋。
 

@@ -1,16 +1,35 @@
 # GitOps CD
 
+## Flux vs Argo CD
 
-### Flux vs Argo CD vs Jenkins-X
+1. Flux
+    1. 简单小巧，只做一件事，并且把这件事做得很好。
+    1. 是基于 kustomize 拓展的，也就是说它原生支持 overlays，一套基础配置打上不同的 overlays 就能应用到各种不同的 dev/staging/prod 环境，能极大地降低配置文件的重复度。
+2. Argo CD
+    1. 可视化做得比较好，有个漂亮且信息丰富的 Web UI.
+    2. 可通过 Web UI 对新配置进行 Diff 确认变更内容，出问题在 Web UI 上能快速回滚。
+    1. Web UI 支持多租户多集群多名字空间，可接入 LDAP。
 
-1. Flux: 简单小巧，只做一件事，并且把这件事做得很好。
-2. Argo CD: 功能与 Flux 类似，但是功能比 Flux 丰富很多，支持多租户多集群多名字空间，可接入 LDAP。有 Web UI。
-3. Jenkins-X: 最复杂的一个工具，同时包含了 CI 和 CD。目前不建议使用。
-
-参考：[FluxCD、ArgoCD或Jenkins X，哪个才是适合你的GitOps工具？ ](http://dockone.io/article/10175)
 
 
-### 存在的问题：资源更新顺序
+
+相关资料：
+
+- [Comparison: Flux vs Argo CD](https://earthly.dev/blog/flux-vs-argo-cd/)
+- [FluxCD vs ArgoCD](https://yashwanth-l.medium.com/fluxcd-vs-argocd-373cd26ed6c7)
+
+## 推荐使用场景
+
+1. K8s 集群的核心组件与配置（网络、监控、告警、数据库等）
+    1. 这个是最适合使用 GitOps 的，因为这些配置通常由集群管理员编写维护，它们具有很专业的 K8s 与 GitOps 知识，使用此类工具不会带来额外负担，而另一方面，集群状态与 Git 仓库中的配置完全一致带来的好处是相当明显的。
+1. 集群中运行的业务服务及其配置：
+    1. 对于做内部平台的企业，通常业务开发者并不会直接操作集群，而是通过内部平台的 UI 来操作，因此业务服务相关的配置不太适合接入 GitOps，也就不适合使用 ArgoCD 或 Flux。
+    1. 对于 DevOps 文化比较浓厚的企业，业务开发者对 K8s 也有一定了解，那么业务服务的配置就也比较适合接入 GitOps。
+
+
+## 相关问题
+
+### 使用 GitOps 管理业务服务存在的问题：服务更新顺序
 
 一个复杂的微服务系统，各微服务之间的依赖关系是很复杂的，这往往要求我们按照依赖链路进行更新。
 
@@ -23,5 +42,5 @@
 
 后端人员会一次性把最新的微服务全部提交给运维组，运维发布系统必须要自己去根据预先定义好的升级顺序，进行按序升级。
 
-然而目前已有的 kubernetes CD 工具，都没有提供类似的按依赖关系进行部署的功能。因此目前我们是自己实现的这样一个需求。
+目前看 Flux 已经有了 denpendsOn 的功能，或许能解决这个问题。
 
