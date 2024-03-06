@@ -29,6 +29,8 @@
 1. `make-iso9660-image.nix`: TODO
 1. `make-ext4-fs.nix`: TODO
 
+测试 ISO 镜像跟 SD 卡都能正常使用交叉编译工具链，或者模拟工具链完成构建，也能在 Orange Pi 5 上正常启动。
+
 我在测试使用 `make-disk-image.nix` 构建使用 EDK2(UEFI) 启动的 NixOS 镜像时遇到了问题：
 
 1. 如果将交叉编译工具链（pkgsCross）作为 `make-disk-image.nix` 的参数传入，那么：
@@ -36,6 +38,7 @@
 1. 如果使用本地工具链（x86_64-linux）来运行 `make-disk-image.nix`，流程很顺畅，但在 `chroot` 阶段会报错，目前怀疑是无法在 `x86_64-linux` 的系统上 `chroot` 到 `aarch64-linux` 的 rootfs.
 1. 如果使用模拟工具链（即在 qemu-aarch64）来运行 `make-disk-image.nix`，那么：
     1. 会导致在运行时疯狂报错 ` Cannot allocate memory`，即使给 `make-disk-image.nix` 传递的参数设置了 8G 内存，还是同样的错误。
+
 
 TODO
 
