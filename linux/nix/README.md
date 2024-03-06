@@ -45,9 +45,9 @@
 1. 如果使用模拟工具链（即在 qemu-aarch64）来运行 `make-disk-image.nix`，那么：
     1. 会导致在运行时疯狂报错 ` Cannot allocate memory`，即使给 `make-disk-image.nix` 传递的参数设置了 8G 内存，还是同样的错误。
     1. 我在想，这里是不是虚拟化了两层，模拟工具链本身（即 binfmt_misc 内核模块）会使用 qemu-aarch64 跑个虚拟环境，而该虚拟环境中的 `make-disk-image.nix` 也会使用它原生的 QEMU 再跑一个虚拟环境，但我传递的内存参数只能给到里面嵌套的这个环境，没给到外面这个 qemu-aarch64，从而导致内存不够用。
-    1. 所以解决方法是，我要看看怎么给我本机（NixOS）的 aarch64 模拟工具链设置 QEMU 环境默认的内存大小。
-    1. TODO 进行中，总之基本能确定肯定跟 binfmt 的虚拟化有关，要看看怎么给它传内存调节参数。
-    1. <https://github.com/NixOS/nixpkgs/blob/nixos-23.11/nixos/modules/system/boot/binfmt.nix>
+    1. 总之基本能确定肯定跟 binfmt 的虚拟化有关，考虑的解决方案：
+        1. 看看怎么给 binfmt 传 qemu 内存调节参数 - 失败，没找到相关资料。
+        1. 询问万能的群友，得到解决方案 ["Cannot allocate memory" despite free reporting "available"](https://stackoverflow.com/questions/46464785/cannot-allocate-memory-despite-free-reporting-available), 使用 `echo 1 > /proc/sys/vm/compact_memory` 后构建成功！所以是内存碎片化的问题？好怪。
 
 ## devbox 调研
 
