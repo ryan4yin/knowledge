@@ -46,7 +46,7 @@
     1. 会导致在运行时疯狂报错 ` Cannot allocate memory`，即使给 `make-disk-image.nix` 传递的参数设置了 8G 内存，还是同样的错误。
     1. 我在想，这里是不是虚拟化了两层，模拟工具链本身（即 binfmt_misc 内核模块）会使用 qemu-aarch64 跑个虚拟环境，而该虚拟环境中的 `make-disk-image.nix` 也会使用它原生的 QEMU 再跑一个虚拟环境，但我传递的内存参数只能给到里面嵌套的这个环境，没给到外面这个 qemu-aarch64，从而导致内存不够用。
     1. 所以解决方法是，我要看看怎么给我本机（NixOS）的 aarch64 模拟工具链设置 QEMU 环境默认的内存大小。
-    1. TODO 进行中。
+    1. TODO 进行中，总之基本能确定肯定跟 binfmt 的虚拟化有关，要看看怎么给它传内存调节参数。
 
 ## devbox 调研
 
