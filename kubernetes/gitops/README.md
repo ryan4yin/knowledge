@@ -19,7 +19,7 @@
     1. Flux 对数据一致性的追求更极致，对于集群配置被手动修改的情况都是直接覆盖，也不提供维护窗口（关闭同步功能）之类的功能。
     1. Flux 支持定义依赖关系，不过 Kustomization 只能依赖另一个 Kustomization，HelmRelease 只能依赖另一个 HelmRelease，不能跨类型依赖。ArgoCD 缺失此特性。
 
-总的来说，Flux 更强大，但 Argo CD 更易用、可视化做得更好。
+总的来说，Flux 更强大、架构简单可维护性高，而 Argo CD 更易用、可视化做得更好，但结构复杂维护成本更高。
 
 
 相关资料：
