@@ -2,12 +2,17 @@
 
 有时候我们希望在集群中直接访问外部服务，有两种方法：
 
-1. 直接使用 [ExternalName](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) 类型的 Kubernetes Service
+1. 直接使用
+   [ExternalName](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) 类
+   型的 Kubernetes Service
    1. 它相当于增加了一个 CNAME 记录，视情况可能会导致负载不均衡。
 2. 自定义 Service + Endpoints
-   1. 这种方式能使用上 kube-proxy 提供的 L4 层负载均衡功能，对于纯 IP 且无额外 DNS 记录的服务，是一个很好的选择。
+   1. 这种方式能使用上 kube-proxy 提供的 L4 层负载均衡功能，对于纯 IP 且无额外 DNS 记录的服务，是一
+      个很好的选择。
 
-自定义 Service + Endpoints 这个功能，官方给了一个示例：[Kubernetes - Services without selectors](https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors)，摘抄如下：
+自定义 Service + Endpoints 这个功能，官方给了一个示
+例：[Kubernetes - Services without selectors](https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors)，
+摘抄如下：
 
 ```yaml
 ---

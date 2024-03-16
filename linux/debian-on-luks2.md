@@ -1,9 +1,11 @@
 ## Steps to Install Debian 12 Bookworm on a LUKS Encrypted Disk + Secure Boot
 
-First, download an live CD image of Debian 12 Bookworm from <https://www.debian.org/CD/live/>, choose the `-standard` suffix which comes without a GUI,
-and copy it to a Ventoy USB drive.
+First, download an live CD image of Debian 12 Bookworm from <https://www.debian.org/CD/live/>,
+choose the `-standard` suffix which comes without a GUI, and copy it to a Ventoy USB drive.
 
-Then, boot Ventoy from the USB drive, choose Debian 12, run the following commands in the live environment to start a SSH server, so that we can connect to the server to do the installation, which is more convenient than using the live environment's terminal directly.
+Then, boot Ventoy from the USB drive, choose Debian 12, run the following commands in the live
+environment to start a SSH server, so that we can connect to the server to do the installation,
+which is more convenient than using the live environment's terminal directly.
 
 ```bash
 # Become root
@@ -22,27 +24,30 @@ usermod -aG sudo ryan
 ip addr
 ```
 
-Then use `ssh -o "StrictHostKeyChecking=no" ryan@x.x.x.x` to connect to the server, note that we use `StrictHostKeyChecking=no` to skip the host key checking, because the live environment's SSH server's host key will change every time you boot the live environment.
-
+Then use `ssh -o "StrictHostKeyChecking=no" ryan@x.x.x.x` to connect to the server, note that we use
+`StrictHostKeyChecking=no` to skip the host key checking, because the live environment's SSH
+server's host key will change every time you boot the live environment.
 
 ### 1. Encrypting with LUKS(everything except ESP)
 
 > [Frequently asked questions (FAQ) - cryptsetup](https://gitlab.com/cryptsetup/cryptsetup/wikis/FrequentlyAskedQuestions)
 
-Securing a root file system is where dm-crypt excels, feature and performance-wise. 
-An encrypted root file system protects everything on the system, it make the system a black box to the attacker.
+Securing a root file system is where dm-crypt excels, feature and performance-wise. An encrypted
+root file system protects everything on the system, it make the system a black box to the attacker.
 
 1. The EFI system partition(ESP) must be left unencrypted, and is mounted at `/boot`
-    1. Since the UEFI firmware can only load boot loaders from unencrypted partitions.
+   1. Since the UEFI firmware can only load boot loaders from unencrypted partitions.
 2. Secure Boot is enabled, everything in ESP is signed.
-3. The BTRFS file system with subvolumes is used for the root partition, and the swap area is a swapfile on a dedicated BTRFS subvolume, thus the swap area is also encrypted.
+3. The BTRFS file system with subvolumes is used for the root partition, and the swap area is a
+   swapfile on a dedicated BTRFS subvolume, thus the swap area is also encrypted.
 
 And the boot flow is:
 
 1. The UEFI firmware loads the boot loader from the ESP(`/boot`).
 2. The boot loader loads the kernel and initrd from the ESP(`/boot`).
 3. **The initrd reads the keyfile from `/dev/sda`(a USB drive)**.
-   - You can also use a passphrase, and type it in remotely via SSH. This can be done by `dropbear-initramfs`.
+   - You can also use a passphrase, and type it in remotely via SSH. This can be done by
+     `dropbear-initramfs`.
 4. The initrd unlocks the root partition and mounts it at `/`.
 5. The initrd continues the boot process, and hands over the control to the kernel.
 
@@ -101,13 +106,13 @@ KEY_UUID=$(blkid -s UUID -o value /dev/sdb | tr -d '\n')
 # `man crypttab` for the documentation of /etc/crypttab
 echo "
 # name, underlying device, keyfile, cryptsetup options
-crypted UUID=${CRYPT_UUID} /dev/sda luks,discard,keyfile-size=32768,keyfile-offset=0
+encrypted UUID=${CRYPT_UUID} /dev/sda luks,discard,keyfile-size=32768,keyfile-offset=0
 " > /mnt/etc/crypttab
 ```
 
 Continue the installation in the chroot environment:
 
-```bash
+````bash
 cd /mnt
 mount -t proc /proc proc/
 mount --rbind /sys sys/
@@ -179,7 +184,7 @@ update-initramfs -c -k all -v
 # inspect the /crypttab in the initrd
 mkdir /tmp/x; cd /tmp/x; unmkinitramfs -v /boot/initrd.img-$(uname -r) .
 cat cryptroot/crypttab
-```
+````
 
 ```bash
 # exit the chroot environment
@@ -194,11 +199,10 @@ apt clean
 reboot
 ```
 
-
 ```bash
 apt install -y cryptsetup btrfs-progs
 # fix problems manually
-cryptsetup open /dev/nvme0n1p3 crypted --key-file /dev/sdb --keyfile-size 32768
+cryptsetup open /dev/nvme0n1p3 encrypted --key-file /dev/sdb --keyfile-size 32768
 mkdir -p /mnt/{boot,home,var/lib,tmp}
 mount -o compress-force=zstd:1,noatime,subvol=@root /dev/mapper/crypted /mnt
 mount /dev/nvme0n1p1 /mnt/boot
@@ -228,7 +232,6 @@ apt install -y sudo curl rsync
 ```
 
 Then use `ssh -o "StrictHostKeyChecking=no" ryan@x.x.x.x` to connect to the server.
-
 
 ```bash
 hostnamectl set-hostname pve-s500plus.lan

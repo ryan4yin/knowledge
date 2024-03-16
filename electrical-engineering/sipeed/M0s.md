@@ -7,7 +7,8 @@ M0s 启动后默认进入的就是正常运行模式，模式切换方法：
 
 ## 环境配置方法
 
-跟着官方文档配就行：[Build with Linux or WSL - BouffaloSDK](https://bl-mcu-sdk.readthedocs.io/zh_CN/latest/get_started/linux_wsl.html)
+跟着官方文档配就
+行：[Build with Linux or WSL - BouffaloSDK](https://bl-mcu-sdk.readthedocs.io/zh_CN/latest/get_started/linux_wsl.html)
 
 ## 烧录方法
 

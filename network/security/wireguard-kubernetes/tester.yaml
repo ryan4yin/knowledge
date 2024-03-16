@@ -6,7 +6,6 @@ metadata:
   labels:
     app: wireguard-tester
 spec:
-
   selector:
     matchLabels:
       app: wireguard-tester
@@ -20,9 +19,9 @@ spec:
           image: lscr.io/linuxserver/wireguard:latest
           imagePullPolicy: IfNotPresent
           command:
-          - /bin/bash
-          - -c
-          - 'while true; do sleep 100000; done'
+            - /bin/bash
+            - -c
+            - "while true; do sleep 100000; done"
           resources:
             limits:
               cpu: "100m"

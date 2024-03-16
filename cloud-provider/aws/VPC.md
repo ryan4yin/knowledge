@@ -5,11 +5,13 @@
 
 ### 路由表
 
-每个 VPC 里面都可以创建很多个路由表，每个路由表可以关联 VPC 中的多个 subnet，只有关联上 subnet，路由表中的规则才会生效。
+每个 VPC 里面都可以创建很多个路由表，每个路由表可以关联 VPC 中的多个 subnet，只有关联上 subnet，路由
+表中的规则才会生效。
 
 但是每个 subnet 只能绑定一个路由表，也就是说 route table 和 subnet 是一对多的关系。
 
-如果我们创建了一个路由表，里面添加了指向 IGW 的路由规则（dst=0.0.0.0/0, target=IGW），那它就是一个**公网路由表**。
+如果我们创建了一个路由表，里面添加了指向 IGW 的路由规则（dst=0.0.0.0/0, target=IGW），那它就是一
+个**公网路由表**。
 
 如果路由表没有添加和公网相关的东西，那就是它就是一个**私网路由表**。
 
@@ -17,16 +19,21 @@
 
 首先，一开始创建的所有 subnet 都是私网的，无法访问外网的。
 
-1. **公有子网**：如果子网绑定的路由表的默认路由规则是到 IGW ，那它就是一个**公有子网**，服务器就能直连外网，外网也能直接通过服务器的公网 IP 访问你。
-2. 私有子网： 如果子网的默认路由规则不是到 IGW，那它就是一个私有子网，其中的设备无法直接被外部访问。 2. 私有子网的默认路由规则 `0.0.0.0/0`，可以设置为到公有子网的 NAT 网关，这样就它就能通过 NAT 访问公网。
+1. **公有子网**：如果子网绑定的路由表的默认路由规则是到 IGW ，那它就是一个**公有子网**，服务器就能直
+   连外网，外网也能直接通过服务器的公网 IP 访问你。
+2. 私有子网： 如果子网的默认路由规则不是到 IGW，那它就是一个私有子网，其中的设备无法直接被外部访
+   问。 2. 私有子网的默认路由规则 `0.0.0.0/0`，可以设置为到公有子网的 NAT 网关，这样就它就能通过 NAT
+   访问公网。
    1. 私有子网也可以启用自动分配公网 IP，但是因为和 IGW 之间没有路由，公网 IP 实际上是没用的。
-3. 推荐 VPC 使用 16 位掩码，公网 subnet 设为 24 位，私有 subnet 通常服务更多，可以设为 23 位，比公网刚好大一倍。
+3. 推荐 VPC 使用 16 位掩码，公网 subnet 设为 24 位，私有 subnet 通常服务更多，可以设为 23 位，比公网
+   刚好大一倍。
 
 ### ENI 和 EIP
 
 弹性 IP 和 ENI 弹性网卡，都可以做高可用：
 
-- 弹性 IP: 收费，IP 固定（不用要收钱，但是在使用状态时，EC2 的费用已经包含了 IP 费用，所以反而不收 EIP 的费用），而且可以跨可用区使用
+- 弹性 IP: 收费，IP 固定（不用要收钱，但是在使用状态时，EC2 的费用已经包含了 IP 费用，所以反而不收
+  EIP 的费用），而且可以跨可用区使用
 - ENI 弹性网卡：只要买了，不管用不用，都会一直收钱。IP/mac 地址都固定，但是不能跨可用区使用。
 
 这里其实还有些疑问。
@@ -37,7 +44,8 @@
 
 有记忆能力，被允许进入的流量，也是允许出去的。
 
-使用方法：安全组是很灵活的，在创建 EC2 等资源时，可以按需绑定安全组，只有你绑定的 SG，它的规则才会生效。
+使用方法：安全组是很灵活的，在创建 EC2 等资源时，可以按需绑定安全组，只有你绑定的 SG，它的规则才会生
+效。
 
 安全组的建议设计方案，建议分成三类：
 
@@ -56,11 +64,13 @@ ACL 和安全组的配合方式：建议外松内紧，就是 ACL 设松一点�
 ### 对等连接 Peer Connection
 
 1. 在两个 VPC 之间创建对等连接
-   1. 创建阶段分为 requester 和 accepter，表示你创建一个连接请求给 accepter，只要它同意，你们就能创建对等连接
+   1. 创建阶段分为 requester 和 accepter，表示你创建一个连接请求给 accepter，只要它同意，你们就能创
+      建对等连接
    2. 实际创建完成后，这个连接是对等的，不是单向的！只有在创建阶段才有角色区分
 2. 分别配置两个 VPC 的路由表，让它们的流量能正确互通。
 
-对等连接本身是免费的，通过对等连接进行跨 VPC 数据传输，费用跟同 VPC 完全一致，只收取跨区/跨域的数据传输费用。
+对等连接本身是免费的，通过对等连接进行跨 VPC 数据传输，费用跟同 VPC 完全一致，只收取跨区/跨域的数据
+传输费用。
 
 ### AWS Transit Gateway
 
@@ -73,23 +83,27 @@ ACL 和安全组的配合方式：建议外松内紧，就是 ACL 设松一点�
 
 ### VPC endpoints
 
-AWS 资源之间的访问，默认都是走外网的，从 VPC 内请求会走 NAT 网关，速度会更慢，而且还会收 NAT 费用与流量传输费用。
+AWS 资源之间的访问，默认都是走外网的，从 VPC 内请求会走 NAT 网关，速度会更慢，而且还会收 NAT 费用与
+流量传输费用。
 
 可以通过 VPC endpoints 让这些请求都直接走 VPC 内部，避免 NAT 费用与流量传输费用。
 
-> 作为对比我们看下阿里云，它所有资源都直接提供内网与公网两个 endpoints，使用内网 endpoints 请求就会走内网，不需要额外创建 VPC endpoints.
+> 作为对比我们看下阿里云，它所有资源都直接提供内网与公网两个 endpoints，使用内网 endpoints 请求就会
+> 走内网，不需要额外创建 VPC endpoints.
 
 VPC endpoints 有两种类型：
 
 - Interface endpoints
   - 一个绑定了一个私网 IP 的弹性网卡，它可将流量转发到 AWS 服务（如 S3）、AWS 用户或合作伙伴的服务
-  - 有独立的域名，客户端必须使用这个独立域名来请求服务！比如 `vpce-1a2b3c4d-5e6f.s3.us-east-1.vpce.amazonaws.com`
+  - 有独立的域名，客户端必须使用这个独立域名来请求服务！比如
+    `vpce-1a2b3c4d-5e6f.s3.us-east-1.vpce.amazonaws.com`
   - 会收取数据处理费用，另外每个实例还会单独按小时计费
 - [Gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)
   - 它是一个路由网关，可将流量经由内部网络转发到 S3 或者 DynamoDB，无需经过 IGW 或者 NAT.
   - 目前只支持 DynamoDB 与 S3 这两个服务
   - 目前免费
-  - 配置方式：必须在 endpoints 页面上选择要绑定的 route_tables！（无法在 route_tables 页面绑定 gateway endpoints）
+  - 配置方式：必须在 endpoints 页面上选择要绑定的 route_tables！（无法在 route_tables 页面绑定
+    gateway endpoints）
 
 常见的比如 S3/DynamoDB/SQS/ECR 等等，都需要添加 VPC endpoints 才能走内网访问。
 
@@ -109,8 +123,9 @@ AWS 托管版的 NAT 网关按流量收费，其价格为 $.045 per GB，在流�
 
 ### VPC Flow Log 流日志
 
-建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按小时分区保存到 S3，然后通过 Athena 查询分析。
-可用于按 IP 段分析跨区流量、NAT 网关流量，从而进行深度优化，或者实施某些流量控制策略。
+建议使用 terraform 创建流日志，以 Apache Parquet 格式（相比默认格式，它的查询速度更快，更省空间）按
+小时分区保存到 S3，然后通过 Athena 查询分析。可用于按 IP 段分析跨区流量、NAT 网关流量，从而进行深度
+优化，或者实施某些流量控制策略。
 
 > https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log
 
@@ -241,7 +256,7 @@ PARTITIONED BY (
   `hour` string
 )
 ROW FORMAT SERDE
-  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
+  'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSetDe'
 STORED AS INPUTFORMAT
   'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat'
 OUTPUTFORMAT
@@ -269,11 +284,14 @@ Repair: Added partition to metastore default.vpc_flow_logs_xxx:aws-account-id=12
 ...
 ```
 
-至于 Flow Log 的数据分析，请参见 [使用 Athena 进行 Flow Log 数据分析](./Athena/Flow%20Log%20数据分析.md)
+至于 Flow Log 的数据分析，请参见
+[使用 Athena 进行 Flow Log 数据分析](./Athena/Flow%20Log%20数据分析.md)
 
 #### Flow Logs 费用
 
-Flow Logs 的主要成本在于 CloudWatch，即使数据是存到 S3 也是需要经过 CloudWatch 的，仅保留近期数据（如一周）的话 S3 的存储费用很低，而 CloudWatch 费用却不可小觑，通常还是应该在测试完成后关闭，临时启用即可。
+Flow Logs 的主要成本在于 CloudWatch，即使数据是存到 S3 也是需要经过 CloudWatch 的，仅保留近期数据
+（如一周）的话 S3 的存储费用很低，而 CloudWatch 费用却不可小觑，通常还是应该在测试完成后关闭，临时启
+用即可。
 
 <https://aws.amazon.com/cloudwatch/pricing/> 中给出了一个 Flow Logs 传输到 S3 的费用计算示例：
 

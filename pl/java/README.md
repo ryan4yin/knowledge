@@ -24,7 +24,6 @@ export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
 - [从jar包中读取资源文件](https://hxraid.iteye.com/blog/483115)
 - [深入解析 Java 反射](https://www.sczyh30.com/posts/Java/java-reflection-1/)
 
-
 ## 参考
 
 - [多种预编译的 OpenJDK 对比](https://stackoverflow.com/questions/52431764/difference-between-openjdk-and-adoptopenjdk)

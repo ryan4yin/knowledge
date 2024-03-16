@@ -1,84 +1,84 @@
 static_resources:
   # cluster 就类似 Nginx 的 Upstream
   clusters:
-  # 每个 cluster 都是一组功能类似的 hosts，比如同一个服务的多个副本，通常由「服务发现」功能自动维护 cluster 的成员
-  - name: baidu
-    connect_timeout: 1s
-    # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
-    type: logical_dns 
-    dns_lookup_family: V4_ONLY
-    lb_policy: round_robin  # cluster 上的负载均衡策略
-    load_assignment:
-      cluster_name: baidu
-      endpoints:  # endpoint 可类比 nginx 的 server
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: www.baidu.com  # 转发给 baidu
-                port_value: 80
-  - name: bing
-    connect_timeout: 1s
-    type: logical_dns  # 通过 DNS 来自动发现 hosts
-    dns_lookup_family: V4_ONLY
-    lb_policy: round_robin
-    load_assignment:
-      cluster_name: bing
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: cn.bing.com
-                port_value: 80
+    # 每个 cluster 都是一组功能类似的 hosts，比如同一个服务的多个副本，通常由「服务发现」功能自动维护 cluster 的成员
+    - name: baidu
+      connect_timeout: 1s
+      # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
+      type: logical_dns
+      dns_lookup_family: V4_ONLY
+      lb_policy: round_robin # cluster 上的负载均衡策略
+      load_assignment:
+        cluster_name: baidu
+        endpoints: # endpoint 可类比 nginx 的 server
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: www.baidu.com # 转发给 baidu
+                      port_value: 80
+    - name: bing
+      connect_timeout: 1s
+      type: logical_dns # 通过 DNS 来自动发现 hosts
+      dns_lookup_family: V4_ONLY
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: bing
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: cn.bing.com
+                      port_value: 80
   listeners:
-  - address:
-      socket_address:
-        address: 0.0.0.0  # 绑定所有网卡
-        port_value: 8080  # 监听这个端口
-    filter_chains:
-    # 监听端口的所有流量都会流经这个 filters 链
-    - filters:
-      # 如果是 HTTP 请求，就会被这个 filter 匹配到，执行其中的逻辑
-      - name: envoy.filters.network.http_connection_manager 
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          codec_type: auto
-          stat_prefix: http
-          http_filters:
-          - name: envoy.filters.http.router
-          access_log:  # 直接将 access_log 输出到 stdout
-            name: envoy.access_loggers.file
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
-              path: /dev/stdout
-          # HTTP 请求的路由规则
-          route_config:
-            name: search_route
-            virtual_hosts:
-            - name: backend
-              domains:
-              - "*"
-              routes:
-              - match:
-                  prefix: "/"
-                  headers:
-                    # 匹配 Host (:authority in HTTP2) 请求头
-                    - name: ":authority"
-                      exact_match: "baidu.com"
-                route:
-                  # 将请求转发给 baidu 这个 cluster
-                  cluster: baidu
-                  host_rewrite_literal: www.baidu.com
-              - match:
-                  prefix: "/"
-                  headers:
-                    - name: ":authority"
-                      exact_match: "bing.com"
-                route:
-                  # 将请求转发给 bing 这个 cluster
-                  cluster: bing
-                  host_rewrite_literal: cn.bing.com
+    - address:
+        socket_address:
+          address: 0.0.0.0 # 绑定所有网卡
+          port_value: 8080 # 监听这个端口
+      filter_chains:
+        # 监听端口的所有流量都会流经这个 filters 链
+        - filters:
+            # 如果是 HTTP 请求，就会被这个 filter 匹配到，执行其中的逻辑
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                codec_type: auto
+                stat_prefix: http
+                http_filters:
+                  - name: envoy.filters.http.router
+                access_log: # 直接将 access_log 输出到 stdout
+                  name: envoy.access_loggers.file
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+                    path: /dev/stdout
+                # HTTP 请求的路由规则
+                route_config:
+                  name: search_route
+                  virtual_hosts:
+                    - name: backend
+                      domains:
+                        - "*"
+                      routes:
+                        - match:
+                            prefix: "/"
+                            headers:
+                              # 匹配 Host (:authority in HTTP2) 请求头
+                              - name: ":authority"
+                                exact_match: "baidu.com"
+                          route:
+                            # 将请求转发给 baidu 这个 cluster
+                            cluster: baidu
+                            host_rewrite_literal: www.baidu.com
+                        - match:
+                            prefix: "/"
+                            headers:
+                              - name: ":authority"
+                                exact_match: "bing.com"
+                          route:
+                            # 将请求转发给 bing 这个 cluster
+                            cluster: bing
+                            host_rewrite_literal: cn.bing.com
 admin:
   access_log_path: "/dev/stdout"
   address:

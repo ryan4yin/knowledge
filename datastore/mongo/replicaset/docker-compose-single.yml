@@ -1,13 +1,13 @@
 # https://github.com/bitnami/bitnami-docker-mongodb
 ---
-version: '2'
+version: "2"
 
 services:
   # 单节点副本集，仅用于测试环境
   mongodb-primary:
-    image: 'bitnami/mongodb:4.2'
+    image: "bitnami/mongodb:4.2"
     environment:
-      - MONGODB_REPLICA_SET_NAME=rs0  # 副本集名称
+      - MONGODB_REPLICA_SET_NAME=rs0 # 副本集名称
       - MONGODB_REPLICA_SET_MODE=primary
       # 额外的 mongo 参数（设置缓存大小）
       - MONGODB_EXTRA_FLAGS=--wiredTigerCacheSizeGB=2
@@ -20,13 +20,12 @@ services:
       # - ALLOW_EMPTY_PASSWORD=yes
     restart: always
     ports:
-    - 27017:27017
+      - 27017:27017
 
     # 只需要保存主节点的数据
     # 首次运行时，自动创建的映射文件夹可能有权限问题，注意自行修改。
     volumes:
-      - './mongodb_master_data:/bitnami'
-
+      - "./mongodb_master_data:/bitnami"
 # 或者使用 Docker 官方镜像，通过 healthcheck 初始化副本集
 # ---
 # # https://hub.docker.com/_/mongo/

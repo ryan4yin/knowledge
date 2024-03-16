@@ -8,33 +8,33 @@ spec:
     labels:
       app: my-test-gateway
   configPatches:
-  - applyTo: HTTP_ROUTE
-    match:
-      context: SIDECAR_INBOUND # this property fixes the ingress outbound
-    patch:
-      operation: MERGE
-      value:
-        decorator:  # remove header: x-envoy-decorator-operation
-          propagate: false
-  - applyTo: NETWORK_FILTER
-    match:
-      context: SIDECAR_INBOUND
-      listener:
-        filterChain:
-          filter:
-            name: "envoy.filters.network.http_connection_manager"
-    patch:
-      operation: MERGE
-      value:
-        typed_config:
-          "@type": "type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager"
-          server_header_transformation: PASS_THROUGH
-  - applyTo: ROUTE_CONFIGURATION
-    match:
-      context: SIDECAR_INBOUND
-    patch:
-      operation: MERGE
-      value:
-        response_headers_to_remove:
-        - "x-envoy-upstream-service-time"
-        - "server"
+    - applyTo: HTTP_ROUTE
+      match:
+        context: SIDECAR_INBOUND # this property fixes the ingress outbound
+      patch:
+        operation: MERGE
+        value:
+          decorator: # remove header: x-envoy-decorator-operation
+            propagate: false
+    - applyTo: NETWORK_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+      patch:
+        operation: MERGE
+        value:
+          typed_config:
+            "@type": "type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager"
+            server_header_transformation: PASS_THROUGH
+    - applyTo: ROUTE_CONFIGURATION
+      match:
+        context: SIDECAR_INBOUND
+      patch:
+        operation: MERGE
+        value:
+          response_headers_to_remove:
+            - "x-envoy-upstream-service-time"
+            - "server"

@@ -4,14 +4,14 @@
 
 越过 dockerd，直接使用它底层的 containerd 做运行时，削减中间环节，可以提升代码的可维护性，减少 Bug.
 
-各家大厂早就将运行时切换到了 containerd，对安全要求更高的甚至已经切换到了 kata-containers 等安全容器方案。
+各家大厂早就将运行时切换到了 containerd，对安全要求更高的甚至已经切换到了 kata-containers 等安全容器
+方案。
 
 为此有必要尽快熟悉 containerd，将集群尽快迁移过来。
 
-
 ## 安装与配置
 
->注意 contaienrd 不会读取 docker 的配置！原来给 docker 配的 `/etc/docker/daemon.json` 已经没用了！
+> 注意 contaienrd 不会读取 docker 的配置！原来给 docker 配的 `/etc/docker/daemon.json` 已经没用了！
 
 containerd 的默认配置文件位置为 `/etc/containerd/config.toml`，详见
 
@@ -48,7 +48,8 @@ version = 2
   insecure_skip_verify = true
 ```
 
->注：我们发现 v2 版的 config.toml 设置 `insecure_skip_verify` 时，如果 registry 名称带端口，比如 `resigtry.svc.local:8443`，就无法生效。。退回使用 v1 版的配置，就没问题。
+> 注：我们发现 v2 版的 config.toml 设置 `insecure_skip_verify` 时，如果 registry 名称带端口，比如
+> `resigtry.svc.local:8443`，就无法生效。。退回使用 v1 版的配置，就没问题。
 
 ### 2. 配置仓库镜像
 
@@ -74,7 +75,6 @@ version = 2
     endpoint = ["https://HostIP3:Port3"]
 ```
 
-
 ## 常用命令
 
 命令行工具这方面现在主要有三个选择：
@@ -98,8 +98,8 @@ crictl 支持连接任何兼容 cri 的运行时，它默认情况下按顺序�
 - `unix:///run/containerd/containerd.sock`
 - `unix:///run/crio/crio.sock`
 
-endpoint 也可以通过命令行参数/环境变量/配置文件手动设置，详见 [docs/crictl](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)
-
+endpoint 也可以通过命令行参数/环境变量/配置文件手动设置，详见
+[docs/crictl](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)
 
 ### 导入导出镜像压缩包
 
@@ -126,16 +126,16 @@ skopeo copy dir:image-output-dir containers-storage:docker.io/weaveworks/weave-n
 
 > kubernetes 节点一般没有此工具，需要自行安装
 
-nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`） 及其中的大部分参数。
+nerdctl 提供和 docker 完全兼容的指令，而且支持 docker-compose.yml（`nerdctl compose up`） 及其中的大
+部分参数。
 
 注意点：
+
 - nerdctl 对网络的支持不如 docker
 
 #### 使用 nerdctl 查看 k8s 镜像与容器
 
 > https://github.com/containerd/nerdctl#debugging-kubernetes
-
-
 
 nerdctl 与 kubernetes 的容器、镜像是隔离的，需要切换到 k8s 的 namespace 才能看到。
 
@@ -146,16 +146,9 @@ nerdctl --namespace k8s.io ps -a
 # To load an image archive (docker save format or OCI format) into local Kubernetes:
 nerdctl --namespace k8s.io load < /path/to/image.tar
 
-# read pod contaienr logs
+# read pod container logs
 ## 1. get the container ID
 nerdctl --namespace k8s.io ps -a
 ## 2. read logs
 nerdctl --namespace=k8s.io logs -f e8793b8cca8b
 ```
-
-
-
-
-
-
-

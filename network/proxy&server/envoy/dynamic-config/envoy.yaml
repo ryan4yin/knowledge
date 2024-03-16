@@ -9,7 +9,7 @@ dynamic_resources:
     path: /etc/envoy/lds.yaml
 
 admin:
-  access_log: 
+  access_log:
     - name: envoy.access_loggers.file
       typed_config:
         # typed_config 的值为 Any 类型，因此必须手动指定类型参数

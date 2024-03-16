@@ -1,16 +1,14 @@
 # Web 前端
 
-
 ## 静态网站生成器
 
 基于 markdown 的静态网站生成器，可用于文档或者博客：
 
 - [hugo](https://github.com/gohugoio/hugo): go 程序员是不是都应该用 hugo 写个人博客？hhh
   - hugo 的 draft 模式同样不需要手动 build，修改 markdown 后手动刷新页面即可看到效果。
-- [vuepress](https://github.com/vuejs/vuepress): vue 官方项目，通过插件支持 markdown，相当流行，而且也非常好看。
+- [vuepress](https://github.com/vuejs/vuepress): vue 官方项目，通过插件支持 markdown，相当流行，而且
+  也非常好看。
 - [docsify](https://github.com/docsifyjs/docsify): markdown 支持，不需要 build，动态更新的静态网站！
-
-
 
 ## 相关文档
 
@@ -20,5 +18,3 @@
 - [Emmet 语法速查表](https://www.w3cplus.com/tools/emmet-cheat-sheet.html)
 
 - [MVC，MVP 和 MVVM 的图示](http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html)
-
-

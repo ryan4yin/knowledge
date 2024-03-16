@@ -117,3 +117,4 @@ testdir
 
 bin/
 obj/
+.pre-commit-config.yaml

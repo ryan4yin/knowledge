@@ -7,34 +7,45 @@
   - PeerAuthentication/RequestAuthentication 与 authorization 进入 beta
   - 使用数据面的 Telemetry v2 插件替代中心化的 Mixer，istio 的指标因此发生较大变化
 - istio 1.8
-  - 添加全局与 Pod 级别的 holdApplicationUntilProxyStarts 参数，使应用程序在 proxy 就续后再启动，避免无法访问网络导致应用报错
-  - 支持通过 `X-Forwarded-For` (XFF) and `X-Forwarded-Client-Cert` (XFCC) 请求头转发客户端 IP/证书：[Configuring Gateway Network Topology](https://istio.io/latest/docs/ops/configuration/traffic-management/network-topologies/)
+  - 添加全局与 Pod 级别的 holdApplicationUntilProxyStarts 参数，使应用程序在 proxy 就续后再启动，避
+    免无法访问网络导致应用报错
+  - 支持通过 `X-Forwarded-For` (XFF) and `X-Forwarded-Client-Cert` (XFCC) 请求头转发客户端 IP/证
+    书：[Configuring Gateway Network Topology](https://istio.io/latest/docs/ops/configuration/traffic-management/network-topologies/)
 - istio 1.9
   - 虚拟机支持进入 beta
-  - Request Classification 进入 beta（监控指标相关的优化，可用于按 path/header 等信息进行指标分类，分类的目的是为了在指标精细度与指标数据量之间取得一个平衡）
+  - Request Classification 进入 beta（监控指标相关的优化，可用于按 path/header 等信息进行指标分类，
+    分类的目的是为了在指标精细度与指标数据量之间取得一个平衡）
   - 添加镜像仓库 `gcr.io/istio-release` 以避免 Dockerhub 的镜像拉取速率限制
 - istio 1.10
   - 服务发现方面的性能优化
   - 支持多个版本的控制面共存，通过 namespace 的 label 来切换版本
-  - 旧版本中，sidecar 从 eth0 截获数据后，会通过 lo 转发给应用容器，现在改成了同样通过 eth0 发送给应用容器
+  - 旧版本中，sidecar 从 eth0 截获数据后，会通过 lo 转发给应用容器，现在改成了同样通过 eth0 发送给应
+    用容器
     - 如果应用容器原来只监听 `127.0.0.1` 等 lo 地址，就会出问题！需要改成 `0.0.0.0`
 - istio 1.11
   - CNI 插件进入 beta，它能缩减 sidecar 的权限
   - External control plane 进入 beta
   - Gateway injection: 新的 Gateway 部署方式，并给出了简单易懂的文档。
 - istio 1.12
-  - [alpha] 为 Telemetry 添加专用 API: [Telemetry API](https://istio.io/latest/docs/reference/config/telemetr)，可以非常方便地自定义 Tracing/Metrics/Logging 配置
+  - [alpha] 为 Telemetry 添加专用 API:
+    [Telemetry API](https://istio.io/latest/docs/reference/config/telemetr)，可以非常方便地自定义
+    Tracing/Metrics/Logging 配置
   - [alpha] 为 WASM 插件添加 API: `WasmPlugin`
   - 优化 helm chart
   - [alpha] Gateway API 升级到 v1alpha2
 - istio 1.13
   - 在 k8s 1.21+ 集群上，通过 EndpointSlice 资源获取所有 workloads，而不是 Endpoint
-  - fix: 有部分连接被 reset: [Drop packets in INVALID state to avoid intermittent connection reset from sidecar](https://github.com/istio/istio/pull/36566)，感觉这个可能就是造成 0 状态码的罪魁祸首？
-  - fix: [HTTP/1.0 requests to be rejected (with a 426 Upgrade Required error) in some cases](https://github.com/istio/istio/issues/36707)
+  - fix: 有部分连接被 reset:
+    [Drop packets in INVALID state to avoid intermittent connection reset from sidecar](https://github.com/istio/istio/pull/36566)，
+    感觉这个可能就是造成 0 状态码的罪魁祸首？
+  - fix:
+    [HTTP/1.0 requests to be rejected (with a 426 Upgrade Required error) in some cases](https://github.com/istio/istio/issues/36707)
 - istio 1.14
   - 默认负载均衡算法从 ROUND_ROBIN 切换到 LEAST_REQUEST。
-    - 官方通过一系列测试发现，LEAST_REQUEST 在几乎所有虚拟场景中，效果都优于 ROUND_ROBIN，因此决定做这一修改。
-  - [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings) 添加参数 `warmupDurationSecs`
+    - 官方通过一系列测试发现，LEAST_REQUEST 在几乎所有虚拟场景中，效果都优于 ROUND_ROBIN，因此决定做
+      这一修改。
+  - [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings)
+    添加参数 `warmupDurationSecs`
     - fix [支持 Pod 扩容时，新 Pod 的 slow start](https://github.com/istio/istio/issues/21228)
     - 但也存在一些 bug: [slow start in istio](https://github.com/istio/istio/issues?q=slow+start)
 - istio 1.15
@@ -53,6 +64,6 @@
   - helm 安装方式进入 beta
   - Kubernetes Gateway API 升级到最新版本（0.6.1）
   - IPv6 双栈支持改进
-- upcomming istio 1.1x
-  - [istio/experimental-ambient](https://github.com/istio/istio/tree/experimental-ambient): istio 实验性的 ambient mesh 功能
-
+- upcoming istio 1.1x
+  - [istio/experimental-ambient](https://github.com/istio/istio/tree/experimental-ambient): istio 实
+    验性的 ambient mesh 功能

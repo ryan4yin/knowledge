@@ -21,4 +21,3 @@ helm upgrade --install traefik --namespace ingress \
 ```
 
 具体使用，参见官方文档。。。
-

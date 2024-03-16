@@ -5,4 +5,3 @@
 - 《声学基础》、《理论声学》、《空间声学》：
   - 语音合成、歌声合成
   - 声学模拟：[揉搓声模拟](http://www.cs.columbia.edu/cg/crumpling/)
-

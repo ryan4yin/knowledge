@@ -1,4 +1,3 @@
-
 # PromQL
 
 ### 1. 语法
@@ -11,6 +10,7 @@
 - `!~` 值与正则表达式不匹配的标签
 
 举例：
+
 ```promql
 # 完全相等
 http_requests_total{host="xxx.xxx", uri="/xxx"}
@@ -31,7 +31,8 @@ irate(http_requests_total{job="api-server"}[5m])
 
 时间范围可使用的单位有：`5s` `5m` `5h` `5d` 等.
 
-其他函数参见 [Prometheus Functions](https://prometheus.io/docs/prometheus/latest/querying/functions/)
+其他函数参见
+[Prometheus Functions](https://prometheus.io/docs/prometheus/latest/querying/functions/)
 
 #### 指标的聚合操作符（Aggregation Operators）
 
@@ -48,16 +49,18 @@ sum without(host, uri)  (rate(nginx_http_requests_total{host="xxx.xxx", uri="/xx
 quantile(0.95, rate(nginx_http_requests_total{host="xxx.xxx", uri="/xxx"}[3m])) by(host, uri, status)
 ```
 
-其他的聚合操作符参见 [Prometheus Aggregation operators](https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators)
+其他的聚合操作符参见
+[Prometheus Aggregation operators](https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators)
 
 #### 指标之间的运算
 
-指标之间可以进行运算，默认情况下，运算以左边的指标为主，在右边的指标中寻找所有标签完全一致的指标，进行运算（也就是说右侧的指标不一定会全部都用上！这和 SQL 的 left_join 类似）：
+指标之间可以进行运算，默认情况下，运算以左边的指标为主，在右边的指标中寻找所有标签完全一致的指标，进
+行运算（也就是说右侧的指标不一定会全部都用上！这和 SQL 的 left_join 类似）：
 
 ```promql
 # 4xx 占比（注意我先用 sum 聚合了数据，这样两边的标签才能够一致）
 sum by(matched_host,matched_uri)  (rate(apisix_http_status{matched_host="xxx", code=~"4.."}[1m]))
-/ 
+/
 sum by(matched_host,matched_uri)  (rate(apisix_http_status{matched_host="xxx"}[1m]))
 ```
 
@@ -66,17 +69,18 @@ sum by(matched_host,matched_uri)  (rate(apisix_http_status{matched_host="xxx"}[1
 ```
 # 各状态码的占比，这里使用了 ignoring 忽略左侧的 code 标签。
 # 同时左侧对右侧是「多对一」的关系，因此需要使用 group_left
-sum by(matched_host,matched_uri, code)  (rate(apisix_http_status{matched_host="xxx"}[1m])) 
-/ ignoring(code) group_left 
+sum by(matched_host,matched_uri, code)  (rate(apisix_http_status{matched_host="xxx"}[1m]))
+/ ignoring(code) group_left
 sum by(matched_host,matched_uri)  (rate(apisix_http_status{matched_host="xxx"}[1m]))
 
 # 下面这个是使用 on 的语法，与上面的 promql 等价
-sum by(matched_host,matched_uri, code)  (rate(apisix_http_status{matched_host="xxx"}[1m])) 
-/ on(matched_host,matched_uri) group_left 
+sum by(matched_host,matched_uri, code)  (rate(apisix_http_status{matched_host="xxx"}[1m]))
+/ on(matched_host,matched_uri) group_left
 sum by(matched_host,matched_uri)  (rate(apisix_http_status{matched_host="xxx"}[1m]))
 ```
 
-注意在非「一对一」的指标运算中，需要使用 `group_left` 或者 `group_right` 来指定哪一方为**多**的一方。
+注意在非「一对一」的指标运算中，需要使用 `group_left` 或者 `group_right` 来指定哪一方为**多**的一
+方。
 
 ### 2. 个人常用 PromQL 集锦
 
@@ -108,7 +112,6 @@ nginx_http_request_duration_seconds_count{host="xxx.xxx"}
 # 计算 p95（histogram_quantile 会使用 le 标签计算分位值，该标签必须存在），单位和 le 相同
 histogram_quantile(0.95, sum by (le) (rate(nginx_http_request_duration_seconds_bucket{host="xxx.xxx"}[1m])))
 ```
-
 
 接口 5mins 内 QPS 突然下降超过 50%（可以检测到一些底层网络问题，如流量突降）：
 
@@ -143,6 +146,7 @@ sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix
 ```
 
 请求延迟(apisix 2.6+):
+
 ```promql
 # 每秒，apisix 自身的处理延迟，低于 200ms 的请求数
 sum by(matched_host,code,matched_uri,kubernetes_namespace,service)  (rate(apisix_http_latency_bucket{type="request",service="<service_id>",kubernetes_namespace="staging", le="200"}[1m]))
@@ -165,9 +169,7 @@ sum by(matched_host,code,matched_uri,kubernetes_namespace,service,le)  (rate(api
 histogram_quantile(0.95, sum by (le, code) (rate(apisix_http_latency_bucket{type="upstream",service="<service_id>",kubernetes_namespace="staging"}[1m])))
 ```
 
-
 #### 2.3 Istio
-
 
 ```promql
 # istio http 状态指标查询
@@ -177,14 +179,14 @@ sum by (destination_version, destination_service_name, namespace, response_code)
 查询出延迟超过 500ms 的请求数量变化：
 
 ```
-sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="xxx", response_code="0", le="+Inf"}) - 
+sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="xxx", response_code="0", le="+Inf"}) -
 sum by(source_app)(istio_request_duration_milliseconds_bucket{reporter="destination", namespace="prod", destination_app="xxx", response_code="0", le="500"})
 ```
 
-
 #### 2.4 Kubernetes
 
-kubelet 中内嵌了 [cadvisor](https://github.com/google/cadvisor) ，它提供了容器层面的指标，对应的指标 path 为 `/metrics/cadvisor`.
+kubelet 中内嵌了 [cadvisor](https://github.com/google/cadvisor) ，它提供了容器层面的指标，对应的指标
+path 为 `/metrics/cadvisor`.
 
 CPU 使用率：
 
@@ -192,9 +194,7 @@ CPU 使用率：
 sum(irate(container_cpu_usage_seconds_total{namespace="istio-system", pod=~"<deployment_name>.+"}[3m])) by (namespace, pod) / (sum(container_spec_cpu_shares{namespace="istio-system", pod=~"<deployment_name>.+"}) by(namespace, pod) / 1024)
 ```
 
-
 服务流量速率查询（供带宽优化、跨区流量优化参考）：
-
 
 接收速率超过 50M/s 的服务：
 
@@ -207,5 +207,3 @@ sum by (namespace, service, interface) (label_replace(rate(container_network_rec
 ```promql
 sum by (namespace, service, interface) (label_replace(rate(container_network_transmit_bytes_total{container!="istio-proxy", container=~"^[[:alpha:]]*", pod!="", interface=~"eth.+"}[10m]), "service", "$1", "pod", "(.*)-[^-]+")) / 1024 / 1024 > 20
 ```
-
-

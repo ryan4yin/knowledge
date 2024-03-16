@@ -1,11 +1,12 @@
 # Istio IngressGateway
 
->https://istio.io/latest/docs/setup/additional-setup/gateway/
+> https://istio.io/latest/docs/setup/additional-setup/gateway/
 
-Istio IngressGateway 跟 APISIX-Ingress-Conroller 等类似，都是 EKS 集群的入口网关。
-区别在于它跟服务网格的结合比较紧密。
+Istio IngressGateway 跟 APISIX-Ingress-Controller 等类似，都是 EKS 集群的入口网关。区别在于它跟服务
+网格的结合比较紧密。
 
-但是根据我的使用体验看，原生的 Istio 网关的 access_log、metrics、direct_reponse、rate_limit 等功能还是有很多缺陷的，需要自己写很多的 EnvoyFilter 才能达成我们的需求：
+但是根据我的使用体验看，原生的 Istio 网关的 access_log、metrics、direct_response、rate_limit 等功能
+还是有很多缺陷的，需要自己写很多的 EnvoyFilter 才能达成我们的需求：
 
 - 负载均衡相关能力：负载均衡、流量切分、流量镜像、限流限并发
   - 其中 Istio 目前对限流限并发的支持不太行
@@ -14,7 +15,8 @@ Istio IngressGateway 跟 APISIX-Ingress-Conroller 等类似，都是 EKS 集群�
 - 基于一些第三方机制的访问控制
   - Istio 对 JWT 提供一定支持
 - 监控：按 Host/Path 等纬度划分的状态码、延时指标监控
-  - Istio 支持此功能，但是默认不开 host/path 标签，直接打开还会导致指标数量暴增，需要自定义 EnvoyFilter
+  - Istio 支持此功能，但是默认不开 host/path 标签，直接打开还会导致指标数量暴增，需要自定义
+    EnvoyFilter
   - Istio 提供 Path 分类的能力，比如按前缀分类，但是都需要自己写 EnvoyFilter 实现
 - 访问日志：统一收集好访问日志后，可使用 SQL 对全局流量的 Host/Path/Headers/Params 等进行深度分析
   - Istio 支持，也可以通过 EnvoyFilter/Telemetry API 自定义访问日志格式
@@ -41,14 +43,14 @@ metadata:
   namespace: prod
 spec:
   selector:
-    app: commmon-ingressgateway
+    app: common-ingressgateway
   servers:
-  - port:
-      number: 8080
-      name: http
-      protocol: HTTP
-    hosts:
-    - '*.k8s.local'
+    - port:
+        number: 8080
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*.k8s.local"
 ```
 
 之后就能通过 virtaulservice/destinationrule 等，来使用这个 ingressgateway 了，示例：
@@ -60,15 +62,15 @@ metadata:
   name: product
 spec:
   hosts:
-  - product.k8s.local
+    - product.k8s.local
   gateways:
-  - common-gateway
+    - common-gateway
   http:
-  - route:
-    - destination:
-        host: product
-        port:
-          number: 8080
+    - route:
+        - destination:
+            host: product
+            port:
+              number: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -79,14 +81,14 @@ metadata:
   namespace: prod
 spec:
   ports:
-  - name: grpc
-    port: 9090
-    protocol: TCP
-    targetPort: 9090
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: 8080
+    - name: grpc
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
   selector:
     app: product
   sessionAffinity: None
@@ -100,10 +102,10 @@ spec:
   host: product
   # 定义了两个 subset
   subsets:
-  - labels:
-      version: v1
-    name: v1
-  - labels:
-      version: v2
-    name: v2
+    - labels:
+        version: v1
+      name: v1
+    - labels:
+        version: v2
+      name: v2
 ```

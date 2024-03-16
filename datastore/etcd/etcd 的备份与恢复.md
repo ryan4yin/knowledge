@@ -1,13 +1,14 @@
-
 ## Etcd 集群的备份与恢复
 
->官方文档：[etcd 3.4 - disaster recovery](https://etcd.io/docs/v3.4.0/op-guide/recovery/)
+> 官方文档：[etcd 3.4 - disaster recovery](https://etcd.io/docs/v3.4.0/op-guide/recovery/)
 
->此文假设你的 Etcd 集群是按 [./etcd_with_systemd.md](./etcd_with_systemd.md) 给出的方法部署的。
+> 此文假设你的 Etcd 集群是按 [./etcd_with_systemd.md](./etcd_with_systemd.md) 给出的方法部署的。
 
-如果 ETCD 集群有超过 (N-1)/2 的节点出现临时性故障，那集群将暂时不可用，直到节点个数恢复到超过 (N-1)/2.
+如果 ETCD 集群有超过 (N-1)/2 的节点出现临时性故障，那集群将暂时不可用，直到节点个数恢复到超过
+(N-1)/2.
 
-而如果有超过 (N-1)/2 的节点出现永久性故障，数据永远丢失，那集群就炸掉了，无法使用，也不可能恢复正常了。
+而如果有超过 (N-1)/2 的节点出现永久性故障，数据永远丢失，那集群就炸掉了，无法使用，也不可能恢复正常
+了。
 
 要避免出现这么悲催的事情，唯一的方法就是多备份，定期跑 snapshot 命令备份数据。
 
@@ -29,17 +30,21 @@ etcdctl --write-out=table snapshot status snapshot.db
 
 ### 二、恢复单个 Etcd 节点
 
-在集群下线节点数不超过 (N-1)/2 的情况下，集群仍然能正常提供服务。
-下线节点如果数据没丢，启动后会自动上线。
+在集群下线节点数不超过 (N-1)/2 的情况下，集群仍然能正常提供服务。下线节点如果数据没丢，启动后会自动
+上线。
 
 而如果数据丢失，节点就必须以新的 member 身份加入，请严格按照如下操作（完整的示例命令在后面有提供）：
 
-- 移除failure节点：连接集群所有剩余节点，使用 `member remove` 命令剔除错误节点。保证当前集群的健康状况
+- 移除failure节点：连接集群所有剩余节点，使用 `member remove` 命令剔除错误节点。保证当前集群的健康状
+  况
 - 彻底清理数据目录：错误节点必须停止，然后删除错误节点的 data 文件夹，以及清空 `member` 目录
-- 集群添加新 member：连接集群所有剩余节点，使用 `member add` 命令重新添加前面处理的错误节点（此时该错误节点已完成清理，但还未启动）
-- 启动 etcd 服务：确保节点的 `/data/etcd.env` `/data/etcd.service` 以及 etcd/etcdctl 均配置完成，使用 systemd 启动 etcd 服务
+- 集群添加新 member：连接集群所有剩余节点，使用 `member add` 命令重新添加前面处理的错误节点（此时该
+  错误节点已完成清理，但还未启动）
+- 启动 etcd 服务：确保节点的 `/data/etcd.env` `/data/etcd.service` 以及 etcd/etcdctl 均配置完成，使
+  用 systemd 启动 etcd 服务
 
-> 注意，当单节点集群添加第二个节点时，在第二个节点未启动前，集群将进入不可用状态！因为集群在线节点数低于 (N-1)/2 了！
+> 注意，当单节点集群添加第二个节点时，在第二个节点未启动前，集群将进入不可用状态！因为集群在线节点数
+> 低于 (N-1)/2 了！
 
 ```shell
 export ETCDCTL_API=3
@@ -58,7 +63,8 @@ sudo rm -rf /data/etcd.data
 etcdctl --endpoints=$ENDPOINT member add node1 --peer-urls="http://node1:2380"
 ```
 
-现在根据上一步提供的新参数，修改 `/data/etcd.env`，如果你的主机 IP 没有变更的话，一般只需要修改 `ETCD_INITIAL_CLUSTER_STATE="existing"` 这一个参数。
+现在根据上一步提供的新参数，修改 `/data/etcd.env`，如果你的主机 IP 没有变更的话，一般只需要修改
+`ETCD_INITIAL_CLUSTER_STATE="existing"` 这一个参数。
 
 最后启动 etcd 服务，应该就正常了。
 
@@ -74,7 +80,8 @@ etcdctl --endpoints=$ENDPOINT member add node1 --peer-urls="http://node1:2380"
 mv /data/etcd.data /data/etcd.data.old
 ```
 
-然后确保所有节点上都已经配置好了 `/data/etcd.env` 和 `/data/etcd.service`，但是暂时不要启动 etcd 服务！
+然后确保所有节点上都已经配置好了 `/data/etcd.env` 和 `/data/etcd.service`，但是暂时不要启动 etcd 服
+务！
 
 现在在所有节点上， 分别使用 snapshot 恢复它们的数据目录：
 
@@ -93,4 +100,3 @@ etcdctl snapshot restore snapshot.db \
 ```
 
 现在再使用 systemctl 启动所有的 etcd 服务，集群应该就恢复到了之前的快照状态。
-

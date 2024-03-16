@@ -3,10 +3,10 @@ services:
   drone:
     image: drone/drone:1
     volumes:
-    - ./data:/data
+      - ./data:/data
     ports:
-    - 80:80
-    - 443:443
+      - 80:80
+      - 443:443
     environment:
       DRONE_GITLAB_SERVER: http://gitlab.svc.local
       DRONE_GITLAB_CLIENT_ID: <gitlab-application-id>
@@ -20,9 +20,9 @@ services:
   drone-runner-docker:
     image: drone/drone-runner-docker:1
     ports:
-    - 3000:3000
+      - 3000:3000
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       DRONE_RPC_SECRET: <random-rpc-secret>
       DRONE_RPC_HOST: drone.svc.local

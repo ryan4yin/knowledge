@@ -7,7 +7,7 @@ pipeline {
     environment {
         // 使用凭据，对不同的凭据，Jenkins 会设置不同的环境变量
         //   1. 对文件凭据，下列环境变量就是文件的路径
-        //  2. 对账号密码，下列环境变量内容为 $USER:$PASSOWRD，用冒号分隔账号和密码。
+        //  2. 对账号密码，下列环境变量内容为 $USER:$PASSWORD，用冒号分隔账号和密码。
         //      同时也提供 $XXX_CREDENTIAL_USR（账号）和 $XXX_CREDENTIAL_PSW（密码）
         // XXX_CREDENTIAL = credentials('xxx-user-password')
 
@@ -59,7 +59,7 @@ pipeline {
                         // sh "dotnet tool update --global dotnet-sonarscanner --version 4.8.0"
                         // 2.2 扫描 dotnet core 代码
                         // sh "dotnet sonarscanner begin /k:${JOB_BASE_NAME}"
-                        // sh "dotnet restore -s http://baget.svc.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // resotre with private nuget server
+                        // sh "dotnet restore -s http://baget.svc.local/v3/index.json -s https://api.nuget.org/v3/index.json"  // restore with private nuget server
                         // sh "dotnet build --no-restore"
                         // sh "dotnet sonarscanner end"
                     }

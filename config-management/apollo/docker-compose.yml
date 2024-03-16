@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   apollo-configservice-dev:
@@ -142,7 +142,6 @@ services:
     networks:
       - apollo
     restart: always
-
 
 networks:
   apollo:

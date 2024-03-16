@@ -22,8 +22,7 @@ Linux 各发行版及相关配置
 
 ## 网络设置
 
-对物理机，可以编写通用脚本设置静态 IP、DNS 等。
-不同发行版的网络配置方法也不同，要注意区分：
+对物理机，可以编写通用脚本设置静态 IP、DNS 等。不同发行版的网络配置方法也不同，要注意区分：
 
 1. Ubuntu: 新版现在已经使用 netplan 进行配置了，配置文件是 `/etc/netplan/xxx.yaml`
 1. CentOS7: 配置文件是 `/etc/sysconfig/network-scripts/ifcfg-<interface-name>`
@@ -70,10 +69,9 @@ DNS1=114.114.114.114  # DNS 服务器
 # DNS2=
 ```
 
-对虚拟机，可以在打包 ova 前首先使用 `apt`/`yum` 安装好 open-vm-tools，
-然后直接使用 terraform 的 vsphere 等插件从 ova 模板新建虚拟机。
-新建虚拟机时可以直接通过 terraform 的配置文件设置好虚拟机的硬件和网络参数。
-这种方式对 ubuntu/centos 都有效，运维不需要自己去处理各 linux 发行版网络配置的差异。
+对虚拟机，可以在打包 ova 前首先使用 `apt`/`yum` 安装好 open-vm-tools，然后直接使用 terraform 的
+vsphere 等插件从 ova 模板新建虚拟机。新建虚拟机时可以直接通过 terraform 的配置文件设置好虚拟机的硬件
+和网络参数。这种方式对 ubuntu/centos 都有效，运维不需要自己去处理各 linux 发行版网络配置的差异。
 
 ## Swap 分区设置
 
@@ -93,8 +91,10 @@ sudo echo 'LANG="en_US.UTF-8"' >> /etc/profile;source /etc/profile
 
 ### Ubuntu：修改 /etc/cloud/cloud.cfg
 
-ubuntu 1804 开始自带 cloud-init，这个工具默认情况下会使我们修改 `/etc/hostname` 失效，也就是无法修改主机名称！
+ubuntu 1804 开始自带 cloud-init，这个工具默认情况下会使我们修改 `/etc/hostname` 失效，也就是无法修改
+主机名称！
 
 但是 kubernetes 的节点必须具有不同的主机名，而且用主机名表示该机器的用途也能方便管理。
 
-我们需要修改 cloud-init 的配置文件 /etc/cloud/cloud.cfg 文件，将里面的 `preserve_hostname` 改成 false，这样才能修改主机名称。
+我们需要修改 cloud-init 的配置文件 /etc/cloud/cloud.cfg 文件，将里面的 `preserve_hostname` 改成
+false，这样才能修改主机名称。

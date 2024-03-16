@@ -1,6 +1,5 @@
 # EKS
 
-
 ## MISC
 
 获取 Kubeconfig:
@@ -16,12 +15,10 @@ export AWS_PROFILE=profile-name
 aws xxx xxx
 ```
 
-
 ## IAM 与 ServiceAccount 的角色绑定
 
 - [Creating an IAM role and policy for your service account](https://docs.aws.amazon.com/eks/latest/userguide/create-service-account-iam-policy-and-role.html)
 - [Associate an IAM role to a service account](https://docs.aws.amazon.com/eks/latest/userguide/specify-service-account-role.html)
-
 
 具体而言，就是：
 
@@ -32,21 +29,21 @@ aws xxx xxx
 ```yaml
 {
   "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "arn:aws:iam::130132914922:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>"
+  "Statement":
+    [
+      {
+        "Effect": "Allow",
+        "Principal":
+          {
+            "Federated": "arn:aws:iam::130132914922:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>",
+          },
+        "Action": "sts:AssumeRoleWithWebIdentity",
+        "Condition": { "StringEquals": {
+                # 尤其注意，这里的 key 要改成 `:sub` 结尾
+                "oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>:sub": "system:serviceaccount:<namespace>:<serviceAccountName>",
+              } },
       },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          # 尤其注意，这里的 key 要改成 `:sub` 结尾
-          "oidc.eks.us-east-1.amazonaws.com/id/<eks-oidc-id>:sub": "system:serviceaccount:<namespace>:<serviceAccountName>"
-        }
-      }
-    }
-  ]
+    ],
 }
 ```
 
@@ -72,13 +69,18 @@ metadata:
 
 `amazon-vpc-cni-k8s` 默认情况下会为每个节点预留大量 ip，提升 ip 分配速度。
 
-在「ip 数量受限的情况下」，可以去掉 `aws-node` 这个 `daemonset` 的 `WARM_ENI_TARGET` 环境变量，再添加 `WARM_IP_TARGET` 及 `MINIMUM_IP_TARGET` 缓解此问题。
+在「ip 数量受限的情况下」，可以去掉 `aws-node` 这个 `daemonset` 的 `WARM_ENI_TARGET` 环境变量，再添
+加 `WARM_IP_TARGET` 及 `MINIMUM_IP_TARGET` 缓解此问题。
 
-建议设置 `WARM_IP_TARGET=2`，使每个节点始终提前预热两个 IP，再设置 `MINIMUM_IP_TARGET` 为 「2 + 绝大部分节点的最大 Pod 数量」。
-比如我们用来专门跑大数据的 EKS 集群，95%+ 的节点都只会有 3 个 pod，就可以设置 `MINIMUM_IP_TARGET=5`
+建议设置 `WARM_IP_TARGET=2`，使每个节点始终提前预热两个 IP，再设置 `MINIMUM_IP_TARGET` 为 「2 + 绝大
+部分节点的最大 Pod 数量」。比如我们用来专门跑大数据的 EKS 集群，95%+ 的节点都只会有 3 个 pod，就可以
+设置 `MINIMUM_IP_TARGET=5`
 
 如果以上参数设得太小，可能会遇到如下问题：
-- 创建新 ENI 并将其附加到节点最多可能需要 10 秒。造成 pod 创建缓慢
-- ipamd 需要调用 EC2 API 将 ip 附加到实例上，调用频繁的情况下可能会遇到到 API 速率限制，导致无法将新的 ENI 或 IP 附加到集群中的任何实例。
 
-详见 [WARM_ENI_TARGET, WARM_IP_TARGET and MINIMUM_IP_TARGET](https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md)
+- 创建新 ENI 并将其附加到节点最多可能需要 10 秒。造成 pod 创建缓慢
+- ipamd 需要调用 EC2 API 将 ip 附加到实例上，调用频繁的情况下可能会遇到到 API 速率限制，导致无法将新
+  的 ENI 或 IP 附加到集群中的任何实例。
+
+详见
+[WARM_ENI_TARGET, WARM_IP_TARGET and MINIMUM_IP_TARGET](https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md)

@@ -8,6 +8,3 @@
 - 等等
 
 它会暴露出 metrics 接口，提供给 prometheus 抓取。
-
-
-

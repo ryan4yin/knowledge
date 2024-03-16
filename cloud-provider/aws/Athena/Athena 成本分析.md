@@ -71,7 +71,7 @@ SELECT
     WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
     WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
     ELSE line_item_usage_type
-  END as usage_type,  
+  END as usage_type,
   sum(line_item_blended_cost) as blended_cost,
 FROM "my_cur"
 where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-12-27'
@@ -80,7 +80,6 @@ where regexp_extract(line_item_usage_start_date, '^..........') >= '2021-12-27'
 group by 1, 2
 order by 1, 2
 ```
-
 
 CloudFront 成本分析：
 
@@ -102,7 +101,7 @@ SELECT
     WHEN line_item_usage_type like '%Lambda-Edge-GB-Second' THEN 'Lambda-Edge-GB-Second'
     WHEN line_item_usage_type like '%Lambda-Edge-Request' THEN 'Lambda-Edge-Request'
     ELSE line_item_usage_type
-  END as usage_type,  
+  END as usage_type,
   line_item_usage_amount,
   line_item_description,
   sum(line_item_blended_cost) as blended_cost
@@ -134,15 +133,17 @@ order by 2, 1
 
 ## SavingPlans/ReservedInstances 对 CUR 成本的影响
 
-SP/RI 会导致部分被 cover 的实例成本下降，而其他实例的成本没变化，而且它是根据一些难以预测的手段去选择 cover 哪些实例的。这会导致基于 CUR 的成本分析手段失效。
+SP/RI 会导致部分被 cover 的实例成本下降，而其他实例的成本没变化，而且它是根据一些难以预测的手段去选
+择 cover 哪些实例的。这会导致基于 CUR 的成本分析手段失效。
 
-解决方法是以 `pricing_public_on_demand_cost` 这个字段进行成本分析，这个给出的是按标准价格计算的实例成本。可以将总的 `blended_cost` 也就是真实成本，以上述 OD 成本为权重进行拆分，得到的就是一个比较准确的成本了。
+解决方法是以 `pricing_public_on_demand_cost` 这个字段进行成本分析，这个给出的是按标准价格计算的实例
+成本。可以将总的 `blended_cost` 也就是真实成本，以上述 OD 成本为权重进行拆分，得到的就是一个比较准确
+的成本了。
 
 ## Athena 自身的成本分析
 
 - 把 workspace 拆得更细致，可以单独分析每个 workspace 的成本
 - 对同一 workspace 内的成本，可以通过脚本把所有 SQL 的查询记录导出来分析
-
 
 ## 参考
 

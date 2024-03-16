@@ -6,7 +6,8 @@
 
 1. 普通的单机部署(normal)
 2. 单机内存数据库(in-memory)：适合用于测试的高速 MySQL 数据库，数据保存在内存中因而速度快。
-3. 使用 kubernetes 部署分布式的 MySQL 集群：参见 [mysql cluster -vitess](./mysql%20cluster%20-%20vitess/README.md)
+3. 使用 kubernetes 部署分布式的 MySQL 集群：参见
+   [mysql cluster -vitess](./mysql%20cluster%20-%20vitess/README.md)
 
 ### 参考
 
@@ -19,24 +20,27 @@
 ### 1. 给 root 账号设置密码（适合开发环境，对安全性要求不高的场景）
 
 启用 root 账户远程登录，并且设置密码：
+
 ```sql
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<your-password>';
 FLUSH PRIVILEGES;
 ```
 
-内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（**危险操作！另外很多应用都不支持使用空密码连接 MySQL！**）：
+内网开发环境的 mysql，可以关掉 root 账户的密码验证功能（**危险操作！另外很多应用都不支持使用空密码连
+接 MySQL！**）：
 
 ```sql
 # 使本机访问 mysql 不需要密码
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost'
 # 使远程访问 mysql 也不需要密码
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' 
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'
 FLUSH PRIVILEGES;
 ```
 
 ### 2. 添加受限用户（安全性高）并设置密码
 
 添加用户：
+
 ```sql
 # 添加本地用户 test，并设置密码
 create user 'test'@'localhost' identified by '<your-password>';
@@ -63,7 +67,7 @@ FLUSH PRIVILEGES;
 # 查看用户
 SELECT user,host,authentication_string,plugin FROM mysql.user;
 # 查看本地用户 test 的权限
-show grants for 'test'@'localhost'; 
+show grants for 'test'@'localhost';
 ```
 
 删除用户与权限：

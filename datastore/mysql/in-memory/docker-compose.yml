@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   mysql:
@@ -6,10 +6,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-    - 3306:3306
+      - 3306:3306
     volumes:
-    # 容器启动后会自动调用下述文件夹中的 shell/sql 脚本，可用于自动化建库建表。
-    - create-databases.sql:/docker-entrypoint-initdb.d/create-databases.sql
+      # 容器启动后会自动调用下述文件夹中的 shell/sql 脚本，可用于自动化建库建表。
+      - create-databases.sql:/docker-entrypoint-initdb.d/create-databases.sql
 
     # 内存模式（tmpfs）的 mysql，速度非常快！但是重启 PC 会丢数据！可用于单元测试/集成测试等环境。
     ## https://docs.docker.com/storage/tmpfs/

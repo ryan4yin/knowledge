@@ -221,7 +221,7 @@ class GitlabHelper:
         for p in self.get_projects_under_group(group, recursive=recursive):
             print(f"将 {p.path_with_namespace} 的 {branch} 分支，设为保护分支")
             p = self.gl.projects.get(p.id)
-            p.branchs.get(branch).protect()
+            p.branches.get(branch).protect()
 
     def delete_projects_under_group(self, group, recursive=False):
         """危险操作！！！

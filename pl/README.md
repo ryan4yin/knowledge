@@ -2,12 +2,12 @@
 
 1. 编译运行环境的安装配置
 1. 总结出来的的一些 utils 代码
-2. 语言相关的笔记
-
+1. 语言相关的笔记
 
 ## 语言的学习
 
-除了 Go/Python/C/Rust/lua 这几个生产力语言的持续精进外，我每年还可以再学一点 PLT 理论，也学一些新的语言开拓视野。
+除了 Go/Python/C/Rust/lua 这几个生产力语言的持续精进外，我每年还可以再学一点 PLT 理论，也学一些新的
+语言开拓视野。
 
 目前我比较感兴趣的语言有：
 
@@ -17,7 +17,6 @@
   - Crystal: 走的是跟 Go 一致的 CSP 并发模型路线，但是语法是 Ruby 的语法
 - 学院派
   - idris/agda/haskell: 大佬们的玩具，先懂点 PLT 理论再接触吧
-
 
 ## 内存管理 - 堆内存与栈内存
 
@@ -39,7 +38,6 @@
 - [project-based-learning](https://github.com/tuvtran/project-based-learning)
 - [500lines](https://github.com/aosabook/500lines)
 
-
 ## 特定语言的源码阅读或者实践项目
 
 算法：
@@ -52,8 +50,8 @@ rust:
 
 c:
 
-- [kilo](https://github.com/antirez/kilo): A text editor in less than 1000 LOC with syntax highlight and search.
-
+- [kilo](https://github.com/antirez/kilo): A text editor in less than 1000 LOC with syntax highlight
+  and search.
 
 go:
 

@@ -1,6 +1,6 @@
 # IOS 自动化构建
 
->本文写于 2020-03-03，其中内容可能已经失效，请谨慎参考。
+> 本文写于 2020-03-03，其中内容可能已经失效，请谨慎参考。
 
 为了实现自动化构建，需要安装 Python3 环境（ macOS 自带）、OpenJDK8+(给 jenkins-agent 需要)。
 
@@ -17,8 +17,8 @@
 security unlock-keychain -p <password> "$HOME/Library/Keychains/login.keychain"
 ```
 
-默认情况下，xcode 会自动管理证书及密钥。
-但对 devops 而言，就希望能手动管理这些数据，这样可以方便地在任意机器上打包。
+默认情况下，xcode 会自动管理证书及密钥。但对 devops 而言，就希望能手动管理这些数据，这样可以方便地在
+任意机器上打包。
 
 为此需要提前手动生成好签名证书等数据，方法：
 

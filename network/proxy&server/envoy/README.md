@@ -12,11 +12,12 @@ envoy 目前是在云原生社区最流行的网络代理，没有之一。众�
 
 Nginx 与 Envoy 在配置方面的设计目标是不一样的。
 
-Nginx 在 2004 年，那个时候 Web 服务器都是手工配置的，所以 Nginx 设计了专用的语法用于编写配置，主要是方便配置的编写。而且当时也没有动态更新配置的需求，配置更新后手动 reload 一下对管理员而言也不是难事。
+Nginx 在 2004 年，那个时候 Web 服务器都是手工配置的，所以 Nginx 设计了专用的语法用于编写配置，主要是
+方便配置的编写。而且当时也没有动态更新配置的需求，配置更新后手动 reload 一下对管理员而言也不是难事。
 
-而 Envoy 的设计目标是作为微服务的边车代理，并且组成服务网格来代理所有集群流量，这种场景需要非常灵活的动态配置能力。
-因此 Envoy 的配置使用了 Json/Yaml 这种解析很方便的配置语法，而且设计重点是配置的模块化，使每部分配置都能单独更新。
-这也导致了直接手写配置的话，Envoy 的配置会显得比较臃肿。
+而 Envoy 的设计目标是作为微服务的边车代理，并且组成服务网格来代理所有集群流量，这种场景需要非常灵活
+的动态配置能力。因此 Envoy 的配置使用了 Json/Yaml 这种解析很方便的配置语法，而且设计重点是配置的模块
+化，使每部分配置都能单独更新。这也导致了直接手写配置的话，Envoy 的配置会显得比较臃肿。
 
 但是实际上把 Envoy 的结构理清楚，它的配置还是很好理解的。
 
@@ -24,22 +25,23 @@ Nginx 在 2004 年，那个时候 Web 服务器都是手工配置的，所以 Ng
 
 Nginx 的配置中需要设定 worker 进程数，以及最大连接数。
 
-而 Envoy 使用非阻塞事件循环编写 worker 代码，因此它不需要太多的线程，也不需要维护太多的连接。
-默认情况下 Enovy 使用的线程数等于硬件线程数（即 Linux 逻辑核数），任一 Worker 与每个上游都只会建立一个 HTTP/2 连接，或者维护一个 HTTP/1.1 连接池。
+而 Envoy 使用非阻塞事件循环编写 worker 代码，因此它不需要太多的线程，也不需要维护太多的连接。默认情
+况下 Enovy 使用的线程数等于硬件线程数（即 Linux 逻辑核数），任一 Worker 与每个上游都只会建立一个
+HTTP/2 连接，或者维护一个 HTTP/1.1 连接池。
 
-一个 Worker 与每个上游只建立一个 HTTP/2 连接，但因为 HTTP/2 的多路复用等属性，这并不表示 Envoy 的性能一定会比 Nginx 的大量 Workers 差。
+一个 Worker 与每个上游只建立一个 HTTP/2 连接，但因为 HTTP/2 的多路复用等属性，这并不表示 Envoy 的性
+能一定会比 Nginx 的大量 Workers 差。
 
-Envoy 的线程数是一个很重要的参数，可以通过 `--concurrency` 来修改，一般边缘代理（网关）需要设置更高的线程数（Worker 数），
-而内部代理大部分负载都很低，降低线程数可以减少资源浪费，在大型服务网格中这就显得很重要了。
-
+Envoy 的线程数是一个很重要的参数，可以通过 `--concurrency` 来修改，一般边缘代理（网关）需要设置更高
+的线程数（Worker 数），而内部代理大部分负载都很低，降低线程数可以减少资源浪费，在大型服务网格中这就
+显得很重要了。
 
 详见 [Envoy threading model](https://blog.envoyproxy.io/envoy-threading-model-a8d44b922310)
 
-
 ### 2. HTTP 客户端断开连接
 
-对于 proxy 还在处理数据，连响应 header 都还没返回给客户端的时候，客户端主动了断开连接的情况，
-nginx 和 envoy 在内部使用不同的状态码来记录这种情况：
+对于 proxy 还在处理数据，连响应 header 都还没返回给客户端的时候，客户端主动了断开连接的情况，nginx
+和 envoy 在内部使用不同的状态码来记录这种情况：
 
 - nginx 使用状态码 `499`
 - envoy 则使用状态码 `0`
@@ -54,7 +56,8 @@ nginx 和 envoy 在内部使用不同的状态码来记录这种情况：
 
 ### 3. HTTP 配置
 
-Nginx 的 http 配置块中，可以在全部或某个 location 上配置 gzip、超时、access_log、rewrite 等功能，还支持使用 if 之类的 DSL，或者运行 lua 脚本。
+Nginx 的 http 配置块中，可以在全部或某个 location 上配置 gzip、超时、access_log、rewrite 等功能，还
+支持使用 if 之类的 DSL，或者运行 lua 脚本。
 
 而在 Envoy 中，所有 HTTP 相关的功能都是使用过滤器实现的，后面会详细讨论。
 
@@ -62,20 +65,21 @@ Nginx 的 http 配置块中，可以在全部或某个 location 上配置 gzip�
 
 ### 3. Upstream
 
-Nginx 的 Upstream 负责在多个 server 之间进行负载均衡，而且不支持动态发现。
-Envoy 中与之对应的概念是 Cluster，每个 Cluster 都可以有多个 Endpoints.
-Cluster 负责在 Endpoints 之间进行负载均衡，也支持动态发现 Endpoints.
+Nginx 的 Upstream 负责在多个 server 之间进行负载均衡，而且不支持动态发现。Envoy 中与之对应的概念是
+Cluster，每个 Cluster 都可以有多个 Endpoints. Cluster 负责在 Endpoints 之间进行负载均衡，也支持动态
+发现 Endpoints.
 
 ### 4. inbound/outbound
 
->这里可能还存在错误
+> 这里可能还存在错误
 
-另外 Envoy 的核心是一个 L3/L4 代理，在这上面也提供了 L7 的支持。也就是说它可以直接在 L3 层代理一个主机或容器的所有流量。
+另外 Envoy 的核心是一个 L3/L4 代理，在这上面也提供了 L7 的支持。也就是说它可以直接在 L3 层代理一个主
+机或容器的所有流量。
 
-将 Envoy 作为一个 Kubernetes Pod Sidecar，进入 Pod 的流量被称为 inbound，而从 Pod 出去的流量被称作 outbound.
+将 Envoy 作为一个 Kubernetes Pod Sidecar，进入 Pod 的流量被称为 inbound，而从 Pod 出去的流量被称作
+outbound.
 
 而 Nginx 是一个 L4/L7 层的服务器，不支持 L3。
-
 
 ## 参考
 

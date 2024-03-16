@@ -11,14 +11,12 @@ Jenkins 有时会出现一类僵死的 Job Build，手动终止它没有任何�
 ```groovy
  Jenkins .instance.getItemByFullName("<JobFullName>")
         .getBuildByNumber(<JobNumber>)
-        .finish(hudson.model.Result.ABORTED, new java.io.IOException("Aborting build")); 
+        .finish(hudson.model.Result.ABORTED, new java.io.IOException("Aborting build"));
 ```
 
 参考资料：
 
 - [How to stop an unstoppable zombie job on Jenkins without restarting the server?](https://stackoverflow.com/questions/14456592/how-to-stop-an-unstoppable-zombie-job-on-jenkins-without-restarting-the-server)
-
-
 
 ## 2. Windows Slave 的日志中文变成乱码
 

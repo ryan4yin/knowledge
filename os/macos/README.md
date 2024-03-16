@@ -1,8 +1,7 @@
 # MacOS X 开发环境配置
 
-> 如下内容已经完全废弃，仅留祚参考。
-> 我的新配置方法（高度自动化）： https://github.com/ryan4yin/nix-darwin-kickstarter
-
+> 如下内容已经完全废弃，仅留祚参考。我的新配置方法（高度自动化）：
+> https://github.com/ryan4yin/nix-darwin-kickstarter
 
 ## 一、[Homebrew](https://github.com/Homebrew/install)
 
@@ -17,12 +16,12 @@ homebrew 是 MacOS X 的包管理工具，对 CLI 爱好者而言，它基本可
 ### 2. hombrew 常用命令
 
 ```shell
-# 通过关键字搜索 fomula
+# 通过关键字搜索 formula
 brew search xxx
 
-# 从 hombrew 的仓库中查找 fomula 进行安装，基本都是 cli 工具或依赖包
+# 从 hombrew 的仓库中查找 formula 进行安装，基本都是 cli 工具或依赖包
 brew install xxx
-# 从 homebrew-cask 仓库中查找 fomula 进行安装，所有 GUI 或其他非常大的软件，都会被放在这个 cask 仓库中
+# 从 homebrew-cask 仓库中查找 formula 进行安装，所有 GUI 或其他非常大的软件，都会被放在这个 cask 仓库中
 brew install --cask xxx
 
 brew update # 更新 Homebrew packages 索引
@@ -42,7 +41,8 @@ xcode-select --install
 
 ### 1. Python3
 
-最新的 macOS 10.15 已经自带 Python3.7 了，对版本没有要求的话可以直接使用系统默认的 python，然后使用 venv/poetry 管理虚拟环境。
+最新的 macOS 10.15 已经自带 Python3.7 了，对版本没有要求的话可以直接使用系统默认的 python，然后使用
+venv/poetry 管理虚拟环境。
 
 有需要可以安装一个 pyenv 来管理多版本的 python，
 
@@ -73,13 +73,12 @@ macOS 10.15 将默认 shell 由 bash 替换为了 zsh，要记得修改环境变
 1. 在「设置」-「网络」中设置静态 IP、路由器、DNS 等网络参数。
 2. 在「设置」-「共享」中启用「远程登录」，即 SSH 服务器。
 
-
 ## 四、桌面开发环境设置
 
 要把 MacOS X 调教地比较适合用做主力开发环境，建议安装如下工具：
 
 ```
-brew install coreutils  # sha256sum/md5sum 
+brew install coreutils  # sha256sum/md5sum
 brew install --cask visual-studio-code docker wireshark iterm2 firefox google-chrome
 # 安装视频播放器
 brew install --cask iina
@@ -88,7 +87,7 @@ brew install fzf tmux zsh-autosuggestions aria2 p7zip
 # 作为 Linux 熟手，当然还需要安装我更熟悉的 gnu-tar 以及 gnu-sed，它们的 cli 名称为 `gtar` `gsed`
 brew install gnu-tar gnu-sed
 # 容器相关命令行工具
-brew install skopeo helm kubectl 
+brew install skopeo helm kubectl
 # 安装编程语言 SDK
 brew install go
 ```
@@ -102,7 +101,6 @@ brew install starship
 # 然后将如下内容添加到 ~/.zshrc 的末尾，再重新进 terminal，就大功告成了
 eval "$(starship init zsh)"
 ```
-
 
 finder 相关设置：
 
@@ -133,20 +131,24 @@ mindnote - 思维导图
 学会用 spotlight 全局搜索，熟悉后可以考虑装个 alfred
 
 finder 相关：
+
 - 把 home 和 codes 文件夹添加到左侧栏
+
 ### 触摸板相关配置
+
 - 在「辅助功能」中启用「三指拖移」
 - 在「触摸板」中启用：
-   - 「辅助点按」 - 「轻点或双指点按」
-   - 「轻点来点按」
+  - 「辅助点按」 - 「轻点或双指点按」
+  - 「轻点来点按」
 
 ### 快捷操作（触发角/touchbar/快捷键）
 
->公司的电脑，为了安全需要人离屏锁屏
+> 公司的电脑，为了安全需要人离屏锁屏
 
 方法一：
 
-进入「设置」-「桌面与屏幕保护程序」-「屏幕保护程序」，点击右下角的「触发角」进入触发角设置，这个很实用。
+进入「设置」-「桌面与屏幕保护程序」-「屏幕保护程序」，点击右下角的「触发角」进入触发角设置，这个很实
+用。
 
 方法二：
 
@@ -154,8 +156,8 @@ finder 相关：
 
 ### 防止系统在锁屏后自动休眠
 
-锁屏后一段时间 macOS 会自动进入休眠状态，并且断网，这可能会导致各种 ssh 连接直接断掉，
-如果没用 tmux/screen 等终端复用器的话，工作环境也会丢失。
+锁屏后一段时间 macOS 会自动进入休眠状态，并且断网，这可能会导致各种 ssh 连接直接断掉，如果没用
+tmux/screen 等终端复用器的话，工作环境也会丢失。
 
 为了避免这个问题，可以在「System」-「Battery」-「Power Adapter」中勾选上「防止电脑自动休眠」。
 
@@ -163,15 +165,16 @@ finder 相关：
 
 这个是 MacOS 系统的全局设置，改起来很麻烦。
 
-比较好的解决方法是只修改 Terminal + IDE 程序的设置，将 `option` 映射为 `esc+` 或者 `meta`.
-一般光标跳转也只在 Terminal + IDE 中用得到，所以感觉这是个比较简单优雅的解决方案。
+比较好的解决方法是只修改 Terminal + IDE 程序的设置，将 `option` 映射为 `esc+` 或者 `meta`. 一般光标
+跳转也只在 Terminal + IDE 中用得到，所以感觉这是个比较简单优雅的解决方案。
 
 这样改好，你就可以在 iterm2 中使用 `option+f` 前进一个单词，`option+b` 回退一个单词了，非常方便。
 
 #### iterm2 的 option 键映射
 
-目前 MacOS 上最流行的 Terminal 是 iterm2，
-具体的设置方法为在 iterm2 的「preferences」-「profile」-「keys」中，有两个很显眼的设置项，在这里将左右 option 键都设置为 `esc+` 就大功告成了。
+目前 MacOS 上最流行的 Terminal 是 iterm2，具体的设置方法为在 iterm2 的
+「preferences」-「profile」-「keys」中，有两个很显眼的设置项，在这里将左右 option 键都设置为 `esc+`
+就大功告成了。
 
 #### vscode 的 option 键映射
 
@@ -185,7 +188,8 @@ vscode 的 option 映射参数如下：
 
 #### jetbrains IDE
 
-jetbrains 系列 IDE 的 2021.2 开始，在「tools」-「terminal」中添加了参数「Use Option as Meta key」，启用该参数即可。
+jetbrains 系列 IDE 的 2021.2 开始，在「tools」-「terminal」中添加了参数「Use Option as Meta key」，
+启用该参数即可。
 
 ### 通过 Touch ID 进行 sudo 命令授权
 
@@ -225,12 +229,13 @@ sudo chmod -w /etc/pam.d/sudo
 
 由于苹果系统原因，外接 2K 显示器会导致字体特别小，非常难受。
 
-建议使用 [one-key-hidpi](https://github.com/xzhih/one-key-hidpi)，跑完脚本重启，就能将外接 2K 显示器变成 retina 屏，就能获得类似 windows 的分辨率缩放体验了。
-
+建议使用 [one-key-hidpi](https://github.com/xzhih/one-key-hidpi)，跑完脚本重启，就能将外接 2K 显示器
+变成 retina 屏，就能获得类似 windows 的分辨率缩放体验了。
 
 ## MacOS 网络诊断相关命令
 
 查看路由表及对应的网卡：
+
 ```
 ❯ netstat -nr
 Routing tables
@@ -253,6 +258,7 @@ brt-w09.lan        f2:7:9a:4e:a9:1c   UHLWI          en0   1189
 ```
 
 网卡相关
+
 ```
 # 列出所有网卡的详细信息
  ifconfig -a
@@ -261,7 +267,7 @@ lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
 	inet 127.0.0.1 netmask 0xff000000
 	inet6 ::1 prefixlen 128
 	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
-	nd6 options=201<PERFORMNUD,DAD>
+	and6 options=201<PERFORMNUD,DAD>
 gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
 stf0: flags=0<> mtu 1280
 ......
@@ -270,7 +276,7 @@ en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
 	ether 14:7d:da:9d:37:a0
 	inet6 fe80::42e:3664:dd14:7a29%en0 prefixlen 64 secured scopeid 0x6
 	inet 192.168.2.238 netmask 0xffffff00 broadcast 192.168.2.255
-	nd6 options=201<PERFORMNUD,DAD>
+	and6 options=201<PERFORMNUD,DAD>
 	media: autoselect
 	status: active
 ......

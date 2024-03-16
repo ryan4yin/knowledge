@@ -26,7 +26,7 @@ func primeNumbers(max int) chan int {
 	isPrime := make([]bool, max+1)
 	primeNumChan := make(chan int)
 
-	// calulate all prime numbers
+	// calculate all prime numbers
 	isPrime[2] = true
 	isPrime[3] = true
 

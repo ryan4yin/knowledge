@@ -9,9 +9,12 @@
 使用 Guix 官方提供的 ISO 镜像安装即可，要注意的是：
 
 1. 其图形化安装程序，无法设置国内镜像源，下载奇慢无比，所以最好使用命令行安装程序。
-2. 为了简化安装，可以先用图形化安装程序一路设置好磁盘分区、`config.scm` 配置生成，然后在实际执行时，再 ctrl+c 退出进入命令行安装程序
+2. 为了简化安装，可以先用图形化安装程序一路设置好磁盘分区、`config.scm` 配置生成，然后在实际执行时，
+   再 ctrl+c 退出进入命令行安装程序
 
-命令行安装的步骤参考官方文档 [Proceeding with the Installation - Guix Manual](https://guix.gnu.org/manual/en/html_node/Proceeding-with-the-Installation.html) 即可：
+命令行安装的步骤参考官方文档
+[Proceeding with the Installation - Guix Manual](https://guix.gnu.org/manual/en/html_node/Proceeding-with-the-Installation.html)
+即可：
 
 ```bash
 # 挂载 root 分区
@@ -55,7 +58,7 @@ guix environment --ad-hoc <package>
 参考配置（dotfiles）：
 
 - https://github.com/rakino/Testament/tree/trunk
-    - 这个配置结构是我比较喜欢的，一目了然。
+  - 这个配置结构是我比较喜欢的，一目了然。
 - https://github.com/Tass0sm/dotfiles
 - https://github.com/engstrand-config/guix-dotfiles
 - https://github.com/podiki/dot.me
@@ -66,4 +69,3 @@ guix environment --ad-hoc <package>
 - https://github.com/migalmoreno/guix-config
 - https://github.com/rsauex/dotfiles
 - https://github.com/hiecaq/guix-config
-

@@ -1,11 +1,12 @@
 # 在Linux上搭建ISCS网络存储
 
-iSCSI是一种使用TCP/IP协议，在现有IP网络上传输SCSI协议数据的工业标准。
-而 SCSI 本来是一个计算机和外部设备之间的通用接口标准。
+iSCSI是一种使用TCP/IP协议，在现有IP网络上传输SCSI协议数据的工业标准。而 SCSI 本来是一个计算机和外部
+设备之间的通用接口标准。
 
-简单解释：SCSI 是计算机和硬盘之间的接口标准（就像 SATA/M.2 一样），而 iSCSI 则将这个接口标准移植到了 TCP/IP 网络之上，使计算机和存储设备可以通过 TCP/IP 网络连接。
+简单解释：SCSI 是计算机和硬盘之间的接口标准（就像 SATA/M.2 一样），而 iSCSI 则将这个接口标准移植到了
+TCP/IP 网络之上，使计算机和存储设备可以通过 TCP/IP 网络连接。
 
->而 SMB/NFS 是更高层的协议，它们构建在文件系统之上。
+> 而 SMB/NFS 是更高层的协议，它们构建在文件系统之上。
 
 ## 用途
 
@@ -19,11 +20,11 @@ iSCSI是一种使用TCP/IP协议，在现有IP网络上传输SCSI协议数据的
 
 1. 服务端（iSCSI Target）：也就是提供实际存储资源的服务器。
    1. iSCSI LUN: 指具体的存储资源（可理解成硬盘），一个服务端可以提供多个 LUN。
-   2. Linux 服务端：linux 上 iscsi 的标准实现是 [ISCSI/LIO](https://wiki.archlinux.org/index.php/ISCSI/LIO) 
+   2. Linux 服务端：linux 上 iscsi 的标准实现是
+      [ISCSI/LIO](https://wiki.archlinux.org/index.php/ISCSI/LIO)
 2. 客户端（iSCSI initiator）：客户端将服务端的存储资源挂载到本机上。
    1. Windows10 自带 iscsi 客户端。
    2. Linux 客户端：`apt install open-iscsi`
-
 
 ## 在 Debian 上运行 ISCSI/LIO
 

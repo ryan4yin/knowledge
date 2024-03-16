@@ -4,7 +4,6 @@ APISIX 是一个国产的 API 网关，基于 Opentresty，其核心贡献者同
 
 它的性能要比 Kong 更优秀，有国内很多企业的落地案例，功能也很丰富，值得考虑。
 
-
 ## 部署到 Kubernetes
 
 ```shell
@@ -17,7 +16,6 @@ helm pull apisix/apisix --untar --version 0.11.0
 # 使用自定义配置安装 apisix
 helm upgrade --install apisix ./apisix -f apisix-values.yaml
 ```
-
 
 ## 参考
 

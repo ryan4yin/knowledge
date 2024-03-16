@@ -1,7 +1,6 @@
 # https://github.com/yeasy/docker_practice/blob/master/etcd/cluster.md
 version: "3.6"
 services:
-
   node1:
     image: quay.io/coreos/etcd:v3.4.0
     volumes:
@@ -113,5 +112,4 @@ networks:
     ipam:
       driver: default
       config:
-      -
-        subnet: 172.16.238.0/24
+        - subnet: 172.16.238.0/24

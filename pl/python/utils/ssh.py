@@ -184,7 +184,7 @@ class SSH(object):
         """
         从远程主机获取文件到本地
         :param remote_file_path: 远程主机上的文件的路径（不会解析 `~` 符号！建议用绝对路径！）
-        :param local: 将文件保存到本地的这个位置/flie-like obj。若未指定，会存放在当前工作目录下(os.getcwd())
+        :param local: 将文件保存到本地的这个位置/file-like obj。若未指定，会存放在当前工作目录下(os.getcwd())
         :param preserve_mode: 是否保存文件的 mode 信息（可读/可写/可执行），默认 True
         :param mkdirs: 如果路径不存在，是否自动创建中间文件夹。
         :return: 一个 Result 对象

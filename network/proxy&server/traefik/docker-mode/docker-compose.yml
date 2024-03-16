@@ -20,7 +20,7 @@ services:
 #     networks:  # 如果使用了自定义的虚拟网络，traefik 必须额外添加这项配置
 #       - my-service1
 
-# networks: 
+# networks:
 #   my-service1:
 #     external:  # 加入 my-service 中已定义好的虚拟网络。否则 traefik 将无法访问 my-service
 #       name: my-service1

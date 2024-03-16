@@ -1,7 +1,7 @@
 ## Envoy 管理员 API
 
-如果 Admin API 配置了监听地址为 `0.0.0.0:15000`，可以直接通过浏览器访问 `<ip-addr>:15000`。
-这是一个导航页，列出了 Admin 的各种 API 接口。
+如果 Admin API 配置了监听地址为 `0.0.0.0:15000`，可以直接通过浏览器访问 `<ip-addr>:15000`。这是一个
+导航页，列出了 Admin 的各种 API 接口。
 
 在命令行中，可以通过如下命令，访问 Envoy 的管理员 API：
 
@@ -28,6 +28,5 @@ curl localhost:15000/stats/prometheus
 curl localhost:15000/server_info
 ```
 
-官方文档：[Administration interface - Enovy Docs](https://www.envoyproxy.io/docs/envoy/v1.21.1/operations/admin#)
-
-
+官方文
+档：[Administration interface - Enovy Docs](https://www.envoyproxy.io/docs/envoy/v1.21.1/operations/admin#)

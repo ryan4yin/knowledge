@@ -13,5 +13,4 @@ sqlite3 /path/to/xx.db
 
 ```
 
-
 TODO

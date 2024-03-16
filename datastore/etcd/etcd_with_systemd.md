@@ -1,9 +1,9 @@
 ## 使用 systemd 部署三节点的 Etcd 集群
 
-
 ### 一、下载 Etcd
 
 参考官方文档，使用如下命令下载：
+
 ```shell
 # 运行以下命令前请先退出 root 模式！
 ETCD_VER=v3.5.9
@@ -33,8 +33,8 @@ rm -rf /tmp/etcd-downloaded
 
 假设我们把所有数据和配置都存放在 /data 目录下，它可能是一个独立的数据硬盘：
 
-
-`/data/etcd.env` 内容如下，三个分别节点只有 `ETCD_NAME` 和 `THIS_IP` 两个参数需要修改，其他配置完全一致:
+`/data/etcd.env` 内容如下，三个分别节点只有 `ETCD_NAME` 和 `THIS_IP` 两个参数需要修改，其他配置完全
+一致:
 
 ```conf
 # 不支持使用 ${xxx} 做变量插值！
@@ -63,10 +63,10 @@ HOST_2=172.16.238.101
 HOST_3=172.16.238.102
 ```
 
-
 `/data/etcd.service` 的内容如下，三个节点的此份配置完全一致，没有任何区别:
 
-> 为了让 etcd 正确通知到 systemd 它的启动状态，这里用 `Type=notify`，但是这种模式下，就必须使用 `/data/bin/etcd` 自身作为启动程序
+> 为了让 etcd 正确通知到 systemd 它的启动状态，这里用 `Type=notify`，但是这种模式下，就必须使用
+> `/data/bin/etcd` 自身作为启动程序
 
 ```conf
 [Unit]

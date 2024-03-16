@@ -4,13 +4,15 @@
 
 ## 挂载失败时也启动系统
 
->https://unix.stackexchange.com/questions/53456/what-is-the-difference-between-nobootwait-and-nofail-in-fstab
+> https://unix.stackexchange.com/questions/53456/what-is-the-difference-between-nobootwait-and-nofail-in-fstab
 
 在 fstab 中，可以使用 `nofail` 选项，使得挂载失败时也启动系统。
 
-**注意这一点非常重要，因为默认情况下如果挂载失败，系统会永远无法启动，你必须通过 U 盘系统或者 rescue 模式来挂载根分区，修复 `/etc/fstab`**。
+**注意这一点非常重要，因为默认情况下如果挂载失败，系统会永远无法启动，你必须通过 U 盘系统或者 rescue
+模式来挂载根分区，修复 `/etc/fstab`**。
 
-尤其是你自动挂载的是移动硬盘或者 SMB 分享，这种情况下，如果你的系统启动时，移动硬盘还未连接，或者 SMB 分享无法连接上，那么系统就会永远无法启动！
+尤其是你自动挂载的是移动硬盘或者 SMB 分享，这种情况下，如果你的系统启动时，移动硬盘还未连接，或者
+SMB 分享无法连接上，那么系统就会永远无法启动！
 
 示例：
 
@@ -33,6 +35,3 @@
 ```
 
 然后 `sudo mount -a` 测试下挂载是否正常，再将 SMB 主机停机，再次测试，应该也不会报错。
-
-
-

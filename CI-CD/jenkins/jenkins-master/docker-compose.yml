@@ -1,9 +1,9 @@
-version: '3.3'
+version: "3.3"
 services:
   jenkins-master:
     image: jenkinsci/blueocean:latest
     container_name: jenkins-master
-    logging:  # 限制容器服务的日志大小，防止容器日志无限制增长
+    logging: # 限制容器服务的日志大小，防止容器日志无限制增长
       options:
         max-size: "10m"
         max-file: "1"
@@ -14,6 +14,6 @@ services:
       - "50000:50000"
     volumes:
       - ./jenkins-data:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock  # 允许在容器内使用 docker
-    user: root  # jenkins-master 需要 root 权限
+      - /var/run/docker.sock:/var/run/docker.sock # 允许在容器内使用 docker
+    user: root # jenkins-master 需要 root 权限
     restart: always

@@ -3,13 +3,15 @@
 BTRFS 的主要特性：
 
 1. subvolume: 类似于 LVM 的逻辑卷，可以在一个文件系统内创建多个子文件系统。
-2. snapshot: 快照，可以在不影响原文件系统的情况下，创建一个文件系统的副本，而且其基于 COW（Write On Copy）技术，因此占用的空间很小。
+2. snapshot: 快照，可以在不影响原文件系统的情况下，创建一个文件系统的副本，而且其基于 COW（Write On
+   Copy）技术，因此占用的空间很小。
 
 相关文档
 
 - [Btrfs - Arch Wiki](https://wiki.archlinuxcn.org/zh-hans/Btrfs)
 
-With Btrfs, it's also easy to install and manage multiple Linux distributions on the same disk, just use different subvolumes for each distribution.
+With Btrfs, it's also easy to install and manage multiple Linux distributions on the same disk, just
+use different subvolumes for each distribution.
 
 ## Take a snapshot of a subvolume
 
@@ -39,7 +41,7 @@ Btrfs 本身支持去重
 
 ```bash
 # format the root partition with btrfs and label it
-mkfs.btrfs -L crypted-nixos /dev/mapper/crypted-nixos 
+mkfs.btrfs -L encrypted-nixos /dev/mapper/crypted-nixos
 
 # mount the root partition and create subvolumes
 mount /dev/mapper/crypted-nixos /mnt
@@ -50,7 +52,7 @@ btrfs subvolume create /mnt/@swap
 umount /mnt
 
 # Remount the root partition with the subvolumes you just created
-# 
+#
 # Enable zstd compression to:
 #   1. Reduce the read/write operations, which helps to:
 #     1. Extend the life of the SSD.
@@ -102,7 +104,7 @@ btrfs subvolume create /mnt/@snapshots
 
 ## Auto backup
 
-1. [btrbk](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/backup/btrbk.nix): take snapshots and backup them to other instances via SSH.
-2. [snapper](https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/services/misc/snapper.nix): similar to btrbk, but it do not support backup remotely.
-
-
+1. [btrbk](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/backup/btrbk.nix):
+   take snapshots and backup them to other instances via SSH.
+2. [snapper](https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/services/misc/snapper.nix):
+   similar to btrbk, but it do not support backup remotely.

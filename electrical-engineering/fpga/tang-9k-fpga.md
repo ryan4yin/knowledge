@@ -4,9 +4,11 @@
 
 1. 支持 VHDL、Verilog HDL 和 System Verilog 语言
 
-##  1. 完成一个入门级的点灯实验
+## 1. 完成一个入门级的点灯实验
 
-首先当然是根据官方文档 [Tang Nano 9K - Sipeed Wiki](https://wiki.sipeed.com/hardware/zh/tang/Tang-Nano-9K/Nano-9K.html) 完成一个点灯实验。
+首先当然是根据官方文档
+[Tang Nano 9K - Sipeed Wiki](https://wiki.sipeed.com/hardware/zh/tang/Tang-Nano-9K/Nano-9K.html) 完
+成一个点灯实验。
 
 我使用的是 Endeavour 系统，一个基于 Arch 的发行版，在其上安装高云 IDE 教育版的方法如下：
 
@@ -15,9 +17,12 @@
 yay -S gowin-eda-edu-ide
 ```
 
-IDE 用于编写生成固件，而固件烧录就需要使用烧录器，高云官方提供的「高云云源编程器 programmer for linux」在我的系统上有 Bug，无法识别到 USB 连接的设备。
+IDE 用于编写生成固件，而固件烧录就需要使用烧录器，高云官方提供的「高云云源编程器 programmer for
+linux」在我的系统上有 Bug，无法识别到 USB 连接的设备。
 
-根据官方文档 [Linux 下烧录方法 - Sipeed Wiki](https://wiki.sipeed.com/hardware/zh/tang/Tang-Nano-Doc/get_started/flash_in_linux.html)，在 Linux 上使用 [openFPGALoader](https://github.com/trabucayre/openFPGALoader) 进行烧录才是最稳的。
+根据官方文档
+[Linux 下烧录方法 - Sipeed Wiki](https://wiki.sipeed.com/hardware/zh/tang/Tang-Nano-Doc/get_started/flash_in_linux.html)，
+在 Linux 上使用 [openFPGALoader](https://github.com/trabucayre/openFPGALoader) 进行烧录才是最稳的。
 
 安装方法如下：
 
@@ -56,9 +61,12 @@ openFPGALoader -b tangnano9k -f ./impl/pnr/tang-9k-led.fs
 
 ### 使用高云 IDE 进行开发
 
-NixOS 上可用我打好的 [高云教育版 IDE](https://github.com/ryan4yin/nur-packages/tree/main/pkgs/gowin-eda-edu-ide)，烧录器则建议使用 openfpgaloader.
+NixOS 上可用我打好的
+[高云教育版 IDE](https://github.com/ryan4yin/nur-packages/tree/main/pkgs/gowin-eda-edu-ide)，烧录器
+则建议使用 openfpgaloader.
 
-跑完综合跟布局布线后，会在项目根目录下生成一个 `impl` 文件夹，里面有 `pnr` 文件夹，里面有 `xxx.fs` 文件，这个就是生成的固件。
+跑完综合跟布局布线后，会在项目根目录下生成一个 `impl` 文件夹，里面有 `pnr` 文件夹，里面有 `xxx.fs`
+文件，这个就是生成的固件。
 
 直接使用 openfpgaloader 烧录即可：
 
@@ -71,7 +79,6 @@ openFPGALoader -b tangnano9k -f ./impl/pnr/*.fs
 代码可以直接用 vscode / neovim 等编辑器编写，然后使用 apicula 进行综合、布局布线、生成固件。
 
 - [YosysHQ/apicula](https://github.com/YosysHQ/apicula)
-
 
 首先，我们需要两个源文件：
 
@@ -95,5 +102,3 @@ gowin_pack -d GW1N-9C -o pack.fs pnrblinky.json
 # 4. 使用 openFPGALoader 烧录固件
 openFPGALoader -b tangnano9k -f pack.fs
 ```
-
-

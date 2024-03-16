@@ -1,4 +1,3 @@
-
 ## 查询
 
 ```shell
@@ -36,7 +35,9 @@ kubectl api-resources --verbs=list
 
 ## 回滚 deployment/daemonset/statefulset
 
-注意 configmap/secrets/rolebinding 等其他配置是没有历史版本管理的！回滚 pod 配置前请先确认是否有用到这些配置，否则可能会导致问题。
+注意 configmap/secrets/rolebinding 等其他配置是没有历史版本管理的！回滚 pod 配置前请先确认是否有用到
+这些配置，否则可能会导致问题。
+
 ```
 # 回滚 deployments
 ## 查询历史版本
@@ -59,10 +60,11 @@ kubectl rollout undo daemonset.v1.apps/<daemonset-name> -n prod --to-revision=7
 kubectl rollout undo daemonset.v1.apps/<daemonset-name> -n prod
 ```
 
-
 ## 删除
 
-删除所有 crash 的 Pod(在流量压力大的时候，快速启动所有 pod，分担请求压力，避免起一个 pod 被打死一个（预热阶段被打死了），导致全都启动不起来):
+删除所有 crash 的 Pod(在流量压力大的时候，快速启动所有 pod，分担请求压力，避免起一个 pod 被打死一个
+（预热阶段被打死了），导致全都启动不起来):
+
 ```
 kubectl delete pod `kubectl get pod -n prod | grep xxx | awk '$3 == "CrashLoopBackOff" {print $1}'`
 ```

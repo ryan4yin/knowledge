@@ -23,33 +23,33 @@ spec:
         app: locust-master
     spec:
       containers:
-      - args:
-        - --headless
-        - --master
-        - --expect-workers=4
-        - -u=50
-        - -r=100
-        - --run-time=1h30m
-        image: locustio/locust:1.2.3
-        imagePullPolicy: IfNotPresent
-        name: locust
-        ports:
-        - name: tcp
-          containerPort: 5557
-        - name: http
-          containerPort: 8089
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        volumeMounts:
-        - mountPath: /home/locust
-          name: locustfile
-        resources:
-          limits:
-            cpu: "2"
-            memory: 1Gi
-          requests:
-            cpu: 100m
-            memory: 128Mi
+        - args:
+            - --headless
+            - --master
+            - --expect-workers=4
+            - -u=50
+            - -r=100
+            - --run-time=1h30m
+          image: locustio/locust:1.2.3
+          imagePullPolicy: IfNotPresent
+          name: locust
+          ports:
+            - name: tcp
+              containerPort: 5557
+            - name: http
+              containerPort: 8089
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /home/locust
+              name: locustfile
+          resources:
+            limits:
+              cpu: "2"
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
 
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -57,10 +57,10 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - configMap:
-          defaultMode: 420
+        - configMap:
+            defaultMode: 420
+            name: locustfile
           name: locustfile
-        name: locustfile
 ---
 apiVersion: v1
 kind: Service
@@ -70,12 +70,11 @@ spec:
   selector:
     app: locust-master
   ports:
-  - protocol: TCP
-    name: tcp
-    port: 5557
-    targetPort: tcp
-  - protocol: TCP
-    name: http
-    port: 8089
-    targetPort: http
-
+    - protocol: TCP
+      name: tcp
+      port: 5557
+      targetPort: tcp
+    - protocol: TCP
+      name: http
+      port: 8089
+      targetPort: http

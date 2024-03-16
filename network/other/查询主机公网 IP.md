@@ -5,4 +5,3 @@
 1. http://httpbin.org/ip
 1. https://api.ipify.org/?format=json
 1. https://ifconfig.me/ip
-

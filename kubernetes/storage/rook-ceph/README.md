@@ -1,12 +1,12 @@
 # [rook](https://github.com/rook/rook)
 
->评价：部署非常简单，但是维护实际上会比 ceph 本身更复杂，引入了比传统的 ceph 更多的概念与组件。
-因此只建议个人玩一玩，生产级别的存储还是让专业的人来搞。
+> 评价：部署非常简单，但是维护实际上会比 ceph 本身更复杂，引入了比传统的 ceph 更多的概念与组件。因此
+> 只建议个人玩一玩，生产级别的存储还是让专业的人来搞。
 
 Kubernetes 存储编排工具，这里主要记录 rook-ceph 相关内容。
 
-rook-ceph 支持块存储、对象存储、共享文件存储(CephFS)及 NFS，但是只有 NFS 和对象存储可以在集群外部使用，
-块存储(iSCSI)好像不支持在外部使用？（还不确定）
+rook-ceph 支持块存储、对象存储、共享文件存储(CephFS)及 NFS，但是只有 NFS 和对象存储可以在集群外部使
+用，块存储(iSCSI)好像不支持在外部使用？（还不确定）
 
 ## 一、使用 rook 在集群内部署 ceph 分布式存储
 
@@ -27,24 +27,25 @@ cd rook/cluster/examples/kubernetes/ceph
 
 ### 1. 预留存储空间
 
-In order to configure the Ceph storage cluster, at least one of these local storage options are required:
+In order to configure the Ceph storage cluster, at least one of these local storage options are
+required:
 
 1. Raw devices (no partitions or formatted filesystems)
 2. Raw partitions (no formatted filesystem)
-1. PVs available from a storage class in block mode
+3. PVs available from a storage class in block mode
 
 我特意为所有 worker 节点分别添加了一个 20G 的硬盘:
 
 ```shell
 $ lsblk
 NAME                                                MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sr0                                                 11:0  1 1024M 0 rom 
-vda                                                 252:0  0  20G 0 disk 
+sr0                                                 11:0  1 1024M 0 rom
+vda                                                 252:0  0  20G 0 disk
 ├─vda1                                             252:1  0  1G 0 part /boot
-└─vda2                                             252:2  0  19G 0 part 
+└─vda2                                             252:2  0  19G 0 part
  ├─centos-root                                     253:0  0  17G 0 lvm /
- └─centos-swap                                     253:1  0  2G 0 lvm 
-vdb                                                 252:16  0  20G 0 disk 
+ └─centos-swap                                     253:1  0  2G 0 lvm
+vdb                                                 252:16  0  20G 0 disk
 ```
 
 上面的 vdb 就是我新加的裸硬盘。
@@ -71,7 +72,9 @@ kubectl create ns rook-ceph
 helm install --namespace rook-ceph rook-release/rook-ceph -f custom-values.yaml
 ```
 
-> 注意：ceph 和 kubernetes 存储组件的很多镜像都托管在 quay.io 中，因此在安装 chart 前，可以考虑先使用 [container/sync_images.py](/container/sync_images.py) 通过代理下载 quay 镜像，导入到所有 worker 节点。
+> 注意：ceph 和 kubernetes 存储组件的很多镜像都托管在 quay.io 中，因此在安装 chart 前，可以考虑先使
+> 用 [container/sync_images.py](/container/sync_images.py) 通过代理下载 quay 镜像，导入到所有 worker
+> 节点。
 
 ### 3. 创建 ceph cluster
 
@@ -81,12 +84,14 @@ helm install --namespace rook-ceph rook-release/rook-ceph -f custom-values.yaml
 kubectl apply -f cluter.yaml
 ```
 
->注意：如果想要在 kubernetes 外部使用这个 ceph 集群，请将 `cluster.yaml` 的 `network.hostNetwork` 设为 `true`.
+> 注意：如果想要在 kubernetes 外部使用这个 ceph 集群，请将 `cluster.yaml` 的 `network.hostNetwork`
+> 设为 `true`.
 
 集群创建完成后，应该能观察到新创建了 rook-ceph-mon, rook-ceph-mgr, rook-ceph-osd 三类 Pod。
 
-现在可以将 Service `rook-ceph-mgr-dashboard` 修改为 NodePort 暴露到外部，然后就能通过 HTTPS 协议访问 Ceph 的 Dashboard 页面了。
-Dashboard 的管理员账号是 `admin`，密码在 Secret `rook-ceph-dashboard-password` 中，查看命令：
+现在可以将 Service `rook-ceph-mgr-dashboard` 修改为 NodePort 暴露到外部，然后就能通过 HTTPS 协议访问
+Ceph 的 Dashboard 页面了。Dashboard 的管理员账号是 `admin`，密码在 Secret
+`rook-ceph-dashboard-password` 中，查看命令：
 
 ```shell
 kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
@@ -99,17 +104,18 @@ DashBoard 应该显示 HEALTH_OK。
 ```shell
 $ lsblk
 NAME                                                 MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-sr0                                                  11:0  1 1024M 0 rom 
-vda                                                 252:0  0  20G 0 disk 
+sr0                                                  11:0  1 1024M 0 rom
+vda                                                 252:0  0  20G 0 disk
 ├─vda1                                                252:1  0  1G 0 part /boot
-└─vda2                                                252:2  0  19G 0 part 
+└─vda2                                                252:2  0  19G 0 part
  ├─centos-root                                           253:0  0  17G 0 lvm /
- └─centos-swap                                           253:1  0  2G 0 lvm 
-vdb                                                 252:16  0  20G 0 disk 
-└─ceph--70212ffb--ab90--40d6--b574--3c8a3c698ea1-osd--data--7b6eafa3--a0c2--474f--a865--eb0767390c91 253:2  0  20G 0 lvm 
+ └─centos-swap                                           253:1  0  2G 0 lvm
+vdb                                                 252:16  0  20G 0 disk
+└─ceph--70212ffb--ab90--40d6--b574--3c8a3c698ea1-osd--data--7b6eafa3--a0c2--474f--a865--eb0767390c91 253:2  0  20G 0 lvm
 ```
 
-这是因为上面的 `cluster.yaml` 有这样一个配置项：`useAllDevices: true`，于是 rook 会自动发现并使用挂载在 node 的 `/dev` 路径下的裸硬盘（`raw disks`）.
+这是因为上面的 `cluster.yaml` 有这样一个配置项：`useAllDevices: true`，于是 rook 会自动发现并使用挂
+载在 node 的 `/dev` 路径下的裸硬盘（`raw disks`）.
 
 ### 4. 问题排查
 
@@ -121,13 +127,12 @@ kubectl apply -f toolbox.yaml
 
 之后通过登入 toolbox 容器中，就可以进行问题排查了。
 
-
 ## 二、使用 Ceph 做集群内部的块存储
 
 rook-ceph 部署完成后，要通过它的块存储提供数据卷给容器，配置及依赖关系如下：
 
 ```shell
-CephBlockPool -> StorageClass -> PersistenceVolumeClaim （动态生成 PersistemceVolume）-> Pod(volume -> volumeMount) 
+CephBlockPool -> StorageClass -> PersistenceVolumeClaim （动态生成 PersistemceVolume）-> Pod(volume -> volumeMount)
 ```
 
 首先创建 CephBlockPool 和 StorageClass:
@@ -153,21 +158,22 @@ kubectl create -f wordpress.yaml
 
 创建完成后，可以通过 k9s/kubectl 查看 default 名字空间中的 PVC 和 Pod 内容。
 
-
 ## 三、注意事项
 
-和状态有关的东西，都比较娇贵。因此服务器的关机、重启、异常宕机，都可能导致 ceph 集群出现问题。
-另外 Pod 自身的异常，也可能导致数据损坏。
+和状态有关的东西，都比较娇贵。因此服务器的关机、重启、异常宕机，都可能导致 ceph 集群出现问题。另外
+Pod 自身的异常，也可能导致数据损坏。
 
 我测试 rook-ceph 遇到的问题有：
 
-1. [node-hangs-after-reboot](https://rook.io/docs/rook/v1.4/ceph-common-issues.html#node-hangs-after-reboot): 先 drain 掉异常节点，重启节点，最后 uncordon 节点。
-  1. 文档说这个 bug 早就解决了，可能还是我内核版本太低导致的问题。
+1. [node-hangs-after-reboot](https://rook.io/docs/rook/v1.4/ceph-common-issues.html#node-hangs-after-reboot):
+   先 drain 掉异常节点，重启节点，最后 uncordon 节点。
+1. 文档说这个 bug 早就解决了，可能还是我内核版本太低导致的问题。
 
-可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一堆问题。rook-ceph 写明推荐的内核版本为 `4.17+`
+可能和我使用的是 centos7(内核版本 3.10) 有关，内核版本太低，导致 rook-ceph 很不稳定，仅测试就出了一
+堆问题。rook-ceph 写明推荐的内核版本为 `4.17+`
 
-[将 CentOS7 内核升级到 5.8](/operation-system/linux/Centos%207%20升级内核版本.md) 后，貌似问题消失了，待观察。
-
+[将 CentOS7 内核升级到 5.8](/operation-system/linux/Centos%207%20升级内核版本.md) 后，貌似问题消失
+了，待观察。
 
 ## 相关资料
 

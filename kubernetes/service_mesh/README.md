@@ -4,24 +4,28 @@
 
 1. [istio](https://github.com/istio/istio): 目前全球最流行的服务网格，功能强大，但是相对的也更复杂。
    1. 文档非常详细
-2. [linkerd2](https://github.com/linkerd/linkerd2): 最初的服务网格的 rust 重构版，比 istio 简单，流控功能没那么强，但是性能更高。
-   - 但是它的数据平面可拓展性比较差，没有良好的插件机制，没有 envoy 灵活。（如果你没有强烈的扩展需求，这一点倒是可以忽略）
+2. [linkerd2](https://github.com/linkerd/linkerd2): 最初的服务网格的 rust 重构版，比 istio 简单，流
+   控功能没那么强，但是性能更高。
+   - 但是它的数据平面可拓展性比较差，没有良好的插件机制，没有 envoy 灵活。（如果你没有强烈的扩展需
+     求，这一点倒是可以忽略）
    - 文档感觉比较简略，不如 istio.
 
 其他还有一些名气小一点的服务网格可供参考，但是目前都不推荐选用：
 
 1. [kuma](https://github.com/kumahq/kuma): 由 Kong 基于 Envoy 开发的一个服务网格
-2. [osm](https://github.com/openservicemesh/osm): 微软开源的一个基于 Envoy 的服务网格，完全基于服务网关接口 SMI 规范开发，使用上比 istio 简单很多，但是仍然功能仍然不够完善，not production-ready.
+2. [osm](https://github.com/openservicemesh/osm): 微软开源的一个基于 Envoy 的服务网格，完全基于服务
+   网关接口 SMI 规范开发，使用上比 istio 简单很多，但是仍然功能仍然不够完善，not production-ready.
 3. apisix 等基于 nginx/openresty 的技术，也在向这个方向发展
-   - 它们的优势大概有：nginx 的「高性能」与「可扩展性」，以及企业能沿用上企业曾经在 nginx 领域多年的历史积累（坑都踩过了）。
+   - 它们的优势大概有：nginx 的「高性能」与「可扩展性」，以及企业能沿用上企业曾经在 nginx 领域多年的
+     历史积累（坑都踩过了）。
 
 以及一些昙花一现，不再活跃的服务网格项目，如 traefik mesh、rancher rio
 
-在选用服务网格产品时，要以自己的痛点为核心，再结合**性能**、**可拓展性**、**复杂度**几个方案来综合考量。
+在选用服务网格产品时，要以自己的痛点为核心，再结合**性能**、**可拓展性**、**复杂度**几个方案来综合考
+量。
 
-如果选择 envoy 阵营，目前不二选择就是 istio.
-如果需要更轻量，目前最佳的选择应该也只有 linkerd2.
-如果希望呆在原来的舒适区，继续使用 openresty，那估计得选择自研.
+如果选择 envoy 阵营，目前不二选择就是 istio. 如果需要更轻量，目前最佳的选择应该也只有 linkerd2. 如果
+希望呆在原来的舒适区，继续使用 openresty，那估计得选择自研.
 
 而展望未来，最有潜力的服务网格，应该是最近 cilium 推出的内核级 Service Mesh.
 
@@ -29,9 +33,11 @@
 
 ### 1. [Istio 1.8.3 - 1.11.4](https://istio.io/v1.11/docs/ops/deployment/performance-and-scalability/)
 
-The Istio load tests mesh consists of **1000 services and 2000 sidecars with 70,000 mesh-wide requests per second**. After running the tests using Istio 1.11.4, we get the following results:
+The Istio load tests mesh consists of **1000 services and 2000 sidecars with 70,000 mesh-wide
+requests per second**. After running the tests using Istio 1.11.4, we get the following results:
 
-- The Envoy proxy uses **0.35 vCPU** and **40 MB** memory per **1000 requests per second** going through the proxy.
+- The Envoy proxy uses **0.35 vCPU** and **40 MB** memory per **1000 requests per second** going
+  through the proxy.
 - Istiod uses **1 vCPU** and **1.5 GB** of memory.
 - The Envoy proxy adds **2.65 ms** to the **90th percentile latency**.
 
@@ -51,15 +57,19 @@ linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P9
 - [x] 观测指标 - 暂时平手（不清楚 Istio 的 flags 在 Linkerd2 这边有没有对应参数）
 - [x] 链路追踪 - 算平手，都支持 jaeger，而且都只能做到 RPC 调用级别的链路追踪
 - [x] 流量切分
-   - 切分权重：istio 目前弱一些，因为它要求总权重必须为 100，也就是说切量的粒度只能到 1%（下个版本会放开这个限制）
-   - 都支持 pathRegex、method、headers
-   - istio 支持更多的参数：params/schema/uriPrefix/ignoreUriCase/withoutHeaders/rewrite 等，而且支持忽略 URI 大小写、流量镜像 mirror
-   - Linkerd2 官方建议搞个 nginx pod 做流量镜像（毕竟只在测试时用嘛，搞个 nginx 确实能满足需求），其他参数估计也是觉得没必要支持，完全可以在 Gateway 上做 hhh
+  - 切分权重：istio 目前弱一些，因为它要求总权重必须为 100，也就是说切量的粒度只能到 1%（下个版本会
+    放开这个限制）
+  - 都支持 pathRegex、method、headers
+  - istio 支持更多的参数：params/schema/uriPrefix/ignoreUriCase/withoutHeaders/rewrite 等，而且支持
+    忽略 URI 大小写、流量镜像 mirror
+  - Linkerd2 官方建议搞个 nginx pod 做流量镜像（毕竟只在测试时用嘛，搞个 nginx 确实能满足需求），其
+    他参数估计也是觉得没必要支持，完全可以在 Gateway 上做 hhh
 - [x] 性能 - Linderd2 强于 Istio
 - [x] 文档 - Istio == Linkerd2，Istio 的文档感觉条理更清晰，Linkerd2 的文档稍显简略了。
 - [x] 流控能力（限流限并发） - Istio > Linkerd2，Linkerd 不提供此能力
   - [Add support for rate limiting - Linkerd2](https://github.com/linkerd/linkerd2/issues/4649)
-- [ ] 流量拓扑图，配合流量监测能力 - Istio 有 Kiali 比较强大，Linkerd2 的 Dashboard 尚且不清楚是否同样强。
+- [ ] 流量拓扑图，配合流量监测能力 - Istio 有 Kiali 比较强大，Linkerd2 的 Dashboard 尚且不清楚是否同
+      样强。
 - [x] 易用性 - Linkerd2 >> Istio，Istio 和 Envoy 两个东西的配置都比 Linkerd2 复杂...
 
 以及另外一些看起来需求不强烈的功能：
@@ -79,10 +89,12 @@ linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P9
 目前来看，Istio 是全家桶，啥功能它都有，目前的缺陷就是：
 
 - 权重限制为 100 有点不够用（istio 下个版本会放宽此限制）
-- slow_start 还没支持，对缓存有依赖的服务扩容不太平滑（ envoy 已经支持此能力，另外社区也已经有对应的 PR，未来应该会支持）
+- slow_start 还没支持，对缓存有依赖的服务扩容不太平滑（ envoy 已经支持此能力，另外社区也已经有对应的
+  PR，未来应该会支持）
 - 性能问题
 
-而 Linkerd 的优势就是高性能、易用，但是很多功能都被砍掉了，有必要配合其他的 Gateway 组件使用，它的缺陷有：
+而 Linkerd 的优势就是高性能、易用，但是很多功能都被砍掉了，有必要配合其他的 Gateway 组件使用，它的缺
+陷有：
 
 - 用的人相对较少，不确定坑有多少
 - slow_start 还没支持，对缓存有依赖的服务扩容不太平滑
@@ -93,12 +105,17 @@ linkerd2-proxy 相比 envoy，只用了 1/9 的内存与 1/8 的 CPU，同时 P9
 
 目前主流的服务网格，核心元素有三个：
 
-- 定位: Service Mesh 的定位始终是提供**服务间通讯+监测**的基础设施层，范围包括 HTTP 和 RPC ——支持 HTTP1.1/REST，支持 HTTP2/gRPC，支持 TCP 协议。也有一些小的尝试如对 Redis 、 Kafka 的支持。
-- 原理: Service Mesh 的工作原理是**原协议转发**，原则上不改变协议内容（通常只是 header 有些小改动）。为了达到零侵入的目标，还引入了 iptables 等流量劫持技术。
-- 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如 **Node 模式部署**。
-    - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
-    - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
-    - Cilium 则将目标聚焦在「eBPF」上，实现**内核级别**的服务网格，并通过 Envoy 支持 Node 模式的 Proxy 以支持 mTLS 等更高级的能力。
+- 定位: Service Mesh 的定位始终是提供**服务间通讯+监测**的基础设施层，范围包括 HTTP 和 RPC ——支持
+  HTTP1.1/REST，支持 HTTP2/gRPC，支持 TCP 协议。也有一些小的尝试如对 Redis 、 Kafka 的支持。
+- 原理: Service Mesh 的工作原理是**原协议转发**，原则上不改变协议内容（通常只是 header 有些小改
+  动）。为了达到零侵入的目标，还引入了 iptables 等流量劫持技术。
+- 部署: Service Mesh 支持 Kubernetes 和虚拟机，但都是采用 **Sidecar 模式**部署，没有采用其他方式如
+  **Node 模式部署**。
+  - Sidecar 模式的性能损耗还是太大了，有些难以接受，所以现在也有一些 **Node 模式**部署的尝
+    试，traefik mesh 就是 Node 模式，dapr 也支持 node 模式。
+  - linkerd2 走的路则是做**轻量的 sidecar**，并且使用 rust 这类高效语言来实现。
+  - Cilium 则将目标聚焦在「eBPF」上，实现**内核级别**的服务网格，并通过 Envoy 支持 Node 模式的 Proxy
+    以支持 mTLS 等更高级的能力。
 
 不过我们现在也看到了 dapr 这样更通用的 multi-runtime 产品，以及 Proxyless Service Mesh.
 

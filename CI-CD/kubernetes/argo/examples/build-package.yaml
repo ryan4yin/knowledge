@@ -43,15 +43,15 @@ spec:
     - name: build-package
       inputs:
         parameters:
-            - name: src-git-url
-            - name: src-branch
+          - name: src-git-url
+          - name: src-branch
         artifacts:
           # git clone => Python CI 代码
           - name: ci-scripts
             path: /work/ci
             git:
               repo: git@gitlab.svc.local:sre-team/ci-workflows.git
-              revision: 
+              revision:
               usernameSecret:
                 name: private-git-creds
                 key: username

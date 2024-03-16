@@ -11,51 +11,51 @@ spec:
     labels:
       app: reviews
   configPatches:
-  - applyTo: HTTP_FILTER
-    match:
-      context: SIDECAR_INBOUND
-      proxy:
-        proxyVersion: '1\.12.*'
-      listener:
-        filterChain:
-          filter:
-            name: "envoy.http_connection_manager"
-            subFilter:
-              name: "istio.stats"
-    patch:
-      operation: INSERT_BEFORE
-      value:
-        name: istio.attributegen
-        typed_config:
-          "@type": type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          value:
-            config:
-              configuration:
-                "@type": type.googleapis.com/google.protobuf.StringValue
-                # 重点就是要自动生成如下这个 attributes 的内容
-                value: |
-                  {
-                    "attributes": [
-                      {
-                        "output_attribute": "classified_request_url_path",
-                        "match": [
-                          {
-                            "value": "/reviews/*",
-                            "condition": "request.url_path.matches('^/reviews/[[:alnum:]]*$')"
-                          },
-                          {
-                            "value": "/products/*",
-                            "condition": "request.url_path.matches('^/products/[[:alnum:]]*$')"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-              vm_config:
-                runtime: envoy.wasm.runtime.null
-                code:
-                  local: { inline_string: "envoy.wasm.attributegen" }
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        proxy:
+          proxyVersion: '1\.12.*'
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.http_connection_manager"
+              subFilter:
+                name: "istio.stats"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: istio.attributegen
+          typed_config:
+            "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                configuration:
+                  "@type": type.googleapis.com/google.protobuf.StringValue
+                  # 重点就是要自动生成如下这个 attributes 的内容
+                  value: |
+                    {
+                      "attributes": [
+                        {
+                          "output_attribute": "classified_request_url_path",
+                          "match": [
+                            {
+                              "value": "/reviews/*",
+                              "condition": "request.url_path.matches('^/reviews/[[:alnum:]]*$')"
+                            },
+                            {
+                              "value": "/products/*",
+                              "condition": "request.url_path.matches('^/products/[[:alnum:]]*$')"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                vm_config:
+                  runtime: envoy.wasm.runtime.null
+                  code:
+                    local: { inline_string: "envoy.wasm.attributegen" }
 ---
 # 有了自定义的 attributes 后，还需要将它作为一个标签添加到指标上才行
 # 根据官方文档，这需要备份并修改 stats 这个 envoyfilter 的内容
@@ -73,130 +73,130 @@ metadata:
   namespace: istio-system
 spec:
   configPatches:
-  - applyTo: HTTP_FILTER
-    match:
-      context: SIDECAR_OUTBOUND
-      listener:
-        filterChain:
-          filter:
-            name: envoy.filters.network.http_connection_manager
-            subFilter:
-              name: envoy.filters.http.router
-      proxy:
-        proxyVersion: ^1\.12.*
-    patch:
-      operation: INSERT_BEFORE
-      value:
-        name: istio.stats
-        typed_config:
-          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          value:
-            config:
-              configuration:
-                '@type': type.googleapis.com/google.protobuf.StringValue
-                value: |
-                  {
-                    "debug": "false",
-                    "stat_prefix": "istio"
-                  }
-              root_id: stats_outbound
-              vm_config:
-                code:
-                  local:
-                    inline_string: envoy.wasm.stats
-                runtime: envoy.wasm.runtime.null
-                vm_id: stats_outbound
-  - applyTo: HTTP_FILTER
-    match:
-      context: SIDECAR_INBOUND
-      listener:
-        filterChain:
-          filter:
-            name: envoy.filters.network.http_connection_manager
-            subFilter:
-              name: envoy.filters.http.router
-      proxy:
-        proxyVersion: ^1\.12.*
-    patch:
-      operation: INSERT_BEFORE
-      value:
-        name: istio.stats
-        typed_config:
-          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          value:
-            config:
-              configuration:
-                '@type': type.googleapis.com/google.protobuf.StringValue
-                # 需要修改的就是这里
-                # 为 requests_total request_duration_milliseconds 添加上 request_url_path 这个维度
-                # 并且值为我们前面分好类的 classified_request_url_path
-                value: |
-                  {
-                    "debug": "false",
-                    "stat_prefix": "istio",
-                    "disable_host_header_fallback": true,
-                    "metrics": [
-                      {
-                        "dimensions": {
-                          "destination_cluster": "node.metadata['CLUSTER_ID']",
-                          "source_cluster": "downstream_peer.cluster_id"
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_OUTBOUND
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+        proxy:
+          proxyVersion: ^1\.12.*
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: istio.stats
+          typed_config:
+            "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                configuration:
+                  "@type": type.googleapis.com/google.protobuf.StringValue
+                  value: |
+                    {
+                      "debug": "false",
+                      "stat_prefix": "istio"
+                    }
+                root_id: stats_outbound
+                vm_config:
+                  code:
+                    local:
+                      inline_string: envoy.wasm.stats
+                  runtime: envoy.wasm.runtime.null
+                  vm_id: stats_outbound
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+        proxy:
+          proxyVersion: ^1\.12.*
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: istio.stats
+          typed_config:
+            "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                configuration:
+                  "@type": type.googleapis.com/google.protobuf.StringValue
+                  # 需要修改的就是这里
+                  # 为 requests_total request_duration_milliseconds 添加上 request_url_path 这个维度
+                  # 并且值为我们前面分好类的 classified_request_url_path
+                  value: |
+                    {
+                      "debug": "false",
+                      "stat_prefix": "istio",
+                      "disable_host_header_fallback": true,
+                      "metrics": [
+                        {
+                          "dimensions": {
+                            "destination_cluster": "node.metadata['CLUSTER_ID']",
+                            "source_cluster": "downstream_peer.cluster_id"
+                          }
+                        },
+                        {
+                          "name": "requests_total",
+                          "dimensions": {
+                              "request_url_path": "classified_request_url_path"
+                          }
+                        },
+                        {
+                          "name": "request_duration_milliseconds",
+                          "dimensions": {
+                              "request_url_path": "classified_request_url_path"
+                          }
                         }
-                      },
-                      {
-                        "name": "requests_total",
-                        "dimensions": {
-                            "request_url_path": "classified_request_url_path"
-                        }
-                      },
-                      {
-                        "name": "request_duration_milliseconds",
-                        "dimensions": {
-                            "request_url_path": "classified_request_url_path"
-                        }
-                      }
-                    ]
-                  }
-              root_id: stats_inbound
-              vm_config:
-                code:
-                  local:
-                    inline_string: envoy.wasm.stats
-                runtime: envoy.wasm.runtime.null
-                vm_id: stats_inbound
-  - applyTo: HTTP_FILTER
-    match:
-      context: GATEWAY
-      listener:
-        filterChain:
-          filter:
-            name: envoy.filters.network.http_connection_manager
-            subFilter:
-              name: envoy.filters.http.router
-      proxy:
-        proxyVersion: ^1\.12.*
-    patch:
-      operation: INSERT_BEFORE
-      value:
-        name: istio.stats
-        typed_config:
-          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          value:
-            config:
-              configuration:
-                '@type': type.googleapis.com/google.protobuf.StringValue
-                value: |
-                  {
-                    "debug": "false",
-                    "stat_prefix": "istio",
-                    "disable_host_header_fallback": true
-                  }
-              root_id: stats_outbound
-              vm_config:
-                code:
-                  local:
-                    inline_string: envoy.wasm.stats
-                runtime: envoy.wasm.runtime.null
-                vm_id: stats_outbound
+                      ]
+                    }
+                root_id: stats_inbound
+                vm_config:
+                  code:
+                    local:
+                      inline_string: envoy.wasm.stats
+                  runtime: envoy.wasm.runtime.null
+                  vm_id: stats_inbound
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: envoy.filters.network.http_connection_manager
+              subFilter:
+                name: envoy.filters.http.router
+        proxy:
+          proxyVersion: ^1\.12.*
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: istio.stats
+          typed_config:
+            "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                configuration:
+                  "@type": type.googleapis.com/google.protobuf.StringValue
+                  value: |
+                    {
+                      "debug": "false",
+                      "stat_prefix": "istio",
+                      "disable_host_header_fallback": true
+                    }
+                root_id: stats_outbound
+                vm_config:
+                  code:
+                    local:
+                      inline_string: envoy.wasm.stats
+                  runtime: envoy.wasm.runtime.null
+                  vm_id: stats_outbound

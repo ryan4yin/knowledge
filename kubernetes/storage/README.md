@@ -1,6 +1,7 @@
 # 分布式数据存储
 
-kubernetes 上的分布式 PV/PVC 存储方案有很多，对于各种云服务商，可以考虑直接使用其提供的 CSI Provider。
+kubernetes 上的分布式 PV/PVC 存储方案有很多，对于各种云服务商，可以考虑直接使用其提供的 CSI
+Provider。
 
 如果你搭建自建，那目前比较被看好的开源方案有这几个：
 
@@ -17,8 +18,9 @@ kubernetes 上的分布式 PV/PVC 存储方案有很多，对于各种云服务�
    1. 跟 rook 一样，都是老牌分布式存储方案。
    2. GlusterFS 的 k8s 支持，即 heketi，**基本没人维护了，不建议使用**。
 
-上述 storage on kubernetes 方案的可靠性还有待考察，可以在 homelab 之类的场景玩一玩，但是在没有足够使用经验之前，不建议上生产环境。
-目前云上存储首选各云厂商提供的存储方案，企业级的自建存储建议直接连接集群外部的 Ceph/GlusterFS/OSS.
+上述 storage on kubernetes 方案的可靠性还有待考察，可以在 homelab 之类的场景玩一玩，但是在没有足够使
+用经验之前，不建议上生产环境。目前云上存储首选各云厂商提供的存储方案，企业级的自建存储建议直接连接集
+群外部的 Ceph/GlusterFS/OSS.
 
 此外还有构建在 Kubernetes 上的对象存储服务提供商，目前主要是 minio.
 

@@ -1,9 +1,6 @@
 # C 语言的 IO 相关标准库与函数
 
-getchar
-putchar
-fopen
-scanf
+getchar putchar fopen scanf
 
 基于行的字符串
 

@@ -19,23 +19,23 @@ spec:
     - name: main
       inputs:
         artifacts:
-        - name: git-repo
-          git:
-            # git 仓库内容：CI 镜像的 Dockerfiles 及其他相关文件
-            repo: git@gitlab.svc.local:sre-team/workflow-dockerfiles.git
-            revision: main
-            insecureIgnoreHostKey: true
-            usernameSecret:
-              name: private-git-creds
-              key: username
-            sshPrivateKeySecret:
-              name: private-git-creds
-              key: ssh-private-key
+          - name: git-repo
+            git:
+              # git 仓库内容：CI 镜像的 Dockerfiles 及其他相关文件
+              repo: git@gitlab.svc.local:sre-team/workflow-dockerfiles.git
+              revision: main
+              insecureIgnoreHostKey: true
+              usernameSecret:
+                name: private-git-creds
+                key: username
+              sshPrivateKeySecret:
+                name: private-git-creds
+                key: ssh-private-key
       steps:
         - - name: build-golang-alpine
             templateRef:
-              name: build-image  # WorkflowTemplate name
-              template: build-image  # template name
+              name: build-image # WorkflowTemplate name
+              template: build-image # template name
             arguments:
               artifacts:
                 - name: git-repo
@@ -50,8 +50,8 @@ spec:
             when: "{{workflow.parameters.build-golang-alpine}} == true"
           - name: build-flutter-ubuntu
             templateRef:
-              name: build-image  # WorkflowTemplate name
-              template: build-image  # template name
+              name: build-image # WorkflowTemplate name
+              template: build-image # template name
             arguments:
               artifacts:
                 - name: git-repo
@@ -66,8 +66,8 @@ spec:
             when: "{{workflow.parameters.build-flutter-ubuntu}} == true"
           - name: build-pulumi-proxmox
             templateRef:
-              name: build-image  # WorkflowTemplate name
-              template: build-image  # template name
+              name: build-image # WorkflowTemplate name
+              template: build-image # template name
             arguments:
               artifacts:
                 - name: git-repo

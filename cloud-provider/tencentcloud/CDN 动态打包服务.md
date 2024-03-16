@@ -1,6 +1,7 @@
 # [APK 动态打包](https://cloud.tencent.com/document/product/228/56430)
 
-APK 动态打包插件功能识别终端用户请求 URL 中的特定参数，在 CDN 边缘将该参数携带的信息动态地写入 APK ，实现在 CDN 边缘对 APK 进行动态打包。APK 动态打包要求使用腾讯云 COS 作为源站。
+APK 动态打包插件功能识别终端用户请求 URL 中的特定参数，在 CDN 边缘将该参数携带的信息动态地写入 APK，
+实现在 CDN 边缘对 APK 进行动态打包。APK 动态打包要求使用腾讯云 COS 作为源站。
 
 主要应用场景：
 

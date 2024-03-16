@@ -14,12 +14,12 @@ http:
       service: api@internal
       # 当请求能匹配上多个 routers 时，会使用优先级最高的。
       priority: 100
-      tls:  # 只支持 TLS 访问！
+      tls: # 只支持 TLS 访问！
         # 这里引用后面的 tls 配置，默认使用 default 配置
         # 也可以在这里设置专用配置
         options: default
         # 这里不支持设置 store 参数！
-    
+
     # 代理 wiki 应用
     wiki:
       entryPoints:
@@ -27,10 +27,10 @@ http:
       rule: "Host(`wiki.svc.local`) "
       service: wiki
       middlerwares:
-      # 按顺序使用多个中间件，对请求进行 preprocess/postprocess
-      - chain-secured
+        # 按顺序使用多个中间件，对请求进行 preprocess/postprocess
+        - chain-secured
       tls: {} # 只支持 TLS 访问！默认使用 default 配置
-    
+
     # 代理 websocket 协议
     wss-test:
       entryPoints:
@@ -46,7 +46,7 @@ http:
     secure-it:
       redirectScheme:
         scheme: https
-        permanent: true  # 301 永久重定向(moved permanently)，否则会使用 301 临时重定向。
+        permanent: true # 301 永久重定向(moved permanently)，否则会使用 301 临时重定向。
 
     # 在 http path 中添加前缀：/xxx => /foo/xxx
     add-prefix-foo:
@@ -68,11 +68,11 @@ http:
           - POST
           - PUT
         accessControlAllowOriginList:
-          - "*"  # 允许任何网站的跨域请求
+          - "*" # 允许任何网站的跨域请求
           # - https://foo.bar.org
           # - https://example.org
-        accessControlMaxAge: 100  # cors 预检(preflight)请求结果的缓存时间
-        addVaryHeader: true  # 如果后端响应的 accessControlAllowOriginList 不一样，是否覆盖它？
+        accessControlMaxAge: 100 # cors 预检(preflight)请求结果的缓存时间
+        addVaryHeader: true # 如果后端响应的 accessControlAllowOriginList 不一样，是否覆盖它？
 
     # 启用 gzip 压缩
     compress-gzip:
@@ -94,13 +94,13 @@ http:
     wiki:
       loadBalancer:
         servers:
-        - url: "http://<host>:<port>/"
+          - url: "http://<host>:<port>/"
 
     wss-test:
       loadBalancer:
         servers:
-        # Traefik 将 WebSocket 当成 Http 流量看待，这里的 url 也用 http://，不能用 ws://
-        - url: "http://<host>:<port>/"
+          # Traefik 将 WebSocket 当成 Http 流量看待，这里的 url 也用 http://，不能用 ws://
+          - url: "http://<host>:<port>/"
 
 # tcp 协议只支持通过 tls 协议的 sni 参数进行路由
 # 非 tls 协议，不能分辨数据
@@ -108,34 +108,33 @@ tcp:
   routers:
   service:
 
-
 # TLS 加密
 tls:
   options:
-    default:  # 默认参数
+    default: # 默认参数
       minVersion: VersionTLS12
       # 验证客户端证书（mTLS，双向 TLS）
       clientAuth:
         caFiles:
-        # 客户端证书的 CA 证书，可以配置多个，只要有一个能匹配上，就能通过验证。
-        - /etc/certs/client-ca.crt
+          # 客户端证书的 CA 证书，可以配置多个，只要有一个能匹配上，就能通过验证。
+          - /etc/certs/client-ca.crt
         clientAuthType: RequireAndVerifyClientCert
       sniStrict: true
       preferServerCipherSuites: true
-  certificates:  # 服务端的 TLS 证书列表
-  # traefik 会通过 SNI 信息来查找证书。多个证书的 SAN 等信息不能相同！！！否则可能会相互覆盖！！！
-  # TLS 连接比 http/dns 更底层，因此不能通过 Host 等参数来选择证书！！
-  - certFile: /etc/certs/server.crt
-    keyFile: /etc/certs/server.key
-    stores:  # 目前唯一可选的 stores 是 `default`
-      - default
-  
+  certificates: # 服务端的 TLS 证书列表
+    # traefik 会通过 SNI 信息来查找证书。多个证书的 SAN 等信息不能相同！！！否则可能会相互覆盖！！！
+    # TLS 连接比 http/dns 更底层，因此不能通过 Host 等参数来选择证书！！
+    - certFile: /etc/certs/server.crt
+      keyFile: /etc/certs/server.key
+      stores: # 目前唯一可选的 stores 是 `default`
+        - default
+
   # 目前 stores 唯一能配置的东西，就是默认证书。
   # 注意！目前只有 `default` 这个 store 有意义！！！
   # stores:
   #   # 当 SNI 信息不匹配时，就会使用这个默认证书建立 TLS 连接。
   #   # 如果不指定，traefik 会自动生成一个默认证书。
-  #   default: 
+  #   default:
   #     defaultCertificate:
   #       certFile: /etc/certs/server.crt
   #       keyFile: /etc/certs/server.key

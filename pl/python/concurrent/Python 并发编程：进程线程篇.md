@@ -2,7 +2,8 @@ Python 提供了 threading 和 multiprocessing 用于编写多线程/多进程�
 
 ## 简单的并发编程
 
-如果你不需要在多个进程/线程之间传递数据，那么 Python 的并发编程可以说是很简单。而且多进程与多线程编程的 API 基本一模一样。
+如果你不需要在多个进程/线程之间传递数据，那么 Python 的并发编程可以说是很简单。而且多进程与多线程编
+程的 API 基本一模一样。
 
 ```python3
 import threading
@@ -49,29 +50,29 @@ if __name__ == '__main__':
         p.start()
 ```
 
-可以看到，只要简单地将类 `threading.Thread` 换成 `multiprocessing.Process` 就行了。 这两个类的构造器参数没有任何差别：
+可以看到，只要简单地将类 `threading.Thread` 换成 `multiprocessing.Process` 就行了。 这两个类的构造器
+参数没有任何差别：
+
 - `threading.Thread(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)`
 - `multiprocessing.Process(group=None, target=None, name=None, args=(), kwargs={}, *, daemon=None)`
 
 ## 需要通信的并发编程
 
-但是一旦需要在异步任务间通信，问题就变得复杂了。
-对于多线程，我们需要使用各种同步机制来确保对共享变量的修改是顺序进行的。
-对于多进程，我们需要使用管道/队列来通信。
-
-
-
+但是一旦需要在异步任务间通信，问题就变得复杂了。对于多线程，我们需要使用各种同步机制来确保对共享变量
+的修改是顺序进行的。对于多进程，我们需要使用管道/队列来通信。
 
 待续
 
 ## 用线程还是用进程？
 
-有时候我们无法确定一个任务是 IO 密集型还是计算密集型，也就无法确定该使用线程还是进程，这时 **multiprocessing.dummy** 帮我们解决了这个选择困难症。
+有时候我们无法确定一个任务是 IO 密集型还是计算密集型，也就无法确定该使用线程还是进程，这时
+**multiprocessing.dummy** 帮我们解决了这个选择困难症。
 
-**multiprocessing.dummy** 的 API 完全等同于 multiprocessing 包, 但是它实际上是一个 threading 库的封装。（也就是说是多线程的）
+**multiprocessing.dummy** 的 API 完全等同于 multiprocessing 包, 但是它实际上是一个 threading 库的封
+装。（也就是说是多线程的）
 
-**如果一个功能你不确定用多进程还是多线程，那就用 multiprocessing 的 API 写，然后用 dummy 的多线程和原生的多进程比较，哪个快就用哪个。**这样需要改的只是一个导包语句。 
-
+**如果一个功能你不确定用多进程还是多线程，那就用 multiprocessing 的 API 写，然后用 dummy 的多线程和
+原生的多进程比较，哪个快就用哪个。**这样需要改的只是一个导包语句。
 
 ## 参考
 

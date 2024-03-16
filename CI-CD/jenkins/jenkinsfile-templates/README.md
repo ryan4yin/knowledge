@@ -1,19 +1,19 @@
 # Jenkins Pipeline
 
-
 ## 加快 Pipeline 构建速度
 
-在 「系统管理」-「系统配置」-「Pipeline Speed/Durability Settings」，将它设为 「Performance Optimized」
+在 「系统管理」-「系统配置」-「Pipeline Speed/Durability Settings」，将它设为 「Performance
+Optimized」
 
 这也能避免因为 Groovy 脚本没有使用 `@CPS` 注解而报错！
 
-
 ## Jenkinsfile 与 CI/CD 代码管理
 
-企业级的 Jenkinsfile 往往是同质化的，每个环节中的几十个仓库，它们用到的 Jenkinsfile 和构建逻辑都一模一样。
-因此完全不需要在每个仓库中放一个 Jenkinfile——这加大了运维成本。
+企业级的 Jenkinsfile 往往是同质化的，每个环节中的几十个仓库，它们用到的 Jenkinsfile 和构建逻辑都一模
+一样。因此完全不需要在每个仓库中放一个 Jenkinfile——这加大了运维成本。
 
-比较优越的解决方案是将 Jenkinsfile 和它用到的 CI/CD 代码放在一起，达成 Jenkinsfile 和 CI/CD 代码的复用。
+比较优越的解决方案是将 Jenkinsfile 和它用到的 CI/CD 代码放在一起，达成 Jenkinsfile 和 CI/CD 代码的复
+用。
 
 比如一个专用于运维的代码仓库，结构如下：
 
@@ -31,48 +31,49 @@
 ├─── README.md
 ```
 
-所有的脚本都包含一个无参的 `main()` 函数，根目录下的 `run.py` 会根据参数去调用对应模块的 `main()` 函数。
-比如 `python3 run.py operation.ftp.clean` 就会调用 `operation.ftp.clean.main()` 这个函数。
+所有的脚本都包含一个无参的 `main()` 函数，根目录下的 `run.py` 会根据参数去调用对应模块的 `main()` 函
+数。比如 `python3 run.py operation.ftp.clean` 就会调用 `operation.ftp.clean.main()` 这个函数。
 
 这样做的好处有：
 
 1. 仓库结构清晰，也方便代码复用。
 2. `run.py` 中可以进行一些全局的设置：
-  1. 日志格式、输出级别
-  2. 捕获代码异常，然后打印出更友好的错误信息。（可以自定义一些任务相关的异常，然后在 `run.py` 中根据异常打印出对应的错误信息。）
-  3. 需要注意的是，使用这种代码结构时，Python 代码中一定要抛出有意义的异常，不能直接 `sys.exit`（非常坏的习惯）. 否则 `run.py` 的异常控制就失去了意义。
-
+3. 日志格式、输出级别
+4. 捕获代码异常，然后打印出更友好的错误信息。（可以自定义一些任务相关的异常，然后在 `run.py` 中根据
+   异常打印出对应的错误信息。）
+5. 需要注意的是，使用这种代码结构时，Python 代码中一定要抛出有意义的异常，不能直接 `sys.exit`（非常
+   坏的习惯）. 否则 `run.py` 的异常控制就失去了意义。
 
 缺点：
 
-1. 构建代码和前后端具体的源代码完全分离了，在当下的 GitOps 流水线下，这样的结构可能会导致：我后端 git 仓库没变更，构建出的镜像却变了。
-  - 后端 git 仓库构建得到的 container image 可能会变，这会导致构建任务无法重复。
-  - 解决方法之一：通过一个批量任务，将 ops 构建代码分发到所有后端仓库。这样源代码和构建代码都在同一个仓库，就能保证一致性。
+1. 构建代码和前后端具体的源代码完全分离了，在当下的 GitOps 流水线下，这样的结构可能会导致：我后端
+   git 仓库没变更，构建出的镜像却变了。
 
-
+- 后端 git 仓库构建得到的 container image 可能会变，这会导致构建任务无法重复。
+- 解决方法之一：通过一个批量任务，将 ops 构建代码分发到所有后端仓库。这样源代码和构建代码都在同一个
+  仓库，就能保证一致性。
 
 ### 代码仓库分类
 
 我们目前是将 jenkinsfiles 和 CI/CD 代码分成了七个 Git 仓库进行管理：
 
 1. 四个直接使用源码的仓库：运维、前端、后端、测试的 CI/CD 仓库，结构前面讲过了
-1. 三个打成 package 使用的仓库：
-   3. job_config: 保存了所有 Git 源码仓库和 Jenkins Job 的映射关系，所有任务都通过它提供的 api 获取源码的 git_url/branch 等信息。
-      - 提供按类别查询的功能
-      - 提供自动通过映射关系创建 Jenkins 任务的功能。
-   4. operation_utils: 运维的实用工具包，通用的代码抽取到这里面 
-   6. common_config: 一些通用的配置，以 class 等方式定义在这个包里面。
-
+1. 三个打成 package 使用的仓库：3. job_config: 保存了所有 Git 源码仓库和 Jenkins Job 的映射关系，所
+   有任务都通过它提供的 api 获取源码的 git_url/branch 等信息。
+   - 提供按类别查询的功能
+   - 提供自动通过映射关系创建 Jenkins 任务的功能。
+   4. operation_utils: 运维的实用工具包，通用的代码抽取到这里面
+   5. common_config: 一些通用的配置，以 class 等方式定义在这个包里面。
 
 ## 脚本片段
 
->这里省略了 `pipeline.stages.stage.steps` 等外部代码块(block)。
-如果出现 grovvy 脚本（标志性特征是: 控制流语句 if-else/while、变量定义 def），下列代码片段还需要使用 `script` 包裹。
-
+> 这里省略了 `pipeline.stages.stage.steps` 等外部代码块(block)。如果出现 grovvy 脚本（标志性特征是:
+> 控制流语句 if-else/while、变量定义 def），下列代码片段还需要使用 `script` 包裹。
 
 ### 1. git 仓库相关操作
 
 拉取 git 仓库：
+
 ```groovy
 // 方法一：使用 git 插件拉取，jenkins 能记录到 git 仓库的 reversion
 dir("sub_git_dir"){  // 如果此文件夹不存在，会自动创建它
@@ -179,7 +180,6 @@ pipeline {
 可以使用专门的 git 仓库来存放一些可复用的 pipeline 片段，详见：
 
 - [Extending with Shared Libraries - Jenkins Docs](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
-
 
 ## 参考
 

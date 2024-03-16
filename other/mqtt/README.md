@@ -8,10 +8,11 @@
 2. 至少到达一次消息（>=1）：确保消息送达，但是客户端可能会收到重复的消息（需要自己进行去重）。
 3. 确保消息到达且仅到达一次（==1）：适用于一些比较严格的计费系统。（越精确，开销就越大）
 
-
 支持分布式的 mqtt broker(代理)，比较流行的有：
 
-1. [EMQ X](https://github.com/emqx/emqx): 目前 github 上 stars 数最高，功能丰富、文档齐全（包括中文，因为是中国公司开发的）
+1. [EMQ X](https://github.com/emqx/emqx): 目前 github 上 stars 数最高，功能丰富、文档齐全（包括中
+   文，因为是中国公司开发的）
    1. 就算不用它，也应该通过它的文档学习下 mqtt
-2. [emitter](https://github.com/emitter-io/emitter): go 语言写的分布式 mqtt broker，功能相比 emqx 简单许多。文档也说支持处理每秒百万级的消息。
+2. [emitter](https://github.com/emitter-io/emitter): go 语言写的分布式 mqtt broker，功能相比 emqx 简
+   单许多。文档也说支持处理每秒百万级的消息。
    1. 如果公司是 go 技术栈的，可以考虑使用这个。

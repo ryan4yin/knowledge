@@ -4,7 +4,7 @@
 
 ```shell
 
-# 列出所有 topic 
+# 列出所有 topic
 bin/kafka-topics.sh --list --zookeeper localhost:2181
 
 # 描述某个 toppic
@@ -17,7 +17,6 @@ bin/kafka-topics.sh --list --zookeeper localhost:2181
 # 查询 topic 内容
 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topicName --from-beginning
 ```
-
 
 ## 更复杂的命令
 
@@ -39,14 +38,13 @@ consumer.assign([TopicPartition('foobar', 0)])
 [next(consumer).value for it in range(10)]
 ```
 
-
 ## 其他
 
 1. kafka 限流（确保 kafka 性能，避免被无限制 write/read 导致集群崩溃，在线上集群是非常重要的功能）
-    1. producer 限流
-    2. consumer 限流
+   1. producer 限流
+   2. consumer 限流
 2. 重平衡限流
-    1. 避免节点故障后的重平衡导致集群性能剧烈下降
+   1. 避免节点故障后的重平衡导致集群性能剧烈下降
 
 ## 故障处理流程
 
@@ -56,4 +54,3 @@ consumer.assign([TopicPartition('foobar', 0)])
 ## 进阶
 
 - 使用 Pulsar 替换 kafka（好处是存算分离，扩容简单，云原生）
-

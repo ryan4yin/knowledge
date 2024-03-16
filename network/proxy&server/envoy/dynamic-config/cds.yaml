@@ -1,48 +1,48 @@
 resources:
-- "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
-  name: baidu_cluster
-  type: STRICT_DNS
-  # typed_extension_protocol_options:
-  #   envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
-  #     "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
-  #     explicit_http_config:
-  #       http2_protocol_options: {}  # 使用 HTTP2，如果 upstream 不支持 http2，连接将会失败！
-  connect_timeout: 1s
-  # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
-  dns_lookup_family: V4_ONLY
-  lb_policy: round_robin  # cluster 上的负载均衡策略
-  load_assignment:
-    cluster_name: baidu_cluster
-    endpoints:
-    - lb_endpoints:
-      - endpoint:
-          address:
-            socket_address:
-              address: www.baidu.com
-              port_value: 443
-  transport_socket:
-    name: envoy.transport_sockets.tls
-    typed_config:
-      "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-      sni: www.baidu.com
-- "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
-  name: bing_cluster
-  type: STRICT_DNS
-  connect_timeout: 1s
-  # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
-  dns_lookup_family: V4_ONLY
-  lb_policy: round_robin  # cluster 上的负载均衡策略
-  load_assignment:
-    cluster_name: bing_cluster
-    endpoints:
-    - lb_endpoints:
-      - endpoint:
-          address:
-            socket_address:
-              address: cn.bing.com
-              port_value: 443
-  transport_socket:
-    name: envoy.transport_sockets.tls
-    typed_config:
-      "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-      sni: cn.bing.com
+  - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
+    name: baidu_cluster
+    type: STRICT_DNS
+    # typed_extension_protocol_options:
+    #   envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+    #     "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+    #     explicit_http_config:
+    #       http2_protocol_options: {}  # 使用 HTTP2，如果 upstream 不支持 http2，连接将会失败！
+    connect_timeout: 1s
+    # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
+    dns_lookup_family: V4_ONLY
+    lb_policy: round_robin # cluster 上的负载均衡策略
+    load_assignment:
+      cluster_name: baidu_cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: www.baidu.com
+                    port_value: 443
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        sni: www.baidu.com
+  - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
+    name: bing_cluster
+    type: STRICT_DNS
+    connect_timeout: 1s
+    # 通过 DNS 来自动发现 hosts，会定期异步解析这个 DNS 地址
+    dns_lookup_family: V4_ONLY
+    lb_policy: round_robin # cluster 上的负载均衡策略
+    load_assignment:
+      cluster_name: bing_cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: cn.bing.com
+                    port_value: 443
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        sni: cn.bing.com

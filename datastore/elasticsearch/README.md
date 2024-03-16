@@ -2,16 +2,18 @@
 
 主要使用 [Docker-ELK](https://github.com/deviantony/docker-elk.git)
 
-需要注意的有: 
+需要注意的有:
 
-1. 要在 `docker-compose.yml` 中添加容器日志的大小限制，elk 的日志比较多，不加限制可能会吃光存储空间。
+1. 要在 `docker-compose.yml` 中添加容器日志的大小限制，elk 的日志比较多，不加限制可能会吃光存储空
+   间。
 1. 磁盘空间不足时，ElasticSearch 会自动将索引设为 `read only`。
-2. ELK 系统启动很慢。（Java 程序的通病）
-3. ELK 系统非常吃 CPU 和内存，空载状态下这三件套也要用掉近 2G 的内存。
-   1. 建议 ElasticSearch  和 Logstash 的内存上下限都设为 4G-8G。
+1. ELK 系统启动很慢。（Java 程序的通病）
+1. ELK 系统非常吃 CPU 和内存，空载状态下这三件套也要用掉近 2G 的内存。
+   1. 建议 ElasticSearch 和 Logstash 的内存上下限都设为 4G-8G。
    2. Logstash 的 pipelines （定时同步）越多，启动就越慢，主要是 pipelines 编译慢得吐血。
-   3. Logstash pipelines 编译慢的问题及解决方案（升级到 logstash7.9+），见 [Logstash 数据管道](./Logstash%20数据管道.md)。
-4. 设定 ElasticSearch JVM 堆的大小：添加环境变量 `ES_JAVA_OPTS: "-Xmx4g -Xms4g"`
+   3. Logstash pipelines 编译慢的问题及解决方案（升级到 logstash7.9+），见
+      [Logstash 数据管道](./Logstash%20数据管道.md)。
+1. 设定 ElasticSearch JVM 堆的大小：添加环境变量 `ES_JAVA_OPTS: "-Xmx4g -Xms4g"`
    1. JVM 堆的大小应该低于 50% 物理内存。
 
 ## 安装中文分词插件
@@ -34,7 +36,8 @@ RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis
 RUN elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-pinyin-6.3.0.zip
 ```
 
-没有代理，网速慢的话，可以手动下载 zip 包到 ``docker-elk/elasticsearch/` 目录下，然后修改 `docker-elk/elasticsearch/Dockerfile`:
+没有代理，网速慢的话，可以手动下载 zip 包到 ``docker-elk/elasticsearch/` 目录下，然后修改
+`docker-elk/elasticsearch/Dockerfile`:
 
 ```dockerfile
 ARG ELK_VERSION
@@ -53,28 +56,30 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
 COPY --from=0 /ik /usr/share/elasticsearch/plugins/ik
 ```
 
-
 ## 修改宿主机的内核参数
 
->要注意不同的软件对内核参数的要求也不一样，如果机器里不是跑 ES，就不要随便改下面给出的参数！否则可能会出现性能问题。
->比如 Redis/Mongo 越跑越慢啥的
+> 要注意不同的软件对内核参数的要求也不一样，如果机器里不是跑 ES，就不要随便改下面给出的参数！否则可
+> 能会出现性能问题。比如 Redis/Mongo 越跑越慢啥的
 
-elasticsearch 6.8 及以上的版本，需要设置 max_map_count 为 262144，否则不能启动。
-docker 的这项内核参数会继承宿主机，因此可以直接修改宿主机的内核参数：
+elasticsearch 6.8 及以上的版本，需要设置 max_map_count 为 262144，否则不能启动。docker 的这项内核参
+数会继承宿主机，因此可以直接修改宿主机的内核参数：
+
 ```shell
 sudo sysctl -w vm.max_map_count=262144  # 临时生效，重启后需要重新设置
 echo "vm.max_map_count=262144" >> /etc/sysctl.conf  # 重启后生效
 ```
 
-此外，es 还需要修改 ulimit 参数，这可以通过  docker-compose.yml 配置，在下一步进行处理。
+此外，es 还需要修改 ulimit 参数，这可以通过 docker-compose.yml 配置，在下一步进行处理。
 
-详细的系统配置说明见[ElasticSearch Docs - Important System Configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/system-config.html)
+详细的系统配置说明
+见[ElasticSearch Docs - Important System Configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/system-config.html)
 
 ## 修改 `docker-compose.yaml`
 
 1. 添加容器日志限制。否则容器日志可能会吃光整个磁盘。。
-1. 修改 ulimit 参数限制，这个可以参考 elastic 官方提供的 [docker/docker-compose.yml](https://github.com/elastic/elasticsearch/blob/master/distribution/docker/docker-compose.yml)
-2. 添加健康检查，简单地直接请求 elasticsearch。
+1. 修改 ulimit 参数限制，这个可以参考 elastic 官方提供的
+   [docker/docker-compose.yml](https://github.com/elastic/elasticsearch/blob/master/distribution/docker/docker-compose.yml)
+1. 添加健康检查，简单地直接请求 elasticsearch。
 
 ```docker-compose
 # ...省略...
@@ -120,19 +125,22 @@ docker-compose up -d
 
 ## ELK 监控
 
-ELK 自带监控功能，但是不建议使用，因为比较吃存储。
-单机监控，默认保留七天监控日志，大概就要用掉六七个 G。
+ELK 自带监控功能，但是不建议使用，因为比较吃存储。单机监控，默认保留七天监控日志，大概就要用掉六七个
+G。
 
-可以在 Kibana 左边导航栏中的「Monitoring」中查看 ELK 系统的状态。
-监控相关的设置可以通过 [ElasticSearch 集群设置更新 API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html) 修改。
+可以在 Kibana 左边导航栏中的「Monitoring」中查看 ELK 系统的状态。监控相关的设置可以通过
+[ElasticSearch 集群设置更新 API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html)
+修改。
 
-监控日志默认保留七天，可通过 API 修改 `xpack.monitoring.history.duration` 来调整保存时间，默认为 `7d`（七天），最小可调整为 `1d`（一天）。
+监控日志默认保留七天，可通过 API 修改 `xpack.monitoring.history.duration` 来调整保存时间，默认为
+`7d`（七天），最小可调整为 `1d`（一天）。
 
-监控的详细设置见 [ES 监控设置](https://www.elastic.co/guide/en/elasticsearch/reference/current/monitoring-settings.html#monitoring-collection-settings)
-
+监控的详细设置见
+[ES 监控设置](https://www.elastic.co/guide/en/elasticsearch/reference/current/monitoring-settings.html#monitoring-collection-settings)
 
 ## 遇到过的问题
 
 - 在公共的 ova 虚拟机镜像中加了 `vm.max_map_count=262144`，导致 Redis 越跑越慢
-- ELK 未设置日志大小上限，导致存储空间被日志挤爆，ES 在空间不足时，会自动将索引的 `read_only_allow_delete` 改为 `true`. 导致我们调写入接口时 ES 返回 403.
+- ELK 未设置日志大小上限，导致存储空间被日志挤爆，ES 在空间不足时，会自动将索引的
+  `read_only_allow_delete` 改为 `true`. 导致我们调写入接口时 ES 返回 403.
   - 解决办法: 清理日志，然后手动将索引的 `read_only_allow_delete` 改回 `false`.

@@ -11,5 +11,5 @@ location /images/ {
 }
 ```
 
-如果你还希望支持文件上传、删除等功能，那显然使用专用的文件共享工具是更好的方案，详见 [/datastore/file-sharing](/datastore/file-sharing/README.md)
-
+如果你还希望支持文件上传、删除等功能，那显然使用专用的文件共享工具是更好的方案，详见
+[/datastore/file-sharing](/datastore/file-sharing/README.md)

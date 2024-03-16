@@ -6,25 +6,26 @@
 
 ## 1. 抓包分析
 
-内容已迁移至 [使用 tcpdump 和 Wireshark 进行抓包分析](https://thiscute.world/posts/tcpdump-and-wireshark/)
+内容已迁移至
+[使用 tcpdump 和 Wireshark 进行抓包分析](https://thiscute.world/posts/tcpdump-and-wireshark/)
 
 ## 2. 性能测试
 
 wrk/wrk2 是一款非常强悍的压测工具：
 
->代码量也不多，很适合用于学习 C 语言以及 epoll 模型
+> 代码量也不多，很适合用于学习 C 语言以及 epoll 模型
 
 - [wrk](https://github.com/wg/wrk)
 - [wrk2](https://github.com/giltene/wrk2): 给 wrk 增加了一些功能，比如以恒定的速率请求给定的 URL
-
 
 ## 3. nmap 端口探测、主机探测工具
 
 [nmap](https://github.com/nmap/nmap) 是一个应用广泛的专业网络探测工具。
 
->参考了 [nmap超详细使用指南](https://crayon-xin.github.io/2018/08/12/nmap%E8%B6%85%E8%AF%A6%E7%BB%86%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/)
+> 参考了
+> [nmap超详细使用指南](https://crayon-xin.github.io/2018/08/12/nmap%E8%B6%85%E8%AF%A6%E7%BB%86%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/)
 
->注意如下命令均需要 root 权限
+> 注意如下命令均需要 root 权限
 
 最简单的用法，执行默认的端口扫描功能：
 
@@ -62,7 +63,7 @@ Nmap done: 1 IP address (1 host up) scanned in 12.75 seconds
 操作系统检测：
 
 ```shell
-root@kali:~# nmap -O 192.168.31.13 
+root@kali:~# nmap -O 192.168.31.13
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-13 00:03 CST
 Nmap scan report for 192.168.31.13
 Host is up (0.00072s latency).
@@ -81,19 +82,23 @@ OS detection performed. Please report any incorrect results at https://nmap.org/
 Nmap done: 1 IP address (1 host up) scanned in 3.49 seconds
 ```
 
-另外如果主机禁用了 ping 功能，就需要使用 `-Pn` 关闭 nmap 的 ping 检测功能，这样才能正常进行端口检测。
+另外如果主机禁用了 ping 功能，就需要使用 `-Pn` 关闭 nmap 的 ping 检测功能，这样才能正常进行端口检
+测。
 
 其他参数介绍：
 
 - TCP 扫描选项
-  - `-sT`: TCP 连接扫描，对每个端口都会进行完整的三次握手。这种扫描方式速度比较慢，而且容易被目标主机识别。
+  - `-sT`: TCP 连接扫描，对每个端口都会进行完整的三次握手。这种扫描方式速度比较慢，而且容易被目标主
+    机识别。
     - 不需要 root 权限，是在低权限下 nmap 的默认扫描方式
-  - `-sS`: SYN 扫描，仅发送 SYN 包并检测目标主机是否恢复 SYN/ACK，速度非常快，而且目标主机比较难检测到。
+  - `-sS`: SYN 扫描，仅发送 SYN 包并检测目标主机是否恢复 SYN/ACK，速度非常快，而且目标主机比较难检测
+    到。
     - 需要 root 权限，是在特权模式下 nmap 的默认扫描方式
   - etc...
 - UDP 扫描选项
   - `-sU`: UDP 是无连接的，只有这一种扫描方式。
-    - 速度慢，因为 Linux 限制内核 1 秒内最多发送一次 ICMP Port Unreachable 信息，扫描一台主机的 65535 个 UDP 端口必定需要超过 18 个小时。
+    - 速度慢，因为 Linux 限制内核 1 秒内最多发送一次 ICMP Port Unreachable 信息，扫描一台主机的
+      65535 个 UDP 端口必定需要超过 18 个小时。
     - 速度优化方法：
       - 并发 UDP 扫描
       - 通过 `-p53,161` 指定端口号，实现优先扫描常用端口。示例仅扫描 53 与 161 两个端口号。
@@ -104,8 +109,9 @@ Nmap done: 1 IP address (1 host up) scanned in 3.49 seconds
   - `--top-ports 1000`: 扫描 nmap-services 文件中的前 1000 个端口，数字可调整。
 - Nmap 脚本引擎（NSE）
   - Nmap 脚本引擎自带了许多有用的脚本，同时也支持自定义脚本，可用于各种渗透测试。
-  - `--script scipt1,scipt2`: 指定使用某些脚本来扫描端口
-  - `-sC`: 等同于 `--script=default`，使用默认脚本来扫描端口。默认使用的脚本有如下特点：速度快、内容丰富、形式简洁、不会侵入目标系统等。
+  - `--script script1,script2`: 指定使用某些脚本来扫描端口
+  - `-sC`: 等同于 `--script=default`，使用默认脚本来扫描端口。默认使用的脚本有如下特点：速度快、内容
+    丰富、形式简洁、不会侵入目标系统等。
   - 其他自带脚本有（通常存放在 `/usr/share/nmap/scripts` 中）：
     - auth: 使用暴力破解来找出目标系统的认证信息
     - docs: 拒绝服务攻击
@@ -122,7 +128,8 @@ nmap --script http-enum,http-headers,http-methods,http-php-version	-p	80 192.168
 
 ## 路由追踪 mtr
 
-[mtr](https://github.com/traviscross/mtr) 结合了 traceroute' 与 'ping' 两个工具的功能，常用于探测路由链路。
+[mtr](https://github.com/traviscross/mtr) 结合了 traceroute' 与 'ping' 两个工具的功能，常用于探测路
+由链路。
 
 可以通过源码编译安装 mtr，也可以用各大平台的包管理器（brew/apt/yum/apk）直接安装。
 
@@ -136,5 +143,3 @@ source ~/.zshrc
 # 现在就可以用了，注意需要 sudo 权限
 sudo mtr baidu.com
 ```
-
-

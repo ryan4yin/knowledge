@@ -7,7 +7,6 @@
 
 但是我们在一些自动化场景中，经常会遇到需要并行运行多个进程，然后等待两个进程退出的场景。
 
-
 ## Shell
 
 注意 shell 版本感觉问题很多，能不用还是尽量不用。
@@ -50,7 +49,6 @@ fi
 wait -n
 ```
 
-
 ## Python
 
 如果可以使用 Python，那直接使用如下脚本应该是最简明的方法：
@@ -76,7 +74,6 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         # 如果 future 有抛出异常，脚本会抛出异常，导致立即结束所有进程。
         future.result()
 ```
-
 
 ## 参考
 

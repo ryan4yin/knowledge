@@ -1,6 +1,7 @@
 # terraformer
 
-[terraformer](https://github.com/GoogleCloudPlatform/terraformer) 是 Google 的一个非官方项目，功能是将已存在的资源转换成 terraform 的 HCL 配置以及 state 文件。
+[terraformer](https://github.com/GoogleCloudPlatform/terraformer) 是 Google 的一个非官方项目，功能是
+将已存在的资源转换成 terraform 的 HCL 配置以及 state 文件。
 
 虽然转换出的配置文件可能会有一些小瑕疵需要手动修正，但是不失为一个方便的工具，它主要有如下用途：
 
@@ -25,7 +26,6 @@ mv terraform ~/bin/
 
 <https://registry.terraform.io/providers/hashicorp/aws/latest/docs>
 
-
 ## 使用方法
 
 首先 cd 到对应的 terraform 配置文件夹：
@@ -48,15 +48,14 @@ terraform plan
 
 确认无误后，使用如下命令应用变更：
 
-
 ```shell
 terraform apply
 ```
 
-
 ## terraformer 资源导入
 
-[terraformer](https://github.com/GoogleCloudPlatform/terraformer): 支持为已存在的资源创建 terraform 的 tf/json 配置以及 tfstate 状态文件。
+[terraformer](https://github.com/GoogleCloudPlatform/terraformer): 支持为已存在的资源创建 terraform
+的 tf/json 配置以及 tfstate 状态文件。
 
 下面介绍使用方法，首先建一个新文件夹 `route53`，在其中编写 `provider.tf` 内容如下：
 
@@ -84,12 +83,13 @@ provider 下载完成后，使用 terraform 导入所有 route53 资源（修改
 terraformer-aws import aws --resources=route53
 ```
 
->因为 route53 api 限制了每秒只能访问 5 次，视 DNS 记录数量，这个用时可能会很长，需要慢慢等待。
-其他无严格限制的资源导入会快非常多。
+> 因为 route53 api 限制了每秒只能访问 5 次，视 DNS 记录数量，这个用时可能会很长，需要慢慢等待。其他
+> 无严格限制的资源导入会快非常多。
 
->运行完成后，会打印出总的 DNS 记录数量，以及完成导入的 DNS 记录数量。
+> 运行完成后，会打印出总的 DNS 记录数量，以及完成导入的 DNS 记录数量。
 
-导入完成后，生成的 terraform.state 文件还有些问题——它写入的 terraform 版本过低（0.12.x），还需要执行如下命令进行更新：
+导入完成后，生成的 terraform.state 文件还有些问题——它写入的 terraform 版本过低（0.12.x），还需要执行
+如下命令进行更新：
 
 ```shell
 terraform state replace-provider -auto-approve \

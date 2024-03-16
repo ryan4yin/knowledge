@@ -41,8 +41,9 @@ WHERE
   and regexp_extract(dstaddr, '^......') = 'xxx.xxx'  -- 目的地是当前 VPC xxx.xxx.0.0/16，即 VPC 内部流量
 ```
 
-但是如果子网的 CIDR 掩码不是 8 的倍数的话，上面这种前缀匹配的方法就失效了。
-这种场景下，AWS 官方博客介绍了一个笨办法，先用脚本生成出 CIDR 地址块与所有 IP 地址的对照关系表存为 csv，然后再将它上传到 S3 导入到 Athena 中使用。
+但是如果子网的 CIDR 掩码不是 8 的倍数的话，上面这种前缀匹配的方法就失效了。这种场景下，AWS 官方博客
+介绍了一个笨办法，先用脚本生成出 CIDR 地址块与所有 IP 地址的对照关系表存为 csv，然后再将它上传到 S3
+导入到 Athena 中使用。
 
 首先使用 Python 脚本穷举 IP 地址：
 
@@ -92,7 +93,7 @@ CREATE EXTERNAL TABLE default.vpc_ipaddr_cidr
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-LOCATION 's3://my_bucket/som_bucket/dat/'
+LOCATION 's3://my_bucket/some_bucket/dat/'
 TBLPROPERTIES ('skip.header.line.count'='1')
 ```
 
@@ -113,9 +114,8 @@ WHERE
   AND (dstaddr not in (select ip from default.vpc_ipaddr_cidr where cidr_block='172.30.96.0/19'))
 ```
 
-
 ## 其他分析手段
 
-- [Presto IP Functions](https://prestodb.io/docs/current/functions/ip.html) 提供了 IPPREFIX 跟 IPADDRESS 两个类型以及相关的函数
+- [Presto IP Functions](https://prestodb.io/docs/current/functions/ip.html) 提供了 IPPREFIX 跟
+  IPADDRESS 两个类型以及相关的函数
 - [Analyze Network Traffic of Amazon Virtual Private Cloud (VPC) by CIDR blocks](https://aws.amazon.com/cn/blogs/networking-and-content-delivery/analyze-network-traffic-of-amazon-virtual-private-cloud-vpc-by-cidr-blocks/)
-

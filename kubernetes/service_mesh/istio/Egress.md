@@ -1,7 +1,7 @@
 # EgressGateway
 
-Istio 有 IngressGateway 作为集中式的流量入口，方便统一管理入网流量。
-而 EgressGateway 自然就是统一管理出网流量。
+Istio 有 IngressGateway 作为集中式的流量入口，方便统一管理入网流量。而 EgressGateway 自然就是统一管
+理出网流量。
 
 通过设置 EgressGateway，Istio 的所有出网流量，都将通过 EgressGateway 的 Pod 出网。好处有：
 
@@ -24,17 +24,18 @@ Istio 有 IngressGateway 作为集中式的流量入口，方便统一管理入�
 
 ### 只允许通过 Egress Gateway 访问外部网络
 
-部署完成后，还有个问题：Istio 只能管控经过 sidecar 的流量。如果未注入 sidecar，那 Pod 的流量就不受 istio 管控了！
-为此需要设置 Kubernetes 的网络策略（NetworkPolicy），禁止掉所有不是源自 EgressGateway 的出集群流量。
+部署完成后，还有个问题：Istio 只能管控经过 sidecar 的流量。如果未注入 sidecar，那 Pod 的流量就不受
+istio 管控了！为此需要设置 Kubernetes 的网络策略（NetworkPolicy），禁止掉所有不是源自 EgressGateway
+的出集群流量。
 
 具体的配置内容待续。。
 
 ## 二、使用外部服务限制 Pod 访问外部网络
 
->注意：**这种方法不依赖 EgressGateway 流量出口，流量是直接从 Istio-Proxy 出去的！**
+> 注意：**这种方法不依赖 EgressGateway 流量出口，流量是直接从 Istio-Proxy 出去的！**
 
-按前面的方法部署好带 EgressGateway 的 Istio 后，集群内带 Sidecar 的容器应该就只能访问已注册的外部服务了。
-但是现在没有任何已注册的外部服务，所以应该无法访问任何外部域名。
+按前面的方法部署好带 EgressGateway 的 Istio 后，集群内带 Sidecar 的容器应该就只能访问已注册的外部服
+务了。但是现在没有任何已注册的外部服务，所以应该无法访问任何外部域名。
 
 以知乎 `zhihu.com` 为例，使用 curl/wget 进行测试，流程如下：
 
@@ -51,16 +52,16 @@ metadata:
   name: zhihu-ext
 spec:
   hosts:
-  - zhihu.com
-  - www.zhihu.com
+    - zhihu.com
+    - www.zhihu.com
   ports:
-  - number: 80
-    name: http
-    protocol: HTTP
-  - number: 443
-    name: https
-    protocol: HTTPS
-  resolution: DNS  # 要求源 ip 必须包含在 DNS 记录中，避免中间人攻击。 
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: https
+      protocol: HTTPS
+  resolution: DNS # 要求源 ip 必须包含在 DNS 记录中，避免中间人攻击。
   location: MESH_EXTERNAL
 ```
 
@@ -73,15 +74,15 @@ metadata:
   name: zhihu-ext
 spec:
   hosts:
-  - "*.zhihu.com"
+    - "*.zhihu.com"
   ports:
-  - number: 80
-    name: http
-    protocol: HTTP
-  - number: 443
-    name: https
-    protocol: HTTPS
-  resolution: None  # 只检查 Host 请求头，不检查源 IP 地址
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: https
+      protocol: HTTPS
+  resolution: None # 只检查 Host 请求头，不检查源 IP 地址
   location: MESH_EXTERNAL
 ```
 
@@ -93,7 +94,6 @@ spec:
 1. DestinationRule: 对 EgressGateway Pod 进行分类，暂且统一使用 `default-egress`
 1. VirtualService: 具体的路由规则
 
-
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -103,14 +103,14 @@ spec:
   selector:
     istio: egressgateway
   servers:
-  - port:
-      number: 443
-      name: tls
-      protocol: TLS
-    hosts:
-    - "*.zhihu.com"
-    tls:
-      mode: PASSTHROUGH
+    - port:
+        number: 443
+        name: tls
+        protocol: TLS
+      hosts:
+        - "*.zhihu.com"
+      tls:
+        mode: PASSTHROUGH
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -119,7 +119,7 @@ metadata:
 spec:
   host: istio-egressgateway.istio-system.svc.cluster.local
   subsets:
-  - name: default
+    - name: default
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -127,36 +127,36 @@ metadata:
   name: direct-zhihu-through-egress-gateway
 spec:
   hosts:
-  - zhihu.com
-  - www.zhihu.com
+    - zhihu.com
+    - www.zhihu.com
   gateways:
-  - mesh
-  - egress-zhihu
+    - mesh
+    - egress-zhihu
   tls:
-  - match:  # Pod -> EgressGateway
-    - gateways:
-      - mesh
-      port: 443
-      sniHosts:
-      - zhihu.com
-    route:
-    - destination:
-        host: istio-egressgateway.istio-system.svc.cluster.local
-        subset: default
-        port:
-          number: 443
-  - match:  # egress-gateway -> ServiceEntry
-    - gateways:
-      - egress-zhihu
-      port: 443
-      sniHosts:
-      - zhihu.com
-    route:
-    - destination:
-        host: zhihu.com
-        port:
-          number: 443
-      weight: 100
+    - match: # Pod -> EgressGateway
+        - gateways:
+            - mesh
+          port: 443
+          sniHosts:
+            - zhihu.com
+      route:
+        - destination:
+            host: istio-egressgateway.istio-system.svc.cluster.local
+            subset: default
+            port:
+              number: 443
+    - match: # egress-gateway -> ServiceEntry
+        - gateways:
+            - egress-zhihu
+          port: 443
+          sniHosts:
+            - zhihu.com
+      route:
+        - destination:
+            host: zhihu.com
+            port:
+              number: 443
+          weight: 100
 ```
 
 现在可以直接在 Pod 中请求知乎，观察 EgressGateway 的信息。

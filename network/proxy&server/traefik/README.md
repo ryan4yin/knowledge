@@ -1,6 +1,7 @@
 # [Traefik](https://github.com/containous/traefik/) 配置
 
-traefik 也是 nginx 的替代品，不过跟 caddy 不同的是，它专注于 API 网关领域，不支持静态文件服务，在 K8s 等领域应用广泛。
+traefik 也是 nginx 的替代品，不过跟 caddy 不同的是，它专注于 API 网关领域，不支持静态文件服务，在
+K8s 等领域应用广泛。
 
 我接触过的三种用法：
 
@@ -12,8 +13,8 @@ traefik 也是 nginx 的替代品，不过跟 caddy 不同的是，它专注于 
 
 traefik 可以在第 4 层(tcp/udp)和第 5 层(http/tls/websocket/grpc)进行流量转发。
 
-但是不支持 ftp/mysql/redis 等协议，这类协议当成第 4 层流量进行转发。设置这种转发意义不大，因为第 4 层只有两个可用信息：端口号和 IP，无法灵活地配置 LoadBalancer 等转发规则。个人感觉是弊大于利。
-
+但是不支持 ftp/mysql/redis 等协议，这类协议当成第 4 层流量进行转发。设置这种转发意义不大，因为第 4
+层只有两个可用信息：端口号和 IP，无法灵活地配置 LoadBalancer 等转发规则。个人感觉是弊大于利。
 
 ## 双向 TLS 认证（TLS）
 
@@ -51,19 +52,18 @@ for i in range(30):
 # 注意事项：环境变量「REQUESTS_CA_BUNDLE」可能会使上述的证书设置失效
 ```
 
-
 ## Let's Encrypt 免费 TLS 证书
 
-向 Let's Encrypt 申请证书时，它需要确认你是该域名的拥有者，它提供的所有验证方式参见[Let's Encrypt - 验证方式（challenge types）](https://letsencrypt.org/zh-cn/docs/challenge-types/)
+向 Let's Encrypt 申请证书时，它需要确认你是该域名的拥有者，它提供的所有验证方式参
+见[Let's Encrypt - 验证方式（challenge types）](https://letsencrypt.org/zh-cn/docs/challenge-types/)
 
 Traefik 支持通过 tlsChallenge/httpChallenge/dnsChallenge 三种验证方式。最常用的两种验证方式是：
 
 1. httpChallenge: 最常用的验证方式。如果你的服务器是公网可访问的，这是不二之选。
-2. dnsChallenge: 第二选择，通过配置 DNS TXT 记录进行验证。即使服务器外部不可访问也能用。traefik 支持 AliDNS/DNSPod 等国内知名 DNS 服务商。
-
+2. dnsChallenge: 第二选择，通过配置 DNS TXT 记录进行验证。即使服务器外部不可访问也能用。traefik 支持
+   AliDNS/DNSPod 等国内知名 DNS 服务商。
 
 详见 [Traefik - Let's Encrypt](https://docs.traefik.io/https/acme/)
-
 
 ## 问题
 

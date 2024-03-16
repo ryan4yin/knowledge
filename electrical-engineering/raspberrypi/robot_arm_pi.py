@@ -36,9 +36,9 @@ joystick = pygame.joystick.Joystick(0)
 joystick.init()
 print(f"已连接手柄控制器：{joystick.get_name()}")
 
-def calculate(speed, current_postion):
+def calculate(speed, current_position):
     distance = speed * max_speed
-    new_position = current_postion + distance
+    new_position = current_position + distance
 
     if new_position < -1:
         print("new", -1)

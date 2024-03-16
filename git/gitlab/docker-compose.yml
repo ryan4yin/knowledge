@@ -1,21 +1,21 @@
-version: '3'
+version: "3"
 services:
   gitlab-ce:
-    image: 'gitlab/gitlab-ce:latest'
+    image: "gitlab/gitlab-ce:latest"
     container_name: gitlab-ce
     restart: always
-    hostname: 'gitlab.example.com'
+    hostname: "gitlab.example.com"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'https://gitlab.example.com'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '80:80'
-      - '443:443'
-      - '22:22'
+      - "80:80"
+      - "443:443"
+      - "22:22"
     volumes:
-      - './gitlab/config:/etc/gitlab'
-      - './gitlab/logs:/var/log/gitlab'
-      - './gitlab/data:/var/opt/gitlab'
+      - "./gitlab/config:/etc/gitlab"
+      - "./gitlab/logs:/var/log/gitlab"
+      - "./gitlab/data:/var/opt/gitlab"
       # gitlab custom hooks
-      - './pre-receive.d:/opt/gitlab/embedded/service/gitlab-shell/hooks/pre-receive.d'
+      - "./pre-receive.d:/opt/gitlab/embedded/service/gitlab-shell/hooks/pre-receive.d"

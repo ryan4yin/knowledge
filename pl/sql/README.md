@@ -1,10 +1,9 @@
-# SQL 
-
+# SQL
 
 按日期对比某两天的数据：
 
 ```sql
-select 
+select
         c1.product,
         c1.region,
         round(c1.cost, 2) c1_cost,
@@ -13,7 +12,7 @@ select
         round(100 * (c2.cost - c1.cost) / c1.cost, 1) as cost_growth_rate
 from (
   (
-    select 
+    select
         product,
         region,
         sum(cost) as cost
@@ -22,7 +21,7 @@ from (
     group by 1,2
   ) as c1
   left outer join (
-    select 
+    select
         product,
         region,
         sum(cost) as cost

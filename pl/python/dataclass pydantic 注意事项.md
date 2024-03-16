@@ -2,7 +2,8 @@
 
 pydantic 和 dataclass 是自 Python 推出类型注解以来，使用最方便的数据类工具。
 
-尤其是 pydantic，不仅完全兼容类型注解，还提供了方便的对象序列化、反序列化功能。不论是用来写数据类，还是编写配置类，都是绝佳利器。
+尤其是 pydantic，不仅完全兼容类型注解，还提供了方便的对象序列化、反序列化功能。不论是用来写数据类，
+还是编写配置类，都是绝佳利器。
 
 ## dataclass 注意事项
 
@@ -31,7 +32,6 @@ class DataType1:
     return ""
 ```
 
-
 ## Python 配置的写法
 
 建议使用 `pydantic.BaseSettings` 编写配置类，示例：
@@ -50,7 +50,7 @@ class HashableMixin:
         )
 
 
-class AppSetings(BaseSettings, HashableMixin):
+class AppSettings(BaseSettings, HashableMixin):
     name: str = Field(max_length=32, env="APP_NAME")  # 此属性来自环境变量 APP_NAME
     registry_url: HttpUrl  # 来自环境变量 REGISTRY_URL
 
@@ -72,6 +72,7 @@ class AppSetings(BaseSettings, HashableMixin):
         return self.vault_client.get("/app/redis")['password']
 ```
 
-`BaseSettings` 在实例化时，会自动从 env 环境变量中加载配置，然后会使用提供的 validation 规则进行参数验证。
-而一些动态的配置，可以使用 `property` 来设置，既实现了动态，又使用方便，个人觉得很好用。
-如果某些动态配置比较消耗时间，可以使用 `lru_cache` 来缓存它，`lru_cache` 要求对象可 hash，为此请继承 `HashableMixin` 这个类。
+`BaseSettings` 在实例化时，会自动从 env 环境变量中加载配置，然后会使用提供的 validation 规则进行参数
+验证。而一些动态的配置，可以使用 `property` 来设置，既实现了动态，又使用方便，个人觉得很好用。如果某
+些动态配置比较消耗时间，可以使用 `lru_cache` 来缓存它，`lru_cache` 要求对象可 hash，为此请继承
+`HashableMixin` 这个类。

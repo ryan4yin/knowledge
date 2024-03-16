@@ -2,7 +2,8 @@
 
 ### 1. 检查 cpu、硬盘的温度
 
->对于服务器，更好的办法是通过 node_exporter 等监控工具采集指标，通过 grafana 等面板展示，这样比手动一个个跑命令要方便快捷非常多！
+> 对于服务器，更好的办法是通过 node_exporter 等监控工具采集指标，通过 grafana 等面板展示，这样比手动
+> 一个个跑命令要方便快捷非常多！
 
 性能测试也需要注意硬件的温度情况，如果温度过高会导致性能下降，就需要考虑补充散热措施了。
 
@@ -75,22 +76,23 @@ nvme1n1 is 0000:03:00.0
 ```
 $ lsblk
 NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-sda           8:0    1    0B  0 disk 
-nvme0n1     259:0    0  1.8T  0 disk 
+sda           8:0    1    0B  0 disk
+nvme0n1     259:0    0  1.8T  0 disk
 ├─nvme0n1p1 259:1    0 1000M  0 part /efi
 └─nvme0n1p2 259:2    0  1.8T  0 part /var/log
                                      /var/cache
                                      /home
                                      /swap
                                      /
-nvme1n1     259:3    0  1.9T  0 disk 
-├─nvme1n1p1 259:4    0  100M  0 part 
-├─nvme1n1p2 259:5    0   16M  0 part 
-├─nvme1n1p3 259:6    0  1.9T  0 part 
-└─nvme1n1p4 259:7    0  697M  0 part 
+nvme1n1     259:3    0  1.9T  0 disk
+├─nvme1n1p1 259:4    0  100M  0 part
+├─nvme1n1p2 259:5    0   16M  0 part
+├─nvme1n1p3 259:6    0  1.9T  0 part
+└─nvme1n1p4 259:7    0  697M  0 part
 ```
 
-结合上述信息可知，温度高的 `nvme-pci-0300` 对应的是 `/dev/nvme0n1`，它正是我的系统盘，正在使用中，所以温度高也正常。
+结合上述信息可知，温度高的 `nvme-pci-0300` 对应的是 `/dev/nvme0n1`，它正是我的系统盘，正在使用中，所
+以温度高也正常。
 
 而 `nvme-pci-0200` 对应的是 `/dev/nvme1n1`，它是我的 Windows 系统盘，目前没有在使用，所以温度低。
 
@@ -150,7 +152,7 @@ Device Descriptor:
   bDescriptorType         1
   bcdUSB               2.10
   bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2 
+  bDeviceSubClass         2
 --
 Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 Device Descriptor:
@@ -158,7 +160,7 @@ Device Descriptor:
   bDescriptorType         1
   bcdUSB               2.00
   bDeviceClass            9 Hub
-  bDeviceSubClass         0 
+  bDeviceSubClass         0
 --
 Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
 Device Descriptor:
@@ -166,7 +168,7 @@ Device Descriptor:
   bDescriptorType         1
   bcdUSB               3.10
   bDeviceClass            9 Hub
-  bDeviceSubClass         0 
+  bDeviceSubClass         0
 ```
 
 可以通过查看块设备的符号链接来确认 USB/NVMe 设备对应的 PCI 地址：
@@ -177,7 +179,6 @@ ls -la /sys/dev/block/ | grep -Ev "loop|dm"
 
 至于速度测试，可以直接使用上一节提到的 `sysbench fileio` 来做。
 
-
 ## 硬盘性能问题排查
 
 如果是机械硬盘，速度慢的可能原因有：
@@ -185,9 +186,9 @@ ls -la /sys/dev/block/ | grep -Ev "loop|dm"
 1. 使用的是 Windows 中常用的 NTFS/FAT 文件系统，长期使用可能会导致磁盘碎片严重，需要进行磁盘碎片整理
 2. 磁盘使用不当，坏道较多，需要进行磁盘检查
 
-关于 Linux 中磁盘碎片的问题，详见 [如何在 Linux 中整理磁盘碎片 ](https://linux.cn/article-6295-1.html)
+关于 Linux 中磁盘碎片的问题，详见
+[如何在 Linux 中整理磁盘碎片 ](https://linux.cn/article-6295-1.html)
 
 ## 命令行 GPU 监控
 
-- [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA 
-
+- [nvtop](https://github.com/Syllo/nvtop): GPUs process monitoring for AMD, Intel and NVIDIA

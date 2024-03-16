@@ -10,18 +10,18 @@ spec:
   selector:
     istio: common-ingressgateway
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 8080
-  - name: https
-    protocol: TCP
-    port: 443
-    targetPort: 8443
-  - name: http3    # HTTP/3 use UDP protocol
-    protocol: UDP
-    port: 443
-    targetPort: 8443
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+    - name: http3 # HTTP/3 use UDP protocol
+      protocol: UDP
+      port: 443
+      targetPort: 8443
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -51,25 +51,25 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: istio
-                  operator: In
-                  values:
-                  - common-ingressgateway
-              topologyKey: kubernetes.io/hostname
-            weight: 1
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: istio
+                      operator: In
+                      values:
+                        - common-ingressgateway
+                topologyKey: kubernetes.io/hostname
+              weight: 1
       nodeSelector:
-        eks.amazonaws.com/nodegroup: network-proxy  # 使用专用节点组
+        eks.amazonaws.com/nodegroup: network-proxy # 使用专用节点组
       containers:
-      - name: istio-proxy
-        image: auto # The image will automatically update each time the pod starts.
-        resources:
-          requests:
-            cpu: 1000m
-            memory: 500Mi
-          limits:
+        - name: istio-proxy
+          image: auto # The image will automatically update each time the pod starts.
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 500Mi
+            limits:
               cpu: 1000m
               memory: 500Mi
 ---
@@ -80,9 +80,9 @@ metadata:
   name: common-ingressgateway-sds
   namespace: istio-ingress
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "watch", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -94,8 +94,8 @@ roleRef:
   kind: Role
   name: common-ingressgateway-sds
 subjects:
-- kind: ServiceAccount
-  name: default
+  - kind: ServiceAccount
+    name: default
 ---
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
@@ -112,16 +112,16 @@ spec:
   maxReplicas: 100
   minReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        # 网关的目标 CPU 目标值得看使用场景
-        # 对于流量波动比较大的，资源就得预留得更多些
-        # 比如假设流量在 3mins 内（节点扩容 + 网关 Pod 就绪的大概用时）存在 20% 的流量波动
-        # 那么如果要确保 CPU 利用率在 80% 内，平均 CPU 的设置就不能超过 60%
-        averageUtilization: 55
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          # 网关的目标 CPU 目标值得看使用场景
+          # 对于流量波动比较大的，资源就得预留得更多些
+          # 比如假设流量在 3mins 内（节点扩容 + 网关 Pod 就绪的大概用时）存在 20% 的流量波动
+          # 那么如果要确保 CPU 利用率在 80% 内，平均 CPU 的设置就不能超过 60%
+          averageUtilization: 55
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -135,4 +135,3 @@ spec:
   selector:
     matchLabels:
       istio: common-ingressgateway
-

@@ -39,4 +39,3 @@ $old_paths | each { |it| to_webp $it $old_format }
 # 2. 执行 .md 文档中的图片名称替换
 $old_paths | each { |it| replace_with_webp $it $old_format }
 ```
-

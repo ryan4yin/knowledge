@@ -39,9 +39,9 @@ spec:
       nodeSelector:
         app.kubernetes.io/component: wireguard-dataplane
       tolerations:
-      - key: "xxx.example.com/wireguard-agents"
-        operator: "Exists"
-        effect: "NoSchedule"
+        - key: "xxx.example.com/wireguard-agents"
+          operator: "Exists"
+          effect: "NoSchedule"
       volumes:
         # - name: wg-api-config
         #   configMap:
@@ -55,40 +55,40 @@ spec:
         - name: wireguard-config
           hostPath:
             path: /etc/wireguard
-            type: DirectoryOrCreate  # auto create directory
+            type: DirectoryOrCreate # auto create directory
       restartPolicy: Always
       serviceAccountName: wireguard-agent
       initContainers:
-      - name: "init-sysctl"
-        image: "busybox:latest"
-        imagePullPolicy: IfNotPresent
-        resources:
-          limits:
-            cpu: "10m"
-            memory: "8Mi"
-          requests:
-            cpu: "10m"
-            memory: "8Mi"
-        securityContext:
-          privileged: true
-        command:
-          - "/bin/sh"
-          - "-c"
-          - |
-            set -o errexit
-            set -o xtrace
+        - name: "init-sysctl"
+          image: "busybox:latest"
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "10m"
+              memory: "8Mi"
+            requests:
+              cpu: "10m"
+              memory: "8Mi"
+          securityContext:
+            privileged: true
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              set -o errexit
+              set -o xtrace
 
-            echo "
-            net.ipv4.conf.all.src_valid_mark=1
-            " >> /etc/init-sysctl.conf
+              echo "
+              net.ipv4.conf.all.src_valid_mark=1
+              " >> /etc/init-sysctl.conf
 
-            # apply sysctl config
-            for i in $(seq 1 3); do
-                sysctl -p /etc/init-sysctl.conf
-                echo "sysctl exit with code $?, wait for 3s and then rerun the command..."
-                sleep 3
-            done 
-            echo "finished sysctl adjustment..."
+              # apply sysctl config
+              for i in $(seq 1 3); do
+                  sysctl -p /etc/init-sysctl.conf
+                  echo "sysctl exit with code $?, wait for 3s and then rerun the command..."
+                  sleep 3
+              done 
+              echo "finished sysctl adjustment..."
       containers:
         - name: wireguard
           image: lscr.io/linuxserver/wireguard:latest
@@ -114,7 +114,7 @@ spec:
             - name: PEERDNS
               value: "auto"
             - name: INTERNAL_SUBNET
-              value: "172.40.5.0/24"   # 注意网段别冲突了
+              value: "172.40.5.0/24" # 注意网段别冲突了
             - name: ALLOWEDIPS
               value: "0.0.0.0/0"
             - name: PERSISTENTKEEPALIVE_PEERS
@@ -132,16 +132,16 @@ spec:
             postStart:
               exec:
                 command:
-                - /bin/sh
-                - -c
-                - "sleep 15"
+                  - /bin/sh
+                  - -c
+                  - "sleep 15"
             # 在这里实现节点注销，或者通过 node deletion events 实现节点注销
             preStop:
               exec:
                 command:
-                - /bin/sh
-                - -c
-                - "sleep 15"
+                  - /bin/sh
+                  - -c
+                  - "sleep 15"
           volumeMounts:
             - mountPath: /lib/modules
               name: modules
@@ -184,9 +184,9 @@ spec:
             preStop:
               exec:
                 command:
-                - /bin/sh
-                - -c
-                - "sleep 15"
+                  - /bin/sh
+                  - -c
+                  - "sleep 15"
           # volumeMounts:
           #   - mountPath: /app/wg-api-config.yaml
           #     name: wg-api-config

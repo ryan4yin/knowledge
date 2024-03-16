@@ -2,7 +2,8 @@
 
 Kubernetes 的 HPA 可以通过 CPU/RAM 进行 Pod 伸缩，另外也支持自定义指标（如每秒请求数等）。
 
-大部分内容已迁移至博客：[二、服务的伸缩配置 - HPA](https://thiscute.world/posts/kubernetes-best-practices/#k8s-hpa)
+大部分内容已迁移至博
+客：[二、服务的伸缩配置 - HPA](https://thiscute.world/posts/kubernetes-best-practices/#k8s-hpa)
 
 ## 指标服务器
 
@@ -10,10 +11,11 @@ Kubernetes 的 HPA 可以通过 CPU/RAM 进行 Pod 伸缩，另外也支持自�
 
 ## 如何设置使用 HPA 进行基于 QPS 的扩缩容
 
-HPA 默认只支持基于 CPU 的扩缩容，这满足了大部分服务的需要，也足够简单可靠。
-但是基于 QPS 扩缩容，也是一个比较常见的需求。
+HPA 默认只支持基于 CPU 的扩缩容，这满足了大部分服务的需要，也足够简单可靠。但是基于 QPS 扩缩容，也是
+一个比较常见的需求。
 
 要支持基于 QPS 的扩缩容策略，需要如下几组件：
+
 - 指标数据库 Prometheus
 - QPS 指标：要有个 Metrics API 能够提供服务的 QPS 信息给 Prometheus 抓取
   - 可以由服务自身暴露 `metrics` 接口提供 QPS 指标，也可以通过注入 Istio Sidecar 实现
@@ -35,4 +37,3 @@ HPA 默认只支持基于 CPU 的扩缩容，这满足了大部分服务的需�
 
 - [Pod 水平自动伸缩 - Kubernetes Docs](https://kubernetes.io/zh/docs/tasks/run-application/horizontal-pod-autoscale/)
 - [Horizontal Pod Autoscaler演练 - Kubernetes Docs](https://kubernetes.io/zh/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/)
-

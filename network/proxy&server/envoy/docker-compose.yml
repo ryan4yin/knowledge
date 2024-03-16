@@ -9,17 +9,17 @@ services:
       - --config-path
       - /etc/envoy/envoy.yaml
       - --log-level
-      - debug  # trace/debug/info/warn/error
+      - debug # trace/debug/info/warn/error
     ports:
       - "80:8080"
       - "443:8443"
-      - "15000:15000"  # 仅测试用，直接暴露 admin 端口是非常危险的
+      - "15000:15000" # 仅测试用，直接暴露 admin 端口是非常危险的
     volumes:
       # 动态配置与静态配置二选一
       # - "./static-config.yaml:/etc/envoy/envoy.yaml"
       - "./dynamic-config:/etc/envoy"
     networks:
-    - proxy
+      - proxy
 
-networks: 
+networks:
   proxy:

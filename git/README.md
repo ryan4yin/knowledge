@@ -5,19 +5,20 @@
 ### 强制走 ssh 协议
 
 以下命令将对 gitlab.svc.local 的 https 请求，强制转换成 ssh 请求。
+
 ```
 git config --global url."git@gitlab.svc.local:".insteadOf "https://gitlab.svc.local"
 ```
 
-在 CI/CD 中可用上述方法强制走 ssh 协议，配合 ssh-agent 插件动态注入 ssh 密钥。
-这样你使用 `git clone https://gitlab.svc.local/xxx.git` 时，底层实际上使用的是 ssh 协议。
+在 CI/CD 中可用上述方法强制走 ssh 协议，配合 ssh-agent 插件动态注入 ssh 密钥。这样你使用
+`git clone https://gitlab.svc.local/xxx.git` 时，底层实际上使用的是 ssh 协议。
 
 也可以用同样的手法转换 http/git 协议，但是不能同时转换多种协议。。
 
 ### 为不同的 Git URL 使用不同的 email/username
 
-如果我们用同一台电脑为开源项目（或个人项目）和公司项目提交代码，就可能会遇到的一个问题：
-公司的 Git 仓库应该使用企业邮箱提交代码，而个人开源项目我们希望使用个人邮箱，如何自动切换呢？
+如果我们用同一台电脑为开源项目（或个人项目）和公司项目提交代码，就可能会遇到的一个问题：公司的 Git
+仓库应该使用企业邮箱提交代码，而个人开源项目我们希望使用个人邮箱，如何自动切换呢？
 
 这个问题，目前比较好的解法是使用 `conditional includes`，添加或修改如下两个文件：
 

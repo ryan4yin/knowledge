@@ -1,8 +1,7 @@
 # expoters 负责导出指标，供 prometheus 采集
-version: '2.1'
+version: "2.1"
 
 services:
-
   nodeexporter:
     image: prom/node-exporter:v1.0.1
     container_name: nodeexporter
@@ -11,10 +10,10 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)"
     restart: unless-stopped
     network_mode: host
     labels:
@@ -33,5 +32,3 @@ services:
     network_mode: host
     labels:
       org.label-schema.group: "monitoring"
-  
-

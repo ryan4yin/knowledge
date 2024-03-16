@@ -7,14 +7,14 @@ spec:
     labels:
       app: xxx
   configPatches:
-  - applyTo: HTTP_ROUTE
-    match:
-      context: SIDECAR_OUTBOUND  # 在从 Sidecar 发出前进行此修改
-      routeConfiguration:
-        portNumber: 8080
-    patch:
-      operation: MERGE
-      value:
-        route:
-          # 在将请求转发给上游 workloads 前，使用 X-Forwarded-Host 的值，重写 Host 这个 header
-          host_rewrite_header: X-Forwarded-Host
+    - applyTo: HTTP_ROUTE
+      match:
+        context: SIDECAR_OUTBOUND # 在从 Sidecar 发出前进行此修改
+        routeConfiguration:
+          portNumber: 8080
+      patch:
+        operation: MERGE
+        value:
+          route:
+            # 在将请求转发给上游 workloads 前，使用 X-Forwarded-Host 的值，重写 Host 这个 header
+            host_rewrite_header: X-Forwarded-Host

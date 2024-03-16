@@ -1,4 +1,4 @@
-# 使用 Buildkit 
+# 使用 Buildkit
 
 - 关注点
   - layer 及 directory 缓存复用

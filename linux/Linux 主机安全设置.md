@@ -18,10 +18,10 @@ passwd username  # 进交互模式，设置用户密码
 
 在需要提权时再 `sudo xxx` 或者 `sudo su`，提升安全性。
 
-
 ### 2. 使用 ssh-key 登录
 
 先在本地机器生成密钥对：
+
 ```shell
 # 方法一：会进入交互模式，可以指定密钥对保存位置与密钥名称。
 ## 会使用默认算法 ssh-rsa(RSA/SHA1)，此算法目前已经不够安全！
@@ -32,7 +32,8 @@ ssh-keygen
 ssh-keygen -t ed25519 -f id_rsa_for_xxx -C "ssh key for xxx" -P ''
 ```
 
-接下来需要把公钥追加到远程主机的 `$HOME/.ssh/authorized_keys` 文件的末尾（`$HOME` 是 user 的家目录，不是 root 的家目录，看清楚了）：
+接下来需要把公钥追加到远程主机的 `$HOME/.ssh/authorized_keys` 文件的末尾（`$HOME` 是 user 的家目录，
+不是 root 的家目录，看清楚了）：
 
 ```shell
 # 方法一：使用 `ssh-copy-id` 自动完成公钥添加，默认公钥路径 ~/.ssh/id_rsa.pub
@@ -44,6 +45,7 @@ chmod 600 ~/.ssh/authorized_keys
 ```
 
 这样你就可以使用秘钥登录了：
+
 ```shell
 ssh <username>@<server-ip> -i <rsa_private_key>  # 私钥默认使用 ~/.ssh/id_rsa
 
@@ -56,6 +58,7 @@ ssh ubuntu@111.222.333.444 -i ~/.ssh/id_rsa_for_server
 ### 3. 禁止密码登录，禁止 root 用户远程登录
 
 编辑 ssh 配置文件 `/etc/ssh/sshd_config`，修改如下：
+
 ```config
 PermitRootLogin no  # 禁止 root 登录
 PasswordAuthentication no  # 禁止密码认证
@@ -68,13 +71,14 @@ PubkeyAuthentication yes  # 允许使用公钥认证登录
 
 ### 4. 打开防火墙，只开启需要使用的端口
 
-旧版的 linux 基本都使用 iptables 做防火墙，但是它配置特别麻烦。而新版的 linux 发行版都提供了对 `iptables` 更高层的封装，简化上手难度：
+旧版的 linux 基本都使用 iptables 做防火墙，但是它配置特别麻烦。而新版的 linux 发行版都提供了对
+`iptables` 更高层的封装，简化上手难度：
 
 1. ubuntu 使用 ufw
 2. centos 使用 firewall
 
-**注意**：Docker 的端口映射，ufw 和 firewall 都管不到！这涉及到底层的 iptables 原理，建议网上搜索。。。
-总之不要试图通过 ufw/firewall/iptables 去简单地禁用 Docker 映射的端口，没有用的。
+**注意**：Docker 的端口映射，ufw 和 firewall 都管不到！这涉及到底层的 iptables 原理，建议网上搜
+索。。。总之不要试图通过 ufw/firewall/iptables 去简单地禁用 Docker 映射的端口，没有用的。
 
 #### 4.1 ufw
 
@@ -98,7 +102,7 @@ systemctl status firewalld # 或者 firewall-cmd --state 查看状态
 systemctl disable firewalld # 停止
 systemctl stop firewalld  # 禁用
 
-# 显示服务列表  
+# 显示服务列表
 ## Amanda, FTP, Samba和TFTP等最重要的服务已经被FirewallD提供相应的服务，可以使用如下命令查看：
 firewall-cmd --get-services
 
@@ -116,9 +120,11 @@ sudo firewall-cmd --reload
 
 ## 注意事项
 
-1. **上述操作防不了 docker 的端口映射！！！**因为 docker 端口映射的 iptables 链，和防火墙的 iptables 链层级相同！
+1. **上述操作防不了 docker 的端口映射！！！**因为 docker 端口映射的 iptables 链，和防火墙的 iptables
+   链层级相同！
 1. 客户端的公钥文件，权限必须是 600，即仅 owner 可读写。
-    - 如果客户端是 windows，必须在公钥文件的「属性」-「安全」中删除掉所有的用户（可能还需要先在「高级」中禁用权限「继承」），只保留自己的读写权限！
+   - 如果客户端是 windows，必须在公钥文件的「属性」-「安全」中删除掉所有的用户（可能还需要先在「高
+     级」中禁用权限「继承」），只保留自己的读写权限！
 
 ## 参考
 

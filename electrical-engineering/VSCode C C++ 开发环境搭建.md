@@ -1,6 +1,8 @@
 # VSCode C/C++ 开发环境搭建
 
-VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡半天，而且还经常给出一堆莫名的引用，体验极其糟糕。而 llvm 项目推出的 clangd 应用广泛，体验丝滑，直接吊打 VSCode C/C++ 插件（举个例子 Clion 就是基于 clangd 开发的）。
+VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡半天，而且还经常给出一堆莫名的引用，体验极
+其糟糕。而 llvm 项目推出的 clangd 应用广泛，体验丝滑，直接吊打 VSCode C/C++ 插件（举个例子 Clion 就
+是基于 clangd 开发的）。
 
 这里就简单介绍下如何用 clangd 搭建开发环境，其实挺简单的。
 
@@ -15,14 +17,17 @@ VSCode 的 C/C++ 插件功能虽然全但是速度比较拉，跳转个定义卡
   - lldb
   - clangd: 这个组件可以使用系统包管理器安装，也可以由 vscode 插件自行下载安装。
 
-环境装好后还需要一点点工作—— clang 借助 `compile_commands.json` 进行语法提示，但这个配置可不是让你手写的，有很多工具可以自动生成它：
+环境装好后还需要一点点工作—— clang 借助 `compile_commands.json` 进行语法提示，但这个配置可不是让你手
+写的，有很多工具可以自动生成它：
 
-1. 对于使用 make 的项目，可以直接使用 [rizsotto/Bear](https://github.com/rizsotto/Bear) 自动生成此文件
-2. 对于使用 cmake 的项目就更简单了，cmake 原生就支持，只需要在根目录的配置文件中添加 `set(CMAKE_EXPORT_COMPILE_COMMANDS True)`
+1. 对于使用 make 的项目，可以直接使用 [rizsotto/Bear](https://github.com/rizsotto/Bear) 自动生成此文
+   件
+2. 对于使用 cmake 的项目就更简单了，cmake 原生就支持，只需要在根目录的配置文件中添加
+   `set(CMAKE_EXPORT_COMPILE_COMMANDS True)`
 3. 其他工具的配置方法请自行搜索。
 
-生成好 `compile_commands.json` 后，最简单的配置方法是，在项目根目录为其添加一个软链接，clangd 就能正确识别到它了。
-假设你的配置文件生成在了 `build` 文件夹中，那么在项目根目录执行如下命令即可：
+生成好 `compile_commands.json` 后，最简单的配置方法是，在项目根目录为其添加一个软链接，clangd 就能正
+确识别到它了。假设你的配置文件生成在了 `build` 文件夹中，那么在项目根目录执行如下命令即可：
 
 ```shell
 ln -s build/compile_commands.json .
@@ -31,7 +36,6 @@ ln -s build/compile_commands.json .
 ## 一、GCC / Clang 常见参数解释
 
 主要摘抄自 [man gcc](https://man7.org/linux/man-pages/man1/gcc.1.html)，用做日常参考:
-
 
 ```shell
 # debug 或学习编译流程时常用的选项
@@ -94,7 +98,7 @@ ln -s build/compile_commands.json .
 
               If multiple -include options are given, the files are
               included in the order they appear on the command line.
-        
+
        -I<directory>
               Add the specified directory to the search path for include files.
 
@@ -229,11 +233,13 @@ ln -s build/compile_commands.json .
 
 ## 二、Makefile 的基础用法
 
-Make 是一个通用的项目构建工具，被广泛应用在 C/C++ 项目构建领域，但是它足够通用的特性使部分 Go/Python 等项目中也有它的身影。
+Make 是一个通用的项目构建工具，被广泛应用在 C/C++ 项目构建领域，但是它足够通用的特性使部分 Go/Python
+等项目中也有它的身影。
 
 官方文档：[GNU make Docs](https://www.gnu.org/software/make/manual/make.html#Introduction)
 
-以及之前写过的一点点练手 Makefile 与详细注释：[video2ascii-c/Makefile](https://github.com/ryan4yin/video2ascii-c/blob/master/Makefile)
+以及之前写过的一点点练手 Makefile 与详细注
+释：[video2ascii-c/Makefile](https://github.com/ryan4yin/video2ascii-c/blob/master/Makefile)
 
 TODO
 
@@ -241,7 +247,8 @@ TODO
 
 CMake 是一个生成 Makefile 的工具，它的目标是简化 Makefile 的编写，并提升编译配置的可移植性。
 
-CMake 是 C/C++ 生态里最好用的构建工具之一了（虽然也被很多人疯狂吐槽），大量现代一点的项目都使用了 CMake 作为编译构建工具，比如乐鑫的 ESP-IDF。
+CMake 是 C/C++ 生态里最好用的构建工具之一了（虽然也被很多人疯狂吐槽），大量现代一点的项目都使用了
+CMake 作为编译构建工具，比如乐鑫的 ESP-IDF。
 
 官方入门教程：[CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
 
@@ -251,7 +258,8 @@ TODO
 
 ### 编译指令
 
-有两种方法，最直观的解法可参考 [The Linux Kernel Module Programming Guide](https://tldp.org/LDP/lkmpg/2.4/html/x208.htm)
+有两种方法，最直观的解法可参考
+[The Linux Kernel Module Programming Guide](https://tldp.org/LDP/lkmpg/2.4/html/x208.htm)
 
 而最简单的方法则是使用内核源码目录中的 `Makefile` 进行编译，命令演示如下：
 
@@ -265,13 +273,15 @@ make -C $(KERNEL_SOURCE_DIR) M=$(pwd) modules
 - `-C $(KERNEL_SOURCE_DIR)`: 这是 Makefile 的递归用法，等同于 `cd $(KERNEL_SOURCE_DIR) && make`
   - 详见 [Recursive Use of make](https://www.gnu.org/software/make/manual/make.html#Recursion)
 - `M=$(pwd)`: 一个传参，在 Makefile 中可以通过 `$(M)` 使用这个参数。
-  - Linux 根目录的 Makefile 会检测这个参数是否存在，并将其赋值给 `KBUILD_EXTMOD` 参数，表示构建此外部模块。
+  - Linux 根目录的 Makefile 会检测这个参数是否存在，并将其赋值给 `KBUILD_EXTMOD` 参数，表示构建此外
+    部模块。
 - `modules`: 同样是来自内核 Makefile 的定义，表示仅构建模块部分。
 
 ### IDE 支持
 
-对于使用 clangd 进行语法补全、定义跳转等功能，Linux 内核其实本身就提供了生成 `compile_commands.json` 的脚本：[scripts/clang-tools/gen_compile_commands.py](https://github.com/torvalds/linux/blob/master/scripts/clang-tools/gen_compile_commands.py)
-
+对于使用 clangd 进行语法补全、定义跳转等功能，Linux 内核其实本身就提供了生成 `compile_commands.json`
+的脚
+本：[scripts/clang-tools/gen_compile_commands.py](https://github.com/torvalds/linux/blob/master/scripts/clang-tools/gen_compile_commands.py)
 
 ## 参考
 

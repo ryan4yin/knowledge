@@ -7,19 +7,19 @@ spec:
     labels:
       istio: ingressgateway
   configPatches:
-  - applyTo: HTTP_ROUTE
-    match:
-      context: GATEWAY  # 网关层
-      routeConfiguration:
-        vhost:
-          name: <domain_here>:443  # host 地址
-    patch:
-      operation: INSERT_FIRST
-      value:
-        name: direct
-        match:
-          path: /direct  # HTTP 路径
-        directResponse:
-          body:
-            inlineString: 'hello world'  # 响应体
-          status: 200  # 响应状态码
+    - applyTo: HTTP_ROUTE
+      match:
+        context: GATEWAY # 网关层
+        routeConfiguration:
+          vhost:
+            name: <domain_here>:443 # host 地址
+      patch:
+        operation: INSERT_FIRST
+        value:
+          name: direct
+          match:
+            path: /direct # HTTP 路径
+          directResponse:
+            body:
+              inlineString: "hello world" # 响应体
+            status: 200 # 响应状态码

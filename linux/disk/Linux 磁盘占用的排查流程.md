@@ -25,7 +25,8 @@ overlay                   98G  6.1G   92G   7% /var/lib/docker/overlay2/62cc31ef
 shm                       64M     0   64M   0% /var/lib/docker/containers/7f7593fc8d14ddbe7dd1a946ccf08adf2bef415a7560db1c12d0ab0abb9e582a/mounts/shm
 ```
 
-可以看到主分区 `/` 已经使用了 7%，现在假设因为某个软件的缓存，导致这个分区 `/` 的可用空间不多了。现在要排查到缓存所在位置。
+可以看到主分区 `/` 已经使用了 7%，现在假设因为某个软件的缓存，导致这个分区 `/` 的可用空间不多了。现
+在要排查到缓存所在位置。
 
 ## `du -h --max-depth=1`
 
@@ -67,7 +68,6 @@ du: cannot access './proc/12646/fdinfo/4': No such file or directory
 通过这样的排查，发现公司这次遇到的问题，是 elasticsearch 的数据文件夹把磁盘消耗光了。
 
 定位到问题后，再依据该数据的重要程度，来决定是直接清空，还是如何处理它。
-
 
 ## 参考
 

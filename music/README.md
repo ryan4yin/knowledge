@@ -19,8 +19,9 @@ Android 必备 APP：
 
 - [musescore](https://musescore.com/): musecore 提供的乐谱分享网站
 - <https://www.musictheory.net/>: 乐理教学网站，英文
-- [好和弦 - Youtube](https://www.youtube.com/channel/UCVXstWyJeO6No3jYELxYrjg)：最简洁明了的和弦教学课！
-   - Bilibili 搬运：<https://www.bilibili.com/video/BV1Kx411B7cQ>
+- [好和弦 - Youtube](https://www.youtube.com/channel/UCVXstWyJeO6No3jYELxYrjg)：最简洁明了的和弦教学
+  课！
+  - Bilibili 搬运：<https://www.bilibili.com/video/BV1Kx411B7cQ>
 
 ## 参考
 

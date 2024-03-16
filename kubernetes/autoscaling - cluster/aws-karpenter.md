@@ -1,16 +1,24 @@
 # [aws/karpenter](https://github.com/aws/karpenter)
 
-karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes 社区的 Cluster Autoscaler 组件，它的优势在于：
+karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes 社区的 Cluster Autoscaler 组件，它的优
+势在于：
 
 - karpenter 对 aws 数百种实例类型、可用区、购买参数的支持要更好些
-- Karpenter 直接管理每个节点实例，完全绕过了 AWS EKS NodeGroup 等编排机制，这免去了管理大量不同配置的 NodeGroups 的烦恼，而且使它的扩缩容、重试机制等更灵活快速
-- 社区的 Cluster Autoscaler 自身不提供 Pod 调度能力，完全依赖于 kube-scheduler 进行 pod 调度。而 Karpenter 在节点上线后会立即主动将未调度成功的 Pod 绑定到新节点，从而使 kubelet 预先准备容器运行时、预拉取镜像，这可以缩短几秒钟的节点启动延时
-- 只要你同时选择了 Spot/OD 两种实例类型，Karpenter 的扩容策略就会自动扩容最佳的实例，Spot 实例的分配优先级是比 OD 更高的，因此会被优先分配。
-  - 并且在 Spot 实例申请失败的时候（资源不足），fallback 到 OD，这个 fallback 的速度非常的快，不会影响集群扩容速度。
+- Karpenter 直接管理每个节点实例，完全绕过了 AWS EKS NodeGroup 等编排机制，这免去了管理大量不同配置
+  的 NodeGroups 的烦恼，而且使它的扩缩容、重试机制等更灵活快速
+- 社区的 Cluster Autoscaler 自身不提供 Pod 调度能力，完全依赖于 kube-scheduler 进行 pod 调度。而
+  Karpenter 在节点上线后会立即主动将未调度成功的 Pod 绑定到新节点，从而使 kubelet 预先准备容器运行
+  时、预拉取镜像，这可以缩短几秒钟的节点启动延时
+- 只要你同时选择了 Spot/OD 两种实例类型，Karpenter 的扩容策略就会自动扩容最佳的实例，Spot 实例的分配
+  优先级是比 OD 更高的，因此会被优先分配。
+  - 并且在 Spot 实例申请失败的时候（资源不足），fallback 到 OD，这个 fallback 的速度非常的快，不会影
+    响集群扩容速度。
 
-注意 karpenter 并不会响应 spot 中断等 EC2 事件，这需要使用 [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) 实现。
+注意 karpenter 并不会响应 spot 中断等 EC2 事件，这需要使用
+[AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) 实现。
 
-实际观测上看，karpenter 扩容确实非常迅速，而且会提前将节点配置加入到集群中，从扩容到新节点就绪，用时大概在 75s-120s 的样子。
+实际观测上看，karpenter 扩容确实非常迅速，而且会提前将节点配置加入到集群中，从扩容到新节点就绪，用时
+大概在 75s-120s 的样子。
 
 注意事项：
 
@@ -18,17 +26,19 @@ karpenter 是 aws 官方推出的一个集群伸缩组件，相比 Kubernetes �
 - karpenter 不会主动回收非空节点！除非该节点触发了 `Node Expired` 策略！
   - 即使使用了 descheduler 来优化 pod 拓扑分布，也起不到应有的效果！
   - 相关 issue: https://github.com/kubernetes-sigs/descheduler/issues/749
-  - 临时解决方法：对于大数据这类纯计算的集群，创建一个小的 Spot 节点组专门给集群组件使用，跟计算任务隔离开。
+  - 临时解决方法：对于大数据这类纯计算的集群，创建一个小的 Spot 节点组专门给集群组件使用，跟计算任务
+    隔离开。
     - 修改所有这些实例的 nodeSelector，只允许在这个专用节点组上运行
-
 
 ## 一、安装方法
 
 ### 创建并关联 Karpenter 节点的 IAM 相关资源
 
-AWS EC2 的 InstanceProfile 是一个 IAM Role 的容器，EC2 不能直接关联 IAM Role，必须使用 InstanceProfile 作为中介。
+AWS EC2 的 InstanceProfile 是一个 IAM Role 的容器，EC2 不能直接关联 IAM Role，必须使用
+InstanceProfile 作为中介。
 
-Karpenter 也需要一个具备必要权限的 InstanceProfile 来为 EKS 创建新节点，这样新建出的节点才能正常加入到集群中。
+Karpenter 也需要一个具备必要权限的 InstanceProfile 来为 EKS 创建新节点，这样新建出的节点才能正常加入
+到集群中。
 
 ```shell
 export KARPENTER_VERSION=v0.8.2
@@ -53,8 +63,8 @@ curl -fsSL https://karpenter.sh/"${KARPENTER_VERSION}"/getting-started/getting-s
 - KarpenterNodeInstanceProfile
 - KarpenterControllerPolicy
 
-
-参考 [AWS IAM 权限控制](/cloud-provider/aws/IAM%20权限控制.md) 末尾的内容。可通过 AWS CLI 为已存在的 IAM Role 创建 InstanceProfile.
+参考 [AWS IAM 权限控制](/cloud-provider/aws/IAM%20权限控制.md) 末尾的内容。可通过 AWS CLI 为已存在的
+IAM Role 创建 InstanceProfile.
 
 建议使用 GitOps 的方式创建这些资源，pulumi/terraform 都是很好的工具。
 
@@ -62,7 +72,8 @@ curl -fsSL https://karpenter.sh/"${KARPENTER_VERSION}"/getting-started/getting-s
 
 ### 允许 Karpenter 创建的节点连接到 EKS 集群
 
-使用如下命令修改 EKS 集群配置，允许使用 `KarpenterNodeRole-xxx` 这个 IAM Role 的 EC2 实例连接到 EKS 集群。
+使用如下命令修改 EKS 集群配置，允许使用 `KarpenterNodeRole-xxx` 这个 IAM Role 的 EC2 实例连接到 EKS
+集群。
 
 ```shell
 eksctl create iamidentitymapping \
@@ -95,7 +106,8 @@ data:
 
 ### 为 KarpenterController 服务绑定 KarpenterControllerPolicy
 
-KarpenterController 需要必要的权限来创建、删除、修改 EC2 实例，为此需要为它创建相应的 Policy 与 IAM Role，之后再通过 Kubernetes ServiceAccount 关联上这个 IAM Role.
+KarpenterController 需要必要的权限来创建、删除、修改 EC2 实例，为此需要为它创建相应的 Policy 与 IAM
+Role，之后再通过 Kubernetes ServiceAccount 关联上这个 IAM Role.
 
 需要的 Policy `KarpenterControllerPolicy` 应该已经在第一步的脚本中自动创建好了，这里直接关联即可：
 
@@ -110,8 +122,8 @@ eksctl create iamserviceaccount \
 export KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter"
 ```
 
-上面命令将自动创建 IAM Role `${CLUSTER_NAME}-karpenter`，并自动为此 Role 配置信任关系，允许 `${CLUSTER_NAME}` 集群的 `karpenter/karpenter` 这个 ServiceAccount 绑定此 IAM Role.
-
+上面命令将自动创建 IAM Role `${CLUSTER_NAME}-karpenter`，并自动为此 Role 配置信任关系，允许
+`${CLUSTER_NAME}` 集群的 `karpenter/karpenter` 这个 ServiceAccount 绑定此 IAM Role.
 
 ### 创建 EC2 Spot 服务关联 Role
 
@@ -127,15 +139,12 @@ aws iam create-service-linked-role --aws-service-name spot.amazonaws.com || true
 An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: Service role name AWSServiceRoleForEC2Spot has been taken in this account, please try a different suffix.
 ```
 
-
 ### 使用 Helm 安装 karpenter
-
 
 ```shell
 helm repo add karpenter https://charts.karpenter.sh/
 helm repo update
 ```
-
 
 然后使用如下命令安装（更好的选择是使用一个自定义的 values.yaml）：
 
@@ -160,10 +169,10 @@ cat karpenter/values.yaml
 
 ## 二、使用方法
 
-Karpenter 使用名为 `Provisioner` 的 CRD 来管理集群的伸缩，Kapenter 基于 `Provisioner` 的配置内容，参考 Pod 的 lables/affinity 等属性进行集群的伸缩决策。
+Karpenter 使用名为 `Provisioner` 的 CRD 来管理集群的伸缩，Kapenter 基于 `Provisioner` 的配置内容，参
+考 Pod 的 lables/affinity 等属性进行集群的伸缩决策。
 
 简单的说，使用了 Karpenter 的 `Provisioner`，你再就不再需要管理多个 EKS 节点组了。
-
 
 一个简单的 Provisioner 配置如下：
 
@@ -230,7 +239,7 @@ spec:
       dev.corp.net/team: MyTeam
     amiFamily: AL2  # 通过 AMI 家族名称自动发现合适的 AMI 镜像，AL2/Bottlerocket
     # 设定磁盘大小，它的优先级比 launchTemplate 低，两者不能共用
-    blockDeviceMappings: 
+    blockDeviceMappings:
       - deviceName: /dev/xvda
         ebs:
           volumeSize: 40Gi
@@ -248,30 +257,36 @@ spec:
 
 首先，karpenter 会基于 `ttlSecondsAfterEmpty` 参数的配置，自动回收长时间空闲的空节点。
 
-其次，karpenter 会自动地优雅关停（`cordon` => `drain` => `shutdown`）被 `kubectl delete no xxx` 命令删除的节点（前提是此节点受 `karpenter` 管理）。这是通过在所有节点上添加 `finalizer` 实现的，这个 `finalizer` 会一直阻塞，直到 kanpenter 完成所有前置操作。
+其次，karpenter 会自动地优雅关停（`cordon` => `drain` => `shutdown`）被 `kubectl delete no xxx` 命令
+删除的节点（前提是此节点受 `karpenter` 管理）。这是通过在所有节点上添加 `finalizer` 实现的，这个
+`finalizer` 会一直阻塞，直到 kanpenter 完成所有前置操作。
 
 如下配置可以组织 Karpenter 回收某个节点：
 
-- PodDisruptionBudget: 如果回收某个节点会破坏某个 PDB 配置，Karpenter 将会停止该操作，过一段时间再重试（Backoff Retry Eviction）
+- PodDisruptionBudget: 如果回收某个节点会破坏某个 PDB 配置，Karpenter 将会停止该操作，过一段时间再重
+  试（Backoff Retry Eviction）
   - PDB 可有效保护服务的稳定性，确保始终有足够多的 Pods 处于 Ready 状态
 - Karpenter 永远不会强制删除 Pods，如果某个 Pod 无法被删除，对应的节点就永远不会被回收
 - Karpenter 不会驱逐拥有 `karpenter.sh/do-not-evict` 注解的 Pods，有这类 Pods 运行的节点不会被回收
-  - 有些 Pods 可能是不允许中断的，比如 spark driver, 它的中断会导致整个 spark 任务失败。为这类 pod 添加上述注解可以有效地保护它们。
-
+  - 有些 Pods 可能是不允许中断的，比如 spark driver, 它的中断会导致整个 spark 任务失败。为这类 pod
+    添加上述注解可以有效地保护它们。
 
 ## 自定义 Launch Template
 
-CRD 中直接提供的参数有限，如果需要自定义 AMI、userdata 等更底层的数据，就需要用到自定义 launch templates.
+CRD 中直接提供的参数有限，如果需要自定义 AMI、userdata 等更底层的数据，就需要用到自定义 launch
+templates.
 
-但是要注意，一旦使用了自定义 Launch Template，那除了实例类型、网络配置之外的其他参数，都将使用你配置的参数，如果配置不当就会导致实例无法启动，或者无法加入集群。
+但是要注意，一旦使用了自定义 Launch Template，那除了实例类型、网络配置之外的其他参数，都将使用你配置
+的参数，如果配置不当就会导致实例无法启动，或者无法加入集群。
 
-Launch Template 的网络接口配置、实例类型配置都会被 karpenter 强制覆盖，所以不要配置它们，这没啥意义。
+Launch Template 的网络接口配置、实例类型配置都会被 karpenter 强制覆盖，所以不要配置它们，这没啥意
+义。
 
 官方推荐用 CloudFormation 创建 LaunchTemplate
 
 ```yaml
 # launch-template-eks-test.yaml
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Resources:
   KarpenterCustomLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
@@ -307,4 +322,3 @@ aws cloudformation create-stack \
   --stack-name KarpenterCustomLaunchTemplateStack \
   --template-body file://$(pwd)/launch-template-eks-test.yaml
 ```
-
