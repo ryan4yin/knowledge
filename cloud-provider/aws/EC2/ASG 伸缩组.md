@@ -1,5 +1,7 @@
 # Auto Scaling Group 伸缩组
 
+> 适合简单使用的场景，功能太简单，被 EKS + Karpenter 吊打。
+
 AWS 的 ASG 实例伸缩组，跟 EKS 的 Deployments 比较类似，也可以设定最小实例数，再按需扩缩容。区别在于
 ASG 管理的是节点数量。
 

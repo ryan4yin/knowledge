@@ -120,6 +120,13 @@ AWS 托管版的 NAT 网关按流量收费，其价格为 $.045 per GB，在流�
 针对此情况存在一些开源解决方案，自建 EC2 实例做 NAT，可大幅缩减 NAT 网关的费用：
 
 - https://github.com/1debit/alternat
+- https://github.com/AndrewGuenther/fck-nat
+
+对于企业级场景（超高连接数与数据量），自建 NAT 需要关注如下这些问题：
+
+- https://github.com/1debit/alternat?tab=readme-ov-file#other-considerations
+- [EC2 的其他隐形网络限制](./EC2/网络限制.md)
+
 
 ### VPC Flow Log 流日志
 
