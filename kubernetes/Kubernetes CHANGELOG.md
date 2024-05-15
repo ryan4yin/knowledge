@@ -166,8 +166,6 @@
 
 ## [1.29](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md#changelog-since-v1280)
 
-> 预计于 1023-12-13 release
-
 - `SidecarContainers` 进入 Beta 并默认启用
 - 以及其他一堆特性完全进入 GA，删除相关的 feature gate
   - CSIMigrationvSphere
@@ -178,3 +176,15 @@
   - GRPCContainerProbe
   - ReadWriteOncePod
   - ...
+- kubelet 一批监控指标进入 GA
+
+
+## [1.30](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.30.md#changelog-since-v1290)
+
+- AppArmor profiles can now be configured through fields on the `PodSecurityContext` and container `SecurityContext`. 
+- 如下特性进入 GA
+  - ValidatingAdmissionPolicy
+  - AdmissionWebhookMatchConditions
+- 新增 Alpha 特性
+  - ServiceTrafficDistribution: 给 Service 添加 `spec.trafficDistribution` 参数用于控制流量分发配置
+

@@ -73,7 +73,7 @@
   - Gateway API GA，升级到 1.0.0
 - istio 1.21 - 2024-03-13
   - 优化配置兼容性，支持设置兼容版本，这样在升级到新版本后，仍然可以使用旧版本的配置，兼容其行为。
-- **istio 1.22** - 2024-05-13
+- **[istio 1.22](https://istio.io/latest/news/releases/1.22.x/announcing-1.22/)** - 2024-05-13
   - **Ambient Mesh 功能进入 beta**
     - Compared to sidecar mode, ambient mode reduces memory overhead and CPU usage by over 90% in
       many cases.
