@@ -49,11 +49,12 @@
     - fix [支持 Pod 扩容时，新 Pod 的 slow start](https://github.com/istio/istio/issues/21228)
     - 但也存在一些 bug: [slow start in istio](https://github.com/istio/istio/issues?q=slow+start)
 - istio 1.15
-  - 支持越来越流行的 arm64 架构
+  - **支持越来越流行的 arm64 架构**
     - 要知道 AWS 的 arm64 实例比 amd64 性价比高 40%！升级后 Istio 网关层将能立即取得到这项收益
+    - 测试发现如果采用了 mtls 加密，arm64 的性价比就低很多了，因为它的加密性能不如 amd64
   - [取消总权重为 `100` 的限制，可以设为任意整数](https://github.com/istio/istio/issues/36069)
 - istio 1.16 - 2022-11-15
-  - Kubernetes Gateway API 进入 Beta
+  - **Kubernetes Gateway API 进入 Beta**
   - 添加对 MAGLEV 负载均衡算法的支持
   - 支持 OpenTelemetry Provider 用于 Tracing
     - 同时 Telemetry API 改用新的 native 插件替换旧的 wasm 插件，降低了其 CPU/MEM 消耗
@@ -64,6 +65,18 @@
   - helm 安装方式进入 beta
   - Kubernetes Gateway API 升级到最新版本（0.6.1）
   - IPv6 双栈支持改进
-- upcoming istio 1.1x
-  - [istio/experimental-ambient](https://github.com/istio/istio/tree/experimental-ambient): istio 实
-    验性的 ambient mesh 功能
+- istio 1.18 - 2023-06-07
+  - 实验性的 ambient mesh 功能 - 使用节点级别的 proxy，大大降低 sidecar proxy 的资源占用
+- istio 1.19 - 2023-09-05
+  - Gateway API 升级到 v0.8.0，**首次加入 Service Mesh 支持**
+- istio 1.20 - 2023-11-14
+  - Gateway API GA，升级到 1.0.0
+- istio 1.21 - 2024-03-13
+  - 优化配置兼容性，支持设置兼容版本，这样在升级到新版本后，仍然可以使用旧版本的配置，兼容其行为。
+- **istio 1.22** - 2024-05-13
+  - **Ambient Mesh 功能进入 beta**
+    - Compared to sidecar mode, ambient mode reduces memory overhead and CPU usage by over 90% in
+      many cases.
+  - **Gateway API 对 service mesh 的支持进入 stable，也就是说可以考虑从 virtualservice/DestinationRule
+    这一套 API 彻底迁移到 Gateway API 了**
+  - **Delta xDS 成为默认方式，这极大地提高了控制面与 sidecar proxy 的性能**
