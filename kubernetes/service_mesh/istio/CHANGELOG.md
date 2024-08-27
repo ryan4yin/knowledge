@@ -80,3 +80,6 @@
   - **Gateway API 对 service mesh 的支持进入 stable，也就是说可以考虑从 virtualservice/DestinationRule
     这一套 API 彻底迁移到 Gateway API 了**
   - **Delta xDS 成为默认方式，这极大地提高了控制面与 sidecar proxy 的性能**
+- **[istio 1.23](https://istio.io/latest/news/releases/1.23.x/announcing-1.23/)** - 2024-08-14
+  - 对 Ambient Mesh 做了大量改进
+

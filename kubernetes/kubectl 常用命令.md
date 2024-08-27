@@ -14,6 +14,8 @@ kubectl get nodes --label-columns "node.kubernetes.io/instance-type" --no-header
 
 kubectl get nodes --label-columns "topology.kubernetes.io/zone,node.kubernetes.io/instance-type" --no-headers | awk '{print $6,$7}' | sort | uniq -c | sort -nr
 
+# 查询所有异常的事件
+kubectl events --types=Warning
 ```
 
 ```shell
