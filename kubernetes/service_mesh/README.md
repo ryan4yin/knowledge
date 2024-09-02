@@ -12,14 +12,13 @@
 
 其他还有一些名气小一点的服务网格可供参考，但是目前都不推荐选用：
 
+1. [cilium serive mesh](https://docs.cilium.io/en/stable/network/servicemesh/l7-traffic-management/)
 1. [kuma](https://github.com/kumahq/kuma): 由 Kong 基于 Envoy 开发的一个服务网格
-2. [osm](https://github.com/openservicemesh/osm): 微软开源的一个基于 Envoy 的服务网格，完全基于服务
-   网关接口 SMI 规范开发，使用上比 istio 简单很多，但是仍然功能仍然不够完善，not production-ready.
-3. apisix 等基于 nginx/openresty 的技术，也在向这个方向发展
+1. ~~apisix 等基于 nginx/openresty 的技术，也在向这个方向发展~~ 项目风险高，不推荐选用
    - 它们的优势大概有：nginx 的「高性能」与「可扩展性」，以及企业能沿用上企业曾经在 nginx 领域多年的
      历史积累（坑都踩过了）。
 
-以及一些昙花一现，不再活跃的服务网格项目，如 traefik mesh、rancher rio
+以及一些昙花一现，不再活跃的服务网格项目，如 traefik mesh, rancher rio, microsoft open service mesh, etc.
 
 在选用服务网格产品时，要以自己的痛点为核心，再结合**性能**、**可拓展性**、**复杂度**几个方案来综合考
 量。

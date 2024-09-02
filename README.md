@@ -125,3 +125,8 @@ SRE/DevOps 文章集锦：
   直接 copy 进来，自动转换为 markdown
 - [domchristie/turndown](https://github.com/domchristie/turndown): 将整个 html 页面转换为 markdown，
   不过对表格的支持好像有点问题
+
+## License
+
+[Ryan Yin's Knowledge](https://github.com/ryan4yin/knowledge) © by Ryan Yin is licensed under
+[CC BY-SA 4.0](./LICENSE.md)
