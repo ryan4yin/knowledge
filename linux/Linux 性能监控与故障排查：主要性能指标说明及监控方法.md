@@ -91,6 +91,7 @@ CPU 使用率即 CPU 运行在非空闲状态的时间占比，它反应了 CPU 
   瓶颈，需要用 iostat 等命令做进一步分析。**
   - iowait 只考虑 Synchronous File IO，It does NOT count time spent waiting for IPC objects such as
     sockets, pipes, ttys, select(), poll(), sleep(), pause() etc.
+  - [iowait 的含义](https://www.kawabangga.com/posts/5903)
 - `hi(hardirq)`：表示 CPU 处理硬中断所花费的时间。硬中断是由外设硬件（如键盘控制器、硬件传感器等）发
   出的，需要有中断控制器参与，特点是快速执行。
 - `si(softirq)`：表示 CPU 处理软中断所花费的时间。软中断是由软件程序（如网络收发、定时调度等）发出的
