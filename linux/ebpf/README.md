@@ -1,10 +1,16 @@
 # eBPF
 
-## 使用 eBPF 进行故障排查
+- ebpf.io
+- https://github.com/iovisor/bcc: ebpf's go/lua bindings(you still need to write the ebpf program in
+  C)
+- https://github.com/bpftrace/bpftrace
+- https://github.com/cilium/ebpf: ebpf's go bindings(you still need to write the ebpf program in C))
+- https://github.com/aya-rs/aya: ebpf's rust bindings, note that you can write ebpf programs in rust
+  using this library.
+- https://www.brendangregg.com/bpf-performance-tools-book.html
 
-> SRE 大佬博客文章： https://www.kawabangga.com/all-posts
+## 学习目标
 
-- TCP 拥塞控制对数据延迟的影响: https://www.kawabangga.com/posts/5181
-- 用 BPF 动态追踪 Python 程序: https://www.kawabangga.com/posts/4894
-- 用 Wireshark 分析 TCP 吞吐瓶颈: https://www.kawabangga.com/posts/4794
-- 是谁杀了我：https://www.kawabangga.com/posts/5236
+1. 可观测性：我们用 ebpf 来分析什么东西？解决什么问题？
+2. 网络：ebpf 如何做到拦截处理流量，同时更新 ebpf 程序还不会中断连接？
+3. 安全性：基于 ebpf 的安全技术有哪些，跟 apparmor 想比有什么区别、优势？
