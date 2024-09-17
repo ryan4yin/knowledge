@@ -31,6 +31,20 @@
 - Rust 的迭代器是零开销抽象，性能甚至比 loop 循环还稍微好一点，代码也比循环更简洁易懂，强烈建议使
   用。
 
+### 模式匹配
+
+模式匹配中的两个关键概念：
+
+- refutable： 可反驳的，即可能失败的模式匹配。
+- irrefutable：不可反驳的，即不可能失败的模式匹配。
+
+以上概念可能会在模式匹配的报错中出现，这表示你需要切换到 `let`/`if let`/`while let` 等其他合适的匹配
+语句。
+
+Rust 的模式匹配非常强大，支持很多复杂的条件匹配、解构、绑定等操作，详见：
+
+https://doc.rust-lang.org/book/ch18-03-pattern-syntax.html
+
 ## 错误处理
 
 - https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/boxing_errors.html
