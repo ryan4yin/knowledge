@@ -22,6 +22,10 @@
   型：`fn returns_summarizable(arg: impl Xxx) -> impl Summary {...}`
 - Trait 对象（Trait Object）：`Box<dyn Xxx>`，还没学，不是很懂...
 
+### 迭代器
+
+- Rust 的迭代器是零开销抽象，性能甚至比 loop 循环还稍微好一点，代码也比循环更简洁易懂，强烈建议使用。
+
 ### 智能指针与并发安全
 
 跟 C 语言一样，rust 默认在栈上分配空间，即使使用 reference 引用，也是一样的。
