@@ -152,13 +152,23 @@ Rust 的线程实现使用 1:1 模型，即一个 Rust 线程对应一个 OS 线
 中使用 `Box<T>`/`Rc<T>` 等数据结构，编译器会直接报错，告诉你它们未实现 `Send`/`Sync` trait，即不是线
 程安全的。
 
+## unsafe
+
+Unsafe 的 5 项特殊能力：
+
+- Dereference a raw pointer
+- Call an unsafe function or method
+- Access or modify a mutable static variable
+- Implement an unsafe trait
+- Access fields of a union
+
+> 注意：unsafe 代码块仍然会被借用检查器与其他 Rust 安全策略检查，unsafe 只是使你可以使用上述 5 项特
+> 殊能力，但 unsafe 代码仍旧需要遵守 Rust 的安全规则。
+
 ## 宏 - macro
 
 待续
 
-## unsafe
-
-待续
 
 ## async/await
 
