@@ -2,12 +2,18 @@
 
 > 个人笔记，不保证准确性。
 
+学习路线：
+
+1. 阅读 The Book
+2. 做完 Rustlings
+3. TODO
+
 ## 需要注意的知识点
 
 ### 所有权
 
 - 一个对象任一时刻只能存在至多一个 mutable 引用，或者多个 immutable 引用。
-  - 而且 immutable/mutable 引用是互斥的，不能同时存在。
+  - immutable/mutable 引用是互斥的，不能同时存在。
 
 ### 生命周期
 
@@ -17,14 +23,13 @@
 ### trait 与泛型
 
 - 可以通过泛型选择性地实现 trait: `fn notify<T: Summary + Display>(item: &T) {...}`
-
   - 对于更复杂的情况，可以使用 `where` 语法提升可读性。
-
 - 使用 Trait 来声明参数类型/返回值类
   型：`fn returns_summarizable(arg: impl Xxx) -> impl Summary {...}`
 - Trait 对象（Trait Object）：`Box<dyn Xxx>`，可类比 Go 的接口对象。
   - 即在不关注对象的具体类型，而只关注它是否实现了某个 trait 时，可以将它转换成一个 trait 对象（Go
     的接口对象）。
+- trait 有些类似 Go 的 interface，区别是它可以有默认实现（这方面更类似 Java）。
 
 ### 迭代器
 
