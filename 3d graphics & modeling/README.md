@@ -21,8 +21,11 @@
 
 此外就是建模、材质工具、布料解算、骨骼模拟等专用工具了，其中最出名的是开源工具 Blender.
 
-> 2022-04-10最近突然想学学游戏引擎，原因是手边有台 Quest 2 VR 头显吃灰有一阵了，想拿来搞搞 VR 开发，
-> 另外还想自己制作些超高画质（4k/6k/8k）的 MMD 动画放 VR 里看。
+> 2022-04-10 最近突然想学学游戏引擎，原因是手边有台 Quest 2 VR 头显吃灰有一阵了，想拿来搞搞 VR 开
+> 发，另外还想自己制作些超高画质（4k/6k/8k）的 MMD 动画放 VR 里看。
+
+> 2024-09-20 更新：最近学习 Rust，接着开始折腾用 Bevy 引擎搞游戏开发，接着又开始折腾 Blender. 于是时
+> 隔两年后又绕回来了，先玩玩 Blender 跟 Bevy Rust 吧。
 
 ## 业余爱好者的 VR 开发与 VR 动画制作学习路线
 
@@ -61,7 +64,7 @@
    - VR 视频制作：不可交互，但好处是可以通过长时间渲染达成极高画质，比如使用 1h 来渲染一个 3mins 的
      视频
      - [Unreal Engine for 360° VR & ArchViz Virtual Tour Video In-depth Tutorial | Oculus TV + YouTube VR](https://www.youtube.com/watch?v=TLHyMwQ0bo0)
-2. blender 基础
+2. Blender 基础
    - [Blender 2.9-3.1黑铁骑士Ⅱ系统零基础入门教程](https://www.bilibili.com/video/BV1zh411Y7LX)
 3. MMD 二次元老婆模型、动作、场景资源
    - [模型屋 - 大量正版二次元老婆模型、动作](https://www.aplaybox.com/)
