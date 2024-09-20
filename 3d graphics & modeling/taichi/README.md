@@ -20,4 +20,8 @@ awesome-taichi 中各领域的项目数量也能很明显的看出，粗略按�
 > 2024-09-20 更新：今天翻了一圈 taichi 的 GitHub、Blog、Zhihu、Bilibili 等各种官方渠道，发现 Taichi
 > 从去年 8 月开始开发与各种其他动态全部停滞了，也没看到任何其他信息，感觉这个项目有些难以为继了...
 > 然后进一步在 Zhihu 上看到胡渊鸣在 2024 年发的唯一一个帖子，是宣传 meshy.ai 图生 3D 模型的，感觉
-> taichi 项目可能被放弃了，他们公司或者胡博士个人转向了 AIGC 领域。
+> taichi 项目可能被放弃了，他们公司或者胡博士个人转向了 AIGC 领域。我之后也通过「胡渊鸣 meshy ai」关
+> 键字搜索到了许多相关信息，基本确认 taichi 暂时不推进了（未来或许还有复活可能？毕竟还没官宣），他搞了家新公司弄 3D AIGC。
+
+- https://www.jazzyear.com/article_info.html?id=1142
+- https://x.com/YuanmingH
