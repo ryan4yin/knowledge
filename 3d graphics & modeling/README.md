@@ -66,6 +66,7 @@
      - [Unreal Engine for 360° VR & ArchViz Virtual Tour Video In-depth Tutorial | Oculus TV + YouTube VR](https://www.youtube.com/watch?v=TLHyMwQ0bo0)
    - [使用 UE5 来做 MMD 视频](https://www.gcores.com/articles/165713)
 2. Blender 基础
+
    - [90 分钟快速上手 Blender](https://www.bilibili.com/video/BV1kX4y1m7G5/)
    - [Blender 4.0 Beginner Donut Tutorial (NEW) - Blender Guru](https://www.youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z)
    - 其他 Idea
@@ -83,6 +84,19 @@
    - [FreeCAD](https://github.com/FreeCAD/FreeCAD): 开源的 CAD 软件
 
 学这么多目的是啥？当然是用 VR 看二次元老婆跳舞啊，而且要最好的素材跟渲染画质，自己动手丰衣足食。
+
+## 3D 建模的未来
+
+2024 年 9 月，目前看到市面上出现了几个有代表性的文生 3D、图生 3D 产品，包括 taichi 创始人都不做
+taichi 了，开始整这个。
+
+- https://zhuanlan.zhihu.com/p/681621437
+- https://www.tripo3d.ai/
+
+这项技术或许能大大加速高精度 3D 资产的成本，推动 3D 游戏、影视、建筑、工业等领域的发展。
+
+对个人跟小创业公司而言，用 AI 来做游戏跟视频是比较可行的一个方向，再用 suno 生成点 AI 音乐，一个简单
+的游戏就能做出来了。
 
 ## 其他资料
 
