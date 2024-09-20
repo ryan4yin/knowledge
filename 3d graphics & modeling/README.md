@@ -65,7 +65,15 @@
      视频
      - [Unreal Engine for 360° VR & ArchViz Virtual Tour Video In-depth Tutorial | Oculus TV + YouTube VR](https://www.youtube.com/watch?v=TLHyMwQ0bo0)
 2. Blender 基础
-   - [Blender 2.9-3.1黑铁骑士Ⅱ系统零基础入门教程](https://www.bilibili.com/video/BV1zh411Y7LX)
+   - [90 分钟快速上手 Blender](https://www.bilibili.com/video/BV1kX4y1m7G5/)
+   - [Blender 4.0 Beginner Donut Tutorial (NEW) - Blender Guru](https://www.youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z)
+   - 其他 Idea
+     - 使用 AI 生成 Python 代码，自动生成与调整 Blender 3D 模型、动画等等。
+     - 直接使用 TripoSR 之类的文生 3D 或图生 3D 模型来生成模型
+     - 相关插件
+       - https://github.com/carson-katri/dream-textures
+       - https://github.com/AIGODLIKE/ComfyUI-BlenderAI-node
+
 3. MMD 二次元老婆模型、动作、场景资源
    - [模型屋 - 大量正版二次元老婆模型、动作](https://www.aplaybox.com/)
    - [永昼UE】免费UE教程#01 PMX模型导入虚幻引擎5教程以及为什么这么做](https://www.bilibili.com/video/BV1uL411c7HH)
@@ -75,6 +83,6 @@
 
 学这么多目的是啥？当然是用 VR 看二次元老婆跳舞啊，而且要最好的素材跟渲染画质，自己动手丰衣足食。
 
-## 参考
+## 其他资料
 
-- [虚幻引擎 5 现已正式推出，是否是使用新版引擎开发游戏的好时机呢？ - 知乎](https://www.zhihu.com/question/526248363/answer/2426839028)
+- [我想单人独立制作《原神》《绝区零》《幻塔》类型的游戏，现在处于人物建模阶段，请专业游戏开发者指点一二？](https://www.zhihu.com/question/614648985/answer/3147842166)
