@@ -64,6 +64,7 @@
    - VR 视频制作：不可交互，但好处是可以通过长时间渲染达成极高画质，比如使用 1h 来渲染一个 3mins 的
      视频
      - [Unreal Engine for 360° VR & ArchViz Virtual Tour Video In-depth Tutorial | Oculus TV + YouTube VR](https://www.youtube.com/watch?v=TLHyMwQ0bo0)
+   - [使用 UE5 来做 MMD 视频](https://www.gcores.com/articles/165713)
 2. Blender 基础
    - [90 分钟快速上手 Blender](https://www.bilibili.com/video/BV1kX4y1m7G5/)
    - [Blender 4.0 Beginner Donut Tutorial (NEW) - Blender Guru](https://www.youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z)
