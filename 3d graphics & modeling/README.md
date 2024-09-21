@@ -67,14 +67,8 @@
    - [使用 UE5 来做 MMD 视频](https://www.gcores.com/articles/165713)
 2. Blender 基础
 
-   - [90 分钟快速上手 Blender](https://www.bilibili.com/video/BV1kX4y1m7G5/)
-   - [Blender 4.0 Beginner Donut Tutorial (NEW) - Blender Guru](https://www.youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z)
    - 其他 Idea
-     - 使用 AI 生成 Python 代码，自动生成与调整 Blender 3D 模型、动画等等。
-     - 直接使用 TripoSR 之类的文生 3D 或图生 3D 模型来生成模型
-     - 相关插件
-       - https://github.com/carson-katri/dream-textures
-       - https://github.com/AIGODLIKE/ComfyUI-BlenderAI-node
+
 
 3. MMD 二次元老婆模型、动作、场景资源
    - [模型屋 - 大量正版二次元老婆模型、动作](https://www.aplaybox.com/)
