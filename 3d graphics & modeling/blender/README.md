@@ -29,6 +29,8 @@
       - [InstantMesh](https://github.com/TencentARC/InstantMesh): 腾讯家的，同样是图生 3D 模型
       - [meshy.ai](https://www.meshy.ai): taichi 胡渊鸣团队整的，主做文生 3D，但也在探索图生 3D、自
         动绑定骨骼等功能。
+      - 根据 Youtube 上搜到的一些对比视频，图生 3D 领域 Tripo AI 做得最好，但 2024 年 8 月 Meshy AI
+        大更新后它的图生 3D 也有了很大进步。
    1. AI 生成图片、视频（优势是这些插件能跟 Blender 直接交互）：
       - [ComfyUI-BlenderAI-node](https://github.com/AIGODLIKE/ComfyUI-BlenderAI-node): 由国内知名
         Blender 布道师只剩一瓶辣椒酱发起的社区以及插件项目。的插件，辣椒酱 23 年开始做了大量相关的视
