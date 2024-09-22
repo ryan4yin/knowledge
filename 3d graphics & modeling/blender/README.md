@@ -31,6 +31,9 @@
         动绑定骨骼等功能。
       - 根据 Youtube 上搜到的一些对比视频，图生 3D 领域 Tripo AI 做得最好，但 2024 年 8 月 Meshy AI
         大更新后它的图生 3D 也有了很大进步。
+        - 个人实测，MeshyAI 跟 Tripo3D 两家目前对二次元模型的支持都比较差，Meshy 4 跟 Tripo 的老版本
+          都有很明显的模型粘连、脸部混乱等问题。Tripo AI 2.0 在二次元模型上有很大进步，脸部混乱跟腿
+          部粘连的问题都解决了，但细节上还相当粗糙，四指未分离，纹理模糊等问题都还存在。
    1. AI 生成图片、视频（优势是这些插件能跟 Blender 直接交互）：
       - [ComfyUI-BlenderAI-node](https://github.com/AIGODLIKE/ComfyUI-BlenderAI-node): 由国内知名
         Blender 布道师只剩一瓶辣椒酱发起的社区以及插件项目。的插件，辣椒酱 23 年开始做了大量相关的视
