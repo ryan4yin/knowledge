@@ -6,7 +6,12 @@
 
 1. 阅读 The Book
 2. 做完 Rustlings
-3. TODO
+3. 阅读 [Practical guide to Error Handling in Rust](https://dev-state.com/posts/error_handling/), 了
+   解 anyhow 与 thiserror 的用法。
+   - anyhow: 用于快速开发，anyhow 不区分错误类型，所有错误都被包装成 anyhow::Error 类型。
+   - thiserror: 比 anyhow 更规范，thiserror 能通过宏定义自定义错误类型。好处是能避免写一堆
+     boilerplate 代码。
+4. TODO
 
 ## 需要注意的知识点
 
@@ -119,7 +124,8 @@ rust 的高阶函数 + 链式语法超级好用！
   - 相对的，如果你的代码确实有问题，`RefCell<T>` 会在运行时检测到借用规则被违反，并导致程序 panic.
   - 同时这会带来一定的性能损失吗？
     - 既然如此？为什么要在运行时检查借用规则？不检查不就没性能损失了？因为不检查就可能会出现难以排查
-      的内存泄漏、数据竞争等问题，~~这是 `unsafe` 的范畴了，只有在 `unsafe` 块中才能关闭借用检查~~（貌似 unsafe 也不能关掉它...）。
+      的内存泄漏、数据竞争等问题，~~这是 `unsafe` 的范畴了，只有在 `unsafe` 块中才能关闭借用检
+      查~~（貌似 unsafe 也不能关掉它...）。
 
 - 智能指针的循环引用可能会导致内存泄漏。Rust 的各种规则只是极大降低了内存泄漏的可能，但并不能完全杜
   绝。
@@ -177,7 +183,6 @@ Unsafe 的 5 项特殊能力：
 ## 宏 - macro
 
 待续
-
 
 ## async/await
 
