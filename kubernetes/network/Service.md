@@ -86,3 +86,15 @@ subsets:
 ```
 
 这样，在集群内访问 `my-service:9376`，会被 Service 转发到 `182.0.2.42:9376`
+
+## 透传客户端 IP 地址
+
+对于 Ingress 这类 L7 Proxy 我们通常不担心客户端 IP 丢失的问题，`X-Forwarded-For` 这个 Header 会帮我
+们记录客户端的 IP 地址。
+
+但 Service 是 L4 Proxy，在使用云厂商的 LoadBalancer 服务时，有这几种方法可以透传客户端的 IP 地址：
+
+1. 设置 `spec.externalTrafficPolicy: Local`，这样流量不会跨 Node 传输，能保证 Pod 看到的是真实的客户
+   端 IP 地址。
+   - 缺点是可能导致负载不均衡，在每个 Node 上都有一个 Pod 时比较适用。
+1. LoadBalancer 与后端 Pod 都启用 PROXY protocol 协议，通过该协议将客户端 IP 透传到 Pod.
