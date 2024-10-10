@@ -5,7 +5,7 @@
 curl --max-time 10 --socks5-hostname ip:port http://example.com
 
 
-# curl - ssl test
+# curl - try to send https request to 11.22.33.44:443 with sni example.com
 curl -v --resolve 'example.com:443:11.22.33.44' https://example.com:443/xxx
 ```
 
