@@ -12,6 +12,8 @@ Logs Insights 来查询日志数据。
 
 日志查询举例：
 
+> https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html
+
 ```
 # 查询 kube-apiserver-audit 日志中所有删除 xxx 名字空间中 service 的记录
 filter @logStream like 'kube-apiserver-audit-'
