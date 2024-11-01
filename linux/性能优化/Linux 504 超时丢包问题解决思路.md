@@ -27,6 +27,7 @@ TCP 连接池，它的 TCP 连接复用率要高得多。
 > 核参数来突破的，需要查阅云服务商的文档来了解。
 
 - [Linux服务器丢包故障的解决思路及引申的TCP/IP协议栈理论 ](https://www.cnblogs.com/276815076/p/5736272.html)
+- [ECS实例中的应用偶尔出现丢包现象 - Aliyun Docs](https://www.alibabacloud.com/help/zh/ecs/the-application-on-the-ecs-instance-occasionally-suffers-packet-loss-and-the-kernel-log-contains-the-error-message-kernel-nf-conntrack-table-full-dropping-packet)
 
 ### nf_conntrack 连接跟踪表用尽导致丢包
 
