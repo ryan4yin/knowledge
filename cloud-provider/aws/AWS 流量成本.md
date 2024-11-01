@@ -53,6 +53,10 @@ ALB 可以用 NLB + 自建 L7 网关替代，而 NAT 网关则可以用
 不过其中要注意的是，在流量大的情况下 NAT 实例或 L7 网关实例，都可能会遇到 nf_conntrack 表用尽导致
 504 等超时错误的问题，需要调整 nf_conntrack 的内核参数扩容该表容量。
 
+以及 EC2 的 ENA driver 本身存在固定的 conntrack 上限，即使调整内核 nf_conntrack 参数也无法突破这个上
+限，可以通过 AWS 监控指标（如 `conntrack_allowance_available` `conntrack_allowance_exceeded`）来监控 ENA driver 的 conntrack 使用情
+况：[Metrics for the ENA driver - ENA Network Performance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html#network-performance-metrics)
+
 ## FAQ
 
 ### 我能否通过加一层 ELB 来避免被收取 Cross Zone 的流量成本？

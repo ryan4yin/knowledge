@@ -23,6 +23,9 @@ TCP 连接池，它的 TCP 连接复用率要高得多。
 
 丢包问题的排查方法如下：
 
+> 注意，AWS EC2 等云主机可能会存在固定的 nf_conntrack/PPS/bandwidth 等限制，这些限制是无法通过修改内
+> 核参数来突破的，需要查阅云服务商的文档来了解。
+
 - [Linux服务器丢包故障的解决思路及引申的TCP/IP协议栈理论 ](https://www.cnblogs.com/276815076/p/5736272.html)
 
 ### nf_conntrack 连接跟踪表用尽导致丢包
