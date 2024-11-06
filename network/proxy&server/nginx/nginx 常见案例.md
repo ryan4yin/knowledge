@@ -143,6 +143,11 @@ sudo kill -QUIT $OLD_MASTER
   - 若当前连接数状况已经接近 Linux 内核或者 nginx 的 rlimit/connections 设置，则可确定是这些参数的问
     题
   - 检查 error_log 里有没有 `worker_connections are not enough, reusing connections` 类似的日志。
+    - 这代表连接数不够用。nginx 的连接数上限是 `worker_connections * worker_processes`，如果超过这个
+      数量很可能会导致丢包，从而出现大量 504 超时。
+    - 解决方式是增加 `worker_connections` 或者 `worker_processes` 的数量。建议 worker_processes 等于
+      CPU 核心数，worker_connections 可以调为 65535 甚至 100000，同时还要确认 `worker_rlimit_nofile` 与主机
+        的 `ulimit -n` 都要大于 `worker_connections` 的值！
 - 检查服务器的网络带宽是否跑满了
 
 如果上述参数都正常，那很可能是其他 TCP/IP 协议栈的问题导致的丢包，最终造成 504 超时，丢包通常会有些
