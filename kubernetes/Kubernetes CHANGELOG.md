@@ -185,6 +185,31 @@
 - 如下特性进入 GA
   - ValidatingAdmissionPolicy
   - AdmissionWebhookMatchConditions
+  - NewVolumeManagerReconstruction
+  - HorizontalPodAutoscaler support for per-container metrics
+  - StableLoadBalancerNodeSet
+- 如下特性进入 Beta
+  - StructuredAuthenticationConfiguration
+  - LoadBalancerIPMode
+  - ImageMaximumGCAge
+  - KubeProxyDrainingTerminatingNodes
 - 新增 Alpha 特性
   - ServiceTrafficDistribution: 给 Service 添加 `spec.trafficDistribution` 参数用于控制流量分发配置
 
+
+## [1.31](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md#changelog-since-v1300)
+
+- [Dynamic Resource Allocation (DRA)](https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/) 的一系列更新（仍为 alpha 特性）
+- 如下特性进入 GA
+  - PodDisruptionConditions
+  - JobPodFailurePolicy
+  - support for AppArmor
+  - LogarithmicScaleDown
+  - KubeProxyDrainingTerminatingNodes
+  - PodDisruptionBudget's `spec.unhealthyPodEvictionPolicy`
+  - ElasticIndexedJob
+- 如下特性进入 Beta
+  - KubeletCgroupDriverFromCRI
+  - RecursiveReadOnlyMounts
+  - Kube-proxy's nftables mode
+  - Service `spec.trafficDistribution`
