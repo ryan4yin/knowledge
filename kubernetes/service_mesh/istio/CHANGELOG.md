@@ -69,14 +69,16 @@
   - 实验性的 ambient mesh 功能 - 使用节点级别的 proxy，大大降低 sidecar proxy 的资源占用
 - istio 1.19 - 2023-09-05
   - Gateway API 升级到 v0.8.0，**首次加入 Service Mesh 支持**
-- istio 1.20 - 2023-11-14
+- [istio 1.20](https://istio.io/latest/news/releases/1.20.x/announcing-1.20/) - 2023-11-14
   - Gateway API GA，升级到 1.0.0
-- istio 1.21 - 2024-03-13
+  - StartupProbe in Sidecar Containers, 大概能缩短 1s 的启动时间
+- [istio 1.21](https://istio.io/latest/news/releases/1.21.x/announcing-1.21/) - 2024-03-13
   - 优化配置兼容性，支持设置兼容版本，这样在升级到新版本后，仍然可以使用旧版本的配置，兼容其行为。
 - **[istio 1.22](https://istio.io/latest/news/releases/1.22.x/announcing-1.22/)** - 2024-05-13
   - **Ambient Mesh 功能进入 beta**
     - Compared to sidecar mode, ambient mode reduces memory overhead and CPU usage by over 90% in
       many cases.
+  - virtualservice/DestinationRule 这套 APIs 终于从 v1beta1 升级到了 v1.
   - **Gateway API 对 service mesh 的支持进入 stable，也就是说可以考虑从 virtualservice/DestinationRule
     这一套 API 彻底迁移到 Gateway API 了**
   - **Delta xDS 成为默认方式，这极大地提高了控制面与 sidecar proxy 的性能**
