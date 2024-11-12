@@ -82,4 +82,10 @@
   - **Delta xDS 成为默认方式，这极大地提高了控制面与 sidecar proxy 的性能**
 - **[istio 1.23](https://istio.io/latest/news/releases/1.23.x/announcing-1.23/)** - 2024-08-14
   - 对 Ambient Mesh 做了大量改进
+- **[istio 1.24](https://istio.io/latest/news/releases/1.24.x/announcing-1.24/)** - 2024-11-07
+  - [Ambient Mode 进入 GA](https://istio.io/latest/blog/2024/ambient-reaches-ga/)
+    - 一系列 Ambient mode 的改进，以及 troubleshooting 文档: <https://github.com/istio/istio/wiki/Troubleshooting-Istio-Ambient>
+
+
+
 
