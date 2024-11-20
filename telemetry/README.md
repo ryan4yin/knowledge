@@ -22,6 +22,23 @@
 
 这里主要介绍与上述三种观察手段相关的工具。
 
+## 相关工具链
+
+- 传统
+  - 监控方案：Prometheus + Grafana + Altermanager
+  - 日志方案：ElasticSearch + Fluentd + Kibana
+  - 链路追踪：Jaeger
+- 新兴方案
+  - 监控
+    - VictoriaMetrics: 特点主要是存储效率高, 存算分离, 扩容方便.
+  - 日志
+    - Victoria Logs: 很容易部署, 兼容性好, 而且宣称全文搜索性能比 Loki 快 1000 倍.
+  - 链路追踪
+    - OpenTelemetry
+  - All in One
+    - [OpenObserve](https://github.com/openobserve/openobserve): 特点就是 all in one, 比较省心, 感觉适合小数据量的场景.
+
+
 ## AIOps
 
 随着 AI 技术应用的推广，AI 技术也渐渐渗透到运维平台，AIOps 即智能运维。
