@@ -72,6 +72,6 @@ nixpkgs 感觉相当于 arch + AUR，导致很多 maintainer 对一些比较老�
 
 另外当前的 monorepo + git 工作流可能会成为瓶颈, 拖慢了一个包的更新 PR 从合并到 master 到进入 unstable 的时间.
 
-
+> 另一个可能性是, NixOS 缺少肥猫这样的超级打包人 (
 
 
