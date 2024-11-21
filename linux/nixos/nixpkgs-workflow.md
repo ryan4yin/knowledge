@@ -48,3 +48,9 @@ arch 的 xxx-testing 与正式仓库之间.
 
 而 arch 应该总是能确保所有 core 与 extra 包都能正常构建(问题都应该在 xxx-testing 仓库解决), 因此其稳
 定性会比 nixpkgs 的 unstable 分支更高.
+
+
+为了兼顾稳定性与版本够新, 一般推荐默认使用 stable 分支, 对需要新版本的软件, 再单独从 unstable 分支引入.
+
+这样做的缺点是, 相比 arch linux, 系统的各软件版本可能会比较滞后.
+
