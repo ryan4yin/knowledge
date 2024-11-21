@@ -54,3 +54,24 @@ arch 的 xxx-testing 与正式仓库之间.
 
 这样做的缺点是, 相比 arch linux, 系统的各软件版本可能会比较滞后.
 
+
+
+## 吐槽 - 经常有人提 PR 把 unstable 搞坏, 而且还不愿意修复?
+
+nixpkgs 现在这个局面就是它的架构跟工作流设计导致的，跟某个个人没有关系。
+
+nixpkgs 感觉相当于 arch + AUR，导致很多 maintainer 对一些比较老的包不感冒，毕竟都不知道还有没有人在用。
+
+打个比较, python maintainer 就只想维护 python 自身，并希望被破坏掉的其他依赖，由相关的 maintainer 自己修。
+
+如果是在 arch 上, 那至少 python 的更新在相关的其他 core/extra 包都能正常构建后才会被合并到正式仓库。
+但在 NixOS 上, 它就直接被自动 merge 到 unstable 分支了, 导致稳定性欠佳.
+
+之前也有人提过为什么 nixpkgs 不像 arch 那样多加个 extra 维护级别跟 testing 分支呢?
+不这么干的主要原因可能是: 人手与资源都不够, 多加一个分支就意味着多维护一个分支、多一堆 CI 构建、多一分 s3 cache 存储.
+
+另外当前的 monorepo + git 工作流可能会成为瓶颈, 拖慢了一个包的更新 PR 从合并到 master 到进入 unstable 的时间.
+
+
+
+
