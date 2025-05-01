@@ -106,6 +106,9 @@
 
 ### **11. Linux 6.12 LTS（2024年发布）**
 
+> https://kernelnewbies.org/Linux_6.12
+
+- 完善了 EEVDF 调度器，它旨在取代旧的 CFS 调度器
 - **sched_ext 调度器**：通过 eBPF 动态加载自定义 CPU 调度策略。
 - **PREEMPT_RT 补丁集成**：实现微秒级响应，适用于工业控制和实时系统。
 - **死机二维码支持**：系统崩溃时快速生成调试信息。
@@ -115,6 +118,8 @@
 ---
 
 ### **Linux 6.13（2025年1月发布）**
+
+> https://kernelnewbies.org/Linux_6.13
 
 1. **惰性抢占（Lazy Preemption）**
    - 优化任务调度，平衡性能与响应性，适用于高性能和实时应用。
@@ -143,6 +148,8 @@
 ---
 
 ### **Linux 6.14 （2025年3月发布）**
+
+> https://kernelnewbies.org/Linux_6.14
 
 1. **硬件支持**
 
