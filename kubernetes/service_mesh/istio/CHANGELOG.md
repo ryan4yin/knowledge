@@ -78,15 +78,22 @@
   - **Ambient Mesh 功能进入 beta**
     - Compared to sidecar mode, ambient mode reduces memory overhead and CPU usage by over 90% in
       many cases.
-  - virtualservice/DestinationRule 这套 APIs 终于从 v1beta1 升级到了 v1.
-  - **Gateway API 对 service mesh 的支持进入 stable，也就是说可以考虑从 virtualservice/DestinationRule
-    这一套 API 彻底迁移到 Gateway API 了**
+  - **VirtualService/DestinationRule/Gateway/Sidecar/... 这套 APIs 终于[从 v1beta1 升级到了 v1](https://istio.io/latest/blog/2024/v1-apis/)**.
+  - **Gateway API 对 service mesh 的支持进入 stable**，也就是说可以考虑从 virtualservice/DestinationRule
+    这一套 API 彻底迁移到 Gateway API 了.
   - **Delta xDS 成为默认方式，这极大地提高了控制面与 sidecar proxy 的性能**
 - **[istio 1.23](https://istio.io/latest/news/releases/1.23.x/announcing-1.23/)** - 2024-08-14
   - 对 Ambient Mesh 做了大量改进
 - **[istio 1.24](https://istio.io/latest/news/releases/1.24.x/announcing-1.24/)** - 2024-11-07
   - [Ambient Mode 进入 GA](https://istio.io/latest/blog/2024/ambient-reaches-ga/)
     - 一系列 Ambient mode 的改进，以及 troubleshooting 文档: <https://github.com/istio/istio/wiki/Troubleshooting-Istio-Ambient>
+
+- **[istio 1.25](https://istio.io/latest/news/releases/1.25.x/announcing-1.25/)** - 2025-03-03
+  - 跨区流量治理 - 支持 Kubernetes 原生的 [Traffic Distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution) 参数
+  - istio-cni 支持了热更新，不会造成节点上的流量中断。
+- **[istio 1.26](https://istio.io/latest/news/releases/1.26.x/announcing-1.26/)** - 2024-05-08
+  - 支持通过 Configmap 自定义 Gateway API 的 Gateway 资源自动创建的 Deployment/Service/HPA/PDB 等资源参数
+  - 新增了对 Gateway API 的 TCPRoute 的支持
 
 
 
