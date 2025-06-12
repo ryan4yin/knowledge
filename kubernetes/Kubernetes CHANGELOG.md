@@ -200,6 +200,7 @@
 ## [1.31](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md#changelog-since-v1300)
 
 - [Dynamic Resource Allocation (DRA)](https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/) 的一系列更新（仍为 alpha 特性）
+  - Users are increasingly deploying Kubernetes as management solution for new workloads (batch processing) and in new environments (edge computing). Such workloads no longer need just RAM and CPU, but also access to specialized hardware. With upcoming enhancements of data center interconnects, accelerators can be installed outside of specific nodes and be connected to nodes dynamically as needed.
 - 如下特性进入 GA
   - PodDisruptionConditions
   - JobPodFailurePolicy
@@ -213,3 +214,74 @@
   - RecursiveReadOnlyMounts
   - Kube-proxy's nftables mode
   - Service `spec.trafficDistribution`
+
+## [1.32](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.32.md)
+
+- 主题："Penelope"，纪念 Kubernetes 十周年
+- 如下特性进入 GA
+  - Structured Authorization Configuration - 多个授权器可配置在 API server 中，支持 CEL 匹配条件
+  - Bound service account token improvements - 在服务账户令牌声明中包含节点名称，增强安全性
+  - Custom Resource Field Selectors - 允许开发者为自定义资源添加字段选择器
+  - Support to size memory backed volumes - 基于 Pod 资源限制动态调整内存支持卷的大小
+  - Auto remove PVCs created by StatefulSet - StatefulSet 创建的 PVC 在不再需要时自动删除
+  - Memory Manager - 内存管理器升级到 GA
+  - Custom profile in kubectl debug
+- 如下特性进入 Beta
+  - Job API managed-by mechanism - Job 的 `managedBy` 字段允许外部控制器管理 Job 同步
+  - Only allow anonymous auth for configured endpoints
+  - Recover from volume expansion failure
+  - Volume group snapshot - 引入 VolumeGroupSnapshot API
+  - Structured parameter support - DRA 的结构化参数支持
+  - Label and field selector authorization
+- 新增 Alpha 特性
+  - Asynchronous preemption in the Kubernetes Scheduler
+  - Mutating admission policies using CEL expressions
+  - Pod-level resource specifications
+  - New statusz and flagz endpoints for core components
+- API 移除
+  - `flowcontrol.apiserver.k8s.io/v1beta3` 被移除，需改用 `flowcontrol.apiserver.k8s.io/v1`
+- DRA 实现变更
+  - 旧的 DRA 实现（KEP #3063）被移除，新的结构化参数模型（KEP #4381）成为基础功能
+
+## [1.33](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.33.md)
+
+- 主题："Octarine: The Color of Magic"
+- 如下特性进入 GA
+  - Sidecar Containers - 边车容器作为特殊的 init 容器实现，具有 `restartPolicy: Always`
+  - Backoff limits per index for indexed Jobs - 为索引 Job 的每个索引设置退避限制
+  - Job success policy - 使用 `.spec.successPolicy` 指定哪些 pod 索引必须成功
+  - Bound ServiceAccount token security improvements - 增强服务账户令牌安全性
+  - Subresource support in kubectl - kubectl 的 `--subresource` 参数正式可用
+  - Multiple Service CIDRs - 新的 `ServiceCIDR` 和 `IPAddress` API 对象
+  - **nftables backend for kube-proxy** - kube-proxy 的 nftables 后端
+  - **Topology aware routing** with `trafficDistribution: PreferClose`
+  - Options to reject non SMT-aligned workload - CPU Manager 的 SMT 对齐选项
+  - Volume populators - 卷填充器升级到 GA
+  - Always honor PersistentVolume reclaim policy
+- 如下特性进入 Beta
+  - **In-place resource resize for vertical scaling of Pods - Pod 的就地资源调整**
+  - Structured parameter support - DRA 结构化参数支持的持续改进
+  - Dynamic Resource Allocation (DRA) for network interfaces
+  - Asynchronous preemption in the Kubernetes Scheduler
+  - ClusterTrustBundles - 集群范围的 X.509 信任锚资源
+  - Fine-grained SupplementalGroups control
+  - **Support for mounting images as volumes**
+    - This allows users to package files and share them among containers in a pod without including them in the main image, thereby reducing vulnerabilities and simplifying image creation.
+  - **Support for user namespaces within Linux Pods**
+  - **Pod `procMount` option**
+- 新增 Alpha 特性
+  - New configuration option for kubectl with `.kuberc`
+  - Configurable tolerance for HorizontalPodAutoscalers
+  - Configurable container restart delay
+  - Custom container stop signals
+  - DRA enhancements - 设备污点容忍、优先级替代方案、管理员访问、可分区设备支持
+  - Node topology labels via downward API
+  - Better pod status with generation and observed generation
+  - PSI (Pressure Stall Information) metrics for scheduling improvements
+- 重要废弃和移除
+  - Deprecation of the stable Endpoints API - 推荐使用 EndpointSlices
+  - Removal of kube-proxy version information in node status
+  - Removal of in-tree gitRepo volume driver
+
+## 
+
