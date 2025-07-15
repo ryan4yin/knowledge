@@ -91,7 +91,7 @@
 - **[istio 1.25](https://istio.io/latest/news/releases/1.25.x/announcing-1.25/)** - 2025-03-03
   - 跨区流量治理 - 支持 Kubernetes 原生的 [Traffic Distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution) 参数
   - istio-cni 支持了热更新，不会造成节点上的流量中断。
-- **[istio 1.26](https://istio.io/latest/news/releases/1.26.x/announcing-1.26/)** - 2024-05-08
+- **[istio 1.26](https://istio.io/latest/news/releases/1.26.x/announcing-1.26/)** - 2025-05-08
   - 支持通过 Configmap 自定义 Gateway API 的 Gateway 资源自动创建的 Deployment/Service/HPA/PDB 等资源参数
   - 新增了对 Gateway API 的 TCPRoute 的支持
 
