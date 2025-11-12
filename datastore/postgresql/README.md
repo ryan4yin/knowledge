@@ -24,58 +24,65 @@
 - BRIN 索引
 - 部分索引和表达式索引
 
-### [4. 扩展机制](extensions/README.md)
+### [4. 表分区](table-partitioning/README.md)
+- 范围分区 (RANGE)
+- 列表分区 (LIST)
+- 哈希分区 (HASH)
+- 分区管理和维护
+- 查询优化和最佳实践
+
+### [5. 扩展机制](extensions/README.md)
 - PostgreSQL 扩展系统介绍
 - 常用扩展（PostGIS、pg_stat_statements 等）
 - 创建自定义扩展
 
-### [5. 与 MySQL 的区别](mysql-comparison/README.md)
+### [7. 与 MySQL 的区别](mysql-comparison/README.md)
 - PostgreSQL 与 MySQL 主要区别速查表
 - 迁移指南
 
-### [6. 备份与恢复](backup-recovery/README.md)
+### [8. 备份与恢复](backup-recovery/README.md)
 - WAL (Write-Ahead Logging) 机制
 - 逻辑备份与物理备份
 - 时间点恢复
 
-### [7. 插件原理与使用](plugins/README.md)
+### [9. 插件原理与使用](plugins/README.md)
 - 插件工作原理
 - 安装与配置常用插件
 - 插件开发基础
 
-### [8. 最佳实践](best-practices/README.md)
+### [10. 最佳实践](best-practices/README.md)
 - 数据库设计原则
 - 性能优化建议
 - 安全配置
 
-### [9. 常用函数](functions/README.md)
+### [11. 常用函数](functions/README.md)
 - 字符串函数
 - 数值函数
 - 日期时间函数
 - 窗口函数
 - 聚合函数
 
-### [10. 性能优化](performance/README.md)
+### [12. 性能优化](performance/README.md)
 - 慢查询分析
 - 查询计划分析
 - 性能调优技巧
 
-### [11. 用户与权限管理](security/README.md)
+### [13. 用户与权限管理](security/README.md)
 - 用户管理
 - 角色和权限
 - 认证方法
 
-### [12. 服务器配置](admin/README.md)
+### [14. 服务器配置](admin/README.md)
 - postgresql.conf 配置
 - pg_hba.conf 访问控制
 - 连接池配置
 
-### [13. 故障排查](troubleshooting/README.md)
+### [15. 故障排查](troubleshooting/README.md)
 - 常见问题与解决方案
 - 日志分析
 - 性能监控
 
-### [14. 实践示例](examples/README.md)
+### [16. 实践示例](examples/README.md)
 - 实际应用场景示例
 - SQL 查询示例
 - 数据库操作示例
