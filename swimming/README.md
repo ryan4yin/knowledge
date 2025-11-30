@@ -22,6 +22,18 @@
 
 参见 [./tutorial.md](./tutorial.md)
 
+## 教程推荐
+
+B 站上我看了比较有收获的 UP 主：
+
+- [梦觉教游泳](https://space.bilibili.com/7283282) - 有很多成体系的视频教程，以及指导教程，而且完全免费！
+  - [蛙泳入门第二版](https://www.bilibili.com/video/BV1sb411P7ae/)
+  - [自由泳入门（第二版）](https://www.bilibili.com/video/BV1bx411L7sA/)
+  - [仰泳入门](https://www.bilibili.com/video/BV1Wo4y1k7Tu/)
+  - [蝶泳入门](https://www.bilibili.com/video/BV1qM4y1A7hu/)
+- [泳培帮Go游泳](https://space.bilibili.com/549098466) - 分解动作，以及小细节讲得非常好，但它成体系的教程都是收费的。
+
+
 ---
 
 ## 关键注意事项
