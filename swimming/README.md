@@ -2,7 +2,13 @@
 
 ## 泳姿介绍
 
-参见 [./swimming-style.md](./swimming-style.md)
+参见 [./swimming-styles.md](./swimming-styles.md)
+
+## 潜泳
+
+参见 [./underwater-swimming.md](./underwater-swimming.md)
+
+潜泳是在水下闭气游泳的技术（不使用脚蹼），主要使用**海豚腿**推进。它是竞技游泳训练的重要组成部分，出发和转身后 15 米内可使用水下海豚腿。闭气能力训练详见 [../diving/apnea-training.md](../diving/apnea-training.md)。
 
 我目前的进度：
 

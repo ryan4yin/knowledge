@@ -34,6 +34,8 @@
 
 **专项训练**：
 - [./apnea-training.md](./apnea-training.md) - 静态闭气与动态闭气训练指南（详细讲解原理和训练方法）
+- [./freediving-kicks.md](./freediving-kicks.md) - 脚蹼踢腿技术详解（DOL、蛙蹼、技术潜水踢腿方式等）
+- **无脚蹼潜泳**：海豚腿潜泳技术（游泳训练），详见 [../swimming/underwater-swimming.md](../swimming/underwater-swimming.md)
 
 **在线资源**：
 - **B 站**：自由潜水教学、Frenzel 耳压平衡教学
