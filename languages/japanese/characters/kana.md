@@ -34,16 +34,18 @@
 
 **片假名单词（外来语）：**
 - アイ（ai）：eye（眼睛）
+- アイコン（aikon）：icon (computer icon)
+- アプリ（apuri）：app, application
 - アメリカ（amerika）：America（美国）
 - イヤホン（iyahon）：earphone（耳机）
-- イギリス（igirisu）：UK（英国）
-- ウール（uuru）：wool（羊毛）
-- ウイスキー（uisukii）：whisky（威士忌）
-- エア（ea）：air（空气）
-- エレベーター（erebeetaa）：elevator（电梯）
+- インターネット（intaanetto）：internet
+- インストール（insutoruuru）：install (software)
+- ウィルス（wirusu）：virus (computer virus)
+- ウェブ（webu）：web (World Wide Web)
+- ウェブサイト（webusaito）：website
 - エロ（ero）：erotic（色情）
-- オーストラリア（oosutoraria）：Australia（澳大利亚）
-- オイル（oiru）：oil（油）
+- エレベーター（erebeetaa）：elevator（电梯）
+- オンライン（onrain）：online
 
 **片假名单词（外来语）- Adult/Erotic:**
 - イク（iku）：to reach orgasm
@@ -95,12 +97,21 @@
 - そら（sora）：空（天空）
 
 **片假名单词（外来语）：**
+- カーソル（kaasoru）：cursor (mouse cursor)
 - カメラ（kamera）：camera（相机）
+- キーボード（kiiboodo）：keyboard
+- サーバー（saabaa）：server (computer server)
+- サイト（saito）：website
 - サッカー（sakkaa）：soccer（足球）
 - シーツ（shiitsu）：sheet（床单）
+- スキャナー（sukyanaa）：scanner
+- スマホ（sumaho）：smartphone
 - スープ（suupu）：soup（汤）
+- スピーカー（supiikaa）：speaker
 - スポーツ（supootsu）：sports（运动）
+- セキュリティ（sekyuriti）：security
 - セーター（seetaa）：sweater（毛衣）
+- ソフト（sofuto）：software
 - ソファ（sofa）：sofa（沙发）
 
 **片假名单词（外来语）- Adult/Erotic:**
@@ -128,12 +139,19 @@
 - ともだち（tomodachi）：友達（朋友）
 
 **片假名单词（外来语）：**
+- タブレット（taburetto）：tablet (computer)
+- タッチパネル（tacchipaneru）：touchscreen
 - タクシー（takushii）：taxi（出租车）
+- チップ（chippu）：chip (computer chip)
 - チーズ（chiizu）：cheese（奶酪）
 - ツール（tsuuru）：tool（工具）
+- データ（deeta）：data
+- ディスプレイ（disupurei）：display
+- デジタル（dejitaru）：digital
 - テーブル（teeburu）：table（桌子）
 - テレビ（terebi）：TV（电视）
 - トイレ（toire）：toilet
+- ダウンロード（daunroodo）：download
 - トマト（tomato）：tomato（番茄）
 
 ---
@@ -187,12 +205,30 @@
 - ほん（hon）：本（书）
 
 **片假名单词（外来语）：**
+- パソコン（pasokon）：personal computer (PC)
+- パスワード（pasuwaado）：password
+- バッテリー（ batterii）：battery
+- バックアップ（bakkuappu）：backup (data)
+- バグ（bagu）：bug (software bug)
 - パン（pan）：bread（面包）
 - バス（basu）：bus（巴士）
+- ハードディスク（haadodisuku）：hard disk
+- ハードウェア（haadowea）：hardware
 - ハンカチ（hankachi）：handkerchief（手帕）
 - ビデオ（bideo）：video（视频）
+- ビッグデータ（biggudeeta）：big data
+- ファイル（fairu）：file (computer file)
+- フォーマット（foomatto）：format
 - フォーク（fooku）：fork（叉子）
+- ブログ（burogu）：blog
+- プラグイン（puraguin）：plugin
+- プログラマー（puroguramaa）：programmer
+- プログラム（puroguramu）：program
+- ヘッドホン（hedohon）：headphones
 - ヘリコプター（herikoputaa）：helicopter（直升机）
+- ポータブル（poataburu）：portable
+- ホームページ（hooomupeiji）：homepage
+- ホーム（hoomu）：home (directory)
 - ホテル（hoteru）：hotel（酒店）
 
 **片假名单词（外来语）- Adult/Erotic:**
@@ -224,11 +260,16 @@
 
 **片假名单词（外来语）：**
 - コンピューター（kompyuutaa）：computer（电脑）
+- コード（koodo）：code (programming code)
+- マウス（mausu）：mouse (computer mouse)
 - マンガ（manga）：manga（漫画）
+- メール（meeru）：email
+- メモリ（memori）：memory (computer memory)
 - ミルク（miruku）：milk（牛奶）
 - ムード（muudo）：mood（气氛）
 - メニュー（menyuu）：menu（菜单）
 - モデル（moderu）：model（模特）
+- モニター（monitaa）：monitor
 
 **片假名单词（外来语）- Adult/Erotic:**
 - エロマンガ（eromanga）：erotic manga
@@ -275,9 +316,18 @@
 **片假名单词（外来语）：**
 - ライト（raito）：light（光、灯）
 - ラジオ（rajio）：radio（收音机）
+- ラップトップ（rapputoppu）：laptop computer
+- リンク（rinku）：link (hyperlink)
+- リセット（risetto）：reset
 - リボン（ribon）：ribbon（丝带）
+- ルーター（ruutaa）：router (network router)
 - ルーズ（ruuzu）：loose（宽松）
+- レスポンシブ（resuponshibu）：responsive (web design)
 - レストラン（resutoran）：restaurant（餐厅）
+- ログイン（roguin）：login
+- ログアウト（roguauto）：logout
+- ロボット（robotto）：robot
+- ロボ（robo）：robot (short form)
 - ロビー（robii）：lobby（大厅）
 - リズム（rizumu）：rhythm
 
@@ -302,6 +352,8 @@
 - を（wo）：助词（表示动作的对象）
 
 **片假名单词（外来语）：**
+- ワイヤレス（waiaresu）：wireless
+- ワイド（waido）：wide (widescreen)
 - ワイン（wain）：wine（红酒）
 - ワンピース（wanpiisu）：one-piece（连衣裙）
 
