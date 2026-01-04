@@ -306,7 +306,7 @@
 - ワンピース（wanpiisu）：one-piece（连衣裙）
 
 **片假名单词（外来语）- Adult/Erotic:**
-- ワイセツ（waisetsu）：indecency, obscenity
+- ワイセツ（waisetsu）：indecency, obscenity（猥褻）
 
 ---
 
