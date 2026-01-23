@@ -2,13 +2,39 @@
 
 PostgreSQL 提供了强大的安全模型，包括用户（角色）管理、权限控制和访问控制。本章节详细介绍 PostgreSQL 的安全机制和最佳实践。
 
-## 角色与用户管理
+## 核心概念：Role（角色）与 User（用户）
 
-### 0. Role 跟 User
+### Role vs User 的本质区别
 
-在现代 PostgreSQL 中，User（用户）和 Role（角色）在底层本质上是同一个东西。
+在 PostgreSQL 中，**Role 和 User 在底层本质上是同一个东西**。
+
+* **全局性**：Role 是 **实例级别（Instance-level）** 的。你在实例中创建了一个 Role，它在所有的数据库（Database）中都可见。
+* **权限的局部性**：虽然 Role 是全局的，但 Role 拥有的 **权限（Privileges）** 和 **对象所有权（Ownership）** 却是 **数据库级别（Database-level）** 的。
+
+> **重点**：如果你想删除一个 Role，必须确保它在 **每一个** 数据库中的依赖项都被清理干净。
 
 简单来说：**Role 是核心概念，而 User 只是一个带有「登录权限」的 Role**。
+
+### 权限授权的三级跳
+
+要让一个用户能访问数据，通常需要按顺序授予三层权限：
+
+1. **Database 层**：允许连接数据库
+```sql
+GRANT CONNECT ON DATABASE my_db TO app_user;
+```
+
+2. **Schema 层**：允许访问架构
+```sql
+GRANT USAGE ON SCHEMA public TO app_user;
+```
+
+3. **Object 层**：允许操作具体的表/序列
+```sql
+GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO app_user;
+```
+
+## 角色与用户管理
 
 ### 1. 创建角色和用户
 
@@ -59,7 +85,104 @@ ALTER USER admin_user WITH SUPERUSER;
 ALTER USER admin_user WITH NOSUPERUSER;
 ```
 
-### 3. 查看用户信息
+### 3. 查询权限依赖关系
+
+当你发现一个用户删不掉时，通常是因为存在以下三种依赖：
+
+#### 查询对象所有权 (Ownership)
+
+查看该用户"拥有"哪些表、视图或序列：
+
+```sql
+SELECT
+    n.nspname as schema,
+    c.relname as name,
+    c.relkind as type
+FROM pg_class c
+JOIN pg_namespace n ON n.oid = c.relnamespace
+JOIN pg_roles r ON r.oid = c.relowner
+WHERE r.rolname = 'target_role_name';
+```
+
+#### 查询显式授权 (Grants)
+
+查看该用户在哪些对象上有权限：
+
+```sql
+SELECT *
+FROM information_schema.role_table_grants
+WHERE grantee = 'target_role_name';
+```
+
+#### 查询全实例依赖 (终极探测)
+
+如果上面查不出结果，但 `DROP ROLE` 依然报错，请查系统共享依赖表：
+
+```sql
+SELECT
+    db.datname,
+    classid::regclass,
+    objid,
+    deptype
+FROM pg_shdepend s
+LEFT JOIN pg_database db ON s.dbid = db.oid
+WHERE refobjid = (SELECT oid FROM pg_roles WHERE rolname = 'target_role_name');
+```
+
+### 4. 角色删除与清理
+
+#### 黄金清理流程
+
+清理 Role 的难点在于：**你不能直接删掉一个"正在被使用"或"拥有资产"的身份。**
+
+建议按顺序在 **每一个涉及的数据库** 中执行：
+
+**第一步：身份继承（解决权限不足）**
+
+管理员需要临时获得该角色的身份，才能处理它的资产：
+
+```sql
+GRANT "target_role" TO "admin_user";
+GRANT "recipient_role" TO "admin_user";  -- 接收资产的角色
+```
+
+**第二步：资产转移（REASSIGN OWNED）**
+
+将该角色拥有的所有表、视图、序列的所有权，批量转移给另一个持久角色：
+
+```sql
+REASSIGN OWNED BY "target_role" TO "recipient_role";
+```
+
+**第三步：依赖抹除（DROP OWNED）**
+
+这是最关键的一步，它会做两件事：
+
+1. 撤销该角色在所有对象上的显式权限（SELECT, UPDATE 等）
+2. **清理默认权限记录（Default ACLs）**——这是最隐形的依赖点
+
+```sql
+DROP OWNED BY "target_role";
+```
+
+**第四步：物理删除**
+
+一旦所有数据库的资产和权限都清空后，执行：
+
+```sql
+DROP ROLE "target_role";
+```
+
+#### 常见坑点
+
+| 坑点 | 说明 | 解决方案 |
+| --- | --- | --- |
+| **多数据库陷阱** | 只清了业务库，没清 `postgres` 库 | 在每个 `datname` 出现的库里跑一遍清理逻辑 |
+| **默认权限 (Default ACLs)** | 用户 A 为用户 B 设定的规则，导致 B 删不掉 | 必须 `GRANT A TO 管理员`，然后执行 `ALTER DEFAULT PRIVILEGES...REVOKE` |
+| **不可见字符** | 角色名里带了空格或换行符 | 使用 `format('%I', role_name)` 动态生成 SQL，或从 `pg_roles` 抓取真实名称 |
+| **系统对象限制** | 无法修改系统内置对象的所有权 | 在 `DO` 块中使用 `BEGIN...EXCEPTION` 捕获并跳过系统对象 |
+
+### 5. 查看用户信息
 
 ```sql
 -- 查看所有角色

@@ -4,6 +4,36 @@
 
 > https://www.postgresql.org/docs/release/
 
+## 文档更新记录
+
+### 2025-01-20 - 角色管理文档增强
+
+**改进内容**:
+
+1. **核心概念强化**
+   - 明确 Role 的实例级别 vs 权限的数据库级别概念
+   - 添加权限授权三级跳说明（Database → Schema → Object）
+
+2. **角色删除流程完善**
+   - 新增"查询权限依赖关系"章节，包含三种依赖查询方法
+   - 新增"角色删除与清理"章节，提供完整的四步清理流程
+   - 添加常见坑点对照表（多数据库、默认权限、不可见字符、系统对象）
+
+3. **新增文档**
+   - `security/role-operations-cheatsheet.md` - 快速参考卡片
+   - `examples/role-deletion-guide.md` - 详细的实战指南（14KB）
+   - `examples/delete-role-example.md` - 完整的操作示例
+
+4. **自动化脚本改进**
+   - 优化 `delete-user.sql` 脚本，添加详细注释和使用说明
+   - 增强错误处理和用户提示信息
+   - 添加故障排查指南
+
+**关键要点**:
+- Role 删除必须在每个数据库中执行（REASSIGN OWNED + DROP OWNED）
+- 默认权限（Default ACLs）是最容易被忽视的依赖
+- 提供了完整的多数据库清理方案
+
 ## PostgreSQL 版本发布时间与重点功能
 
 ### PostgreSQL 10 (2017年10月)
