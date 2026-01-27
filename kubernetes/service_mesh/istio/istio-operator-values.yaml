@@ -59,6 +59,7 @@ spec:
             maxUnavailable: 0
         nodeSelector:
           eks.amazonaws.com/nodegroup: "network-proxy" # 使用专用的网络节点组，与业务服务隔离开
+        tolerations: {}
         affinity:
           podAntiAffinity: # 使 pod 更分散些
             preferredDuringSchedulingIgnoredDuringExecution:
