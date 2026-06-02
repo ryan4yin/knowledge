@@ -232,7 +232,7 @@
 - DRA 实现变更
   - 旧的 DRA 实现（KEP #3063）被移除，新的结构化参数模型（KEP #4381）成为基础功能
 
-## [1.33](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.33.md)
+## [1.33](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.33.md#changelog-since-v1320)
 
 - 重要不兼容/废弃变更
   - `Endpoints` API 被标记为 deprecated，直接 watch/read `Endpoints` 的程序应迁移到 `EndpointSlice`
@@ -251,59 +251,44 @@
   - 细粒度 SupplementalGroups 控制
   - `procMount` 选项默认启用
 
-## [1.34](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.34.md)
+## [1.34](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.34.md#changelog-since-v1330)
 
 - 如下特性进入 GA
   - Dynamic Resource Allocation (DRA) 核心 API `resource.k8s.io/v1`
   - Structured Authentication Config
-  - Structured Authorization Configuration 中的 label/field selector 授权
   - `KubeletCgroupDriverFromCRI`：kubelet 可从 CRI 自动发现 cgroup driver
   - VolumeAttributesClass/ModifyVolume 与 volume expansion failure recovery
   - Node swap support
   - API server tracing、kubelet OpenTelemetry tracing
-  - Streaming LIST responses 与 consistent reads from watch cache
 - 如下特性进入 Beta
-  - Pod-level resources
+  - Pod-level resources `pod.spec.resources`
   - MutatingAdmissionPolicy
-  - PodCertificateRequest：kubelet 可为 Pod 申请/轮换证书，利好 mTLS/工作负载身份
-  - Service Account Token Integration for image pulls：镜像拉取可使用短期 Pod 身份 token
-  - PSI metrics
   - Mutable CSI Node Allocatable
-  - kube-proxy nftables mode
 
-## [1.35](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.35.md)
+## [1.35](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.35.md#changelog-since-v1340)
 
 - 重要不兼容/废弃变更
   - **移除 cgroup v1 支持**：仍使用 cgroup v1 的 Linux 节点上 kubelet 将无法启动，升级前必须迁移到
     cgroup v2
+  - kube-proxy ipvs mode 被废弃，鼓励用户迁移到 nftables.
   - Kubernetes 社区宣布 Ingress NGINX 在 2026-03 后归档，不再发布修复，建议迁移 Gateway API
 - 如下特性进入 GA
   - In-place Pod resource resize：可直接调整 Pod CPU/memory，无需重建 Pod
   - `PreferSameNode` Service traffic distribution；原 `PreferClose` 更名为 `PreferSameZone`
-  - Job `managedBy`：允许外部 controller 管理 Job 状态同步
-  - SPDY 到 WebSockets 的迁移
   - kubelet image GC max age、并行拉镜像数量限制
-  - 细粒度 SupplementalGroups 控制
-  - kubelet drop-in config directory
 - 如下特性进入 Beta
   - Pod certificates，用于原生工作负载身份与证书轮换
-  - Storage version migration 内置 controller
   - StatefulSet `maxUnavailable`
-  - ResourceVersion 语义收紧为可比较的 decimal number，利于 informer/迁移/控制器可靠性
 
-## [1.36](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md)
+## [1.36](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md#changelog-since-v1350)
 
 - 重要不兼容/废弃变更
-  - Ingress NGINX 已于 2026-03-24 退休，不再有新版本、bugfix 或安全修复
   - in-tree `gitRepo` volume plugin 被移除，仍依赖它的 Pod 需要迁移到 initContainer 或 `git-sync`
-  - Service `externalIPs` 被标记为 deprecated，新暴露外部服务应优先考虑 LoadBalancer、NodePort 或
-    Gateway API
-  - 移除 Kubernetes API 类型对 `gogoprotobuf` runtime 依赖；依赖 Kubernetes Go API 类型的项目应关注
-    生成代码与 protobuf 兼容性
+  - Service `.spec.externalIPs` 被标记为 deprecated，新暴露外部服务应优先考虑 LoadBalancer、NodePort
+    或 Gateway API
 - 如下特性进入 GA
   - Fine-grained kubelet API authorization：替代宽泛的 `nodes/proxy` 授权
   - User Namespaces in Pods：`hostUsers: false` 可让容器 root 映射为宿主机非特权用户
-  - MutatingAdmissionPolicy：用 CEL 在 apiserver 内完成常见资源变更，减少 webhook 依赖
   - VolumeGroupSnapshot
   - Mutable CSINode Allocatable
   - 外部 ServiceAccount token signer
