@@ -92,12 +92,15 @@
       <https://github.com/istio/istio/wiki/Troubleshooting-Istio-Ambient>
 
 - **[istio 1.25](https://istio.io/latest/news/releases/1.25.x/announcing-1.25/)** - 2025-03-03
+
   - 跨区流量治理 - 支持 Kubernetes 原生的
     [Traffic Distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution)
     参数
   - istio-cni 支持了热更新，不会造成节点上的流量中断。
+
 - **[istio 1.26](https://istio.io/latest/news/releases/1.26.x/announcing-1.26/)** - 2025-05-08
 
+  - 官方支持 Kubernetes 1.29-1.33
   - 支持通过 Configmap 自定义 Gateway API 的 Gateway 资源自动创建的 Deployment/Service/HPA/PDB 等资
     源参数
   - 新增了对 Gateway API 的 TCPRoute 的支持
@@ -107,18 +110,21 @@
     - `istioctl manifest` 相关命令继续弱化，推荐迁移到 Helm 或 `istioctl install`
 
 - **[istio 1.27](https://istio.io/latest/news/releases/1.27.x/announcing-1.27/)** - 2025-08-11
+  - 官方支持 Kubernetes 1.29-1.33
   - **Waypoint proxy 成熟度提升**，Ambient mode 下 L7 策略、遥测与流量治理能力继续补齐
   - **Gateway API 支持增强**，继续减少对 VirtualService/Gateway 旧 API 组合的依赖
   - 重要升级变化
     - 继续推进 Gateway API/ambient 方向，升级前应检查 waypoint、ztunnel、CNI 与控制面版本一致性
     - 使用 EnvoyFilter 的场景仍需逐项回归，因为 EnvoyFilter 依赖底层 Envoy 细节，跨版本风险最高
 - **[istio 1.28](https://istio.io/latest/news/releases/1.28.x/announcing-1.28/)** - 2025-11-06
+  - 官方支持 Kubernetes 1.30-1.34
   - Ambient mode 继续增强，包括 waypoint、ztunnel、故障排查与可观测性能力
   - Gateway API 集成继续增强，适合作为新流量入口/服务网格 API 的默认方向
   - 重要升级变化
     - 关注 Gateway API CRD 版本与 Kubernetes 版本兼容性，避免控制面升级后 CRD 仍停留在旧版本
     - 自定义安装参数建议迁移到 Helm values，减少对旧 manifest 生成流程的依赖
 - **[istio 1.29](https://istio.io/latest/news/releases/1.29.x/announcing-1.29/)** - 2026-02-12
+  - 官方支持 Kubernetes 1.31-1.35
   - **Gateway API Inference Extension 支持进入 alpha**，支持面向 LLM/AI 服务的 EPP (Endpoint Picker
     Provider) 流量选择
   - **零停机金丝雀升级体验优化**，减少 sidecar 升级时短暂流量中断的概率
@@ -128,6 +134,7 @@
     - 升级前建议先用 `istioctl analyze` 检查弃用配置与 analyzer 告警
     - 如果使用 Inference Extension，需要同步检查 Gateway API 扩展 CRD 与 EPP 实现版本
 - **[istio 1.30](https://istio.io/latest/news/releases/1.30.x/announcing-1.30/)** - 2026-05-07
+  - 官方支持 Kubernetes 1.32-1.36
   - **Gateway API Inference Extension 进入 beta**，推理服务流量选择能力更接近生产可用
   - **Ambient mode 支持 multicluster**，并发布新的 ambient multicluster 安装文档
   - **支持对 `istioctl waypoint apply` 创建的 waypoint 做定制化配置**
