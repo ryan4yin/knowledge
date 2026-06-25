@@ -115,6 +115,9 @@ Klipper 配套组件：
   [Fluidd](https://github.com/fluidd-core/fluidd)：Web 管理界面，替代传统的 OctoPrint
 - [Crowsnest](https://github.com/mainsail-crew/crowsnest)：摄像头推流，支持延时摄影
 
+刷入 Klipper 后，效果基本等同于 Neptune 4 Pro——Neptune 4 Pro 相比 3 Pro 的主要升级就是换用了 Klipper
+固件和 ARM CPU 上位机。
+
 ### DIY 打印机
 
 - [VoronDesign](https://github.com/VoronDesign): 朋友说这个 voron2 现在很火，core-xy 结构速度应该能
