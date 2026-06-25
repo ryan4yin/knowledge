@@ -1,6 +1,8 @@
 # 3D 打印
 
-我的 3D 打印机：ELEGOO Neptune 3 Pro，入手价格 1499 元。
+我的 3D 打印机：ELEGOO Neptune 3 Pro，入手价格 1499 元。现已刷入
+[Klipper](https://github.com/Klipper3d/klipper) 固件，配置文件仓库：
+[neptune3pro-klipper](https://github.com/ryan4yin/neptune3pro-klipper)。
 
 我买这台打印机参考的网友建议有：
 
@@ -19,11 +21,14 @@
 
 ### 如何找 3D 模型
 
-- 貌似很多人推荐的 3D 打印模型网，可以直接下载 STL 文件：https://www.thingiverse.com/
+- 国内最流行的 3D 打印社区，拓竹官方平台，模型/打印配置/耗材参数一站式下载：
+  [MakerWorld](https://makerworld.com.cn/zh)
+- 国外最大的模型站，可直接下载 STL 文件： [Printables](https://www.printables.com/)（Prusa 官方平
+  台）、 [Thingiverse](https://www.thingiverse.com/)
 - 二次元模型
   - 模之屋，不过这个还不清楚该怎么打印：https://www.aplaybox.com/article
   - 日本二次元模型站点：https://bowlroll.net/
-- 其他的
+- 其他
   - https://www.cgtrader.com/3d-print-models
   - https://free3d.com/zh/
   - https://www.turbosquid.com/Search/3D-Models/free
@@ -31,13 +36,13 @@
 
 ### 如何转换与打印模型
 
-1. 首先需要有已经准备好的 OBJ/STL 格式的模型，这个模型可以在前面提供的网站上下载，也可以自己学习使用
-   参数化建模软件来设计。
+1. 首先需要有已经准备好的 OBJ/STL/3MF 格式的模型，这个模型可以在前面提供的网站上下载，也可以自己学习
+   使用参数化建模软件来设计。
 2. 打印前，要考虑好基本的物理支撑结构，找到需要的「额外支撑」最少的摆放方式，并据此调整模型角度，通
    常这样打印出的东西结构强度也最高。
-3. 需要使用开源的切片软件 [Cura](https://github.com/Ultimaker/Cura) 调整模型，它会通过内置算法设定好
-   合适的打印走线方式。
-4. 将模型导出并复制到 U 盘，然后插入打印机开始打印。
+3. 使用开源的切片软件 [OrcaSlicer](https://github.com/SoftFever/OrcaSlicer) 调整模型，内置多种校准工
+   具（流量校准、压力提前、温度塔等），对 Klipper 支持极好，是目前最流行的开源切片软件。
+4. 切片后的 G-code 通过网络直接上传到打印机（Klipper + Moonraker），无需 U 盘插拔。
 
 ### 打印机耗材
 
@@ -92,15 +97,39 @@
 
 ### 打印机改造
 
-TODO
+我的 Neptune 3 Pro 已通过 [kiauh](https://github.com/dw-0/kiauh) 刷入 Klipper 固件。Klipper 将运动计
+算卸载到上位机（树莓派），实现更高精度和更快的打印速度，并支持 Web 远程管理、输入整形（减少振动）、
+压力提前等高级功能。
+
+配置文件仓库：[neptune3pro-klipper](https://github.com/ryan4yin/neptune3pro-klipper)，包含：
+
+- Klipper 打印机配置（`klipper-config/`）
+- OrcaSlicer 适配 Klipper 的切片配置文件（`orca-slicer/`）
+- 配置验证脚本（`scripts/validate_config.py`）
+- 常见问题排错（`TROUBLESHOOTING.md`）
+
+Klipper 配套组件：
+
+- [Moonraker](https://github.com/Arksine/moonraker)：Klipper 的 Web API 层
+- [Mainsail](https://github.com/mainsail-crew/mainsail) /
+  [Fluidd](https://github.com/fluidd-core/fluidd)：Web 管理界面，替代传统的 OctoPrint
+- [Crowsnest](https://github.com/mainsail-crew/crowsnest)：摄像头推流，支持延时摄影
 
 ### DIY 打印机
 
 - [VoronDesign](https://github.com/VoronDesign): 朋友说这个 voron2 现在很火，core-xy 结构速度应该能
   比我的 i3 机器快很多。
 - 打印机固件
-  - [klipper](https://github.com/Klipper3d/klipper): 最流行的 Linux 3D 打印机固件
-  - [Marlin](https://github.com/MarlinFirmware/Marlin): 最流行的基于 MCU 的 3D 打印机固件
+  - [Klipper](https://github.com/Klipper3d/klipper): 目前最流行的 Linux 3D 打印机固件，将运动规划卸
+    载到上位机，性能远超传统 MCU 固件。我的 Neptune 3 Pro 已刷入。
+  - [Marlin](https://github.com/MarlinFirmware/Marlin): 最流行的基于 MCU 的 3D 打印机固件，Neptune 3
+    Pro 出厂预装此固件。
+- 切片软件
+  - [OrcaSlicer](https://github.com/SoftFever/OrcaSlicer): 基于 Bambu Studio 的开源切片软件，内置校
+    准工具，对 Klipper 支持最好，是目前最流行的切片软件。
+  - [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer): Prusa 官方切片软件，OrcaSlicer 的祖先。
+  - [Cura](https://github.com/Ultimaker/Cura): UltiMaker 官方切片软件，早年很流行，但近年逐渐被
+    OrcaSlicer 替代。
 - 其他
-  - [OctoPrint](https://github.com/OctoPrint/OctoPrint): 打印机的 Web UI，让你无痛远程打印。
-  - 还可以加装摄像头延时摄影啥的，反正玩法很多啦
+  - [OctoPrint](https://github.com/OctoPrint/OctoPrint): 传统 Marlin 打印机的 Web UI。Klipper 用户一
+    般用 Mainsail 或 Fluidd 替代。
