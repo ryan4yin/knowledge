@@ -2,7 +2,7 @@
   description = "A Nix-flake-based Python development environment";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";
     flake-utils.url = "github:numtide/flake-utils";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
   };
@@ -20,17 +20,19 @@
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
-            typos.enable = true; # Source code spell checker
-            prettier.enable = true; # Markdown & TS formatter
-          };
-          settings = {
             typos = {
-              write = true; # Automatically fix typos
-              configPath = "./.typos.toml";
+              enable = true; # Source code spell checker
+              settings = {
+                write = true; # Automatically fix typos
+                configPath = "./.typos.toml";
+              };
             };
             prettier = {
-              write = true; # Automatically format files
-              configPath = "./.prettierrc.yaml";
+              enable = true; # Markdown & TS formatter
+              settings = {
+                write = true; # Automatically format files
+                configPath = "./.prettierrc.yaml";
+              };
             };
           };
         };
@@ -41,7 +43,7 @@
           # spell checker
           typos
           # code formatter
-          nodePackages.prettier
+          prettier
         ];
 
         shellHook = ''
