@@ -39,7 +39,7 @@ Gas 跟 Ether 是分离的，有一个汇率在中间。这是为了避免 Ether
 
 用户需要在交易中设定愿意付出的 Gas 单价，出价越高，矿工们就越愿意处理你的交易，交易速度就越快。
 
-<https://ethgasstation.info/> 这个站点显示了当前市场上的 Gas 汇率以及对应的交易速度。
+<https://etherscan.io/gastracker> 和 <https://openchainbench.com/benchmarks/gas-estimation> 这些站点显示了当前市场上的 Gas 汇率以及对应的交易速度。(注: 原来的 ethgasstation.info 已于 2023 年停止服务。)
 
 以太坊允许将交易中的 Gas 单价设置为 0，但是这可能会导致你的交易永远不会被处理。
 
